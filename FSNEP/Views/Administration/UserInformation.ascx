@@ -29,7 +29,7 @@
                 Salary:
             </td>
             <td>
-                <%= Html.TextBoxFor(u=>u.User.Salary) %>
+                <%= Html.TextBox("User.Salary", Model.User.Salary == 0 ? string.Empty : Model.User.Salary.ToString()) %>
             </td>
             <td>
                 <%= Html.ValidationMessageFor(u=>u.User.Salary) %>

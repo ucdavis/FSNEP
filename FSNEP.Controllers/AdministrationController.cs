@@ -52,7 +52,7 @@ namespace FSNEP.Controllers
         public ActionResult CreateUser()
         {
             //Create the viewmodel with a blank user
-            var viewModel = new CreateUserViewModel {User = new User()};
+            var viewModel = new CreateUserViewModel {User = new User {FTE = 1}};
 
             PopulateDefaultUserViewModel(viewModel);
 
@@ -109,8 +109,8 @@ namespace FSNEP.Controllers
                 
                 //Send the user a message
                 var newUserTokenPath = Url.AbsoluteAction("Index", "Home", new {token = user.Token});
-
                 var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser(user.Supervisor.ID).Email;
+                
                 MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail, newUserTokenPath);
 
                 ts.CommitTransaction();
