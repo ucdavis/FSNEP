@@ -41,11 +41,12 @@
             .PrefixUrlParameters(false)
             .Columns(col =>
                          {
-                             col.Add(cs =>
-                                         {%>
-                                            PRINT [TODO]
-                                            <%
-                                         });
+                            col.Add(x =>
+                                {
+                                    %>
+                                    <%= Html.ActionLink<ReportController>(a=>a.PrintViewableTimeRecord(x.Id), "Print PDF") %>
+                                     <%
+                                });
                              col.Add(x => x.User.FullName).Title("User");
                              col.Add(x => x.MonthName).Title("Month");
                              col.Add(x => x.Year);
