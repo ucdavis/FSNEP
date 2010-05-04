@@ -8,10 +8,22 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <script type="text/javascript">
+        var approved;
+
         $(function() {
-            $("form").submit(function() {
-                alert("Post");
+            approved = $("#Approved");
+
+            $("#Approve").click(function() {
+                approved.val(true);
+            });
+
+            $("#Disapprove").click(function() {
+                if ($("#ReviewComment").val().length == 0) {
+                    alert("Comment Required for Disapproval");
+                    return false;
+                }
                 
+                approved.val(false);
             });
         });
     </script>
@@ -22,8 +34,9 @@
 
     <% if (Model.CanBeApprovedOrDenied) { %>
     <div>
-        <% using (Html.BeginForm()) { %>
+        <% using (Html.BeginForm("ApproveOrDenyRecord", "Supervisor", new {id=Model.Record.Id}, FormMethod.Post, new {id="ApproveOrDeny"})) { %>
             <%= Html.AntiForgeryToken() %>
+            <%= Html.Hidden("Approved") %>
             
             <%= Html.ClientSideValidation<Record>() %>
             
