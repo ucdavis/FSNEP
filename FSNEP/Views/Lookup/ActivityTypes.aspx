@@ -8,7 +8,11 @@
 
 <script type="text/javascript">
     $(function() {
-        $("#CreateActivityTypeForm").validate();
+        $("#CreateActivityTypeForm").validate({
+            rules: {
+                indicator: { minlength: 2 }
+            }
+        });
     });
 </script>
 
