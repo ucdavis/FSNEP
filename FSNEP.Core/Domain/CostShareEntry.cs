@@ -6,7 +6,6 @@ namespace FSNEP.Core.Domain
     public class CostShareEntry : Entry
     {
         [NotNull]
-        [Valid]
         public virtual ExpenseType ExpenseType { get; set; }
 
         public virtual EntryFile EntryFile { get; set; }
