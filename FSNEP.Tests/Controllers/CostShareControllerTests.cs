@@ -302,38 +302,42 @@ namespace FSNEP.Tests.Controllers
 
             _costShareRepository.Expect(a => a.GetNullableByID(id)).Return(costShare).Repeat.Once();
             _costShareBLL.Expect(a => a.HasAccess(_principal, costShare)).Return(true).Repeat.Once();
-            //_costShareBLL.Expect(a => a.IsEditable(costShare)).Return(false).Repeat.Once();
 
             Controller.Entry(id)
                 .AssertActionRedirect()
                 .ToAction<CostShareController>(a => a.Review(id));
         }
 
-        //[TestMethod]
-        //public void CostShareControllerEntryWhenHasAccessAndIsEditable()
-        //{
-        //    Controller.ControllerContext.HttpContext.User = _principal;
+        [TestMethod]
+        public void CostShareControllerEntryWhenHasAccessAndIsEditable()
+        {
+            Controller.ControllerContext.HttpContext.User = _principal;
 
-        //    const int id = 5;
-        //    var costShare = CreateValidEntities.CostShare(null);
-        //    costShare.User = _currentUser;
-        //    costShare.SetIdTo(id);
+            const int id = 5;
+            var costShare = CreateValidEntities.CostShare(null);
+            costShare.User = _currentUser;
+            costShare.SetIdTo(id);
 
-        //    FakeCostShareEntryRecords(costShare);
-        //    FakeProjects();
-        //    FakeFundTypes();
-        //    FakeExpenses();
+            FakeCostShareEntryRecords(costShare);
+            FakeProjects();
+            FakeFundTypes();
+            FakeExpenses();
 
-        //    _costShareRepository.Expect(a => a.GetNullableByID(id)).Return(costShare).Repeat.Once();
-        //    _costShareBLL.Expect(a => a.HasAccess(_principal, costShare)).Return(true).Repeat.Once();
-        //    _costShareBLL.Expect(a => a.IsEditable(costShare)).Return(true).Repeat.Once();
-
+            _costShareRepository.Expect(a => a.GetNullableByID(id)).Return(costShare).Repeat.Once();
+            _costShareBLL.Expect(a => a.HasAccess(_principal, costShare)).Return(true).Repeat.Once();
 
 
-        //    Controller.Entry(id)
-        //        .AssertActionRedirect()
-        //        .ToAction<CostShareController>(a => a.Review(id));
-        //}
+
+            var result = Controller.Entry(id)
+                .AssertViewRendered()
+                .WithViewData<CostShareEntryViewModel>();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(4, result.CostShareEntries.Count());
+            Assert.AreEqual(4, result.ExpenseTypes.Count());
+            Assert.AreEqual(5, result.FundTypes.Count());
+            Assert.AreEqual(4, result.Projects.Count());
+        }
 
         
 
@@ -401,46 +405,60 @@ namespace FSNEP.Tests.Controllers
 
         }
 
-        //private void FakeExpenses()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        private void FakeExpenses()
+        {
+            var expenseList = new List<ExpenseType>();
 
-        //private void FakeFundTypes()
-        //{
-        //    var fundTypeList = new List<FundType>();
+            for (int i = 0; i < 5; i++)
+            {
+                expenseList.Add(CreateValidEntities.ExpenseType(i + 1));
+                if(i == 2)
+                {
+                    expenseList[i].IsActive = false;
+                }
+                expenseList[i].SetIdTo(i + 1);
+            }
+            var expenseTypeRepository = FakeRepository<ExpenseType>();
 
-        //    for (int i = 0; i < 5; i++)
-        //    {
-        //        fundTypeList.Add(CreateValidEntities.FundType(i + 1));
-        //        fundTypeList[i].SetIdTo(i + 1);
-        //    }
+            Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository).Repeat.Any();
+            expenseTypeRepository.Expect(a => a.Queryable).Return(expenseList.AsQueryable()).Repeat.Any();
+        }
 
-        //    var fundTypeRepository = FakeRepository<FundType>();
-        //    Controller.Repository.Expect(a => a.OfType<FundType>()).Return(fundTypeRepository).Repeat.Any();
-        //    _currentUser.FundTypes = fundTypeList;
-        //    _userBll.Expect(a => a.GetUser()).Return(_currentUser).Repeat.Any();
-        //}
+        private void FakeFundTypes()
+        {
+            var fundTypeList = new List<FundType>();
 
-        //private void FakeProjects()
-        //{
-        //    var projectList = new List<Project>();
+            for (int i = 0; i < 5; i++)
+            {
+                fundTypeList.Add(CreateValidEntities.FundType(i + 1));
+                fundTypeList[i].SetIdTo(i + 1);
+            }
 
-        //    for (int i = 0; i < 5; i++)
-        //    {
-        //        projectList.Add(CreateValidEntities.Project(i+1));
-        //        if(i==2)
-        //        {
-        //            projectList[i].IsActive = false;
-        //        }
-        //        projectList[i].SetIdTo(i + 1);
-        //    }
+            var fundTypeRepository = FakeRepository<FundType>();
+            Controller.Repository.Expect(a => a.OfType<FundType>()).Return(fundTypeRepository).Repeat.Any();
+            _currentUser.FundTypes = fundTypeList;
+            _userBll.Expect(a => a.GetUser()).Return(_currentUser).Repeat.Any();
+        }
 
-        //    var projectRepository = FakeRepository<Project>();
-        //    Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
-        //    _userBll.Expect(a => a.GetAllProjectsByUser(projectRepository))
-        //        .Return(projectList.AsQueryable().Where(a => a.IsActive)).Repeat.Any();
-        //}
+        private void FakeProjects()
+        {
+            var projectList = new List<Project>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                projectList.Add(CreateValidEntities.Project(i + 1));
+                if (i == 2)
+                {
+                    projectList[i].IsActive = false;
+                }
+                projectList[i].SetIdTo(i + 1);
+            }
+
+            var projectRepository = FakeRepository<Project>();
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
+            _userBll.Expect(a => a.GetAllProjectsByUser(projectRepository))
+                .Return(projectList.AsQueryable().Where(a => a.IsActive)).Repeat.Any();
+        }
 
         #endregion Helper Methods
 

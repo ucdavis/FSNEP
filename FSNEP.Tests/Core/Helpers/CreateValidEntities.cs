@@ -175,6 +175,22 @@ namespace FSNEP.Tests.Core.Helpers
             return rtValue;
         }
 
+        public static ExpenseType ExpenseType(int? counter)
+        {
+            var extra = "";
+            if (counter != null)
+            {
+                extra = counter.ToString();
+            }
+            var rtValue = new ExpenseType
+                              {
+                                  Name = "ExpenseTypeName" + extra, 
+                                  IsActive = true
+                              };
+
+            return rtValue;
+        }
+
         //TODO: add and use other entities
     }
 }
