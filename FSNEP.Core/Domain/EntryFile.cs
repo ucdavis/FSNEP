@@ -13,6 +13,7 @@ namespace FSNEP.Core.Domain
             DateAdded = SystemTime.Now();
         }
 
+        [NotNullNotEmpty]
         public virtual byte[] Content { get; set; }
 
         [Required]
