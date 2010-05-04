@@ -2,6 +2,8 @@
 using Castle.Windsor;
 using FSNEP.Controllers;
 using MvcContrib.Castle;
+using CAESArch.Data.NHibernate;
+using NHibernate;
 
 namespace FSNEP
 {
@@ -19,10 +21,13 @@ namespace FSNEP
             //Register the routes for this site
             new RouteConfigurator().RegisterRoutes();
 
-            InitializeServiceLocator();
+            var windsorContainer = InitializeDependencyLocator();
+
+            //Configure the audit interceptor
+            NHibernateSessionManager.Instance.RegisterInterceptor(windsorContainer.Resolve<IInterceptor>());
         }
 
-        private static void InitializeServiceLocator()
+        private static IWindsorContainer InitializeDependencyLocator()
         {
             var container = new WindsorContainer();
 
@@ -31,6 +36,8 @@ namespace FSNEP
             container.RegisterControllers(typeof(HomeController).Assembly);
 
             ComponentRegistrar.AddComponentsTo(container);
+
+            return container;
         }
     }
 }

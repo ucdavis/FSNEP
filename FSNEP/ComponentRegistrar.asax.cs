@@ -22,6 +22,8 @@ namespace FSNEP
 
             container.AddComponent("roleProvider", typeof (RoleProvider), typeof (RoleProviderService));
 
+            container.AddComponent("auditInterceptor", typeof (NHibernate.IInterceptor), typeof (AuditInterceptor));
+            
             AddRepositoriesTo(container);
 
             AddBLLClassesTo(container);
