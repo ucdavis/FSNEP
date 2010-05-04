@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
 using UCDArch.Testing;
+using UCDArch.Web.ActionResults;
 
 
 namespace FSNEP.Tests.Controllers
@@ -67,14 +68,113 @@ namespace FSNEP.Tests.Controllers
             Controller.ControllerContext.HttpContext.User = userPrincipal;
 
             var timeRecord = _timeRecordBll.GetNullableByID(1);
+            _timeRecordBll.AssertWasNotCalled(a => a.EnsurePersistent(timeRecord));
 
             var result = Controller.AddEntry(timeRecord.Id, timeRecordEntry);
+
             _timeRecordBll.AssertWasCalled(a => a.EnsurePersistent(timeRecord));
             Assert.IsNotNull(result);
             Assert.AreEqual("{ id = 24 }", result.Data.ToString());
         }
 
         //TODO: Failure (ie. invalid timerecord.id)
+        /// <summary>
+        /// Invalid time record id causes time record entry to fail.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void InvalidTimeRecordIdCausesTimeRecordEntryToFail()
+        {
+            const int invalidTimeRecordId = 123; //Does not exist and isn't mocked.
+            JsonNetResult result = null;
+            try
+            {
+                var timeRecordEntry = CreateValidTimeRecordEntry();
+                timeRecordEntry.SetIdTo(24);
+                IPrincipal userPrincipal = new MockPrincipal();
+                Controller.ControllerContext.HttpContext.User = userPrincipal;                
+
+                _timeRecordBll.AssertWasNotCalled(a => a.EnsurePersistent(_timeRecord));
+                result = Controller.AddEntry(invalidTimeRecordId, timeRecordEntry);
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(_timeRecord);
+                Assert.IsNull(result);
+                Assert.AreEqual("Invalid time record indentifier", message.Message);
+                _timeRecordBll.AssertWasNotCalled(a => a.EnsurePersistent(_timeRecord));
+                throw;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Time record with different username causes time record entry to fail.
+        /// This test creates a timeRecord with an attached use with the usename "WrongOne".
+        /// The mock that checks the currect user is hard coded to "UserName".
+        /// That causes this to fail.
+        /// Also, the GetNullableByID is set to use this timeRecord when it is called from within AddEntry. 
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void TimeRecordWithDifferentUsernameCausesTimeRecordEntryToFail()
+        {
+            TimeRecord timeRecord = null;
+            JsonNetResult result = null;
+            try
+            {
+                var timeRecordEntry = CreateValidTimeRecordEntry();
+                timeRecordEntry.SetIdTo(24);
+                IPrincipal userPrincipal = new MockPrincipal();
+                Controller.ControllerContext.HttpContext.User = userPrincipal;
+                timeRecord = CreateValidTimeRecord();
+                timeRecord.User = CreateValidUser("WongOne");
+                timeRecord.SetIdTo(13);
+                _timeRecordBll.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+
+                _timeRecordBll.AssertWasNotCalled(a => a.EnsurePersistent(timeRecord));
+                result = Controller.AddEntry(timeRecord.Id, timeRecordEntry);
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(timeRecord);
+                Assert.IsNull(result);
+                Assert.AreEqual("Current user does not have access to this record", message.Message);
+                _timeRecordBll.AssertWasNotCalled(a => a.EnsurePersistent(timeRecord));
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Invalid time record entry causes time record entry to fail.
+        /// Leonidas test (300th unit test created) :)
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void InvalidTimeRecordEntryCausesTimeRecordEntryToFail()
+        {
+            JsonNetResult result = null;
+            try
+            {
+                var timeRecordEntry = CreateValidTimeRecordEntry();
+                timeRecordEntry.ActivityType = null; //makes this invalid
+                timeRecordEntry.SetIdTo(24);
+                IPrincipal userPrincipal = new MockPrincipal();
+                Controller.ControllerContext.HttpContext.User = userPrincipal;
+
+                _timeRecordBll.AssertWasNotCalled(a => a.EnsurePersistent(_timeRecord));
+                result = Controller.AddEntry(_timeRecord.Id, timeRecordEntry);
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(_timeRecord);
+                Assert.IsNull(result);
+                Assert.AreEqual("Entry is not valid", message.Message);
+                _timeRecordBll.AssertWasNotCalled(a => a.EnsurePersistent(_timeRecord));
+                throw;
+            }
+        }
 
         #endregion AddEntry Tests
 
@@ -121,6 +221,18 @@ namespace FSNEP.Tests.Controllers
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
 
+            return user;
+        }
+
+        /// <summary>
+        /// Creates the valid user. With a specific UserName
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <returns></returns>
+        private static User CreateValidUser(string username)
+        {
+            var user = CreateValidUser();
+            user.UserName = username;
             return user;
         }
 
