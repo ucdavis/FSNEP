@@ -197,8 +197,10 @@ namespace FSNEP.Controllers
                     UserBLL.EnsurePersistent(user);
 
                     var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser(user.Supervisor.Id).Email;
+                    //MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail,
+                    //                                    Url.AbsoluteAction("Index", "Home", new {token = user.Token}));
                     MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail,
-                                                        Url.AbsoluteAction("Index", "Home", new {token = user.Token}));
+                                                        Url.AbsoluteAction("NewUser", "Account", new {id = new Guid(user.Token.ToString())}));
 
                     UserBLL.DbContext.CommitTransaction();
                 }
