@@ -81,11 +81,12 @@ namespace FSNEP.Controllers
         {
             var costShare = _costShareRepository.GetNullableByID(id);
 
-            Check.Require(costShare != null, "Invalid time record indentifier");
+            Check.Require(costShare != null, "Invalid cost share indentifier");
 
             Check.Require(_costShareBLL.HasAccess(CurrentUser, costShare),
                           "Current user does not have access to this record");
 
+            entry.Record = costShare;
 
             entry.TransferValidationMessagesTo(ModelState);
 

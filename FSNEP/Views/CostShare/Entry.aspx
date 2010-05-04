@@ -5,6 +5,40 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <script type="text/javascript">
+        var Services = {
+            GetAccountsForProject: '<%= Url.Action("GetAccountsForProject", "Association") %>'
+        }
+
+        $(function() {
+            //PopulateAccounts($("#Entry_Project"));
+
+            $("#Entry_Project").change(function() { PopulateAccounts(this); });
+        });
+        
+        function PopulateAccounts(el) {
+            var projectId = $(el).val();
+
+            //Get the new accounts for this project
+            $.getJSON(
+                Services.GetAccountsForProject + "/" + projectId,
+                null,
+                OnPopulateAccountsComplete);
+        }
+
+        function OnPopulateAccountsComplete(result) {
+            var accountSelect = $("#Entry_Account");
+            accountSelect.empty(); //remove the current options
+            accountSelect.removeAttr("disabled");
+
+            $(result).each(function() { //append in the new elements
+                var acct = this;
+                var newOption = $("<option>" + acct.Name + "</option>").val(acct.Id);
+
+                accountSelect.append(newOption);
+            });
+        }
+    </script>
 
     <h2><%= Html.Encode(string.Format("Cost Share for {0}", Model.CostShare.Date.ToString("MMMM yyyy"))) %></h2>
     
@@ -45,7 +79,13 @@
                     .FirstOption("Select A Project")
                 %>
             </p>
-            <p>Account</p>
+            <p>
+                <label for="Entry_Account" id="Account_Label">
+                    Account:</label>
+                <select id="Entry_Account" name="Entry.Account" disabled="disabled">
+                    <option value="">Select An Account</option>
+                </select>
+            </p>
             <p>
                 <%= this.TextArea("Entry.Comment").Label("Comment:")%>
             </p>
