@@ -32,6 +32,7 @@ namespace FSNEP
         private static void AddRepositoriesTo(IWindsorContainer container)
         {
             container.AddComponent("repository", typeof (IRepository), typeof (Repository));
+            container.AddComponent("genericRepository", typeof (IRepository<>), typeof (Repository<>));
         }
 
         /// <summary>

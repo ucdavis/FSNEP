@@ -10,14 +10,14 @@ namespace FSNEP
     public class AuditInterceptor : EmptyInterceptor
     {
         public IUserAuth UserAuth { get; private set; }
-        public IRepository Repository { get; set; }
+        public IRepository<Audit> AuditRepository { get; set; }
 
-        public AuditInterceptor(IUserAuth userAuth, IRepository repository)
+        public AuditInterceptor(IUserAuth userAuth, IRepository<Audit> auditRepository)
         {
             Check.Require(userAuth != null, "User Authorization Context is Required");
 
             UserAuth = userAuth;
-            Repository = repository;
+            AuditRepository = auditRepository;
         }
 
         public override void OnDelete(object entity, object id, object[] state, string[] propertyNames, NHibernate.Type.IType[] types)
@@ -55,7 +55,7 @@ namespace FSNEP
 
             audit.SetActionCode(auditActionType);
 
-            Repository.OfType<Audit>().EnsurePersistent(audit);
+            AuditRepository.EnsurePersistent(audit);
         }
     }
 }

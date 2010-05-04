@@ -11,14 +11,14 @@ namespace FSNEP.Tests.Auditing
     public class AuditInterceptorTests
     {
         public AuditInterceptor AuditInterceptor { get; set; }
-        public IRepository Repository { get; set; }
+        public IRepository<Audit> AuditRepository { get; set; }
 
         public AuditInterceptorTests()
         {
             var userAuth = MockRepository.GenerateStub<IUserAuth>();
-            Repository = MockRepository.GenerateStub<IRepository>();
+            AuditRepository = MockRepository.GenerateStub<IRepository<Audit>>();
 
-            AuditInterceptor = new AuditInterceptor(userAuth, Repository);
+            AuditInterceptor = new AuditInterceptor(userAuth, AuditRepository);
         }
 
         [TestMethod]
@@ -26,12 +26,9 @@ namespace FSNEP.Tests.Auditing
         {
             AuditInterceptor.UserAuth.Expect(a => a.CurrentUserName).Return("currentUser");
 
-            var auditRepository = MockRepository.GenerateStub<IRepository<Audit>>();
-            AuditInterceptor.Repository.Expect(a => a.OfType<Audit>()).Return(auditRepository);
-
             AuditInterceptor.AuditObjectModification(new Audit(), null, AuditActionType.Update);
 
-            auditRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Audit>.Is.Anything));
+            AuditRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<Audit>.Is.Anything));
         }
 
         [TestMethod]
@@ -41,13 +38,10 @@ namespace FSNEP.Tests.Auditing
 
             AuditInterceptor.UserAuth.Expect(a => a.CurrentUserName).Return("currentUser");
 
-            var auditRepository = MockRepository.GenerateStub<IRepository<Audit>>();
-            auditRepository
+            AuditRepository
                 .Expect(a => a.EnsurePersistent(Arg<Audit>.Is.Anything))
                 .WhenCalled(a => audit = (Audit)a.Arguments.First());
 
-            AuditInterceptor.Repository.Expect(a => a.OfType<Audit>()).Return(auditRepository);
-            
             AuditInterceptor.AuditObjectModification(new object(), null, AuditActionType.Update);
 
             Assert.AreEqual("currentUser", audit.Username);
@@ -60,12 +54,9 @@ namespace FSNEP.Tests.Auditing
 
             AuditInterceptor.UserAuth.Expect(a => a.CurrentUserName).Return("currentUser");
 
-            var auditRepository = MockRepository.GenerateStub<IRepository<Audit>>();
-            auditRepository
+            AuditRepository
                 .Expect(a => a.EnsurePersistent(Arg<Audit>.Is.Anything))
                 .WhenCalled(a => audit = (Audit)a.Arguments.First());
-
-            AuditInterceptor.Repository.Expect(a => a.OfType<Audit>()).Return(auditRepository);
 
             AuditInterceptor.AuditObjectModification(new object(), null, AuditActionType.Update);
 
@@ -81,12 +72,9 @@ namespace FSNEP.Tests.Auditing
 
             AuditInterceptor.UserAuth.Expect(a => a.CurrentUserName).Return("currentUser");
 
-            var auditRepository = MockRepository.GenerateStub<IRepository<Audit>>();
-            auditRepository
+            AuditRepository
                 .Expect(a => a.EnsurePersistent(Arg<Audit>.Is.Anything))
                 .WhenCalled(a => audit = (Audit)a.Arguments.First());
-
-            AuditInterceptor.Repository.Expect(a => a.OfType<Audit>()).Return(auditRepository);
 
             AuditInterceptor.AuditObjectModification(sampleObject, null, AuditActionType.Update);
 
@@ -98,14 +86,11 @@ namespace FSNEP.Tests.Auditing
         {
             AuditInterceptor.UserAuth.Expect(a => a.CurrentUserName).Return("currentUser");
 
-            var auditRepository = MockRepository.GenerateStub<IRepository<Audit>>();
-            auditRepository.Expect(a => a.EnsurePersistent(Arg<Audit>.Is.Anything));
-
-            AuditInterceptor.Repository.Expect(a => a.OfType<Audit>()).Return(auditRepository);
+            AuditRepository.Expect(a => a.EnsurePersistent(Arg<Audit>.Is.Anything));
 
             AuditInterceptor.AuditObjectModification(new object(), null, AuditActionType.Update);
 
-            auditRepository.AssertWasCalled(a=>a.EnsurePersistent(Arg<Audit>.Is.Anything));
+            AuditRepository.AssertWasCalled(a=>a.EnsurePersistent(Arg<Audit>.Is.Anything));
         }
     }
 }

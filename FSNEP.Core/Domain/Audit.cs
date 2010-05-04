@@ -17,7 +17,7 @@ namespace FSNEP.Core.Domain
 
         [RequiredValidator]
         [StringLengthValidator(1)]
-        public virtual string ActionCodeId { get; set; }
+        public virtual string AuditActionTypeId { get; set; }
 
         [RequiredValidator]
         [StringLengthValidator(256)]
@@ -30,13 +30,13 @@ namespace FSNEP.Core.Domain
             switch (auditActionType)
             {
                 case AuditActionType.Create:
-                    ActionCodeId = "C";
+                    AuditActionTypeId = "C";
                     break;
                 case AuditActionType.Update:
-                    ActionCodeId = "U";
+                    AuditActionTypeId = "U";
                     break;
                 case AuditActionType.Delete:
-                    ActionCodeId = "D";
+                    AuditActionTypeId = "D";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("auditActionType");

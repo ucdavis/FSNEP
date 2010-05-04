@@ -7,7 +7,7 @@
 
     <property name="ObjectName" />
     <property name="ObjectId" />
-    <property name="ActionCodeId" />
+    <property name="AuditActionTypeId" />
     <property name="Username" />
     <property name="AuditDate" />
 
