@@ -168,9 +168,9 @@ namespace FSNEP.Tests.Repositories
 
             using (var ts = new TransactionScope())
             {
-                foreach (var userID in UserIds)
+                foreach (var userId in UserIds)
                 {
-                    var currentUser = UserBLL.GetById(userID);
+                    var currentUser = UserBLL.GetById(userId);
 
                     currentUser.Projects.Add(project1);
 
