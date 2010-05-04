@@ -67,8 +67,8 @@ namespace FSNEP.Tests.Controllers
         public void PrintViewableTimeRecordShouldMapToPrintViewableTimeRecord()
         {
             const int id = 5;
-            "~/Report/PrintViewableTimeRecord/5"
-                .ShouldMapTo<ReportController>(a => a.PrintViewableTimeRecord(id));
+            "~/Report/DisplayViewableTimeRecord/5"
+                .ShouldMapTo<ReportController>(a => a.DisplayViewableTimeRecord(id));
         }
 
         [TestMethod]
@@ -168,7 +168,7 @@ namespace FSNEP.Tests.Controllers
         {
             try
             {
-                Controller.PrintViewableTimeRecord(5);
+                Controller.DisplayViewableTimeRecord(5);
             }
             catch (Exception ex)
             {
@@ -189,7 +189,7 @@ namespace FSNEP.Tests.Controllers
 
             _userBLL.Expect(a => a.GetAllViewableUsers()).Return(emptyUsers).Repeat.Once();
 
-            Controller.PrintViewableTimeRecord(timeRecord.Id).AssertResultIs<HttpUnauthorizedResult>();
+            Controller.DisplayViewableTimeRecord(timeRecord.Id).AssertResultIs<HttpUnauthorizedResult>();
         }
 
 
@@ -209,7 +209,7 @@ namespace FSNEP.Tests.Controllers
 
             _userBLL.Expect(a => a.GetAllViewableUsers()).Return(users).Repeat.Once();
 
-            Controller.PrintViewableTimeRecord(timeRecord.Id).AssertResultIs<HttpUnauthorizedResult>();
+            Controller.DisplayViewableTimeRecord(timeRecord.Id).AssertResultIs<HttpUnauthorizedResult>();
         }
 
         [TestMethod]
@@ -232,7 +232,7 @@ namespace FSNEP.Tests.Controllers
             _reportBLL.Expect(a => a.GenerateIndividualTimeRecordReport(timeRecord, ReportType.PDF)).Return(
                 new ReportResult(new byte[1], "contentType")).Repeat.Once();            
 
-            Controller.PrintViewableTimeRecord(timeRecord.Id).AssertResultIs<FileContentResult>();
+            Controller.DisplayViewableTimeRecord(timeRecord.Id).AssertResultIs<FileContentResult>();
         }
 
         #endregion PrintViewableTimeRecord Tests

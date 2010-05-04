@@ -47,7 +47,7 @@ namespace FSNEP.Controllers
         /// <summary>
         /// Print out the time record for the given time record id
         /// </summary>
-        public ActionResult PrintViewableTimeRecord(int id)
+        public ActionResult DisplayViewableTimeRecord(int id)
         {
             var record = Repository.OfType<TimeRecord>().GetNullableByID(id);
 
@@ -61,8 +61,8 @@ namespace FSNEP.Controllers
             {
                 return new HttpUnauthorizedResult();
             }
-            
-            return _reportBLL.GenerateIndividualTimeRecordReport(record, ReportType.PDF).ToFileResult("TimeRecord.pdf");
+
+            return _reportBLL.GenerateIndividualTimeRecordReport(record, ReportType.Web).ToFileResult();
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult TimeRecord(int recordId)
         {
-            return PrintViewableTimeRecord(recordId);
+            return DisplayViewableTimeRecord(recordId);
         }
 
         public ActionResult GetRecordForUser(Guid? val)

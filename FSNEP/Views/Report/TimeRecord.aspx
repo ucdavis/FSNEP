@@ -9,8 +9,6 @@
 
     <script type="text/javascript">
         $(function() {
-            $('form').validate();
-
             $('#recordId').cascade('#userId', {
                 ajax: { url: '<%= Url.Action("GetRecordForUser", "Report") %>' },
                 template: function(item) {
@@ -18,19 +16,31 @@
                 }
                 //,match: function(selectedValue) { return this.when == selectedValue; }
             });
+
+            $('#generate').click(function(e) {
+                //First make sure that a recordId was chosen
+                var recordSelect = $('#recordId');
+                var recordId = recordSelect.val();
+
+                if ($('form').valid()) {
+                    //Ok, no errors so open a new time record report in a new window
+                    window.open('<%= Url.Action("DisplayViewableTimeRecord", "Report") %>/' + recordId, 'something');
+                }
+
+                e.preventDefault();
+            });
         });
     </script>
 
     <h2>TimeRecord</h2>
     
     <% using (Html.BeginForm()) { %>
-        <%= Html.AntiForgeryToken() %>
-        
+    
     <fieldset>
         <legend>Select A Time Record</legend>
         <p>
             <%= this.Select("userId")
-                .Options(Model, x=>x.Id, x=>x.FullNameLastFirst)
+                .Options(Model, x => x.Id, x => x.FullNameLastFirst)
                 .FirstOption("Select A User")
                 .Class("required")
                 .Label("User: ")
@@ -42,12 +52,12 @@
             </select>
         </p>
         <p>
-            <input type="submit" value="Generate!" />
+            <a href="#" id="generate">Generate!</a>
         </p>
     </fieldset>
-    
-    <% } %>
 
+    <% } %>
+    
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="AdditionalScripts" runat="server">

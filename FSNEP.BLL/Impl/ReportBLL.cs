@@ -54,6 +54,7 @@ namespace FSNEP.BLL.Impl
             string format = "pdf"; //default to PDF
 
             if (reportType == ReportType.Excel) format = "excel";
+            if (reportType == ReportType.Web) format = "HTML4.0";
 
             const string deviceInfo = "<DeviceInfo>" +
                                       "<SimplePageHeaders>True</SimplePageHeaders>" +
@@ -70,6 +71,7 @@ namespace FSNEP.BLL.Impl
     public enum ReportType
     {
         PDF,
-        Excel
+        Excel,
+        Web
     }
 }
