@@ -2,9 +2,11 @@
 using CAESArch.BLL;
 using CAESArch.BLL.Repositories;
 using CAESArch.Core.DataInterfaces;
+using CAESArch.Core.Utils;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FSNEP.Tests.Core.Extensions;
 
 namespace FSNEP.Tests.Repositories
 {
@@ -47,6 +49,7 @@ namespace FSNEP.Tests.Repositories
         public void FundTypeDoesNotSaveWithNullName()
         {
             var fundType = new FundType { Name = null};
+            
 
             try
             {
@@ -59,7 +62,10 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception message)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.FundType could not be persisted\n\n\r\nValidation Errors: Name, The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\r\nName, The value cannot be null.\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<FundType>.GetValidationResults(fundType).AsMessageList();
+                Assert.AreEqual(2, results.Count);
+                Assert.AreEqual(true, results.Contains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive)."), "Expected the valadion result to have \"Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\"");
+                Assert.AreEqual(true, results.Contains("Name: The value cannot be null."), "Expected the valadion result to have \"Name: The value cannot be null.\"");                
                 throw;
             }
         }
