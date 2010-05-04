@@ -17,6 +17,7 @@ namespace FSNEP.Tests.BLL
     public class RecordBLLTests
     {
         private IRecordBLL<Record> _recordBLL;
+        private IRecordBLL<TimeRecord> _timeRecordBLL;
         private IRepository _repository;
         private IPrincipal _principal = MockRepository.GenerateStub<MockPrincipal>();
         private List<Record> Records { get; set; }
@@ -28,6 +29,7 @@ namespace FSNEP.Tests.BLL
         {
             _repository = MockRepository.GenerateStub<IRepository>();
             _recordBLL = new RecordBLL<Record>(_repository);
+            _timeRecordBLL = new RecordBLL<TimeRecord>(_repository);
 
             CurrentUser = CreateValidUser();
             CurrentUser.UserName = "CurrentUser";
@@ -605,6 +607,34 @@ namespace FSNEP.Tests.BLL
             Assert.AreEqual(2009, currentRecord.Year);
         }
 
+        /// <summary>
+        /// Gets the current creates and returns A new time record.
+        /// New Time Record has salary of current user.
+        /// </summary>
+        [TestMethod]
+        public void GetCurrentCreatesAndReturnsANewTimeRecord()
+        {
+            var fakeDate = new DateTime(2009, 10, 31);
+            SystemTime.Now = () => fakeDate;
+
+            FakeTimeRecordsToCheck(); //No records for the current user.
+
+            FakeStatusQuery();
+            FakeUserQuery();
+            var recordTrackingRepository = MockRepository.GenerateStub<IRepository<RecordTracking>>();
+            _repository.Expect(a => a.OfType<RecordTracking>()).Return(recordTrackingRepository).Repeat.Any();
+
+            var currentRecord = _timeRecordBLL.GetCurrent(_principal);
+            Assert.IsNotNull(currentRecord);
+            recordTrackingRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<RecordTracking>.Is.Anything));
+            _repository.OfType<TimeRecord>().AssertWasCalled(a => a.EnsurePersistent(Arg<TimeRecord>.Is.Anything));
+            Assert.AreEqual(CurrentUser, currentRecord.User);
+            Assert.AreEqual(Status.Option.Current, currentRecord.Status.NameOption);
+            Assert.AreEqual(10, currentRecord.Month);
+            Assert.AreEqual(2009, currentRecord.Year);
+            Assert.AreEqual(CurrentUser.Salary, currentRecord.Salary);
+        }
+
 
         /// <summary>
         /// Get current creates and returns A new record.
@@ -787,8 +817,40 @@ namespace FSNEP.Tests.BLL
             var recordRepository = MockRepository.GenerateStub<IRepository<Record>>();
             _repository.Expect(a => a.OfType<Record>()).Return(recordRepository).Repeat.Any();
             recordRepository.Expect(a => a.Queryable).Return(Records.AsQueryable()).Repeat.Any();
+        }
 
+        private void FakeTimeRecordsToCheck()
+        {
+            var nonCurrentUser = CreateValidUser();
+            nonCurrentUser.UserName = "NonCurrent";
 
+            var statusCurrent = new Status { NameOption = Status.Option.Current };
+            var statusApproved = new Status { NameOption = Status.Option.Approved };
+            var statusDisapproved = new Status { NameOption = Status.Option.Disapproved };
+            var statusPendingReview = new Status { NameOption = Status.Option.PendingReview };
+
+            var timeRecords = new List<TimeRecord>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                timeRecords.Add(new TimeRecord
+                {
+                    Month = 12,
+                    Year = 2009,
+                    User = nonCurrentUser,
+                    Status = statusCurrent,
+                    ReviewComment = "Comment" + (i + 1),
+                    Entries = new List<Entry>(),
+                    Salary = 1
+                });
+            }
+            timeRecords[1].Status = statusApproved;
+            timeRecords[2].Status = statusDisapproved;
+            timeRecords[3].Status = statusPendingReview;
+
+            var timeRecordRepository = MockRepository.GenerateStub<IRepository<TimeRecord>>();
+            _repository.Expect(a => a.OfType<TimeRecord>()).Return(timeRecordRepository).Repeat.Any();
+            timeRecordRepository.Expect(a => a.Queryable).Return(timeRecords.AsQueryable()).Repeat.Any();
         }
 
         /// <summary>
