@@ -3,7 +3,6 @@ using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using CAESArch.IoC;
 using FSNEP.Core.Abstractions;
 using FSNEP.Tests.Core;
 using FSNEP.Tests.Core.Fakes;
@@ -17,23 +16,15 @@ namespace FSNEP.Tests.Controllers
     [TestClass]
     public class AccountControllerTest : ControllerTestBase<AccountController>
     {
-        protected override void AddComponents()
+        protected override void SetupController()
         {
-            base.AddComponents();
+            IFormsAuthentication formsAuth = new MockFormsAuthenticationService();
 
-            //We need to create a fake forms auth and membership service
-            var membershipProvider = new MockMembershipProvider();
-            var membershipService = new AccountMembershipService(membershipProvider);
+            IMembershipService membershipService = new AccountMembershipService(new MockMembershipProvider());
 
-            ServiceLocator.AddInstance<IFormsAuthentication>(new MockFormsAuthenticationService());
-            ServiceLocator.AddInstance<IMembershipService>(membershipService);
-            ServiceLocator.AddInstance<IMessageGateway>(MockRepository.GenerateStub<IMessageGateway>());
-        }
+            var messageGateway = MockRepository.GenerateStub<IMessageGateway>();
 
-        public AccountControllerTest()
-        {
-            //Register routes
-            new RouteConfigurator().RegisterRoutes();
+            CreateController(formsAuth, membershipService, messageGateway);
         }
 
         [TestMethod]
@@ -325,16 +316,6 @@ namespace FSNEP.Tests.Controllers
 
         private AccountController GetAccountController()
         {
-            /*
-            IFormsAuthentication formsAuth = new MockFormsAuthenticationService();
-            MembershipProvider membershipProvider = new MockMembershipProvider();
-            AccountMembershipService membershipService = new AccountMembershipService(membershipProvider);
-            AccountController controller = new AccountController(formsAuth, membershipService);
-            ControllerContext controllerContext = new ControllerContext(new MockHttpContext(), new RouteData(), controller);
-            controller.ControllerContext = controllerContext;
-            return controller;
-             */
-
             return Controller;
         }
 

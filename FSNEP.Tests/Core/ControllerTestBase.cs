@@ -17,8 +17,7 @@ namespace FSNEP.Tests.Core
     {
         protected CT Controller { get; private set; }
         private TestControllerBuilder Builder { get; set; }
-        protected IWindsorContainer container = new WindsorContainer();
-
+        
         protected ControllerTestBase()
         {
             new RouteConfigurator().RegisterRoutes();
@@ -27,23 +26,22 @@ namespace FSNEP.Tests.Core
         [TestInitialize]
         public void Setup()
         {
-            ServiceLocator.Clear();
-
             Builder = new TestControllerBuilder();
-            container = ServiceLocator.Container;
 
-            container.RegisterControllers(typeof(HomeController).Assembly); //Add all of the controllers
-
-            AddComponents();
-
-            DependencyResolver.InitializeWith(new WindsorDependencyResolver(container));
-
-            Controller = Builder.CreateIoCController<CT>();
+            SetupController();
         }
 
-        protected virtual void AddComponents()
+        /// <summary>
+        /// Override this method to setup a controller that doesn't have an empty ctor
+        /// </summary>
+        protected virtual void SetupController()
         {
-            
+            Controller = Builder.CreateController<CT>();
+        }
+
+        protected void CreateController(params object[] constructorArgs)
+        {
+            Controller = Builder.CreateController<CT>(constructorArgs);
         }
 
         protected static INonStaticGenericBLLBase<T, IdT> GetStubRepository<T, IdT>()
