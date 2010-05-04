@@ -16,6 +16,7 @@ using UCDArch.Core.Utils;
 using UCDArch.Web.Attributes;
 using UCDArch.Web.Helpers;
 using UCDArch.Core.PersistanceSupport;
+using UCDArch.Web.Validator;
 
 namespace FSNEP.Controllers
 {
@@ -84,10 +85,11 @@ namespace FSNEP.Controllers
         {
             model.User.UserName = model.UserName; //transfer the username to the user class
 
-            ValidationHelper.TransferValidationMessagesTo(model, ModelState); //Validate the create user properties
+            MvcValidationAdapter.TransferValidationMessagesTo(ModelState,
+                                                              MvcValidationAdapter.GetValidationResultsFor(model));
 
-            ValidationHelper.TransferValidationMessagesTo(model.User, ModelState, "User"); //validate the user properties
-
+            model.User.TransferValidationMessagesTo("User", ModelState);
+            
             //CheckUserAssociations(model.User); //Make sure the associations are set//Done by users.cs now
 
             if (roleList == null || roleList.Count == 0)
@@ -313,8 +315,8 @@ namespace FSNEP.Controllers
 
             TransferValuesTo(userToUpdate, user);
 
-            ValidationHelper.TransferValidationMessagesTo(userToUpdate, ModelState);
-
+            userToUpdate.TransferValidationMessagesTo(ModelState);
+            
             //CheckUserAssociations(userToUpdate); //Done by User.cs now
 
             if (roleList == null || roleList.Count == 0)

@@ -167,11 +167,11 @@ namespace FSNEP.Controllers
 
             if (lookupEntity != null) lookupEntity.IsActive = true;
 
-            ValidationHelper.TransferValidationMessagesTo(entity, ModelState);
-
+            entity.TransferValidationMessagesTo(ModelState);
+            
             if (!ModelState.IsValid)
             {
-                Message = type + " Creation Failed. " + ValidationHelper.GetErrorMessages(entity, ModelState);
+                Message = type + " Creation Failed. " + GetErrorMessages<T,IdT>(entity);
 
                 return;
             }
@@ -198,6 +198,19 @@ namespace FSNEP.Controllers
             Repository.OfType<T>().EnsurePersistent(entity);
 
             Message = type + " Removed Successfully";
+        }
+
+        private string GetErrorMessages<T, IdT>(T objToValidate) where T : DomainObjectWithTypedId<IdT>
+        {
+            var sb = new System.Text.StringBuilder();
+            
+            foreach (var valResult in objToValidate.ValidationResults())
+            {
+                sb.Append(valResult.PropertyName + ": " + valResult.Message);
+            }
+
+            return sb.ToString();
+
         }
     }
 }
