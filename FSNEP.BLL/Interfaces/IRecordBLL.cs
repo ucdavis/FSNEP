@@ -11,7 +11,6 @@ namespace FSNEP.BLL.Interfaces
         bool HasAccess(string userName, T record);
 
         bool IsEditable(T record);
-        bool IsSubmittable(T record);
 
         /// <summary>
         /// Return the current time record if it has not been submitted.  If there is not current sheet, create one

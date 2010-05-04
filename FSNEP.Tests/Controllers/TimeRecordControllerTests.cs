@@ -283,7 +283,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual(35, specialResult.CalendarDays.Count);
             Assert.AreEqual(1, specialResult.FundTypes.Count);
             Assert.AreEqual(2, specialResult.Projects.Count);
-            Assert.IsFalse(specialResult.IsSubmittable, "If this one fails it is probably the test data.");
+            
             foreach (var project in projects)
             {
                 if (project.IsActive)

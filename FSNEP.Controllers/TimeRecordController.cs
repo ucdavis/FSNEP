@@ -156,7 +156,6 @@ namespace FSNEP.Controllers
             var viewModel = new TimeRecordEntryViewModel
                                 {
                                     TimeRecord = timeRecord,
-                                    IsSubmittable = timeRecordBLL.IsSubmittable(timeRecord),
                                     CalendarDays = calendarGenerator.GenerateCalendar(timeRecord),
                                     Projects = userBLL.GetAllProjectsByUser(repository.OfType<Project>()).ToList(),
                                     FundTypes = userBLL.GetUser().FundTypes,
@@ -173,6 +172,5 @@ namespace FSNEP.Controllers
         public IList<Project> Projects { get; set; }
         public IList<FundType> FundTypes { get; set; }
         public IList<ActivityCategory> ActivityCategories { get; set; }
-        public bool IsSubmittable { get; set; }
     }
 }

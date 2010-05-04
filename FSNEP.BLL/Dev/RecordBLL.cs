@@ -32,11 +32,6 @@ namespace FSNEP.BLL.Dev
             return false;
         }
 
-        public bool IsSubmittable(T record)
-        {
-            throw new NotImplementedException();
-        }
-
         public T GetCurrent(string userName)
         {
             throw new NotImplementedException();
