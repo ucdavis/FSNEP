@@ -3,7 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using Elmah;
 
-namespace FSNEP.Helpers.Attributes
+namespace FSNEP.Controllers.Helpers.Attributes
 {
     public class HandleErrorWithELMAHAttribute : HandleErrorAttribute
     {
@@ -41,7 +41,7 @@ namespace FSNEP.Helpers.Attributes
                 return false;
 
             var testContext = new ErrorFilterModule.AssertionHelperContext(
-                                      context.Exception, HttpContext.Current);
+                context.Exception, HttpContext.Current);
 
             return config.Assertion.Test(testContext);
         }

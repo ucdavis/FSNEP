@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Globalization;
-using System.Net.Mail;
 using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Security;
-using FSNEP.Core.Abstractions;
-using FSNEP.Helpers.Attributes;
-using MvcContrib;
-using MvcContrib.Attributes;
 using CAESArch.Core.Utils;
+using FSNEP.Controllers.Helpers.Attributes;
+using FSNEP.Core.Abstractions;
+using MvcContrib.Attributes;
+using MvcContrib;
 
 namespace FSNEP.Controllers
 {

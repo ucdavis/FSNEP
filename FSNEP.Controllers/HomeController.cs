@@ -1,8 +1,9 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
+using FSNEP.Controllers.Helpers.Attributes;
 
 namespace FSNEP.Controllers
 {
-    [HandleError]
+    [HandleErrorWithELMAH]
     public class HomeController : Controller
     {
         public ActionResult Index()

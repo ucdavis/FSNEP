@@ -2,7 +2,7 @@ using System.Web.Mvc;
 using CAESArch.Data.NHibernate;
 using NHibernate;
 
-namespace FSNEP.Helpers.Attributes
+namespace FSNEP.Controllers.Helpers.Attributes
 {
     public class TransactionAttribute : ActionFilterAttribute
     {

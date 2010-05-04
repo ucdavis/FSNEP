@@ -120,8 +120,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentRegistrar.asax.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -129,8 +127,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Attributes\HandleErrorWithELMAHAttribute.cs" />
-    <Compile Include="Helpers\Attributes\TransactionAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouteConfigurator.cs" />
   </ItemGroup>
@@ -170,6 +166,10 @@
     <ProjectReference Include="..\FSNEP.BLL\FSNEP.BLL.csproj">
       <Project>{C99762B2-05D5-4DD8-8F98-E0B5244EB402}</Project>
       <Name>FSNEP.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FSNEP.Controllers\FSNEP.Controllers.csproj">
+      <Project>{C7B24D27-6F72-43BA-A3E9-21C10F869FEA}</Project>
+      <Name>FSNEP.Controllers</Name>
     </ProjectReference>
     <ProjectReference Include="..\FSNEP.Core\FSNEP.Core.csproj">
       <Project>{E8EF47BB-45DB-480D-94B0-0F5E43E7DFC4}</Project>

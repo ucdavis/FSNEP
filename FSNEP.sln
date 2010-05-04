@@ -11,9 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSNEP.Core", "FSNEP.Core\FS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSNEP.Data", "FSNEP.Data\FSNEP.Data.csproj", "{95716BED-2153-4838-89D1-83D9CA2D2445}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSNEP.Controllers", "FSNEP.Controllers\FSNEP.Controllers.csproj", "{C7B24D27-6F72-43BA-A3E9-21C10F869FEA}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
+		SccNumberOfProjects = 7
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = http://1x:8080/
 		SccLocalPath0 = .
@@ -32,6 +34,9 @@ Global
 		SccProjectUniqueName5 = FSNEP.Data\\FSNEP.Data.csproj
 		SccProjectName5 = FSNEP.Data
 		SccLocalPath5 = FSNEP.Data
+		SccProjectUniqueName6 = FSNEP.Controllers\\FSNEP.Controllers.csproj
+		SccProjectName6 = FSNEP.Controllers
+		SccLocalPath6 = FSNEP.Controllers
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +63,10 @@ Global
 		{95716BED-2153-4838-89D1-83D9CA2D2445}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95716BED-2153-4838-89D1-83D9CA2D2445}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95716BED-2153-4838-89D1-83D9CA2D2445}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7B24D27-6F72-43BA-A3E9-21C10F869FEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7B24D27-6F72-43BA-A3E9-21C10F869FEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7B24D27-6F72-43BA-A3E9-21C10F869FEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7B24D27-6F72-43BA-A3E9-21C10F869FEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
