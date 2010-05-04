@@ -39,5 +39,10 @@ namespace FSNEP.Core.Domain
         {
             Current, PendingReview, Disapproved, Approved
         }
+
+        public static string GetName(Option current)
+        {
+            return current.ToString();
+        }
     }
 }

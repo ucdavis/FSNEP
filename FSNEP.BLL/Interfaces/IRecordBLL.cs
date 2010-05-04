@@ -29,6 +29,13 @@ namespace FSNEP.BLL.Interfaces
         /// <returns></returns>
         T GetCurrent(IPrincipal user);
 
+        /// <summary>
+        /// Gets the current record. This should only be user internally and for testing
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        T GetCurrentRecord(IPrincipal user);
+
         DateTime GetCurrentSheetDate();
     }
 }

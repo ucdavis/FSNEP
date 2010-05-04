@@ -35,6 +35,11 @@ namespace FSNEP.BLL.Dev
             throw new NotImplementedException();
         }
 
+        public T GetCurrentRecord(IPrincipal user)
+        {
+            throw new NotImplementedException();
+        }
+
         public DateTime GetCurrentSheetDate()
         {
             throw new NotImplementedException();

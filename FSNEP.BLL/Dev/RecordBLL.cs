@@ -56,13 +56,14 @@ namespace FSNEP.BLL.Dev
         public T GetCurrent(IPrincipal user)
         {
             //Get the current record for the user.
-            var currentRecord = _repository.OfType<T>()
-                .Queryable
-                .Where(x => x.User.UserName == user.Identity.Name)
-                .Where(x => x.Status.Name == "Current")
-                .OrderByDescending(x => x.Year)
-                .ThenByDescending(x => x.Month)
-                .FirstOrDefault();
+            //var currentRecord = _repository.OfType<T>()
+            //    .Queryable
+            //    .Where(x => x.User.UserName == user.Identity.Name)
+            //    .Where(x => x.Status.Name == Status.GetName(Status.Option.Current))
+            //    .OrderByDescending(x => x.Year)
+            //    .ThenByDescending(x => x.Month)
+            //    .FirstOrDefault();
+            var currentRecord = GetCurrentRecord(user);
 
             //Create a new timesheet if there is no current,
             // or if it is within the same year and we have passed into a new month (even if there was an old current still active)
@@ -77,6 +78,22 @@ namespace FSNEP.BLL.Dev
             {
                 return currentRecord;
             }
+        }
+
+        /// <summary>
+        /// Gets the current record. Split out to make testing easier
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        public T GetCurrentRecord(IPrincipal user)
+        {
+            return _repository.OfType<T>()
+                .Queryable
+                .Where(x => x.User.UserName == user.Identity.Name)
+                .Where(x => x.Status.Name == Status.GetName(Status.Option.Current))
+                .OrderByDescending(x => x.Year)
+                .ThenByDescending(x => x.Month)
+                .FirstOrDefault();
         }
 
         private T CreateRecord(IPrincipal user)
