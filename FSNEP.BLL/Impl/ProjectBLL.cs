@@ -1,3 +1,4 @@
+using System;
 using CAESArch.BLL;
 using FSNEP.Core.Domain;
 
@@ -8,8 +9,8 @@ namespace FSNEP.BLL.Impl
         INonStaticGenericBLLBase<Project, int> Repository { get; set; }
     }
 
-    public class ProjectBLL : LookupBLL<Project,int>
+    public class ProjectBLL : GenericBLL<Project,int>, IProjectBLL
     {
-        
+
     }
 }
