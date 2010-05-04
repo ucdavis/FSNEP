@@ -116,5 +116,80 @@ namespace FSNEP.Tests.Controllers
             "~/Administration/Users/Modify/testuser"
                 .ShouldMapTo<UserAdministrationController>(a => a.Modify("testuser"));
         }
+
+        /// <summary>
+        /// WIP
+        /// </summary>
+        [TestMethod, Ignore]
+        public void CreateUserSavesNewUser()
+        {            
+            FakeProjects();
+
+            #region newUser
+            const string validValueName = "ValidName";
+            const int validValueSalary = 1;
+            const int validValueFte = 1;
+
+            var newUser = new User
+            {
+                FirstName = validValueName,
+                LastName = validValueName,
+                Salary = validValueSalary,
+                FTE = validValueFte,
+                IsActive = true,
+            };
+            newUser.Supervisor = newUser; //I'm my own supervisor //May need or want to change this
+
+            var userId = Guid.NewGuid();
+            newUser.SetUserID(userId);
+            #endregion newUser
+
+            #region Parameters needed for the Create Method
+            var supervisorGuid = newUser.ID;
+            var projectList = new List<int>();
+            var fundTypeList = new List<int>();
+            var roleList = new List<string>();
+            #endregion Parameters needed for the Create Method
+
+            projectList.Add(1);
+            projectList.Add(2);
+            fundTypeList.Add(1);
+            fundTypeList.Add(2);
+            roleList.Add("Supervisor");
+            roleList.Add("Timesheet User");
+
+
+            var userModel = new CreateUserViewModel
+            {
+                Question = "Q",
+                Answer = "A",
+                User = newUser,
+                UserName = "ValidUserName",
+                Email = "test@test.edu"
+            };
+
+            Controller.Create(userModel, supervisorGuid, projectList, fundTypeList, roleList);
+
+        }
+
+
+        ////TODO: Verify that this fake is working...
+        private void FakeProjects()
+        {                                    
+            var projects = new List<Project>()
+                               {
+                                   new Project {Name = "Name", IsActive = true},
+                                   new Project{Name = "Name2", IsActive = true}
+                               }.AsQueryable();            
+            var projectRepository = FakeRepository<Project>();
+            projectRepository.Expect(a => a.Queryable).Return(projects);
+
+
+            /* This is what is calling the above code.
+            var projects = from proj in Repository.OfType<Project>().Queryable
+                           where projectList.Contains(proj.ID)
+                           select proj;
+             */
+        }
     }
 }
