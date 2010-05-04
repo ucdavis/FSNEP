@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
+using System.Net.Mail;
 using System.Security.Principal;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using System.Web.UI;
+using FSNEP.Core.Abstractions;
+using FSNEP.Helpers.Attributes;
+using MvcContrib;
+using MvcContrib.Attributes;
 
 namespace FSNEP.Controllers
 {
-
-    [HandleError]
+    [HandleErrorWithELMAH]
     public class AccountController : Controller
     {
 
@@ -30,6 +30,8 @@ namespace FSNEP.Controllers
         {
             FormsAuth = formsAuth ?? new FormsAuthenticationService();
             MembershipService = service ?? new AccountMembershipService();
+
+            MessageService = new MessageGateway();
         }
 
         public IFormsAuthentication FormsAuth
@@ -44,9 +46,14 @@ namespace FSNEP.Controllers
             private set;
         }
 
+        public IMessageGateway MessageService
+        {
+            get;
+            set;
+        }
+
         public ActionResult LogOn()
         {
-
             return View();
         }
 
@@ -80,44 +87,97 @@ namespace FSNEP.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult Register()
+        /// <summary>
+        /// Forgot password will ask the user for their username 
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ForgotPassword()
         {
+            return View();
+        }
 
-            ViewData["PasswordLength"] = MembershipService.MinPasswordLength;
+        [AcceptPost]
+        public ActionResult ForgotPassword(string id)
+        {
+            var member = MembershipService.GetUser(id);
+
+            if (member == null)
+            {
+                ViewData["Message"] = "User information not found.";
+                return View();
+            }
+
+            return this.RedirectToAction(a => a.ResetPassword(id));
+        }
+
+        public ActionResult ResetPassword(string id)
+        {
+            var member = MembershipService.GetUser(id);
+
+            if (member == null)
+            {
+                return this.RedirectToAction(a => a.ForgotPassword());
+            }
+
+            ViewData["PasswordQuestion"] = member.PasswordQuestion;
+            ViewData["UserName"] = member.UserName;
 
             return View();
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Register(string userName, string email, string password, string confirmPassword)
+        [AcceptPost]
+        public ActionResult ResetPassword(string id, string passwordAnswer)
         {
+            var member = MembershipService.GetUser(id);
 
-            ViewData["PasswordLength"] = MembershipService.MinPasswordLength;
-
-            if (ValidateRegistration(userName, email, password, confirmPassword))
+            if (member == null)
             {
-                // Attempt to register the user
-                MembershipCreateStatus createStatus = MembershipService.CreateUser(userName, password, email);
-
-                if (createStatus == MembershipCreateStatus.Success)
-                {
-                    FormsAuth.SignIn(userName, false /* createPersistentCookie */);
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("_FORM", ErrorCodeToString(createStatus));
-                }
+                return this.RedirectToAction(a => a.ForgotPassword(id));
             }
 
-            // If we got this far, something failed, redisplay form
+            ViewData["PasswordQuestion"] = member.PasswordQuestion;
+            ViewData["UserName"] = member.UserName;
+
+            if (string.IsNullOrEmpty(passwordAnswer))
+            {
+                ViewData["Message"] = "Your answer can not be blank.  Please try again.";
+
+                return View();
+            }
+
+            string newPassword;
+
+            //We have a member, check if password answer
+            try
+            {
+                newPassword = member.ResetPassword(passwordAnswer);
+            }
+            catch (MembershipPasswordException)
+            {
+                ViewData["Message"] = "Your answer could not be verified. Please try again.";
+
+                return View();
+            }
+
+            //We have a valid password, email the user, then redirect
+            //TODO: Replace with a real message send
+            MessageService.SendMessage("automatedemail@caes.ucdavis.edu",
+                member.Email,
+                "Password Reset",
+                string.Format(
+                    @"Please return to the site and log in using the following information.{0}User Name: {1}{0}Password: {2}", Environment.NewLine, member.UserName, newPassword));
+
+            return this.RedirectToAction(a => a.ResetPasswordSuccess());
+        }
+
+        public ActionResult ResetPasswordSuccess()
+        {
             return View();
         }
 
         [Authorize]
         public ActionResult ChangePassword()
         {
-
             ViewData["PasswordLength"] = MembershipService.MinPasswordLength;
 
             return View();
@@ -212,140 +272,23 @@ namespace FSNEP.Controllers
             return ModelState.IsValid;
         }
 
-        private bool ValidateRegistration(string userName, string email, string password, string confirmPassword)
-        {
-            if (String.IsNullOrEmpty(userName))
-            {
-                ModelState.AddModelError("username", "You must specify a username.");
-            }
-            if (String.IsNullOrEmpty(email))
-            {
-                ModelState.AddModelError("email", "You must specify an email address.");
-            }
-            if (password == null || password.Length < MembershipService.MinPasswordLength)
-            {
-                ModelState.AddModelError("password",
-                    String.Format(CultureInfo.CurrentCulture,
-                         "You must specify a password of {0} or more characters.",
-                         MembershipService.MinPasswordLength));
-            }
-            if (!String.Equals(password, confirmPassword, StringComparison.Ordinal))
-            {
-                ModelState.AddModelError("_FORM", "The new password and confirmation password do not match.");
-            }
-            return ModelState.IsValid;
-        }
-
-        private static string ErrorCodeToString(MembershipCreateStatus createStatus)
-        {
-            // See http://msdn.microsoft.com/en-us/library/system.web.security.membershipcreatestatus.aspx for
-            // a full list of status codes.
-            switch (createStatus)
-            {
-                case MembershipCreateStatus.DuplicateUserName:
-                    return "Username already exists. Please enter a different user name.";
-
-                case MembershipCreateStatus.DuplicateEmail:
-                    return "A username for that e-mail address already exists. Please enter a different e-mail address.";
-
-                case MembershipCreateStatus.InvalidPassword:
-                    return "The password provided is invalid. Please enter a valid password value.";
-
-                case MembershipCreateStatus.InvalidEmail:
-                    return "The e-mail address provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidAnswer:
-                    return "The password retrieval answer provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidQuestion:
-                    return "The password retrieval question provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidUserName:
-                    return "The user name provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.ProviderError:
-                    return "The authentication provider returned an error. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-
-                case MembershipCreateStatus.UserRejected:
-                    return "The user creation request has been canceled. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-
-                default:
-                    return "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-            }
-        }
         #endregion
     }
 
-    // The FormsAuthentication type is sealed and contains static members, so it is difficult to
-    // unit test code that calls its members. The interface and helper class below demonstrate
-    // how to create an abstract wrapper around such a type in order to make the AccountController
-    // code unit testable.
-
-    public interface IFormsAuthentication
+    //TODO: Move into abstractions class file
+    public interface IMessageGateway
     {
-        void SignIn(string userName, bool createPersistentCookie);
-        void SignOut();
+        void SendMessage(string from, string to, string subject, string body);
     }
 
-    public class FormsAuthenticationService : IFormsAuthentication
+    public class MessageGateway : IMessageGateway
     {
-        public void SignIn(string userName, bool createPersistentCookie)
+        public void SendMessage(string from, string to, string subject, string body)
         {
-            FormsAuthentication.SetAuthCookie(userName, createPersistentCookie);
-        }
-        public void SignOut()
-        {
-            FormsAuthentication.SignOut();
-        }
-    }
+            var message = new MailMessage(from, to, subject, body);
+            var client = new SmtpClient("smtp.ucdavis.edu");
 
-    public interface IMembershipService
-    {
-        int MinPasswordLength { get; }
-
-        bool ValidateUser(string userName, string password);
-        MembershipCreateStatus CreateUser(string userName, string password, string email);
-        bool ChangePassword(string userName, string oldPassword, string newPassword);
-    }
-
-    public class AccountMembershipService : IMembershipService
-    {
-        private MembershipProvider _provider;
-
-        public AccountMembershipService()
-            : this(null)
-        {
-        }
-
-        public AccountMembershipService(MembershipProvider provider)
-        {
-            _provider = provider ?? Membership.Provider;
-        }
-
-        public int MinPasswordLength
-        {
-            get
-            {
-                return _provider.MinRequiredPasswordLength;
-            }
-        }
-
-        public bool ValidateUser(string userName, string password)
-        {
-            return _provider.ValidateUser(userName, password);
-        }
-
-        public MembershipCreateStatus CreateUser(string userName, string password, string email)
-        {
-            MembershipCreateStatus status;
-            _provider.CreateUser(userName, password, email, null, null, true, null, out status);
-            return status;
-        }
-
-        public bool ChangePassword(string userName, string oldPassword, string newPassword)
-        {
-            MembershipUser currentUser = _provider.GetUser(userName, true /* userIsOnline */);
-            return currentUser.ChangePassword(oldPassword, newPassword);
+            client.Send(message);
         }
     }
 }

@@ -4,41 +4,134 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using FSNEP.Core.Abstractions;
+using FSNEP.Tests.Core.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FSNEP;
 using FSNEP.Controllers;
+using MvcContrib.TestHelper;
+using Rhino.Mocks;
 
 namespace FSNEP.Tests.Controllers
 {
-
     [TestClass]
     public class AccountControllerTest
     {
+        public AccountControllerTest()
+        {
+            //Register routes
+            //new RouteConfigurator().RegisterRoutes();
+        }
+
+        [TestMethod]
+        public void ForgotPasswordGetReturnsView()
+        {
+            GetAccountController().ForgotPassword()
+                .AssertViewRendered();
+        }
+
+        [TestMethod]
+        public void ForgotPasswordPostRedirectsToResetPasswordActionOnValidUser()
+        {
+            GetAccountController().ForgotPassword("validUser")
+                .AssertActionRedirect()
+                .ToAction<AccountController>(a => a.ResetPassword("validUser"));
+        }
+
+        [TestMethod]
+        public void ForgotPasswordPostShowsErrorMessageForInvalidUser()
+        {
+            GetAccountController().ForgotPassword("invalidUser")
+                .AssertViewRendered()
+                .ViewData["Message"]
+                .ShouldBe("User information not found.");
+        }
+
+        [TestMethod]
+        public void ResetPasswordWithUsernameMapsToProperController()
+        {
+            "~/Account/ResetPassword/validUser"
+                .ShouldMapTo<AccountController>(a => a.ResetPassword("validUser"));
+        }
+
+        [TestMethod]
+        public void ResetPasswordGetRedirectsToForgotPasswordWhenUsernameInvalid()
+        {
+            GetAccountController().ResetPassword("invalidUser")
+                .AssertActionRedirect()
+                .ToAction<AccountController>(a => a.ForgotPassword());
+        }
+
+        [TestMethod]
+        public void ResetPasswordGetPopulatesPasswordQuestionWhenUsernameIsValid()
+        {
+            GetAccountController().ResetPassword("validUser")
+                .AssertViewRendered()
+                .ViewData["PasswordQuestion"]
+                .ShouldBe("Question");
+        }
+
+        [TestMethod]
+        public void ResetPasswordPostGivesErrorMessageWhenAnswerIsIncorrect()
+        {
+            GetAccountController().ResetPassword("validUser", "invalidAnswer")
+                .AssertViewRendered()
+                .ViewData["Message"]
+                .ShouldBe("Your answer could not be verified. Please try again.");
+        }
+
+        [TestMethod]
+        public void ResetPasswordPostGivesErrorMessageWhenAnswerIsBlank()
+        {
+            GetAccountController().ResetPassword("validUser", "")
+                .AssertViewRendered()
+                .ViewData["Message"]
+                .ShouldBe("Your answer can not be blank.  Please try again.");
+        }
+
+        [TestMethod]
+        public void ResetPasswordPostRedirectsToPasswordSuccessPageWhenAnswerIsValid()
+        {
+            var controller = GetAccountController();
+            controller.MessageService = new MockMessageGateway();
+
+            controller.ResetPassword("validUser", "validAnswer")
+                .AssertActionRedirect()
+                .ToAction<AccountController>(a => a.ResetPasswordSuccess());
+        }
+
+        [TestMethod]
+        public void ResetPasswordPostSendsEmailWhenAnswerIsValid()
+        {
+            //Setup a mock messageGateway
+            var messageGateway = MockRepository.GenerateMock<IMessageGateway>();
+            messageGateway
+                .Expect(m => m.SendMessage("", "", "", ""))
+                .IgnoreArguments();
+
+            //Get the account controller
+            var controller = GetAccountController();
+            controller.MessageService = messageGateway;
+
+            controller.ResetPassword("validUser", "validAnswer");
+
+            messageGateway.VerifyAllExpectations(); //Verify the message gateway was called
+        }
 
         [TestMethod]
         public void ChangePasswordGetReturnsView()
         {
-            // Arrange
-            AccountController controller = GetAccountController();
-
-            // Act
-            ViewResult result = (ViewResult)controller.ChangePassword();
-
-            // Assert
-            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
+            GetAccountController().ChangePassword()
+                .AssertViewRendered()
+                .ViewData["PasswordLength"]
+                .ShouldBe(6);
         }
 
         [TestMethod]
         public void ChangePasswordPostRedirectsOnSuccess()
         {
-            // Arrange
-            AccountController controller = GetAccountController();
-
-            // Act
-            RedirectToRouteResult result = (RedirectToRouteResult)controller.ChangePassword("oldPass", "newPass", "newPass");
-
-            // Assert
-            Assert.AreEqual("ChangePasswordSuccess", result.RouteValues["action"]);
+            GetAccountController().ChangePassword("oldPass", "newPass", "newPass")
+                .AssertActionRedirect()
+                .ToAction("ChangePasswordSuccess");
         }
 
         [TestMethod]
@@ -48,7 +141,7 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = GetAccountController();
 
             // Act
-            ViewResult result = (ViewResult)controller.ChangePassword("", "newPassword", "newPassword");
+            var result = (ViewResult)controller.ChangePassword("", "newPassword", "newPassword");
 
             // Assert
             Assert.AreEqual(6, result.ViewData["PasswordLength"]);
@@ -243,117 +336,6 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
 
-        [TestMethod]
-        public void RegisterGet()
-        {
-            // Arrange
-            AccountController controller = GetAccountController();
-
-            // Act
-            ViewResult result = (ViewResult)controller.Register();
-
-            // Assert
-            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
-        }
-
-        [TestMethod]
-        public void RegisterPostRedirectsHomeIfRegistrationSuccessful()
-        {
-            // Arrange
-            AccountController controller = GetAccountController();
-
-            // Act
-            RedirectToRouteResult result = (RedirectToRouteResult)controller.Register("someUser", "email", "goodPass", "goodPass");
-
-            // Assert
-            Assert.AreEqual("Home", result.RouteValues["controller"]);
-            Assert.AreEqual("Index", result.RouteValues["action"]);
-        }
-
-        [TestMethod]
-        public void RegisterPostReturnsViewIfEmailNotSpecified()
-        {
-            // Arrange
-            AccountController controller = GetAccountController();
-
-            // Act
-            ViewResult result = (ViewResult)controller.Register("username", "", "password", "password");
-
-            // Assert
-            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
-            Assert.AreEqual("You must specify an email address.", result.ViewData.ModelState["email"].Errors[0].ErrorMessage);
-        }
-
-        [TestMethod]
-        public void RegisterPostReturnsViewIfNewPasswordDoesNotMatchConfirmPassword()
-        {
-            // Arrange
-            AccountController controller = GetAccountController();
-
-            // Act
-            ViewResult result = (ViewResult)controller.Register("username", "email", "password", "password2");
-
-            // Assert
-            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
-            Assert.AreEqual("The new password and confirmation password do not match.", result.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
-        }
-
-        [TestMethod]
-        public void RegisterPostReturnsViewIfPasswordIsNull()
-        {
-            // Arrange
-            AccountController controller = GetAccountController();
-
-            // Act
-            ViewResult result = (ViewResult)controller.Register("username", "email", null, null);
-
-            // Assert
-            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
-            Assert.AreEqual("You must specify a password of 6 or more characters.", result.ViewData.ModelState["password"].Errors[0].ErrorMessage);
-        }
-
-        [TestMethod]
-        public void RegisterPostReturnsViewIfPasswordIsTooShort()
-        {
-            // Arrange
-            AccountController controller = GetAccountController();
-
-            // Act
-            ViewResult result = (ViewResult)controller.Register("username", "email", "12345", "12345");
-
-            // Assert
-            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
-            Assert.AreEqual("You must specify a password of 6 or more characters.", result.ViewData.ModelState["password"].Errors[0].ErrorMessage);
-        }
-
-        [TestMethod]
-        public void RegisterPostReturnsViewIfRegistrationFails()
-        {
-            // Arrange
-            AccountController controller = GetAccountController();
-
-            // Act
-            ViewResult result = (ViewResult)controller.Register("someUser", "DuplicateUserName" /* error */, "badPass", "badPass");
-
-            // Assert
-            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
-            Assert.AreEqual("Username already exists. Please enter a different user name.", result.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
-        }
-
-        [TestMethod]
-        public void RegisterPostReturnsViewIfUsernameNotSpecified()
-        {
-            // Arrange
-            AccountController controller = GetAccountController();
-
-            // Act
-            ViewResult result = (ViewResult)controller.Register("", "email", "password", "password");
-
-            // Assert
-            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
-            Assert.AreEqual("You must specify a username.", result.ViewData.ModelState["username"].Errors[0].ErrorMessage);
-        }
-
         private static AccountController GetAccountController()
         {
             IFormsAuthentication formsAuth = new MockFormsAuthenticationService();
@@ -363,6 +345,11 @@ namespace FSNEP.Tests.Controllers
             ControllerContext controllerContext = new ControllerContext(new MockHttpContext(), new RouteData(), controller);
             controller.ControllerContext = controllerContext;
             return controller;
+        }
+
+        public class MockMessageGateway : IMessageGateway
+        {
+            public void SendMessage(string from, string to, string subject, string body) { }
         }
 
         public class MockFormsAuthenticationService : IFormsAuthentication
@@ -405,17 +392,17 @@ namespace FSNEP.Tests.Controllers
 
         public class MockPrincipal : IPrincipal
         {
-            IIdentity _identity;
+            IIdentity identity;
 
             public IIdentity Identity
             {
                 get
                 {
-                    if (_identity == null)
+                    if (identity == null)
                     {
-                        _identity = new MockIdentity();
+                        identity = new MockIdentity();
                     }
-                    return _identity;
+                    return identity;
                 }
             }
 
@@ -425,50 +412,30 @@ namespace FSNEP.Tests.Controllers
             }
         }
 
-        public class MockMembershipUser : MembershipUser
-        {
-            public override bool ChangePassword(string oldPassword, string newPassword)
-            {
-                return newPassword.Equals("newPass");
-            }
-        }
-
         public class MockHttpContext : HttpContextBase
         {
-            private IPrincipal _user;
+            private IPrincipal user;
 
             public override IPrincipal User
             {
                 get
                 {
-                    if (_user == null)
+                    if (user == null)
                     {
-                        _user = new MockPrincipal();
+                        user = new MockPrincipal();
                     }
-                    return _user;
+                    return user;
                 }
                 set
                 {
-                    _user = value;
+                    user = value;
                 }
             }
         }
 
         public class MockMembershipProvider : MembershipProvider
         {
-            string _applicationName;
-
-            public override string ApplicationName
-            {
-                get
-                {
-                    return _applicationName;
-                }
-                set
-                {
-                    _applicationName = value;
-                }
-            }
+            public override string ApplicationName { get; set; }
 
             public override bool EnablePasswordReset
             {
@@ -570,7 +537,7 @@ namespace FSNEP.Tests.Controllers
 
             public override MembershipUser CreateUser(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, Object providerUserKey, out MembershipCreateStatus status)
             {
-                MockMembershipUser user = new MockMembershipUser();
+                var user = new FakeMembershipUser();
 
                 if (username.Equals("someUser") && password.Equals("goodPass") && email.Equals("email"))
                 {
@@ -627,7 +594,7 @@ namespace FSNEP.Tests.Controllers
 
             public override MembershipUser GetUser(string username, bool userIsOnline)
             {
-                return new MockMembershipUser();
+                return username == "invalidUser" ? null : new FakeMembershipUser();
             }
 
             public override string ResetPassword(string username, string answer)
