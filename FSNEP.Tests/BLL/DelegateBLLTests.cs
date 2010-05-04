@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web.Security;
 using FSNEP.BLL.Dev;
 using FSNEP.BLL.Impl;
@@ -21,7 +20,7 @@ namespace FSNEP.Tests.BLL
         private IUserAuth _userAuth;
         private IUserBLL _userBLL;
         private RoleProvider _roleProvider;
-        private readonly User CurrentUser = CreateValidEntities.User(1);
+        private readonly User _currentUser = CreateValidEntities.User(1);
         private List<User> _users = new List<User>();
 
         [TestInitialize]
@@ -33,8 +32,8 @@ namespace FSNEP.Tests.BLL
             _roleProvider = MockRepository.GenerateStub<RoleProvider>();
             _userAuth.RoleProvider = _roleProvider;
 
-            CurrentUser.UserName = "CurrentUser";
-            _userBLL.Expect(a => a.GetUser()).Return(CurrentUser).Repeat.Any();
+            _currentUser.UserName = "_currentUser";
+            _userBLL.Expect(a => a.GetUser()).Return(_currentUser).Repeat.Any();
 
             for (int i = 0; i < 3; i++)
             {
@@ -60,12 +59,12 @@ namespace FSNEP.Tests.BLL
             var userToAssign = CreateValidEntities.User(2);
             userToAssign.UserName = userToAssignUserName;
 
-            CurrentUser.Delegate = null;
+            _currentUser.Delegate = null;
 
             _delegateBLL.AssignDelegate(userToAssign);
-            _userBLL.AssertWasCalled(a => a.EnsurePersistent(CurrentUser));
+            _userBLL.AssertWasCalled(a => a.EnsurePersistent(_currentUser));
 
-            Assert.AreSame(userToAssign, CurrentUser.Delegate);
+            Assert.AreSame(userToAssign, _currentUser.Delegate);
         }
 
         /// <summary>
@@ -84,14 +83,14 @@ namespace FSNEP.Tests.BLL
             var userToAssign = CreateValidEntities.User(2);
             userToAssign.UserName = userToAssignUserName;
 
-            CurrentUser.Delegate = null;
+            _currentUser.Delegate = null;
 
             _delegateBLL.AssignDelegate(userToAssign);
-            _userBLL.AssertWasCalled(a => a.EnsurePersistent(CurrentUser));
+            _userBLL.AssertWasCalled(a => a.EnsurePersistent(_currentUser));
 
             var argumentsForCallsMadeOn = _roleProvider.GetArgumentsForCallsMadeOn(a => a.AddUsersToRoles(Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything));
             Assert.AreEqual(1, argumentsForCallsMadeOn.Count(), "AddUsersToRoles should have been called once");
-            Assert.AreSame(userToAssign, CurrentUser.Delegate);
+            Assert.AreSame(userToAssign, _currentUser.Delegate);
         }
 
 
@@ -146,18 +145,18 @@ namespace FSNEP.Tests.BLL
             _users[0].Delegate = _users[1];
 
 
-            CurrentUser.Delegate = userToRemove;
-            _users.Add(CurrentUser);
+            _currentUser.Delegate = userToRemove;
+            _users.Add(_currentUser);
 
             _userBLL.Expect(a => a.Queryable).Return(_users.AsQueryable()).Repeat.Any();
 
             _delegateBLL.RemoveDelegate(userToRemove);
-            _userBLL.AssertWasCalled(a => a.EnsurePersistent(CurrentUser));
+            _userBLL.AssertWasCalled(a => a.EnsurePersistent(_currentUser));
 
             var argumentsForCallsMadeOn = _roleProvider.GetArgumentsForCallsMadeOn(a => a.RemoveUsersFromRoles(Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything));
             Assert.AreEqual(1, argumentsForCallsMadeOn.Count(), "RemoveUsersFromRoles should have been called once");
 
-            Assert.IsNull(CurrentUser.Delegate);
+            Assert.IsNull(_currentUser.Delegate);
         }
 
         /// <summary>
@@ -175,20 +174,20 @@ namespace FSNEP.Tests.BLL
             var userToRemove = CreateValidEntities.User(2);
             userToRemove.UserName = userToRemoveUserName;
 
-            CurrentUser.Delegate = userToRemove;
+            _currentUser.Delegate = userToRemove;
             _users[1].Delegate = userToRemove;
 
-            _users.Add(CurrentUser);
+            _users.Add(_currentUser);
 
             _userBLL.Expect(a => a.Queryable).Return(_users.AsQueryable()).Repeat.Any();
 
             _delegateBLL.RemoveDelegate(userToRemove);
-            _userBLL.AssertWasCalled(a => a.EnsurePersistent(CurrentUser));
+            _userBLL.AssertWasCalled(a => a.EnsurePersistent(_currentUser));
 
             var argumentsForCallsMadeOn = _roleProvider.GetArgumentsForCallsMadeOn(a => a.RemoveUsersFromRoles(Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything));
             Assert.AreEqual(0, argumentsForCallsMadeOn.Count(), "RemoveUsersFromRoles should have Not been called");
 
-            Assert.IsNull(CurrentUser.Delegate);
+            Assert.IsNull(_currentUser.Delegate);
         }
 
         /// <summary>
@@ -209,10 +208,10 @@ namespace FSNEP.Tests.BLL
                 var userToRemove = CreateValidEntities.User(2);
                 userToRemove.UserName = userToRemoveUserName;
 
-                CurrentUser.Delegate = null;
+                _currentUser.Delegate = null;
                 _users[1].Delegate = userToRemove;
 
-                _users.Add(CurrentUser);
+                _users.Add(_currentUser);
 
                 _userBLL.Expect(a => a.Queryable).Return(_users.AsQueryable()).Repeat.Any();
 
@@ -244,10 +243,10 @@ namespace FSNEP.Tests.BLL
                 var userToRemove = CreateValidEntities.User(2);
                 userToRemove.UserName = userToRemoveUserName;
 
-                CurrentUser.Delegate = _users[0];
+                _currentUser.Delegate = _users[0];
                 _users[1].Delegate = userToRemove;
 
-                _users.Add(CurrentUser);
+                _users.Add(_currentUser);
 
                 _userBLL.Expect(a => a.Queryable).Return(_users.AsQueryable()).Repeat.Any();
 
