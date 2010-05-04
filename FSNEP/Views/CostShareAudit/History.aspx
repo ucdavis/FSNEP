@@ -36,6 +36,7 @@
 
         <%
         Html.Grid(Model.Records)
+            .DisplayAlternateMessageWhen(Model.Records.Count() == 0, "No Cost Share Records Found")
             .Name("CostShares")
             .PrefixUrlParameters(false)
             .Columns(col =>
