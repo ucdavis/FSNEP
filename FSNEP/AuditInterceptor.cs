@@ -55,7 +55,7 @@ namespace FSNEP
 
             audit.SetActionCode(auditActionType);
 
-            AuditRepository.EnsurePersistent(audit);
+            AuditRepository.EnsurePersistent(audit, false /*Do not force save*/, false /*Do not flush changes since we are in the middle of other actions*/);
         }
     }
 }
