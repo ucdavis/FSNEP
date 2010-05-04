@@ -18,6 +18,8 @@ namespace FSNEP.BLL.Impl
         IQueryable<User> GetSupervisors();
         User GetUser();
         User GetUser(string username);
+        List<string> GetAllRoles();
+        IEnumerable<string> GetCurrentRoles();
     }
 
     public class UserBLL : GenericBLL<User,Guid>, IUserBLL
@@ -82,6 +84,24 @@ namespace FSNEP.BLL.Impl
             var member = UserAuth.GetUser(username);
 
             return member == null ? null : Repository.GetNullableByID((Guid)member.ProviderUserKey);
+        }
+
+        public List<string> GetAllRoles()
+        {
+            var roleList = new List<string>(UserAuth.RoleProvider.GetAllRoles());
+
+            if (!UserAuth.IsCurrentUserInRole(RoleNames.RoleAdmin)) //if user is not an admin, remove the visibility of that role
+            {
+                roleList.Remove(RoleNames.RoleAdmin);
+            }
+
+            return roleList;
+        }
+
+        public IEnumerable<string> GetCurrentRoles()
+        {
+            //Get roles for the current user
+            return UserAuth.RoleProvider.GetRolesForUser(UserAuth.CurrentUserName);
         }
     }
 }

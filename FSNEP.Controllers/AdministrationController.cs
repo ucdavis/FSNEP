@@ -227,6 +227,9 @@ namespace FSNEP.Controllers
 
             viewModel.FundTypes = new MultiSelectList(UserBLL.GetAvailableFundTypes().ToList(), "ID", "Name",
                                                       viewModel.User.FundTypes.Select(p => p.ID));
+
+            viewModel.AvailableRoles = UserBLL.GetAllRoles();
+            viewModel.UserRoles = UserBLL.GetCurrentRoles();
         }
     }
 
@@ -256,5 +259,8 @@ namespace FSNEP.Controllers
         public SelectList Supervisors { get; set; }
         public MultiSelectList Projects { get; set; }
         public MultiSelectList FundTypes { get; set; }
+
+        public IEnumerable<string> AvailableRoles { get; set; }
+        public IEnumerable<string> UserRoles { get; set; }
     }
 }

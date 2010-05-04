@@ -92,3 +92,22 @@
         </tr>
     </table>
 </fieldset>
+
+<br />
+
+<fieldset>
+<legend>Roles</legend>
+    <table>
+        <tr>
+            <td>
+                Roles:
+            </td>
+            <td>
+                <%= this.CheckBoxList("RoleList").Options(Model.AvailableRoles).Selected(Model.UserRoles) %>
+            </td>
+            <td>
+                <%= Html.ValidationMessage("RoleList") %>
+            </td>
+        </tr>
+    </table>
+</fieldset>
