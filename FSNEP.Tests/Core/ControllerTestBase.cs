@@ -2,28 +2,26 @@ using CAESArch.BLL;
 using MvcContrib.TestHelper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
-using System.Web.Mvc;
 using CAESArch.Core.DataInterfaces;
+using FSNEP.Controllers;
 
 namespace FSNEP.Tests.Core
 {
     [TestClass]
-    public abstract class ControllerTestBase<CT> where CT : Controller
+    public abstract class ControllerTestBase<CT> where CT : SuperController
     {
         protected CT Controller { get; private set; }
         private TestControllerBuilder Builder { get; set; }
-        
+
         protected ControllerTestBase()
         {
             new RouteConfigurator().RegisterRoutes();
-        }
 
-        [TestInitialize]
-        public void Setup()
-        {
             Builder = new TestControllerBuilder();
 
             SetupController();
+
+            Controller.Repository = MockRepository.GenerateStub<IRepository>();
         }
 
         /// <summary>

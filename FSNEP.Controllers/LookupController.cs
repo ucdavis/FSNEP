@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Web.Mvc;
-using CAESArch.Core.DataInterfaces;
 using CAESArch.Core.Domain;
 using FSNEP.Controllers.Helpers;
 using FSNEP.Controllers.Helpers.Attributes;
@@ -13,13 +12,6 @@ namespace FSNEP.Controllers
     [Transaction]
     public class LookupController : SuperController
     {
-        public IRepository Repository;
-
-        public LookupController(IRepository repository)
-        {
-            Repository = repository;
-        }
-
         public ActionResult ActivityTypes()
         {
             var activeActivityTypes =

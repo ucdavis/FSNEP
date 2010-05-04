@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using CAESArch.Core.DataInterfaces;
 using FSNEP.Controllers;
 using FSNEP.Tests.Core;
 using MvcContrib.TestHelper;
@@ -13,15 +12,6 @@ namespace FSNEP.Tests.Controllers
     [TestClass]
     public class LookupControllerTests : ControllerTestBase<LookupController>
     {
-        private IRepository _repository;
-        
-        protected override void SetupController()
-        {
-            _repository = MockRepository.GenerateStub<IRepository>();
-            
-            CreateController(_repository);
-        }
-
         [TestMethod]
         public void CreateProjectSavesNewProject()
         {
@@ -32,7 +22,7 @@ namespace FSNEP.Tests.Controllers
                 .Expect(a => a.EnsurePersistent(Arg<Project>.Is.Anything))
                 .WhenCalled(a => newProject = (Project) a.Arguments.First()); //set newproject to the project that was saved
 
-            _repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
 
             Controller.CreateProject(newProject);
 
@@ -50,7 +40,7 @@ namespace FSNEP.Tests.Controllers
 
             var projectRepository = FakeRepository<Project>();
             
-            _repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
 
             Controller.CreateProject(newProject);
 
@@ -61,7 +51,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void CreateProjectRedirectsToProjects()
         {
-            _repository.Expect(a => a.OfType<Project>()).Return(FakeRepository<Project>());
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(FakeRepository<Project>());
 
             Controller.CreateProject(new Project())
                 .AssertActionRedirect()
@@ -76,7 +66,7 @@ namespace FSNEP.Tests.Controllers
             var projectRepository = FakeRepository<Project>();
             projectRepository.Expect(a => a.GetNullableByID(invalidProjectId)).Return(null);
 
-            _repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
 
             Controller.InactivateProject(invalidProjectId)
                 .AssertActionRedirect()
@@ -91,7 +81,7 @@ namespace FSNEP.Tests.Controllers
             var projectRepository = FakeRepository<Project>();
             projectRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(activeProject);
             
-            _repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
 
             Controller.InactivateProject(activeProject.ID);
             
@@ -108,7 +98,7 @@ namespace FSNEP.Tests.Controllers
             var projectRepository = FakeRepository<Project>();
             projectRepository.Expect(a => a.GetNullableByID(validProjectId)).Return(validProject);
             
-            _repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
 
             Controller.InactivateProject(validProjectId)
                 .AssertActionRedirect()
@@ -126,7 +116,7 @@ namespace FSNEP.Tests.Controllers
             var projectRepository = FakeRepository<Project>();
             projectRepository.Expect(a => a.Queryable).Return(projects);
 
-            _repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
 
             var result = Controller.Projects()
                 .AssertViewRendered()
