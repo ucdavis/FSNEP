@@ -1,5 +1,6 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<FSNEP.Controllers.UserViewModel>" %>
 
+<%= Html.HiddenFor(a=>a.User.ID) %>
 <fieldset>
     <legend>User Information</legend>
     <table>
@@ -77,7 +78,7 @@
                                     .Selected(Model.User.Supervisor != null ? Model.User.Supervisor.ID : Guid.Empty) %>
             </td>
             <td>
-                <%= Html.ValidationMessage("SupervisorID") %>
+                <%= Html.ValidationMessageFor(a=>a.User.Supervisor) %>
             </td>
         </tr>
         <tr>
@@ -88,7 +89,7 @@
                 <%= this.MultiSelect("User.Projects").Options(Model.Projects, a=>a.ID, a=>a.Name).Selected(Model.User.Projects.Select(a=>a.ID)) %>
             </td>
             <td>
-                <%= Html.ValidationMessage("User.Projects") %>
+                <%= Html.ValidationMessageFor(a=>a.User.Projects) %>
             </td>
         </tr>
         <tr>
@@ -96,16 +97,7 @@
                 Fund Types:
             </td>
             <td>
-                <%
-                    var fundtypes = Model.FundTypes;
-                    var fundtypesids = new[] { 2 }; //Model.User.FundTypes.Select(a => a.ID);
-                    int i = 0;
-                    
-                    
-                     %>
-            
-                <%--<%= this.MultiSelect("User.FundTypes").Options(new MultiSelectList(Model.FundTypes, "ID", "Name")).Selected(fundtypesids) %>--%>
-                <%--<%= this.MultiSelect("FundTypeList").Options(Model.FundTypes) %>--%>
+                <%= this.MultiSelect("User.FundTypes").Options(Model.FundTypes, a=>a.ID, a=>a.Name).Selected(Model.User.FundTypes.Select(a=>a.ID)) %>
             </td>
             <td>
                 <%= Html.ValidationMessage("User.FundTypes") %>

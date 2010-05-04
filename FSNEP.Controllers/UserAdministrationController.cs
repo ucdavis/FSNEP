@@ -277,59 +277,56 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult Modify(User user, List<string> roleList)
+        public ActionResult Modify(User user, List<string> roleList, string id)
         {
-            //ValidationHelper<User>.Validate(user, ModelState);
+            ValidationHelper<User>.Validate(user, ModelState);
 
-            var viewModel = UserViewModel.Create(UserBLL);
-            viewModel.User = user;
+            CheckUserAssociations(user);
 
-            return View(viewModel);
+            if (roleList == null || roleList.Count == 0)
+                ModelState.AddModelError("RoleList", "User must have at least one role");
 
-            #region OldCode
-            /*
-            var user = UserBLL.GetUser(id);
-
-            TryUpdateModel(user, "User"); //Update the user from the data entered in the form
-
-            CheckUserProperties(supervisorId, projectList, fundTypeList);
-
-            ValidationHelper<User>.Validate(user, ModelState, "User");
-
-            if (roleList == null) ModelState.AddModelError("RoleList", "User must have at least one role");
-
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return Modify(id);
+                //Do the save
+                EnsureProperRoles(roleList, user);
+
+                //Now reconcile the user's roles
+                UserBLL.SetRoles(id, roleList);
+
+                //We have a valid viewstate, so save the changes
+                using (var ts = new TransactionScope())
+                {
+                    UserBLL.EnsurePersistent(user);
+
+                    ts.CommitTransaction();
+                }
+
+                Message = string.Format("{0} modified successfully", id);
+
+                return this.RedirectToAction(a => a.List());
+             
             }
-
-            PopulateUserProperties(user, supervisorId, projectList, fundTypeList);
-
-            if (roleList == null) roleList = new List<string>();
-
-            EnsureProperRoles(roleList, user);
-
-            // If the user has subordinates, make sure they have supervisor role
-            if (UserBLL.GetSubordinates(user).Count() > 0 && !roleList.Contains(RoleNames.RoleSupervisor))
+            else //Not valid -- repopulate the viewmodel and send the user back to make the corrections
             {
-                roleList.Add(RoleNames.RoleSupervisor);
+                var viewModel = UserViewModel.Create(UserBLL);
+                viewModel.User = user;
+
+                return View(viewModel);
             }
- 
-            //Now reconcile the user's roles
-            UserBLL.SetRoles(id, roleList);
-            
-            //We have a valid viewstate, so save the changes
-            using (var ts = new TransactionScope())
-            {
-                UserBLL.EnsurePersistent(user);
+        }
 
-                ts.CommitTransaction();
-            }
+        /// <summary>
+        /// Checks on associated user info accoding to business rules
+        /// </summary>
+        /// <param name="user">The user instance to check</param>
+        private void CheckUserAssociations(User user)
+        {
+            if (user.Projects.Count == 0) 
+                ModelState.AddModelError("User.Projects", "You must select at least one project");
 
-            return this.RedirectToAction<HomeController>(a => a.Index());
-             */
-
-            #endregion
+            if (user.FundTypes.Count == 0)
+                ModelState.AddModelError("User.FundTypes", "You must select at least one fund type");
         }
 
         /// <summary>
@@ -386,7 +383,14 @@ namespace FSNEP.Controllers
              */
         }
 
-        private static void EnsureProperRoles(ICollection<string> roles, User user)
+        /// <summary>
+        /// Bus. rules:  
+        /// If the fundtype starts with State, the user much have the timesheet role.
+        /// If the user has subordinates, they must be a supervisor
+        /// </summary>
+        /// <param name="roles"></param>
+        /// <param name="user"></param>
+        private void EnsureProperRoles(ICollection<string> roles, User user)
         {
             //Business role checks
             Check.Require(roles != null);
@@ -405,6 +409,12 @@ namespace FSNEP.Controllers
             if (hasStateType && !roles.Contains(RoleNames.RoleTimeSheet))
             {
                 roles.Add(RoleNames.RoleTimeSheet);
+            }
+
+            // If the user has subordinates, make sure they have supervisor role
+            if (UserBLL.GetSubordinates(user).Count() > 0 && !roles.Contains(RoleNames.RoleSupervisor))
+            {
+                roles.Add(RoleNames.RoleSupervisor);
             }
         }
     }

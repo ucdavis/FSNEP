@@ -228,6 +228,24 @@ namespace FSNEP.ModelBinder
 
             if (propertyDescriptor.Name == ID_PROPERTY_NAME)
             {
+                /*
+                var fields = bindingContext.ModelType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+                var basefields = bindingContext.ModelType.BaseType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+
+                var idField = bindingContext.ModelType.GetField("id", BindingFlags.NonPublic | BindingFlags.Instance);
+                var baseIdField = bindingContext.ModelType.BaseType.GetField("id",
+                                                                             BindingFlags.NonPublic |
+                                                                             BindingFlags.Instance);
+                */
+                //Look for the id field
+                //var idProperty = bindingContext.ModelType.GetField("id", BindingFlags.NonPublic | BindingFlags.Instance);
+                var idField = bindingContext.ModelType.GetField("id", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                Check.Ensure(idField != null, "id field could not be found");
+
+                idField.SetValue(bindingContext.Model, value);
+
+                /*
                 Type idType = propertyDescriptor.PropertyType;
                 object typedId = Convert.ChangeType(value, idType);
 
@@ -248,6 +266,7 @@ namespace FSNEP.ModelBinder
 
                 // Set the value of the protected Id property
                 idProperty.SetValue(bindingContext.Model, typedId, null);
+                 */
             }
         }
 
@@ -296,7 +315,7 @@ namespace FSNEP.ModelBinder
 
         #endregion
 
-        private const string ID_PROPERTY_NAME = "Id";
+        private const string ID_PROPERTY_NAME = "ID";
     }
 
     internal class EntityCollectionValueProviderResult : ValueProviderResult
