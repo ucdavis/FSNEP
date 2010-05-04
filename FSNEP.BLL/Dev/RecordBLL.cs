@@ -188,10 +188,7 @@ namespace FSNEP.BLL.Dev
         {
             var recordStatusOption = record.Status.NameOption;
 
-            Check.Require(
-                recordStatusOption == Status.Option.Current || recordStatusOption == Status.Option.Disapproved,
-                "Record must be have either the current or disapproved status in order to be submitted");
-
+            Check.Require(record.IsEditable, "Record must be have either the current or disapproved status in order to be submitted");
 
             Status pendingReviewStatus = _repository.OfType<Status>()
                 .Queryable.Where(x => x.Name == Status.GetName(Status.Option.PendingReview)).Single();
