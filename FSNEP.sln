@@ -15,7 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSNEP.Controllers", "FSNEP.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{978D0F6A-5CD2-4FFE-8781-7E345D794E7F}"
 	ProjectSection(SolutionItems) = preProject
-		Bin\antlr.runtime.dll = Bin\antlr.runtime.dll
 		Bin\CAESArch.BLL.dll = Bin\CAESArch.BLL.dll
 		Bin\CAESArch.Core.dll = Bin\CAESArch.Core.dll
 		Bin\CAESArch.Data.dll = Bin\CAESArch.Data.dll
@@ -24,10 +23,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Bin\Castle.DynamicProxy2.dll = Bin\Castle.DynamicProxy2.dll
 		Bin\Castle.MicroKernel.dll = Bin\Castle.MicroKernel.dll
 		Bin\Castle.Windsor.dll = Bin\Castle.Windsor.dll
-		Bin\Common.Logging.dll = Bin\Common.Logging.dll
 		Bin\Elmah.dll = Bin\Elmah.dll
 		Bin\HibernatingRhinos.NHibernate.Profiler.Appender.dll = Bin\HibernatingRhinos.NHibernate.Profiler.Appender.dll
 		Bin\Iesi.Collections.dll = Bin\Iesi.Collections.dll
+		Bin\LinFu.DynamicProxy.dll = Bin\LinFu.DynamicProxy.dll
 		Bin\log4net.dll = Bin\log4net.dll
 		Bin\Microsoft.Web.Mvc.dll = Bin\Microsoft.Web.Mvc.dll
 		Bin\Moq.dll = Bin\Moq.dll
@@ -35,12 +34,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Bin\MvcContrib.dll = Bin\MvcContrib.dll
 		Bin\MvcContrib.FluentHtml.dll = Bin\MvcContrib.FluentHtml.dll
 		Bin\MvcContrib.TestHelper.dll = Bin\MvcContrib.TestHelper.dll
-		Bin\NHibernate.ByteCode.Spring.dll = Bin\NHibernate.ByteCode.Spring.dll
+		Bin\NHibernate.ByteCode.LinFu.dll = Bin\NHibernate.ByteCode.LinFu.dll
 		Bin\NHibernate.dll = Bin\NHibernate.dll
 		Bin\NHibernate.Linq.dll = Bin\NHibernate.Linq.dll
 		Bin\Rhino.Mocks.dll = Bin\Rhino.Mocks.dll
-		Bin\Spring.Aop.dll = Bin\Spring.Aop.dll
-		Bin\Spring.Core.dll = Bin\Spring.Core.dll
 		Bin\System.Data.SQLite.DLL = Bin\System.Data.SQLite.DLL
 	EndProjectSection
 EndProject
