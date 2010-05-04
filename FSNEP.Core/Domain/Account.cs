@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using FSNEP.Core.Validators;
+using UCDArch.Core.NHibernateValidator.Extensions;
 
 namespace FSNEP.Core.Domain
 {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
 using UCDArch.Core.NHibernateValidator.Extensions;
-using FSNEP.Core.Validators;
 
 namespace FSNEP.Core.Domain
 {
