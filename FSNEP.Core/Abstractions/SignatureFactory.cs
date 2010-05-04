@@ -1,30 +1,38 @@
 using System;
 using System.IO;
+using System.Linq;
 using FSNEP.Core.Domain;
 using FSNEP.Core.Dto;
+using UCDArch.Core.PersistanceSupport;
 
 namespace FSNEP.Core.Abstractions
 {
     public interface ISignatureFactory
     {
-        byte[] CreateSignature(Record record);
+        byte[] CreateSignature(Record record, IRepository repository);
     }
 
     public class SignatureFactory : ISignatureFactory
     {
-        public byte[] CreateSignature(Record record)
+        public byte[] CreateSignature(Record record, IRepository repository)
         {
             byte[] signature;
 
             if (record is TimeRecord)
             {
-                var signableRecord = new SignableTimeRecord((TimeRecord) record);
+                var timeRecordEntries =
+                    repository.OfType<TimeRecordEntry>().Queryable.Where(x => x.Record.Id == record.Id).OrderBy(x=>x.Id);
+
+                var signableRecord = new SignableTimeRecord((TimeRecord) record, timeRecordEntries);
 
                 signature = GenerateHash(signableRecord);
             }
             else if (record is CostShare)
             {
-                var signableRecord = new SignableCostShare((CostShare) record);
+                var costShareEntries =
+                    repository.OfType<CostShareEntry>().Queryable.Where(x => x.Record.Id == record.Id).OrderBy(x => x.Id);
+                
+                var signableRecord = new SignableCostShare((CostShare)record, costShareEntries);
 
                 signature = GenerateHash(signableRecord);
             }

@@ -121,7 +121,7 @@ namespace FSNEP.BLL.Dev
 
         private void PersistRecordWithTracking(T record, IPrincipal user, IRepository repository)
         {
-            var signature = _signatureFactory.CreateSignature(record);
+            var signature = _signatureFactory.CreateSignature(record, repository);
 
             var tracking = new RecordTracking
             {
