@@ -19,7 +19,7 @@
 
     <%using (Html.BeginForm("CreateActivityCategory", "Lookup", new { returnTo = Request.QueryString["returnTo"] }, FormMethod.Post, new { id = "CreateActivityCategoryForm" }))
       { %>
-    
+        <%= Html.AntiForgeryToken() %>
     <fieldset>
         <legend>New Activity Category:</legend>
         <p>
@@ -50,7 +50,7 @@
             </td>
             <td>
                 <% using (Html.BeginForm("InactivateActivityCategory", "Lookup", new { item.Id })) { %>
-                
+                    <%= Html.AntiForgeryToken() %>
                     <input type="submit" value="Inactivate" />
                 
                 <%} %>

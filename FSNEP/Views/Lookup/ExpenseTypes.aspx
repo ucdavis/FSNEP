@@ -19,7 +19,7 @@
 
     <%using (Html.BeginForm("CreateExpenseType", "Lookup", FormMethod.Post, new { id = "CreateExpenseForm" }))
       { %>
-    
+        <%= Html.AntiForgeryToken() %>
     <fieldset>
         <legend>New Expense Type:</legend>
         <p>
@@ -50,7 +50,7 @@
             </td>
             <td>
                 <% using (Html.BeginForm("InactivateExpenseType", "Lookup", new { item.Id })) { %>
-                
+                    <%= Html.AntiForgeryToken() %>
                     <input type="submit" value="Inactivate" />
                 
                 <%} %>

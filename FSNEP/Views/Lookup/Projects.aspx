@@ -17,7 +17,8 @@
     <h3><%= Html.Encode(TempData["Message"]) %></h3>
     <h2>Projects</h2>
 
-    <%using (Html.BeginForm("CreateProject", "Lookup", FormMethod.Post, new {id="CreateProjectForm"})) { %>
+    <%using (Html.BeginForm("CreateProject", "Lookup", FormMethod.Post, new {id="CreateProjectForm"})) { %>    
+    <%= Html.AntiForgeryToken() %>
     
     <fieldset>
         <legend>New Project:</legend>
@@ -49,6 +50,7 @@
             </td>
             <td>
                 <form method="post" action="<%= Url.Action("InactivateProject", new { item.Id }) %>">
+                    <%= Html.AntiForgeryToken() %>
                     <input type="submit" value="Inactivate" />
                 </form>
             </td>

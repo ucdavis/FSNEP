@@ -19,7 +19,7 @@
 
     <%using (Html.BeginForm("CreateHoursInMonth", "Lookup", FormMethod.Post, new { id = "CreateHoursInMonthForm" }))
       { %>
-    
+        <%= Html.AntiForgeryToken() %>
     <fieldset>
         <legend>New:</legend>
         <p>

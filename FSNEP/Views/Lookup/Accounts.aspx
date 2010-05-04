@@ -23,6 +23,7 @@
 
     <%using (Html.BeginForm("CreateAccount", "Lookup", FormMethod.Post, new { id = "CreateAccountForm" }))
       { %>
+      <%= Html.AntiForgeryToken() %>
     
     <fieldset>
         <legend>New Project:</legend>
@@ -57,7 +58,7 @@
             </td>
             <td>
                 <% using (Html.BeginForm("InactivateAccount", "Lookup", new { item.Id })) { %>
-                
+                    <%= Html.AntiForgeryToken() %>
                     <input type="submit" value="Inactivate" />
                 
                 <%} %>

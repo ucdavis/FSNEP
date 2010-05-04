@@ -23,7 +23,7 @@
 
     <%using (Html.BeginForm("CreateActivityType", "Lookup", FormMethod.Post, new { id = "CreateActivityTypeForm" }))
       { %>
-    
+        <%= Html.AntiForgeryToken() %>  
     <fieldset>
         <legend>New Activity Type:</legend>
         <p>
@@ -62,7 +62,7 @@
             </td>
             <td>
                 <% using (Html.BeginForm("InactivateActivityType", "Lookup", new { item.Id })){ %>
-                
+                    <%= Html.AntiForgeryToken() %>
                     <input type="submit" value="Inactivate" />
                 
                 <% } %>
