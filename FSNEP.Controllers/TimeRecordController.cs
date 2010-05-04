@@ -58,6 +58,22 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(a => a.Entry(timeRecord.Id));
         }
 
+        public ActionResult Review(int id)
+        {
+            var timeRecord = _timeRecordRepository.GetNullableByID(id);
+
+            Check.Require(timeRecord != null, "Invalid cost share indentifier");
+
+            if (!_timeRecordBLL.HasAccess(CurrentUser, timeRecord))
+            {
+                return RedirectToErrorPage(string.Format("{0} does not have access to this cost share", CurrentUser.Identity.Name));
+            }
+
+            var viewModel = TimeRecordReviewViewModel.Create(timeRecord, Repository);
+
+            return View(viewModel);
+        }
+
         public ActionResult Entry(int id)
         {
             var timeRecord = _timeRecordRepository.GetNullableByID(id);
@@ -161,6 +177,26 @@ namespace FSNEP.Controllers
             entryToUpdate.Hours = entry.Hours;
         }
     }
+
+    public class TimeRecordReviewViewModel
+    {
+        public static TimeRecordReviewViewModel Create(TimeRecord timeRecord, IRepository repository)
+        {
+            var timeRecordEntries = repository.OfType<TimeRecordEntry>().Queryable.Where(x => x.Record.Id == timeRecord.Id).OrderBy(x=>x.Date);
+
+            var viewModel = new TimeRecordReviewViewModel
+            {
+                TimeRecord = timeRecord,
+                TimeRecordEntries = timeRecordEntries.ToList()
+            };
+
+            return viewModel;
+        }
+
+        public TimeRecord TimeRecord { get; set; }
+        public IEnumerable<TimeRecordEntry> TimeRecordEntries { get; set; }
+    }
+
 
     public class TimeRecordEntryViewModel
     {

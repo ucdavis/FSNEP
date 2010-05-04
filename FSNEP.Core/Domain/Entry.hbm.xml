@@ -20,7 +20,7 @@
       <property name="Date"></property>
       <property name="Hours"></property>
       <property name="AdjustmentDate"></property>
-      <many-to-one name="ActivityType" class="ActivityType" column="ActivityTypeID"></many-to-one>
+      <many-to-one name="ActivityType" class="ActivityType" column="ActivityTypeID" outer-join="true"></many-to-one>
     </joined-subclass>
 
     <joined-subclass name="CostShareEntry" table="CostShareRecordEntries">

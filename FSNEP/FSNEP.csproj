@@ -217,6 +217,7 @@
     <Content Include="Views\TimeRecord\Calendar.ascx" />
     <Content Include="Views\TimeRecord\Entry.aspx" />
     <Content Include="Views\TimeRecord\History.aspx" />
+    <Content Include="Views\TimeRecord\Review.aspx" />
     <Content Include="Views\UserAdministration\Create.aspx" />
     <Content Include="Views\UserAdministration\List.aspx" />
     <Content Include="Views\UserAdministration\Modify.aspx" />
