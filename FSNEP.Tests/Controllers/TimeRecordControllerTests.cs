@@ -514,7 +514,7 @@ namespace FSNEP.Tests.Controllers
                            Month = 10,
                            Year = 2009,
                            Salary = 200,
-                           Status = new Status { Name = "S1" },
+                           Status = new Status { NameOption = Status.Option.Current },
                            User = User,
                            ReviewComment = "A review is a review except when it isn't."
                        };

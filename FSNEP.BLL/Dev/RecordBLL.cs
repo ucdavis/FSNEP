@@ -44,7 +44,8 @@ namespace FSNEP.BLL.Dev
         {
             Check.Require(record != null);
 
-            if (record.Status.Name == "Current" || record.Status.Name == "Disapproved")
+            //if (record.Status.Name == Status.Option.Current.ToString() || record.Status.Name == Status.Option.Disapproved.ToString())
+            if (record.Status.NameOption == Status.Option.Current || record.Status.NameOption == Status.Option.Disapproved)
             {
                 return true; //editable only if the status is current or disapproved
             }

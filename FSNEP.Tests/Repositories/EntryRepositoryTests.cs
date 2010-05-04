@@ -101,8 +101,8 @@ namespace FSNEP.Tests.Repositories
 
         public void LoadStatus()
         {
-            var status1 = new Status {Name = "S1"};
-            var status2 = new Status { Name = "S2" };
+            var status1 = new Status {NameOption = Status.Option.Approved};
+            var status2 = new Status { NameOption = Status.Option.Current };
 
             var statusRepository = Repository.OfType<Status>();
 

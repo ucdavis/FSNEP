@@ -93,8 +93,8 @@ namespace FSNEP.Tests.Core
 
         private void CreateStatus()
         {
-            var status1 = new Status { Name = "S1" };
-            var status2 = new Status { Name = "S2" };
+            var status1 = new Status { NameOption = Status.Option.Current };
+            var status2 = new Status { NameOption = Status.Option.PendingReview };
 
             var statusRepository = Repository.OfType<Status>();
 

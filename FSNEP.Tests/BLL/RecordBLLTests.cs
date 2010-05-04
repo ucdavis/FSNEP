@@ -23,7 +23,7 @@ namespace FSNEP.Tests.BLL
         [TestMethod]
         public void IsEditableReturnsTrueIfStatusIsCurrent()
         {
-            var status = new Status {Name = Status.Option.Current.ToString()};
+            var status = new Status {NameOption = Status.Option.Current};
 
             var record = new Record {Status = status};
 
@@ -35,7 +35,7 @@ namespace FSNEP.Tests.BLL
         [TestMethod]
         public void IsEditableReturnsTrueIfStatusIsDisapproved()
         {
-            var status = new Status { Name = Status.Option.Disapproved.ToString() };
+            var status = new Status { NameOption = Status.Option.Disapproved };
 
             var record = new Record { Status = status };
 
@@ -47,7 +47,7 @@ namespace FSNEP.Tests.BLL
         [TestMethod]
         public void IsEditableReturnsFalseIfStatusIsApproved()
         {
-            var status = new Status { Name = Status.Option.Approved.ToString() };
+            var status = new Status { NameOption = Status.Option.Approved };
 
             var record = new Record { Status = status };
 
@@ -59,7 +59,7 @@ namespace FSNEP.Tests.BLL
         [TestMethod]
         public void IsEditableReturnsPendingReviewIfStatusIsPendingReview()
         {
-            var status = new Status { Name = Status.Option.PendingReview.ToString() };
+            var status = new Status { NameOption = Status.Option.PendingReview };
 
             var record = new Record { Status = status };
 
