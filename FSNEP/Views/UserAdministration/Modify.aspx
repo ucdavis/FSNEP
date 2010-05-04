@@ -1,5 +1,4 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<FSNEP.Controllers.UserViewModel>" %>
-<%@ Import Namespace="FSNEP.Core.Domain"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
 	ModifyUser
@@ -9,7 +8,7 @@
 
 <h2>Modify User</h2>
 
-    <%= Html.ClientSideValidation<User>("User") %>
+
     <%= Html.ValidationSummary("User modification was unsuccessful. Please correct the errors and try again.") %>
 
     <% using (Html.BeginForm()) {%>

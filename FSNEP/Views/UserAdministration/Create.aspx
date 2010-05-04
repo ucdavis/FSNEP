@@ -6,8 +6,10 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <h2>
         Create User</h2>
-        
-        <%= Html.ValidationSummary("User creation was unsuccessful. Please correct the errors and try again.") %>
+
+    <%= Html.ClientSideValidation<FSNEP.Controllers.CreateUserViewModel>() %>        
+
+    <%= Html.ValidationSummary("User creation was unsuccessful. Please correct the errors and try again.") %>
 
     <% using (Html.BeginForm()) {%>
         

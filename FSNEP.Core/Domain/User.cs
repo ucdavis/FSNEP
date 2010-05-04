@@ -25,9 +25,10 @@ namespace FSNEP.Core.Domain
         [NotNull]
         public virtual User Supervisor { get; set; }
 
+        [NotNullNotEmpty]
         public virtual IList<FundType> FundTypes { get; set; }
 
-        // [NotNullValidator] Must be at least one project?
+        [NotNullNotEmpty]
         public virtual IList<Project> Projects { get; set; }
 
         [RangeDouble(Min=0.01, Message = "Must be greater than zero")]

@@ -1,5 +1,7 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<FSNEP.Controllers.UserViewModel>" %>
-
+<%@ Import Namespace="FSNEP.Core.Domain"%>
+    
+<%= Html.ClientSideValidation<User>("User") %>
 <%= Html.HiddenFor(a=>a.User.Id) %>
 <fieldset>
     <legend>User Information</legend>
