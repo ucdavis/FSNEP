@@ -36,6 +36,10 @@ namespace FSNEP
                 .WithDefaults(new { controller = "CostShareAudit", action = "History", id = "" })
                 .AddWithName("CostShareAudit", routes);
 
+            MvcRoute.MappUrl("Administration/TimeRecordAudit/{action}/{id}")
+                .WithDefaults(new { controller = "TimeRecordAudit", action = "History", id = "" })
+                .AddWithName("TimeRecordAudit", routes);
+
             MvcRoute.MappUrl("{controller}/{action}/{id}")
                 .WithDefaults(new { controller = "Home", action = "Index", id = "" })
                 .AddWithName("Default", routes);

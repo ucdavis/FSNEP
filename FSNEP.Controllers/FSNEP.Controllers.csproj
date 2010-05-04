@@ -108,6 +108,7 @@
     <Compile Include="ReportController.cs" />
     <Compile Include="ServiceController.cs" />
     <Compile Include="SupervisorController.cs" />
+    <Compile Include="TimeRecordAuditController.cs" />
     <Compile Include="TimeRecordController.cs" />
     <Compile Include="UserAdministrationController.cs" />
     <Compile Include="Helpers\Attributes\HandleErrorWithELMAHAttribute.cs" />
