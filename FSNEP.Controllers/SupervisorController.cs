@@ -119,6 +119,44 @@ namespace FSNEP.Controllers
             //If we haven't matched time record or cost share
             throw new ApplicationException("You can only approve or deny 'Time Records' and 'Cost Shares'.");
         }
+
+        #region Delegates
+
+        [Authorize(Roles="Supervisor")]
+        public RedirectToRouteResult Delegate()
+        {
+            var userHasDelegate = Repository.OfType<User>()
+                                            .Queryable
+                                            .Where(x => x.UserName == CurrentUser.Identity.Name && x.Delegate != null)
+                                            .Any();
+
+            return userHasDelegate ? RedirectToAction("RemoveDelegate") : RedirectToAction("AssignDelegate");
+        }
+
+        /// <summary>
+        /// Return a list of all active users (except the current one), any one of which can be assigned as a delegate for this supervisor
+        /// </summary>
+        [Authorize(Roles = "Supervisor")]
+        public ActionResult AssignDelegate()
+        {
+            var users = Repository.OfType<User>().Queryable.Where(x => x.IsActive && x.UserName != CurrentUser.Identity.Name).ToList();
+
+            return View(users);
+        }
+
+        [Authorize(Roles="Supervisor")]
+        public ActionResult RemoveDelegate()
+        {
+            var delegateUser =
+                Repository.OfType<User>().Queryable.Where(x => x.UserName == CurrentUser.Identity.Name).Select(
+                    x => x.Delegate).SingleOrDefault();
+
+            if (delegateUser == null) this.RedirectToAction(x => x.Delegate());
+
+            return View(delegateUser);
+        }
+
+        #endregion
     }
 
     public class ReviewViewModel<T,TEnT> where TEnT : Entry where T : Record

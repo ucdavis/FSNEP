@@ -265,6 +265,8 @@
   <ItemGroup>
     <Content Include="Scripts\jquery.cascade.js" />
     <Content Include="Views\Report\TimeRecord.aspx" />
+    <Content Include="Views\Supervisor\AssignDelegate.aspx" />
+    <Content Include="Views\Supervisor\RemoveDelegate.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
