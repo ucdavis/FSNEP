@@ -20,7 +20,7 @@
     <% } %>
 
     <div>
-        <%=Html.ActionLink("Back to List", "Index") %>
+        <%=Html.ActionLink("Back to List", "List", "UserAdministration") %>
     </div>
 
 </asp:Content>

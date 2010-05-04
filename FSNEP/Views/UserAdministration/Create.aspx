@@ -68,6 +68,6 @@
     
      <% } %>
     <p>
-        <%=Html.ActionLink("Back to List", "Index") %>
+        <%=Html.ActionLink("Back to List", "List", "UserAdministration") %>
     </p>
 </asp:Content>
