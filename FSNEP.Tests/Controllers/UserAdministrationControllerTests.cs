@@ -181,11 +181,62 @@ namespace FSNEP.Tests.Controllers
                 .ToAction<HomeController>(a => a.Index());
         }
 
+        /// <summary>
+        /// Creates a user with a invalid first name of 51 characters.
+        /// Ensures the corerct message is displayed.
+        /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithTooLongFirstName()
         {
-            const string validValueName = "ValidName";
             const string invalidValueName = "123456789 123456789 123456789 123456789 12345678901";
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.User.FirstName = invalidValueName;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            //TODO: ? .AssertActionRedirect().ToAction<UserAdministrationController>(a => a.Create())
+            Assert.AreEqual("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).", newUserModel.ViewData.ModelState["User.FirstName"].Errors[0].ErrorMessage);
+        }
+        //TODO: Other tests based on this structure (Above/Below)
+
+        /// <summary>
+        /// Creates a user with a invalid last name of 51 characters.
+        /// Ensures the corerct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithTooLongLastName()
+        {
+            const string invalidValueName = "123456789 123456789 123456789 123456789 12345678901";
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.User.LastName = invalidValueName;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            //TODO: ? .AssertActionRedirect().ToAction<UserAdministrationController>(a => a.Create())
+            Assert.AreEqual("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).", newUserModel.ViewData.ModelState["User.LastName"].Errors[0].ErrorMessage);
+        }
+
+        private static List<int> CreateListOfProjects()
+        {
+            var projectList = new List<int> {2, 3};
+
+            return projectList;
+        }
+        private static List<int> CreateListOfFundTypes()
+        {
+            var fundTypeList = new List<int> {4, 5};
+
+
+            return fundTypeList;
+        }
+        private static List<string> CreateListOfRoles()
+        {
+            var roleList = new List<string> {"Supervisor", "Timesheet User"};
+
+            return roleList;
+        }
+
+        private CreateUserViewModel CreateValidUserModel()
+        {
+            const string validValueName = "ValidName";
             const int validValueSalary = 1;
             const int validValueFte = 1;
 
@@ -197,7 +248,7 @@ namespace FSNEP.Tests.Controllers
             #region newUser
             var newUser = new User
             {
-                FirstName = invalidValueName,
+                FirstName = validValueName,
                 LastName = validValueName,
                 Salary = validValueSalary,
                 FTE = validValueFte,
@@ -207,20 +258,7 @@ namespace FSNEP.Tests.Controllers
 
             var userId = Guid.NewGuid();
             newUser.SetUserID(userId);
-            #endregion newUser
-
-            #region Parameters needed for the Create Method
-            var projectList = new List<int>();
-            var fundTypeList = new List<int>();
-            var roleList = new List<string>();
-
-            projectList.Add(2); //Need to match at least 1 value from FakeProjects
-            projectList.Add(3);
-            fundTypeList.Add(4);
-            fundTypeList.Add(5);
-            roleList.Add("Supervisor");
-            roleList.Add("Timesheet User");
-            #endregion Parameters needed for the Create Method
+            #endregion newUser            
 
             var userModel = new CreateUserViewModel
             {
@@ -234,11 +272,9 @@ namespace FSNEP.Tests.Controllers
             MockMethods(userModel);
             MocksForFailure(userModel);
 
-            //Call the method that the UI would use to create the new user.
-            var newUserModel = (ViewResult)Controller.Create(userModel, supervisor.ID, projectList, fundTypeList, roleList);
-            //TODO: ? .AssertActionRedirect().ToAction<UserAdministrationController>(a => a.Create())
-            Assert.AreEqual("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).", newUserModel.ViewData.ModelState["User.FirstName"].Errors[0].ErrorMessage);
+            return userModel;
         }
+
 
         private void MocksForFailure(CreateUserViewModel userModel)
         {
