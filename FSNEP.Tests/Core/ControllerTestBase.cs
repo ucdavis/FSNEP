@@ -1,14 +1,8 @@
-using System;
 using CAESArch.BLL;
-using Castle.Windsor;
-using MvcContrib.Castle;
 using MvcContrib.TestHelper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
-using FSNEP.Controllers;
-using MvcContrib.Services;
 using System.Web.Mvc;
-using CAESArch.IoC;
 
 namespace FSNEP.Tests.Core
 {
