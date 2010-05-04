@@ -37,6 +37,17 @@
         </tr>
         <tr>
             <td>
+                FTE:
+            </td>
+            <td>
+                <%= Html.TextBoxFor(u=>u.User.FTE) %>
+            </td>
+            <td>
+                <%= Html.ValidationMessageFor(u => u.User.FTE)%>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 Benefit Rate:
             </td>
             <td>
