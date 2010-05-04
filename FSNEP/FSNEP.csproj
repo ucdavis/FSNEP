@@ -288,6 +288,7 @@
     <Content Include="Views\Audit\CostShareEntryAuditList.ascx" />
     <Content Include="Views\Audit\CostShareHistory.aspx" />
     <Content Include="Views\Audit\CostShareReview.aspx" />
+    <Content Include="Views\Audit\TimeRecordReview.aspx" />
     <Content Include="Views\Home\SemiAnnualCertification.ascx" />
     <Content Include="Views\Home\UserPermissions.ascx" />
     <Content Include="Views\Report\TimeRecord.aspx" />

@@ -34,6 +34,17 @@ namespace FSNEP.Controllers
             return View(viewModel);
         }
 
+        public ActionResult TimeRecordReview(int id)
+        {
+            var timeRecord = Repository.OfType<TimeRecord>().GetNullableByID(id);
+
+            Check.Require(timeRecord != null);
+
+            var viewModel = TimeRecordAuditReviewViewModel.Create(Repository.OfType<TimeRecordEntry>(), timeRecord);
+
+            return View(viewModel);
+        }
+
         public ActionResult CostShareReview(int id)
         {
             var costShare = Repository.OfType<CostShare>().GetNullableByID(id);
@@ -44,6 +55,8 @@ namespace FSNEP.Controllers
 
             return View(viewModel);
         }
+
+
 
         [AcceptPost]
         public JsonResult CostShareExclude(int id, string excludeReason)
@@ -120,6 +133,27 @@ namespace FSNEP.Controllers
         public IEnumerable<CostShareEntry> Entries { get; set; }
 
         public CostShare CostShare { get; set; }
+
+        public bool IsAccepted { get; set; }
+    }
+
+    public class TimeRecordAuditReviewViewModel
+    {
+        public static TimeRecordAuditReviewViewModel Create(IRepository<TimeRecordEntry> timeRecordEntryRepository, TimeRecord timeRecord)
+        {
+            var viewModel = new TimeRecordAuditReviewViewModel { TimeRecord = timeRecord };
+
+            var costShareEntries = timeRecordEntryRepository.Queryable.Where(x => x.Record.Id == timeRecord.Id);
+
+            viewModel.Entries = costShareEntries.ToList();
+            viewModel.IsAccepted = viewModel.TimeRecord.Status.NameOption == Status.Option.Approved;
+
+            return viewModel;
+        }
+
+        public IEnumerable<TimeRecordEntry> Entries { get; set; }
+
+        public TimeRecord TimeRecord { get; set; }
 
         public bool IsAccepted { get; set; }
     }

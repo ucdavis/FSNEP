@@ -34,27 +34,51 @@
 
         <br /><br />
         <div>
-
-        <%
-        Html.Grid(Model.Records)
-            .DisplayAlternateMessageWhen(Model.Records.Count() == 0, "No Cost Share Records Found")
-            .Name("CostShares")
-            .PrefixUrlParameters(false)
-            .Columns(col =>
-                         {
-                             col.Add(cs =>
-                                         {%>
-                                            <%= Html.ActionLink<AuditController>(x=>x.CostShareReview(cs.Id), "Review") %>
-                                            <%
-                                         });
-                             col.Add(x => x.User.FullName).Title("User");
-                             col.Add(x => x.MonthName).Title("Month");
-                             col.Add(x => x.Year);
-                             col.Add(x => x.Status.Name).Title("Status");
-                         })
-            .Render();
-        
-            %>
+            
+            <table class="t-widget t-grid">
+                <thead>
+                    <tr>
+                        <th class="t-header">
+                        </th>
+                        <th class="t-header">
+                            Name
+                        </th>
+                        <th class="t-header t-last-header">
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% int lastMonth = 0; %>
+                    <% foreach (var record in Model.Records.OrderByDescending(a => a.Year).ThenByDescending(a => a.Month).ThenBy(a => a.User.FullNameLastFirst))
+                       { %>
+                    <% int currentMonth = record.Month; %>
+                    <% if (currentMonth != lastMonth)
+                       { %>
+                    <tr class="ui-widget-header">
+                        <td colspan="4">
+                            <h3>
+                                <%= Html.Encode(record.MonthName)%>
+                                <%= Html.Encode(record.Year)%>
+                            </h3>
+                        </td>
+                    </tr>
+                    <% lastMonth = currentMonth; %>
+                    <% } %>
+                    <tr>
+                        <td>
+                            <%= Html.ActionLink<AuditController>(x=>x.CostShareReview(record.Id), "Review") %>
+                        </td>
+                        <td>
+                            <%= Html.Encode(record.User.FullName)%>
+                        </td>
+                        <td>
+                            <%= Html.Encode(record.Status.Name)%>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
 
         </div>
 
