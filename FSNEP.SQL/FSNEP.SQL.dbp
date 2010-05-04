@@ -22,6 +22,7 @@ Begin DataProject = "FSNEP.SQL"
    End
    Begin Folder = "Scheema"
       Script = "InsertLookupData.sql"
+      Script = "InsertProviderData.sql"
       Script = "Scheema.sql"
    End
    Begin Folder = "SPROCs"
