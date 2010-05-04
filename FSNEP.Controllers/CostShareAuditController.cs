@@ -45,13 +45,16 @@ namespace FSNEP.Controllers
             var costShareEntries = costShareEntryRepository.Queryable.Where(x => x.Record.Id == costShare.Id);
 
             viewModel.Entries = costShareEntries.ToList();
-            
+            viewModel.IsAccepted = viewModel.CostShare.Status.NameOption == Status.Option.Approved;
+
             return viewModel;
         }
 
         public IEnumerable<CostShareEntry> Entries { get; set; }
 
         public CostShare CostShare { get; set; }
+
+        public bool IsAccepted { get; set; }
     }
 
     public class CostShareAuditHistoryViewModel
