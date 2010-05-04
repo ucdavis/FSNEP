@@ -148,6 +148,9 @@ namespace FSNEP.Controllers
             return this.RedirectToAction<HomeController>(a => a.Index());
         }
 
+        /// <summary>
+        /// Maps the guid user ident to a username ident
+        /// </summary>
         public ActionResult ModifyUserById(Guid? id)
         {
             if (id== null) return this.RedirectToAction(a => a.CreateUser());
