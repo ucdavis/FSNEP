@@ -86,7 +86,8 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void RoutingEditEntryMapsToEditEntry()
         {
-            "~/TimeRecord/EditEntry".ShouldMapToIgnoringParams("TimeRecord", "EditEntry");
+            //"~/TimeRecord/EditEntry".ShouldMapToIgnoringParams("TimeRecord", "EditEntry");
+            "~/TimeRecord/EditEntry".Route().ShouldMapTo<TimeRecordController>(a => a.EditEntry(1, null), true);
         }
 
         /// <summary>
@@ -95,7 +96,8 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void RoutingGetEntryMapsToGetEntry()
         {
-            "~/TimeRecord/GetEntry".ShouldMapToIgnoringParams("TimeRecord", "GetEntry");
+            //"~/TimeRecord/GetEntry".ShouldMapToIgnoringParams("TimeRecord", "GetEntry");
+            "~/TimeRecord/GetEntry".Route().ShouldMapTo<TimeRecordController>(a => a.GetEntry(1), true);
         }
 
         #endregion Routing maps
