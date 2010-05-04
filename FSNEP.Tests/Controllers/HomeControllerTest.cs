@@ -33,5 +33,11 @@ namespace FSNEP.Tests.Controllers
             // Assert
             Assert.IsNotNull(result);
         }
+
+        [TestMethod]
+        public void FailingTest()
+        {
+            Assert.IsTrue(false, "This test will always fail");
+        }
     }
 }
