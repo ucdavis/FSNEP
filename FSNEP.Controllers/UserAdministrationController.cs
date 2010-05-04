@@ -267,6 +267,34 @@ namespace FSNEP.Controllers
             //Now the user roles are the roles for the given id
             viewModel.UserRoles = UserBLL.GetUserRoles(id);
 
+            //If the UserRoles contains values not in the Available roles, add them. Otherwise
+            //they would be removed when the user is saved.
+            if(viewModel.UserRoles != null)
+            {
+                var joinRoles = new List<string>();
+                foreach (string userRole in viewModel.UserRoles)
+                {
+                    if(!viewModel.AvailableRoles.Contains(userRole))
+                    {
+                        joinRoles.Add(userRole);
+                    }
+                }
+                if(joinRoles.Count > 0)
+                {
+                    foreach (string availableRole in viewModel.AvailableRoles)
+                    {
+                        if(!joinRoles.Contains(availableRole))
+                        {
+                            joinRoles.Add(availableRole);
+                        }
+                    }
+                }
+                if(joinRoles.Count > 0)
+                {
+                    viewModel.AvailableRoles = joinRoles.AsEnumerable(); 
+                }
+            }
+
             return View(viewModel);
         }
 
