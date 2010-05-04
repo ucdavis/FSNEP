@@ -142,7 +142,7 @@ namespace FSNEP.BLL.Dev
                 UserName = user.Identity.Name
             };
 
-            repository.OfType<Record>().EnsurePersistent(record); //persist the record
+            repository.OfType<T>().EnsurePersistent(record); //persist the record
 
             repository.OfType<RecordTracking>().EnsurePersistent(tracking); //persist the tracking info along with it
         }
@@ -152,7 +152,7 @@ namespace FSNEP.BLL.Dev
         /// </summary>
         private bool SheetExists(IPrincipal user, DateTime date)
         {
-            return _repository.OfType<Record>()
+            return _repository.OfType<T>()
                 .Queryable
                 .Where(x => x.User.UserName == user.Identity.Name)
                 .Where(x => x.Year == date.Year && x.Month == date.Month)
