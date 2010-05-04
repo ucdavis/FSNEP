@@ -2,7 +2,6 @@
 using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using System.Web.Security;
 using FSNEP.Core.Abstractions;
 using FSNEP.Tests.Core;
@@ -11,7 +10,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FSNEP.Controllers;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
-using CAESArch.IoC;
 
 namespace FSNEP.Tests.Controllers
 {
@@ -28,6 +26,7 @@ namespace FSNEP.Tests.Controllers
 
             container.Kernel.AddComponentInstance("formsAuth", typeof (IFormsAuthentication), new MockFormsAuthenticationService());
             container.Kernel.AddComponentInstance("membershipService", typeof(IMembershipService), membershipService);
+            container.Kernel.AddComponentInstance("messageGateway", typeof(IMessageGateway), MockRepository.GenerateStub<IMessageGateway>());
         }
 
         public AccountControllerTest()
@@ -118,9 +117,6 @@ namespace FSNEP.Tests.Controllers
         {
             //Setup a mock messageGateway
             var messageGateway = MockRepository.GenerateMock<IMessageGateway>();
-            messageGateway
-                .Expect(m => m.SendMessage("", "", "", ""))
-                .IgnoreArguments();
 
             //Get the account controller
             var controller = GetAccountController();
@@ -128,7 +124,7 @@ namespace FSNEP.Tests.Controllers
 
             controller.ResetPassword("validUser", "validAnswer");
 
-            messageGateway.VerifyAllExpectations(); //Verify the message gateway was called
+            messageGateway.AssertWasCalled(a=>a.SendMessage("","","",""), a=>a.IgnoreArguments()); //Verify the message gateway was called
         }
 
         [TestMethod]
@@ -231,34 +227,6 @@ namespace FSNEP.Tests.Controllers
 
             // Assert
             Assert.IsNotNull(result);
-        }
-
-        [TestMethod]
-        public void ConstructorSetsProperties()
-        {
-            // Arrange
-            IFormsAuthentication formsAuth = new MockFormsAuthenticationService();
-            IMembershipService membershipService = new AccountMembershipService();
-
-            // Act
-            AccountController controller = new AccountController(formsAuth, membershipService);
-
-            // Assert
-            Assert.AreEqual(formsAuth, controller.FormsAuth, "FormsAuth property did not match.");
-            Assert.AreEqual(membershipService, controller.MembershipService, "MembershipService property did not match.");
-        }
-
-        [TestMethod]
-        public void ConstructorSetsPropertiesToDefaultValues()
-        {
-            /*
-            // Act
-            AccountController controller = new AccountController();
-
-            // Assert
-            Assert.IsNotNull(controller.FormsAuth, "FormsAuth property is null.");
-            Asert.IsNotNull(controller.MembershipService, "MembershipService property is null.");
-             */
         }
 
         [TestMethod]

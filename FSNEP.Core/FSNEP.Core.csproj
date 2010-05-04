@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstractions\MessageGateway.cs" />
     <Compile Include="Abstractions\Providers.cs" />
     <Compile Include="Domain\Account.cs" />
     <Compile Include="Domain\ActivityType.cs" />
