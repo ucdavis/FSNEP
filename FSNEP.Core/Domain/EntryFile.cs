@@ -18,6 +18,9 @@ namespace FSNEP.Core.Domain
         public virtual byte[] Content { get; set; }
 
         [Required]
+        public virtual string ContentType { get; set; }
+
+        [Required]
         [Length(50)]
         [Pattern(@"^.+\.(pdf)$", RegexOptions.IgnoreCase, "File must be a PDF")]
         public virtual string Name { get; set; }

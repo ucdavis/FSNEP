@@ -107,7 +107,7 @@ namespace FSNEP.Controllers
 
             if (postedFile != null && postedFile.ContentLength != 0)
             {
-                var entryFile = new EntryFile { Name = postedFile.FileName, Content = new byte[postedFile.ContentLength] };
+                var entryFile = new EntryFile { Name = postedFile.FileName, Content = new byte[postedFile.ContentLength], ContentType = postedFile.ContentType };
 
                 postedFile.InputStream.Read(entryFile.Content, 0, postedFile.ContentLength);
 
@@ -181,6 +181,24 @@ namespace FSNEP.Controllers
             Message = string.Format("Cost Share for {0:MMMM yyyy} Submitted Successfully", costShare.Date);
 
             return this.RedirectToAction(a => a.History());
+        }
+
+        public ActionResult ViewEntryFile(int entryId)
+        {
+            var entry = Repository.OfType<CostShareEntry>().GetNullableByID(entryId);
+
+            Check.Require(entry != null, "Invalid entry indentifier");
+
+            var costShare = _costShareRepository.GetNullableByID(entry.Record.Id);
+
+            Check.Require(costShare != null, "Invalid cost share indentifier");
+
+            if (!_costShareBLL.HasAccess(CurrentUser, costShare))
+            {
+                return RedirectToErrorPage(string.Format("{0} does not have access to review this cost share", CurrentUser.Identity.Name));
+            }
+
+            return File(entry.EntryFile.Content, entry.EntryFile.ContentType, entry.EntryFile.Name);
         }
     }
 

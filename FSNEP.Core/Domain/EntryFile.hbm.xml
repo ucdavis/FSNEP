@@ -6,6 +6,7 @@
     </id>
 
     <property name="Content" />
+    <property name="ContentType" />
     <property name="Name" />
     <property name="DateAdded" />
 
