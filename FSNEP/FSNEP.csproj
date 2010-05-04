@@ -267,6 +267,7 @@
     <Content Include="Views\CostShareAudit\History.aspx" />
     <Content Include="Views\CostShareAudit\Review.aspx" />
     <Content Include="Views\Home\SemiAnnualCertification.ascx" />
+    <Content Include="Views\Home\UserPermissions.ascx" />
     <Content Include="Views\Report\TimeRecord.aspx" />
     <Content Include="Views\Supervisor\AssignDelegate.aspx" />
     <Content Include="Views\Supervisor\RemoveDelegate.aspx" />

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<UserPermissionsViewModel>" %>
 
 <%@ Import Namespace="FSNEP.Controllers" %>
 <asp:Content ID="indexTitle" ContentPlaceHolderID="titleContent" runat="server">
@@ -7,6 +7,9 @@
 <asp:Content ID="indexContent" ContentPlaceHolderID="mainContent" runat="server">
     <h2>
         Quick Links:</h2>
+        
+    <% Html.RenderPartial("UserPermissions"); %>
+    
     <h3>
         Time Records</h3>
     <ul>

@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using FSNEP.Core.Domain;
 using FSNEP.Core.Abstractions;
 using UCDArch.Web.Attributes;
+using System.Security.Principal;
 
 namespace FSNEP.Controllers
 {
@@ -14,7 +15,9 @@ namespace FSNEP.Controllers
         {
             ViewData["Message"] = "Welcome to ASP.NET MVC!";
 
-            return View();
+            var viewModel = UserPermissionsViewModel.Create(CurrentUser);
+
+            return View(viewModel);
         }
 
         public ActionResult Error(string errorMessage)
@@ -71,6 +74,42 @@ namespace FSNEP.Controllers
             
             return View(viewModel);
         }
+    }
+
+    public class UserPermissionsViewModel
+    {
+        /// <summary>
+        /// Determines a user's roles through the user context
+        /// </summary>
+        /// <remarks>
+        /// Could possibly be improved by getting all roles at once and enumerating this collection
+        /// </remarks>
+        /// <param name="userContext">IPrincipal current user context</param>
+        public static UserPermissionsViewModel Create(IPrincipal userContext)
+        {
+            var viewModel = new UserPermissionsViewModel
+                                {
+                                    IsAdmin = userContext.IsInRole(RoleNames.RoleAdmin),
+                                    IsProjectAdmin = userContext.IsInRole(RoleNames.RoleProjectAdmin),
+                                    IsTimeRecordUser = userContext.IsInRole(RoleNames.RoleTimeSheet),
+                                    IsCostShareUser = userContext.IsInRole(RoleNames.RoleNonSalary),
+                                    IsSupervisor = userContext.IsInRole(RoleNames.RoleSupervisor) ||
+                                                   userContext.IsInRole(RoleNames.RoleDelegateSupervisor)
+                                };
+
+
+            return viewModel;
+        }
+
+        public bool IsSupervisor { get; set; }
+
+        public bool IsCostShareUser { get; set; }
+
+        public bool IsTimeRecordUser { get; set; }
+
+        public bool IsProjectAdmin { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 
     public class SemiAnnualCertificationViewModel
