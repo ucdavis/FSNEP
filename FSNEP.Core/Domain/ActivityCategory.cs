@@ -1,8 +1,6 @@
-using CAESArch.Core.Domain;
-
 namespace FSNEP.Core.Domain
 {
-    public class ActivityCategory : LookupObject<ActivityCategory,int>
+    public class ActivityCategory : LookupObject
     {
         public override string ToString()
         {

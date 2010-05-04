@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using CAESArch.Core.DataInterfaces;
 using FSNEP.Core.Domain;
-using CAESArch.Core.Utils;
-using FSNEP.Controllers.Helpers.Attributes;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Core.Utils;
+using UCDArch.Web.Attributes;
 
 namespace FSNEP.Controllers
 {
@@ -32,7 +32,7 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult Associate(int id, int[] accountIds)
         {
-            var project = Repository.OfType<Project>().GetByID(id);
+            var project = Repository.OfType<Project>().GetById(id);
 
             Check.Require(project != null, "Valid ProjectId not passed into Associate action");
    
@@ -42,7 +42,7 @@ namespace FSNEP.Controllers
             {
                 foreach (var accountID in accountIds)
                 {
-                    project.Accounts.Add(Repository.OfType<Account>().GetByID(accountID));
+                    project.Accounts.Add(Repository.OfType<Account>().GetById(accountID));
                 }
             }
 

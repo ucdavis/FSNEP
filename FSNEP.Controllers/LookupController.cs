@@ -1,11 +1,11 @@
 using System.Linq;
 using System.Web.Mvc;
-using CAESArch.Core.Domain;
-using FSNEP.Controllers.Helpers;
-using FSNEP.Controllers.Helpers.Attributes;
 using FSNEP.Core.Domain;
 using MvcContrib;
 using MvcContrib.Attributes;
+using UCDArch.Core.DomainModel;
+using UCDArch.Web.Attributes;
+using UCDArch.Web.Helpers;
 
 namespace FSNEP.Controllers
 {
@@ -26,7 +26,7 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult InactivateActivityType(int id)
         {
-            InactivateEntity<ActivityType, int>(id, "Activity Type");
+            InactivateEntity<ActivityType>(id, "Activity Type");
 
             return this.RedirectToAction(a => a.ActivityTypes());
         }
@@ -53,7 +53,7 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult InactivateActivityCategory(int id)
         {
-            InactivateEntity<ActivityCategory, int>(id, "Activity Category");
+            InactivateEntity<ActivityCategory>(id, "Activity Category");
             
             return this.RedirectToAction(a => a.ActivityCategories(null));
         }
@@ -78,7 +78,7 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult InactivateExpenseType(int id)
         {
-            InactivateEntity<ExpenseType, int>(id, "Expense Type");
+            InactivateEntity<ExpenseType>(id, "Expense Type");
             
             return this.RedirectToAction(a => a.ExpenseTypes());
         }
@@ -103,7 +103,7 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult InactivateAccount(int id)
         {
-            InactivateEntity<Account, int>(id, "Account");
+            InactivateEntity<Account>(id, "Account");
 
             return this.RedirectToAction(a => a.Accounts());
         }
@@ -119,7 +119,7 @@ namespace FSNEP.Controllers
         public ActionResult HoursInMonths()
         {
             var hoursInMonths =
-                Repository.OfType<HoursInMonth>().Queryable.OrderBy(a => a.ID.Year).ThenBy(a => a.ID.Month).ToList();
+                Repository.OfType<HoursInMonth>().Queryable.OrderBy(a => a.Id.Year).ThenBy(a => a.Id.Month).ToList();
 
             return View(hoursInMonths);
         }
@@ -148,7 +148,7 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult InactivateProject(int id)
         {
-            InactivateEntity<Project, int>(id, "Project");
+            InactivateEntity<Project>(id, "Project");
 
             return this.RedirectToAction(a => a.Projects());
         }
@@ -161,17 +161,17 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(a => a.Projects());
         }
 
-        private void CreateEntity<T, IdT>(T entity, string type) where T : DomainObject<T, IdT>
+        private void CreateEntity<T, IdT>(T entity, string type) where T : DomainObjectWithTypedId<IdT>
         {
-            var lookupEntity = entity as LookupObject<T, IdT>; // If this is a looked entity we want to make sure isActive is true
+            var lookupEntity = entity as LookupObject; // If this is a looked entity we want to make sure isActive is true
 
             if (lookupEntity != null) lookupEntity.IsActive = true;
 
-            ValidationHelper<T>.Validate(entity, ModelState);
+            ValidationHelper.TransferValidationMessagesTo(entity, ModelState);
 
             if (!ModelState.IsValid)
             {
-                Message = type + " Creation Failed. " + ValidationHelper<T>.GetErrorMessages(entity, ModelState);
+                Message = type + " Creation Failed. " + ValidationHelper.GetErrorMessages(entity, ModelState);
 
                 return;
             }
@@ -182,7 +182,7 @@ namespace FSNEP.Controllers
             Message = type + " Created Successfully";
         }
 
-        private void InactivateEntity<T, IdT>(int id, string type) where T : LookupObject<T, IdT>
+        private void InactivateEntity<T>(int id, string type) where T : LookupObject
         {
             var entity = Repository.OfType<T>().GetNullableByID(id);
 

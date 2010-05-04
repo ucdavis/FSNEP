@@ -1,18 +1,15 @@
-﻿using NHibernate.Validator.Constraints;
+using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
 using UCDArch.Core.NHibernateValidator.Extensions;
 
 namespace FSNEP.Core.Domain
 {
-    public class FundType : DomainObject
+    public class LookupObject : DomainObject
     {
         [Required]
         [Length(50)]
         public virtual string Name { get; set; }
 
-        public FundType()
-        {
-
-        }
+        public virtual bool IsActive { get; set; }
     }
 }

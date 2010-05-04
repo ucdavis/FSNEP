@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
-using CAESArch.BLL;
 using FSNEP.BLL.Impl;
 using FSNEP.Controllers.Helpers;
 using FSNEP.Controllers.Helpers.Extensions;
@@ -13,8 +12,12 @@ using MvcContrib;
 using System;
 using System.Web.Security;
 using FSNEP.Core.Abstractions;
-using CAESArch.Core.Utils;
-using CAESArch.Core.Validators;
+using NHibernate.Validator.Constraints;
+using UCDArch.Core.NHibernateValidator.Extensions;
+using UCDArch.Core.Utils;
+using UCDArch.Web.Attributes;
+using UCDArch.Web.Helpers;
+using UCDArch.Core.PersistanceSupport;
 
 namespace FSNEP.Controllers
 {
@@ -45,6 +48,7 @@ namespace FSNEP.Controllers
         /// <summary>
         /// TODO: Remove this testing method
         /// </summary>
+        [Transaction]
         public ActionResult DeleteUser(string id)
         {
             //This only works with tester accounts
@@ -52,12 +56,7 @@ namespace FSNEP.Controllers
             {
                 var user = UserBLL.GetUser(id);
 
-                using (var ts = new TransactionScope())
-                {
-                    UserBLL.Remove(user);
-
-                    ts.CommitTransaction();
-                }
+                UserBLL.Remove(user);
 
                 UserBLL.UserAuth.MembershipService.DeleteUser(id);
             }
@@ -70,7 +69,7 @@ namespace FSNEP.Controllers
         /// <returns>CreateUserViewModel</returns>
         public ActionResult Create()
         {
-            var viewModel = CreateUserViewModel.Create(UserBLL);
+            var viewModel = CreateUserViewModel.Create(UserBLL, Repository);
             viewModel.User = new User { FTE = 1, IsActive = true }; //Default these two values
 
             return View(viewModel);
@@ -87,9 +86,9 @@ namespace FSNEP.Controllers
         {
             model.User.UserName = model.UserName; //transfer the username to the user class
 
-            ValidationHelper<CreateUserViewModel>.Validate(model, ModelState); //Validate the create user properties
+            ValidationHelper.TransferValidationMessagesTo(model, ModelState); //Validate the create user properties
 
-            ValidationHelper<User>.Validate(model.User, ModelState, "User"); //validate the user properties
+            ValidationHelper.TransferValidationMessagesTo(model.User, ModelState, "User"); //validate the user properties
 
             CheckUserAssociations(model.User); //Make sure the associations are set
 
@@ -99,7 +98,7 @@ namespace FSNEP.Controllers
             if (!ModelState.IsValid)
             {
                 //If we aren't valid, return to the create page
-                var viewModel = CreateUserViewModel.Create(UserBLL);
+                var viewModel = CreateUserViewModel.Create(UserBLL, Repository);
                 viewModel.TransferValuesFrom(model);
 
                 viewModel.UserRoles = roleList;
@@ -178,7 +177,7 @@ namespace FSNEP.Controllers
 
                     }
                     //If we aren't valid, return to the create page
-                    var viewModel = CreateUserViewModel.Create(UserBLL);
+                    var viewModel = CreateUserViewModel.Create(UserBLL, Repository);
                     viewModel.TransferValuesFrom(model);
 
                     viewModel.UserRoles = roleList;
@@ -192,22 +191,22 @@ namespace FSNEP.Controllers
 
                 user.Token = Guid.NewGuid(); //setup the new user token
 
-                var ts = new TransactionScope();
-
+                UserBLL.DbContext.BeginTransaction();
+                
                 try
                 {
                     //save the user
                     UserBLL.EnsurePersistent(user);
 
-                    var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser(user.Supervisor.ID).Email;
+                    var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser(user.Supervisor.Id).Email;
                     MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail,
                                                         Url.AbsoluteAction("Index", "Home", new {token = user.Token}));
 
-                    ts.CommitTransaction();
+                    UserBLL.DbContext.CommitTransaction();
                 }
                 catch (Exception)
                 {
-                    ts.RollBackTransaction();
+                    UserBLL.DbContext.RollbackTransaction();
 
                     //delete the user then throw the exception
                     UserBLL.UserAuth.MembershipService.DeleteUser(model.UserName);
@@ -249,7 +248,7 @@ namespace FSNEP.Controllers
             //If the user could not be found, redirect to creating a user
             if (user == null) return this.RedirectToAction(a => a.Create());
 
-            var viewModel = UserViewModel.Create(UserBLL);
+            var viewModel = UserViewModel.Create(UserBLL, Repository);
             viewModel.User = user;
 
             //Now the user roles are the roles for the given id
@@ -266,13 +265,14 @@ namespace FSNEP.Controllers
         /// <param name="id">UserName/ID</param>
         /// <returns>Either the user view model on failure or the list of users on success</returns>
         [AcceptPost]
+        [Transaction]
         public ActionResult Modify(User user, List<string> roleList, string id)
         {
             var userToUpdate = UserBLL.GetUser(id);
 
             TransferValuesTo(userToUpdate, user);
 
-            ValidationHelper<User>.Validate(userToUpdate, ModelState);
+            ValidationHelper.TransferValidationMessagesTo(userToUpdate, ModelState);
 
             CheckUserAssociations(userToUpdate);
 
@@ -281,7 +281,7 @@ namespace FSNEP.Controllers
 
             if (!ModelState.IsValid)
             {
-                var viewModel = UserViewModel.Create(UserBLL);
+                var viewModel = UserViewModel.Create(UserBLL, Repository);
                 viewModel.User = userToUpdate;
                 viewModel.UserRoles = roleList; //Prevent the roles from being cleared out with an error
 
@@ -296,12 +296,7 @@ namespace FSNEP.Controllers
                 UserBLL.SetRoles(id, roleList);
 
                 //We have a valid viewstate, so save the changes
-                using (var ts = new TransactionScope())
-                {
-                    UserBLL.EnsurePersistent(userToUpdate);
-
-                    ts.CommitTransaction();
-                }
+                UserBLL.EnsurePersistent(userToUpdate);
 
                 Message = string.Format("{0} Modified Successfully", id);
 
@@ -376,9 +371,9 @@ namespace FSNEP.Controllers
         /// <summary>
         /// Creates the user view model, including populating the lookups
         /// </summary>
-        public new static CreateUserViewModel Create(IUserBLL userBLL)
+        public new static CreateUserViewModel Create(IUserBLL userBLL, IRepository repository)
         {
-            var baseViewModel = UserViewModel.Create(userBLL);
+            var baseViewModel = UserViewModel.Create(userBLL, repository);
 
             var viewModel = new CreateUserViewModel
                                 {
@@ -401,22 +396,22 @@ namespace FSNEP.Controllers
             User = model.User;
         }
 
-        [RequiredValidator]
-        [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
+        [Required]
+        [Length(1, 50, Message = "Must be between 1 and 50 characters long")]
         public string UserName { get; set; }
 
-        [RequiredValidator]
-        [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
-        [RegexValidator(@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$", RegexOptions.IgnoreCase,
-            MessageTemplate = "Must be a valid email address")]
+        [Required]
+        [Length(1, 50, Message = "Must be between 1 and 50 characters long")]
+        [Pattern(@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$", RegexOptions.IgnoreCase,
+            Message = "Must be a valid email address")]
         public string Email { get; set; }
 
-        [RequiredValidator]
-        [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
+        [Required]
+        [Length(1, 50, Message = "Must be between 1 and 50 characters long")]
         public string Question { get; set; }
 
-        [RequiredValidator]
-        [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
+        [Required]
+        [Length(1, 50, Message = "Must be between 1 and 50 characters long")]
         public string Answer { get; set; }
     }
 
@@ -425,13 +420,13 @@ namespace FSNEP.Controllers
         /// <summary>
         /// Creates the user view model, including populating the lookups
         /// </summary>
-        public static UserViewModel Create(IUserBLL userBLL)
+        public static UserViewModel Create(IUserBLL userBLL, IRepository repository)
         {
             var viewModel = new UserViewModel
                                 {
                                     Supervisors = userBLL.GetSupervisors().OrderBy(a => a.LastName).ToList(),
-                                    Projects = userBLL.GetAllProjectsByUser().OrderBy(a => a.Name).ToList(),
-                                    FundTypes = userBLL.GetAvailableFundTypes().OrderBy(a => a.Name).ToList(),
+                                    Projects = userBLL.GetAllProjectsByUser(repository.OfType<Project>()).OrderBy(a => a.Name).ToList(),
+                                    FundTypes = userBLL.GetAvailableFundTypes(repository.OfType<FundType>()).OrderBy(a => a.Name).ToList(),
                                     AvailableRoles = userBLL.GetAllRoles()
                                 };
 

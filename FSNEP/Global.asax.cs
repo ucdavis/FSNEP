@@ -2,9 +2,9 @@
 using Castle.Windsor;
 using FSNEP.Controllers;
 using MvcContrib.Castle;
-using CAESArch.Data.NHibernate;
 using NHibernate;
-using FSNEP.ModelBinder;
+using UCDArch.Data.NHibernate;
+using UCDArch.Web.ModelBinder;
 
 namespace FSNEP
 {
@@ -24,7 +24,7 @@ namespace FSNEP
 
             var windsorContainer = InitializeDependencyLocator();
 
-            ModelBinders.Binders.DefaultBinder = new ArchModelBinder();
+            ModelBinders.Binders.DefaultBinder = new UCDArchModelBinder();
 
             //Configure the audit interceptor
             NHibernateSessionManager.Instance.RegisterInterceptor(windsorContainer.Resolve<IInterceptor>());

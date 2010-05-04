@@ -1,9 +1,9 @@
 using System;
-using CAESArch.Core.DataInterfaces;
 using FSNEP.BLL.Interfaces;
 using NHibernate;
-using CAESArch.Core.Utils;
 using FSNEP.Core.Domain;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Core.Utils;
 
 namespace FSNEP
 {

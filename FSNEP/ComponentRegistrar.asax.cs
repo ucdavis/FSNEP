@@ -3,9 +3,9 @@ using Castle.Windsor;
 using FSNEP.BLL.Impl;
 using FSNEP.Core.Abstractions;
 using System.Web.Security;
-using CAESArch.Core.DataInterfaces;
-using CAESArch.BLL.Repositories;
 using FSNEP.BLL.Interfaces;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Data.NHibernate;
 
 namespace FSNEP
 {

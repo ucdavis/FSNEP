@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using CAESArch.Core.Domain;
-using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
+using FSNEP.Core.Validators;
 
 namespace FSNEP.Core.Domain
 {
-    public class Account : LookupObject<Account, int>
+    public class Account : LookupObject
     {
-        [RangeValidator(0.00, RangeBoundaryType.Inclusive, 0.30, RangeBoundaryType.Inclusive)]
+        [RangeDouble(0,0.3)]
         public virtual double IndirectCost { get; set; }
 
         public virtual double IndirectCostPercent

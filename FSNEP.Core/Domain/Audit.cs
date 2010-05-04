@@ -1,26 +1,25 @@
 using System;
-using CAESArch.Core.Domain;
-using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
-using CAESArch.Core.Validators;
+using NHibernate.Validator.Constraints;
+using UCDArch.Core.DomainModel;
+using UCDArch.Core.NHibernateValidator.Extensions;
 
 namespace FSNEP.Core.Domain
 {
-    public class Audit : DomainObject<Audit,Guid>
+    public class Audit : DomainObjectWithTypedId<Guid>
     {
-        [RequiredValidator]
-        [StringLengthValidator(50)]
+        [Length(50)]
+        [Required]
         public virtual string ObjectName { get; set; }
 
-        [IgnoreNulls]
-        [StringLengthValidator(50)]
+        [Length(50)]
         public virtual string ObjectId { get; set; }
 
-        [RequiredValidator]
-        [StringLengthValidator(1)]
+        [Length(1)]
+        [Required]
         public virtual string AuditActionTypeId { get; set; }
 
-        [RequiredValidator]
-        [StringLengthValidator(256)]
+        [Length(256)]
+        [Required]
         public virtual string Username { get; set; }
 
         public virtual DateTime AuditDate { get; set; }

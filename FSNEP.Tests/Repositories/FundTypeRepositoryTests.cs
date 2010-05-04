@@ -1,12 +1,10 @@
 ﻿using System;
-using CAESArch.BLL;
-using CAESArch.BLL.Repositories;
-using CAESArch.Core.DataInterfaces;
-using CAESArch.Core.Utils;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FSNEP.Tests.Core.Extensions;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Data.NHibernate;
+using UCDArch.Testing.Extensions;
 
 namespace FSNEP.Tests.Repositories
 {
@@ -34,12 +32,7 @@ namespace FSNEP.Tests.Repositories
         {
             var fundType = new FundType { Name = ValidValueName };
 
-            using (var ts = new TransactionScope())
-            {
-                _fundTypeRepository.EnsurePersistent(fundType);
-
-                ts.CommitTransaction();
-            }
+            _fundTypeRepository.EnsurePersistent(fundType);
 
             Assert.AreEqual(false, fundType.IsTransient());
         }
@@ -53,16 +46,11 @@ namespace FSNEP.Tests.Repositories
 
             try
             {
-                using (var ts = new TransactionScope())
-                {
-                    _fundTypeRepository.EnsurePersistent(fundType);
-
-                    ts.CommitTransaction();
-                }
+                _fundTypeRepository.EnsurePersistent(fundType);
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<FundType>.GetValidationResults(fundType).AsMessageList();
+                var results = fundType.ValidationResults().AsMessageList();
                 Assert.AreEqual(2, results.Count);
                 results.AssertContains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
                 results.AssertContains("Name: The value cannot be null.");
@@ -80,16 +68,11 @@ namespace FSNEP.Tests.Repositories
 
             try
             {
-                using (var ts = new TransactionScope())
-                {
-                    _fundTypeRepository.EnsurePersistent(fundType);
-
-                    ts.CommitTransaction();
-                }
+                _fundTypeRepository.EnsurePersistent(fundType);
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<FundType>.GetValidationResults(fundType).AsMessageList();
+                var results = fundType.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
                 results.AssertContains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
                 //Assert.AreEqual(true, results.Contains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive)."), "Expected the validation result to have \"Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\"");                

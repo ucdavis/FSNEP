@@ -1,15 +1,15 @@
-﻿using CAESArch.Core.Domain;
-using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
+﻿using NHibernate.Validator.Constraints;
+using UCDArch.Core.NHibernateValidator.Extensions;
 
 namespace FSNEP.Core.Domain
 {
-    public class ActivityType : LookupObject<ActivityType, int>
+    public class ActivityType : LookupObject
     {
-        [NotNullValidator]
-        [StringLengthValidator(2, 2)]
+        [Length(2,2)]
+        [Required]
         public virtual string Indicator { get; set; }
 
-        [NotNullValidator]
+        [NotNull]
         public virtual ActivityCategory ActivityCategory { get; set; }
 
         public override string ToString()

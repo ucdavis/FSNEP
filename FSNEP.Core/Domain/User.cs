@@ -1,44 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using CAESArch.Core.Domain;
-using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
-using CAESArch.Core.Validators;
+using NHibernate.Validator.Constraints;
+using UCDArch.Core.DomainModel;
+using UCDArch.Core.NHibernateValidator.Extensions;
+using FSNEP.Core.Validators;
 
 namespace FSNEP.Core.Domain
 {
-    public class User : DomainObject<User, Guid>
+    public class User : DomainObjectWithTypedId<Guid>, IHasAssignedId<Guid>
     {
-        [NotNullValidator(MessageTemplate="Username should be set upon creation")]
-        [StringLengthValidator(1,256)]
+        [Length(1, 256)]
+        [Required(Message = "Username should be set upon creation")]
         public virtual string UserName { get; set; }
 
-        [NotNullValidator]
-        [StringLengthValidator(50)]
+        [Length(50)]
+        [Required]
         public virtual string FirstName { get; set; }
 
-        [RequiredValidator] // Have the required validator first so a null returns a meaningful message.
-        [StringLengthValidator(1,50)]        
+        [Length(50)]
+        [Required]
         public virtual string LastName { get; set; }
 
         public virtual User CreatedBy { get; set; }
 
-        [NotNullValidator(MessageTemplate = "You must select a supervisor")]
+        [NotNull]
         public virtual User Supervisor { get; set; }
 
-        [IgnoreNulls]
         public virtual IList<FundType> FundTypes { get; set; }
 
         // [NotNullValidator] Must be at least one project?
         public virtual IList<Project> Projects { get; set; }
 
-        [RangeValidator(0.00, RangeBoundaryType.Exclusive, 0.00, RangeBoundaryType.Ignore, MessageTemplate = "Must be greater than zero")]
-            public virtual double Salary { get; set; }
+        [RangeDouble(Min=0.01, Message = "Must be greater than zero")]
+        public virtual double Salary { get; set; }
 
-        [RangeValidator(0.00, RangeBoundaryType.Inclusive, 2.00, RangeBoundaryType.Inclusive)]
+        [RangeDouble(0, 2)]
         public virtual double BenefitRate { get; set; }
 
-        [RangeValidator(0.00, RangeBoundaryType.Exclusive, 1.00, RangeBoundaryType.Inclusive)] //FTE is (0,1]
-            public virtual double FTE { get; set; }
+        [RangeDouble(0.01,1)]
+        public virtual double FTE { get; set; }
 
         public virtual bool ResetPassword { get; set; }
 
@@ -69,7 +69,12 @@ namespace FSNEP.Core.Domain
 
         public virtual void SetUserID(Guid userID)
         {
-            this.id = userID;
+            this.Id = userID;
+        }
+
+        public void SetAssignedIdTo(Guid assignedId)
+        {
+            Id = assignedId;
         }
     }
 }

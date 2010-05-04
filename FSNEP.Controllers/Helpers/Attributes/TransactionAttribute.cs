@@ -1,9 +1,9 @@
 using System.Web.Mvc;
-using FSNEP.Data;
 using System;
 
 namespace FSNEP.Controllers.Helpers.Attributes
 {
+    /*
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class TransactionAttribute : ActionFilterAttribute
     {
@@ -34,4 +34,5 @@ namespace FSNEP.Controllers.Helpers.Attributes
             }
         }
     }
+     */
 }

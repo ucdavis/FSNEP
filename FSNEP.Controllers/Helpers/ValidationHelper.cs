@@ -2,6 +2,7 @@ using System.Web.Mvc;
 
 namespace FSNEP.Controllers.Helpers
 {
+    /*
     public static class ValidationHelper<T>
     {
         public static bool Validate(T objToValidate, ModelStateDictionary modelState)
@@ -47,4 +48,5 @@ namespace FSNEP.Controllers.Helpers
             return sb.ToString();
         }
     }
+     */
 }
