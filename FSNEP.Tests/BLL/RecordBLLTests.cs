@@ -579,7 +579,7 @@ namespace FSNEP.Tests.BLL
         
 
         /// <summary>
-        /// Gets the current creates and returns A new record.
+        /// Get current creates and returns A new record.
         /// Date has current month because "current date" is the 31st
         /// </summary>
         [TestMethod]
@@ -607,7 +607,7 @@ namespace FSNEP.Tests.BLL
 
 
         /// <summary>
-        /// Gets the current creates and returns A new record.
+        /// Get current creates and returns A new record.
         /// Date has previous month because "Current date" is less than the 30th
         /// </summary>
         [TestMethod]
@@ -631,9 +631,100 @@ namespace FSNEP.Tests.BLL
             Assert.AreEqual(Status.Option.Current, currentRecord.Status.NameOption);
             Assert.AreEqual(09, currentRecord.Month);
             Assert.AreEqual(2009, currentRecord.Year);
+            Assert.IsNull(currentRecord.ReviewComment); //Because it is new
         }
 
-        //TODO: Test When Sheet exists.
+        /// <summary>
+        /// Get current creates and returns null because a sheet for that already exists (Pending review).
+        /// </summary>
+        [TestMethod]
+        public void GetCurrentCreatesAndReturnsANewRecord3()
+        {
+            var fakeDate = new DateTime(2009, 10, 31);
+            SystemTime.Now = () => fakeDate;
+
+            FakeRecordsToCheck(); //No records for the current user.
+
+            Records.Add(new Record
+            {
+                Month = 09,
+                Year = 2009,
+                User = CurrentUser,
+                Status = new Status { NameOption = Status.Option.Approved },
+                ReviewComment = "ReturnThisRecord1",
+                Entries = new List<Entry>()
+            });
+            Records.Add(new Record
+            {
+                Month = 10,
+                Year = 2009,
+                User = CurrentUser,
+                Status = new Status { NameOption = Status.Option.PendingReview },
+                ReviewComment = "ReturnThisRecord2",
+                Entries = new List<Entry>()
+            });
+         
+
+            FakeStatusQuery();
+            FakeUserQuery();
+            var recordTrackingRepository = MockRepository.GenerateStub<IRepository<RecordTracking>>();
+            _repository.Expect(a => a.OfType<RecordTracking>()).Return(recordTrackingRepository).Repeat.Any();
+
+            var currentRecord = _recordBLL.GetCurrent(_principal);
+            Assert.IsNull(currentRecord);
+            recordTrackingRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<RecordTracking>.Is.Anything));
+            _repository.OfType<Record>().AssertWasNotCalled(a => a.EnsurePersistent(Arg<Record>.Is.Anything));
+        }
+
+        /// <summary>
+        /// Get current creates and returns a new record because a sheet for that 
+        /// month does not yet exist, but one for the previous month does exist, 
+        /// but it is pending review an not editable.
+        /// </summary>
+        [TestMethod]
+        public void GetCurrentCreatesAndReturnsANewRecord4()
+        {
+            var fakeDate = new DateTime(2009, 11, 01);
+            SystemTime.Now = () => fakeDate;
+
+            FakeRecordsToCheck(); //No records for the current user.
+
+            Records.Add(new Record
+            {
+                Month = 09,
+                Year = 2009,
+                User = CurrentUser,
+                Status = new Status { NameOption = Status.Option.Approved },
+                ReviewComment = "ReturnThisRecord1",
+                Entries = new List<Entry>()
+            });
+            Records.Add(new Record
+            {
+                Month = 10,
+                Year = 2009,
+                User = CurrentUser,
+                Status = new Status { NameOption = Status.Option.PendingReview },
+                ReviewComment = "ReturnThisRecord2",
+                Entries = new List<Entry>()
+            });
+
+
+            FakeStatusQuery();
+            FakeUserQuery();
+            var recordTrackingRepository = MockRepository.GenerateStub<IRepository<RecordTracking>>();
+            _repository.Expect(a => a.OfType<RecordTracking>()).Return(recordTrackingRepository).Repeat.Any();
+
+            var currentRecord = _recordBLL.GetCurrent(_principal);
+            Assert.IsNotNull(currentRecord);
+            recordTrackingRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<RecordTracking>.Is.Anything));
+            _repository.OfType<Record>().AssertWasCalled(a => a.EnsurePersistent(Arg<Record>.Is.Anything));
+            Assert.AreEqual(CurrentUser, currentRecord.User);
+            Assert.AreEqual(Status.Option.Current, currentRecord.Status.NameOption);
+            Assert.AreEqual(11, currentRecord.Month);
+            Assert.AreEqual(2009, currentRecord.Year);
+            Assert.IsNull(currentRecord.ReviewComment); //Because it is new
+        }
+ 
 
         #endregion GetCurrent Tests
 
