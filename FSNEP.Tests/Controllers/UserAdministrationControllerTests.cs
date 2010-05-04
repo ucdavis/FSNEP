@@ -13,20 +13,22 @@ using FSNEP.Core.Domain;
 using FSNEP.Core.Abstractions;
 using System.Web.Security;
 using FSNEP.Tests.Core.Extensions;
+using Rhino.Mocks.Interfaces;
 
 namespace FSNEP.Tests.Controllers
 {
     [TestClass]
     public class UserAdministrationControllerTests : ControllerTestBase<UserAdministrationController>
     {
-        public IUserBLL UserBLL { get; set; }
+        public IUserBLL UserBll { get; set; }
+
 
         protected override void SetupController()
         {
-            UserBLL = MockRepository.GenerateStub<IUserBLL>();
+            UserBll = MockRepository.GenerateStub<IUserBLL>();
             var messageGateway = MockRepository.GenerateStub<IMessageGateway>();
 
-            CreateController(UserBLL, messageGateway);
+            CreateController(UserBll, messageGateway);
         }
 
         [TestMethod]
@@ -34,7 +36,7 @@ namespace FSNEP.Tests.Controllers
         {
             var fourUsers = new List<User> {new User(), new User(), new User(), new User()};
 
-            UserBLL.Expect(u=>u.GetAllUsers()).Return(fourUsers.AsQueryable());
+            UserBll.Expect(u=>u.GetAllUsers()).Return(fourUsers.AsQueryable());
 
             var result = Controller.List()
                             .AssertViewRendered()
@@ -46,9 +48,9 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void CreateUserReturnsCreateUserViewModel()
         {
-            UserBLL.Expect(a => a.GetSupervisors()).Return(new List<User>().AsQueryable());
-            UserBLL.Expect(a => a.GetAllProjectsByUser()).Return(new List<Project>().AsQueryable());
-            UserBLL.Expect(a => a.GetAvailableFundTypes()).Return(new List<FundType>().AsQueryable());
+            UserBll.Expect(a => a.GetSupervisors()).Return(new List<User>().AsQueryable());
+            UserBll.Expect(a => a.GetAllProjectsByUser()).Return(new List<Project>().AsQueryable());
+            UserBll.Expect(a => a.GetAvailableFundTypes()).Return(new List<FundType>().AsQueryable());
             
             Controller.Create()
                 .AssertViewRendered()
@@ -59,7 +61,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void ModifyUserRedirectsToCreateUserWithInvalidUsername()
         {
-            UserBLL.Expect(a => a.GetUser("BADUSER")).Return(null);
+            UserBll.Expect(a => a.GetUser("BADUSER")).Return(null);
 
             Controller.Modify("BADUSER")
                 .AssertActionRedirect()
@@ -158,9 +160,8 @@ namespace FSNEP.Tests.Controllers
             #endregion newUser
 
             #region Parameters needed for the Create Method
-            var roleList = new List<string>();
-            roleList.Add("Supervisor");
-            roleList.Add("Timesheet User");
+            var roleList = new List<string> {"Supervisor", "Timesheet User"};
+
             #endregion Parameters needed for the Create Method
 
             var userModel = new CreateUserViewModel
@@ -187,41 +188,310 @@ namespace FSNEP.Tests.Controllers
         }
 
 
+        #region Modify valid changes saves for each type of value that can be modified.
 
-        
         /// <summary>
-        /// Modifies the existing valid user saves valid changes.
+        /// Modifies the first name of the existing valid user saves valid changes.
         /// </summary>
         [TestMethod]
-        public void ModifyExistingValidUserSavesValidChanges()
-        {           
+        public void ModifyExistingValidUserSavesValidChangesFirstName()
+        {
+            const string newValidValue = "NewFirstName";
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.FirstName = newValidValue; //Change it
+
+            Assert.AreNotEqual(newValidValue, userModelOriginal.User.FirstName, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newValidValue, userModelOriginal.User.FirstName, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies the last name of the existing valid user saves valid changes.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesLastName()
+        {
+            const string newValidValue = "NewLastName";
+
             CreateUserViewModel userModelOriginal = CreateValidUserModel();
             CreateAndAttachProjectsToUser(userModelOriginal);
             CreateAndAttachFundTypesToUser(userModelOriginal, false);            
 
             MockModifySpecificMethods(userModelOriginal);
 
-            var newUser = new User
-                              {
-                                  FirstName = userModelOriginal.User.FirstName,
-                                  LastName = userModelOriginal.User.LastName,
-                                  Salary = userModelOriginal.User.Salary,
-                                  FTE = userModelOriginal.User.FTE,
-                                  BenefitRate = userModelOriginal.User.BenefitRate,
-                                  IsActive = userModelOriginal.User.IsActive,
-                                  Supervisor = userModelOriginal.User.Supervisor,
-                                  FundTypes = userModelOriginal.User.FundTypes,
-                                  Projects = userModelOriginal.User.Projects
-                              };
+            var newUser = CopySpecificUserFields(userModelOriginal);
 
-            newUser.LastName = "NewLastName"; //Change it
+            newUser.LastName = newValidValue; //Change it
 
-            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            Assert.AreNotEqual(newValidValue, userModelOriginal.User.LastName, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newValidValue, userModelOriginal.User.LastName, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies the salary of the existing valid user saves valid changes.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesSalary()
+        {
+            const int newValidValue = 200000;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.Salary = newValidValue; //Change it
+
+            Assert.AreNotEqual(newValidValue, userModelOriginal.User.Salary, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newValidValue, userModelOriginal.User.Salary, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies FTE of the existing valid user saves valid changes.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesFte()
+        {
+            const double newValidValue = 0.5;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.FTE = newValidValue; //Change it
+
+            Assert.AreNotEqual(newValidValue, userModelOriginal.User.FTE, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newValidValue, userModelOriginal.User.FTE, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies benefit rate of the existing valid user saves valid changes .
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesBenefitRate()
+        {
+            const double newValidValue = 1.5;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.BenefitRate = newValidValue; //Change it
+
+            Assert.AreNotEqual(newValidValue, userModelOriginal.User.BenefitRate, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newValidValue, userModelOriginal.User.BenefitRate, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies "is active" of the existing valid user saves valid changes.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesIsActive()
+        {
+            const bool newValidValue = false;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.IsActive = newValidValue; //Change it
+
+            Assert.AreNotEqual(newValidValue, userModelOriginal.User.IsActive, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newValidValue, userModelOriginal.User.IsActive, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies the supervisor of the existing valid user saves valid changes.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesSupervisor()
+        {
+            var newFakeSupervisor = FakeSupervisor();
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.Supervisor = newFakeSupervisor; //Change it
+
+            Assert.AreNotEqual(newFakeSupervisor, userModelOriginal.User.Supervisor, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newFakeSupervisor, userModelOriginal.User.Supervisor, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies the existing valid user saves valid changes to fund types.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesFundTypes()
+        {
+            //Based on CreateValidUserModel, this will deselect 2 fund types.
+            var fundTypes = new List<FundType>
+                                {
+                                    new FundType {Name = "Name2"}
+                                };
+            fundTypes[0].SetIdTo(5);
 
 
-            //throw new NotImplementedException("Do this test.");
-        }        
-        
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.FundTypes = fundTypes; //Change it
+
+            Assert.AreNotEqual(fundTypes, userModelOriginal.User.IsActive, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(fundTypes, userModelOriginal.User.FundTypes, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies the existing valid user saves valid changes to projects.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesProjects()
+        {
+            var projects = new List<Project>
+                               {
+                                   new Project{Name = "Name2", IsActive = true}
+                               };
+            projects[0].SetIdTo(3);
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.Projects = projects; //Change it
+
+            Assert.AreNotEqual(projects, userModelOriginal.User.Projects, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(projects, userModelOriginal.User.Projects, "Value was not changed in the modify method.");
+        }
+
+        [TestMethod, Ignore]
+        public void ModifyExistingValidUserSavesValidChangesRoles()
+        {
+            var newRoles = new List<string> { "Timesheet User", "ProjectAdmin" };
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            userModelOriginal.UserRoles = CreateListOfRoles();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+            MockModifySetRoles(userModelOriginal.UserName,newRoles);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);         
+
+            Assert.AreNotEqual(newRoles, userModelOriginal.UserRoles, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, newRoles, userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newRoles, userModelOriginal.UserRoles, "Value was not changed in the modify method.");
+        }
+
+
+        /// <summary>
+        /// Mocks the modify set roles.
+        /// </summary>
+        /// <param name="userName">ID/UserName.</param>
+        /// <param name="newRoles">The new roles.</param>
+        private void MockModifySetRoles(string userName, List<string> newRoles)
+        {
+            //TODO: Figure out how to get this to work.
+            UserBll.Expect(a => a.SetRoles(userName, newRoles)).CallOriginalMethod();
+
+
+        }
+
+        #endregion Modify valid changes saves for each type of value that can be modified.
 
         /// <summary>
         /// Creates a user with a valid first name of spaces.
@@ -979,22 +1249,22 @@ namespace FSNEP.Tests.Controllers
             MembershipCreateStatus status;
 
             var mockGuid = Guid.NewGuid();
-            UserBLL = MockRepository.GenerateStub<IUserBLL>();
-            UserBLL.UserAuth = MockRepository.GenerateStub<IUserAuth>();
-            UserBLL.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
+            UserBll = MockRepository.GenerateStub<IUserBLL>();
+            UserBll.UserAuth = MockRepository.GenerateStub<IUserAuth>();
+            UserBll.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
             var memberShipUser = MockRepository.GenerateStub<MembershipUser>();
 
             //If Repeat.any() isn't used, it will return the Guid only once, which means if you debug and inspect the value, it will be null the next time it is looked at.
             memberShipUser.Expect(a => a.ProviderUserKey).IgnoreArguments().Return(mockGuid).Repeat.Any();
 
             //If IgnoreArguments is not used, the params don't match and it isn't mocked.
-            UserBLL.UserAuth.MembershipService.Expect(a => a.CreateUser("Test", "dfgsdf345234", "Test@test.edu", "Q", "A", true,
+            UserBll.UserAuth.MembershipService.Expect(a => a.CreateUser("Test", "dfgsdf345234", "Test@test.edu", "Q", "A", true,
                                                                 null, out status)).IgnoreArguments().OutRef(status = MembershipCreateStatus.Success).Return(memberShipUser);
 
 
             MembershipCreateStatus testStatus;
 
-            var testMemebershipUser = UserBLL.UserAuth.MembershipService.CreateUser("1Test", "1dfgsdf345234",
+            var testMemebershipUser = UserBll.UserAuth.MembershipService.CreateUser("1Test", "1dfgsdf345234",
                                                                                     "1Test@test.edu", "1Q", "A", true,
                                                                                     null, out testStatus);
             Assert.AreEqual(MembershipCreateStatus.Success, testStatus);
@@ -1008,23 +1278,23 @@ namespace FSNEP.Tests.Controllers
             MembershipCreateStatus status;
 
             var mockGuid = Guid.NewGuid();
-            UserBLL = MockRepository.GenerateStub<IUserBLL>();
-            UserBLL.UserAuth = MockRepository.GenerateStub<IUserAuth>();
-            UserBLL.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
+            UserBll = MockRepository.GenerateStub<IUserBLL>();
+            UserBll.UserAuth = MockRepository.GenerateStub<IUserAuth>();
+            UserBll.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
             var memberShipUser = MockRepository.GenerateStub<MembershipUser>();
 
             //If Repeat.any() isn't used, it will return the Guid only once, which means if you debug and inspect the value, it will be null the next time it is looked at.
             memberShipUser.Expect(a => a.ProviderUserKey).IgnoreArguments().Return(mockGuid).Repeat.Any();
 
             //If IgnoreArguments is not used, the params don't match and it isn't mocked.
-            UserBLL.UserAuth.MembershipService.Expect(a => a.CreateUser("Test", "dfgsdf345234", "Test@test.edu", "Q", "A", true,
+            UserBll.UserAuth.MembershipService.Expect(a => a.CreateUser("Test", "dfgsdf345234", "Test@test.edu", "Q", "A", true,
                                                                 null, out status)).IgnoreArguments().OutRef(status = MembershipCreateStatus.Success).Return(memberShipUser);
 
 
             // ReSharper disable RedundantAssignment
             var testStatus = MembershipCreateStatus.UserRejected;  //Prime to a different value to make sure the OutRef works as expected.
             // ReSharper restore RedundantAssignment
-            var testMemebershipUser = UserBLL.UserAuth.MembershipService.CreateUser("1Test", "1dfgsdf345234",
+            var testMemebershipUser = UserBll.UserAuth.MembershipService.CreateUser("1Test", "1dfgsdf345234",
                                                                                     "1Test@test.edu", "1Q", "A", true,
                                                                                     null, out testStatus);
             Assert.AreEqual(MembershipCreateStatus.Success, testStatus);
@@ -1032,10 +1302,10 @@ namespace FSNEP.Tests.Controllers
 
             memberShipUser.Email = "test@test.edu";
 
-            UserBLL.UserAuth.MembershipService.Expect(a => a.GetUser("test")).Return(
+            UserBll.UserAuth.MembershipService.Expect(a => a.GetUser("test")).Return(
                 memberShipUser).Repeat.Any();
 
-            var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser("test").Email;
+            var supervisorEmail = UserBll.UserAuth.MembershipService.GetUser("test").Email;
             Assert.AreEqual("test@test.edu", supervisorEmail);
 
         }
@@ -1129,7 +1399,7 @@ namespace FSNEP.Tests.Controllers
         /// Mock calls to these.
         /// </summary>
         /// <param name="userModel"></param>
-        private void MocksForUserLists(CreateUserViewModel userModel)
+        private void MocksForUserLists(UserViewModel userModel)
         {
             var supervisors = new List<User> {userModel.User.Supervisor};
             var projects = new List<Project>
@@ -1150,9 +1420,9 @@ namespace FSNEP.Tests.Controllers
             fundTypes[1].SetIdTo(5);
             fundTypes[2].SetIdTo(6);
 
-            UserBLL.Expect(a => a.GetSupervisors()).Return(supervisors.AsQueryable());
-            UserBLL.Expect(a => a.GetAllProjectsByUser()).Return(projects.AsQueryable());
-            UserBLL.Expect(a => a.GetAvailableFundTypes()).Return(fundTypes.AsQueryable());
+            UserBll.Expect(a => a.GetSupervisors()).Return(supervisors.AsQueryable());
+            UserBll.Expect(a => a.GetAllProjectsByUser()).Return(projects.AsQueryable());
+            UserBll.Expect(a => a.GetAvailableFundTypes()).Return(fundTypes.AsQueryable());
         }
        
         /// <summary>
@@ -1163,8 +1433,8 @@ namespace FSNEP.Tests.Controllers
         /// <param name="wantedCreateStatus">The status wanted for the Create mock</param>
         private void MockMethods(CreateUserViewModel userModel, MembershipCreateStatus wantedCreateStatus)
         {
-            UserBLL.UserAuth = MockRepository.GenerateStub<IUserAuth>();
-            UserBLL.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
+            UserBll.UserAuth = MockRepository.GenerateStub<IUserAuth>();
+            UserBll.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
 
             MembershipCreateStatus createStatus;
             var mockGuid = Guid.NewGuid();                                    
@@ -1172,15 +1442,15 @@ namespace FSNEP.Tests.Controllers
 
             #region Mocks for the supervisor            
             //We don't need to ignore arguments for this one because we are only doing it for a specific Supervior ID.
-            UserBLL.UserAuth.MembershipService.Expect(a => a.GetUser(userModel.User.Supervisor.ID)).Return(memberShipUser).Repeat.Any();
+            UserBll.UserAuth.MembershipService.Expect(a => a.GetUser(userModel.User.Supervisor.ID)).Return(memberShipUser).Repeat.Any();
             memberShipUser.Email = "test@test.edu"; //Email for the Supervisor. If we need a different email for a user, this would need to be changed.
 
-            UserBLL.Expect(a => a.GetByID(userModel.User.Supervisor.ID)).Return(userModel.User.Supervisor).Repeat.Any();
+            UserBll.Expect(a => a.GetByID(userModel.User.Supervisor.ID)).Return(userModel.User.Supervisor).Repeat.Any();
             #endregion Mocks for the supervisor
 
             #region Mocks for the Create method
             //If IgnoreArguments is not used, the params don't match and it isn't mocked.
-            UserBLL.UserAuth.MembershipService.Expect(a => a.CreateUser(userModel.UserName, "jaskidjflkajsdlf$#12", userModel.Email, userModel.Question, userModel.Answer, true,
+            UserBll.UserAuth.MembershipService.Expect(a => a.CreateUser(userModel.UserName, "jaskidjflkajsdlf$#12", userModel.Email, userModel.Question, userModel.Answer, true,
                                                                 null, out createStatus)).OutRef(createStatus = wantedCreateStatus).Return(memberShipUser);
             //If Repeat.any() isn't used, it will return the Guid only once, which means if you debug and inspect the value, it will be null the next time it is looked at.
             memberShipUser.Expect(a => a.ProviderUserKey).IgnoreArguments().Return(mockGuid).Repeat.Any();
@@ -1196,7 +1466,7 @@ namespace FSNEP.Tests.Controllers
             //Mock the GetSubordinates so it doesn't require this user to gave the supervisor role.
             //TODO: Change this with a parameter to test having subordinates
             var emptyList = new List<User>().AsQueryable();            
-            UserBLL.Expect(a => a.GetSubordinates(userModel.User)).Return(emptyList).Repeat.Any();            
+            UserBll.Expect(a => a.GetSubordinates(userModel.User)).Return(emptyList).Repeat.Any();            
             #endregion Mocks for the URL methods (In Create)
 
         }
@@ -1275,7 +1545,7 @@ namespace FSNEP.Tests.Controllers
         /// </summary>
         /// <param name="userModel">The user model.</param>
         /// <param name="createStateFundTypes">if set to <c>true</c> [create state fund types].</param>
-        private static void CreateAndAttachFundTypesToUser(CreateUserViewModel userModel, bool createStateFundTypes)
+        private static void CreateAndAttachFundTypesToUser(UserViewModel userModel, bool createStateFundTypes)
         {
             if (createStateFundTypes)
             {
@@ -1300,7 +1570,7 @@ namespace FSNEP.Tests.Controllers
         /// Creates the projects and attachs them to user.
         /// </summary>
         /// <param name="userModel">The user model.</param>
-        private static void CreateAndAttachProjectsToUser(CreateUserViewModel userModel)
+        private static void CreateAndAttachProjectsToUser(UserViewModel userModel)
         {
             var projects = new List<Project>
                                {
@@ -1319,9 +1589,31 @@ namespace FSNEP.Tests.Controllers
         /// <param name="userModelOriginal">The user model original.</param>
         private void MockModifySpecificMethods(CreateUserViewModel userModelOriginal)
         {
-            UserBLL.Expect(a => a.GetUser(userModelOriginal.UserName)).Return(userModelOriginal.User);
+            UserBll.Expect(a => a.GetUser(userModelOriginal.UserName)).Return(userModelOriginal.User);
         }
 
+
+        /// <summary>
+        /// Copies the specific user fields.
+        /// </summary>
+        /// <param name="userModelOriginal">The user model original.</param>
+        /// <returns></returns>
+        private static User CopySpecificUserFields(UserViewModel userModelOriginal)
+        {
+            return new User
+            {
+                FirstName = userModelOriginal.User.FirstName,
+                LastName = userModelOriginal.User.LastName,
+                Salary = userModelOriginal.User.Salary,
+                FTE = userModelOriginal.User.FTE,
+                BenefitRate = userModelOriginal.User.BenefitRate,
+                IsActive = userModelOriginal.User.IsActive,
+                Supervisor = userModelOriginal.User.Supervisor,
+                FundTypes = userModelOriginal.User.FundTypes,
+                Projects = userModelOriginal.User.Projects
+            };
+
+        }
         #endregion Helper Methods
     }
 }
