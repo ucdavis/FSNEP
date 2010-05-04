@@ -241,21 +241,6 @@ namespace FSNEP.Tests.Repositories
         
         #endregion Entry Tests
 
-        #region HoursInMonth Tests
-
-        /// <summary>
-        /// Determines whether this instance [can get target hours when hours in month is null].
-        /// </summary>
-        [TestMethod]
-        public void CanGetTargetHoursWhenHoursInMonthIsNull()
-        {
-            var record = GetValid(null);
-            record.User.FTE = 1;
-            Assert.AreEqual(0, record.TargetHours);
-        }
-
-        #endregion HoursInMonth Tests
-
         #endregion Valid Tests
 
         #region Invalid Tests
