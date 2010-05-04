@@ -24,7 +24,7 @@
 
                 if ($('form').valid()) {
                     //Ok, no errors so open a new time record report in a new window
-                    window.open('<%= Url.Action("DisplayViewableTimeRecord", "Report") %>/' + recordId, 'something');
+                    window.open('<%= Url.Action("DisplayViewableTimeRecord", "Report") %>/' + recordId, "_blank");
                 }
 
                 e.preventDefault();
