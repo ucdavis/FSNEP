@@ -1,5 +1,6 @@
 using System.Linq;
 using CAESArch.BLL;
+using CAESArch.BLL.Repositories;
 using FSNEP.Tests.Core;
 using FSNEP.Tests.Core.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,17 +27,17 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void GetAllUsersReturnsOnlyUsersWithIntersectingProjectsForProjectAdmin()
         {
-            var projectBLL = new GenericBLL<Project, int>();
+            var projectRepository = new Repository<Project>();
 
             UserBLL.UserAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleProjectAdmin)).Return(true);
 
             UserBLL.UserAuth.Expect(a => a.CurrentUserName).Return("currentuser");
             UserBLL.UserAuth.Expect(a => a.GetUser("currentuser")).Return(new FakeMembershipUser(UserIds[0])); //Current user is the first user
 
-            var project1 = projectBLL.Repository.GetByID(1);
-            var project2 = projectBLL.Repository.GetByID(2);
-            var project3 = projectBLL.Repository.GetByID(3);
-            var project4 = projectBLL.Repository.GetByID(4);
+            var project1 = projectRepository.GetByID(1);
+            var project2 = projectRepository.GetByID(2);
+            var project3 = projectRepository.GetByID(3);
+            var project4 = projectRepository.GetByID(4);
 
             var currentUser = UserBLL.GetByID(UserIds[0]);
 
