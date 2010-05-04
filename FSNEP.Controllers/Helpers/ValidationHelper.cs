@@ -27,5 +27,24 @@ namespace FSNEP.Controllers.Helpers
 
             return validationResults.IsValid;
         }
+
+        /// <summary>
+        /// Builds a string of all the Error Messages in all the Values of the ModelState.
+        /// </summary>
+        /// <param name="objToValidate"></param>
+        /// <param name="modelState"></param>
+        /// <returns>String of Error Messages</returns>
+        public static string GetErrorMessages(T objToValidate, ModelStateDictionary modelState)
+        {
+            var sb = new System.Text.StringBuilder();
+            foreach (var val in modelState.Values)
+            {
+                foreach (var err in val.Errors)
+                {
+                    sb.Append(err.ErrorMessage);
+                }
+            }
+            return sb.ToString();
+        }
     }
 }
