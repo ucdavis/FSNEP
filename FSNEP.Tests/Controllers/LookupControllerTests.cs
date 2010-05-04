@@ -23,6 +23,35 @@ namespace FSNEP.Tests.Controllers
         }
 
         [TestMethod]
+        public void CreateProjectSavesNewProject()
+        {
+            Project exampleNewProject = null;
+            
+            var projectRepository = FakeRepository<Project>();
+            projectRepository.Expect(a => a.EnsurePersistent(null)).IgnoreArguments().WhenCalled(
+                a => exampleNewProject = (Project) a.Arguments.First());
+
+            _repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
+
+            Controller.CreateProject("NewProjectName");
+
+            projectRepository.AssertWasCalled(a => a.EnsurePersistent(null), a => a.IgnoreArguments().Repeat.Once());//make sure we called persist
+
+            Assert.AreEqual(true, exampleNewProject.IsActive, "The created project should be active");
+            Assert.AreEqual("NewProjectName", exampleNewProject.Name);
+        }
+
+        [TestMethod]
+        public void CreateProjectRedirectsToProjects()
+        {
+            _repository.Expect(a => a.OfType<Project>()).Return(FakeRepository<Project>());
+
+            Controller.CreateProject("ValidProject")
+                .AssertActionRedirect()
+                .ToAction<LookupController>(a => a.Projects());
+        }
+
+        [TestMethod]
         public void InactivateProjectRedirectsOnInvalidProjectId()
         {
             const int invalidProjectId = 42;
@@ -44,11 +73,10 @@ namespace FSNEP.Tests.Controllers
             
             var projectRepository = FakeRepository<Project>();
             projectRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(activeProject);
-            projectRepository.Expect(a => a.EnsurePersistent(activeProject));
-
+            
             _repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
 
-            Controller.InactivateProject(1);
+            Controller.InactivateProject(activeProject.ID);
             
             Assert.AreEqual(false, activeProject.IsActive, "Project should have been inactivated");
             projectRepository.AssertWasCalled(a => a.EnsurePersistent(activeProject), a => a.Repeat.Once()); //Make sure we saved the change
@@ -57,15 +85,15 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void InactivateProjectRedirectsOnValidProjectId()
         {
-            var activeProject = new Project { IsActive = true };
+            const int validProjectId = 1;
+            var validProject = new Project();
 
             var projectRepository = FakeRepository<Project>();
-            projectRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(activeProject);
-            projectRepository.Expect(a => a.EnsurePersistent(activeProject));
-
+            projectRepository.Expect(a => a.GetNullableByID(validProjectId)).Return(validProject);
+            
             _repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
 
-            Controller.InactivateProject(1)
+            Controller.InactivateProject(validProjectId)
                 .AssertActionRedirect()
                 .ToAction<LookupController>(a => a.Projects());
         }
