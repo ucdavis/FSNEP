@@ -188,7 +188,11 @@ namespace FSNEP.BLL.Dev
         /// <param name="user">The user who will review the record</param>
         public virtual IEnumerable<T> GetReviewableAndCurrentRecords(IPrincipal user)
         {
-            var reviewableAndCurrentStatuses = new[] {"PendingReview", "Current"};
+            var reviewableAndCurrentStatuses = new[]
+            {
+                Status.GetName(Status.Option.PendingReview), 
+                Status.GetName(Status.Option.Current)
+            };
 
             var records = _repository.OfType<T>().Queryable
                 .Where(x => x.User.Supervisor.UserName == user.Identity.Name

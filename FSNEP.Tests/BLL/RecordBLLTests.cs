@@ -1017,9 +1017,9 @@ namespace FSNEP.Tests.BLL
         /// Get reviewable and current records returns only expected records in correct order for time record.
         /// </summary>
         [TestMethod]
-        public void GetReviewableAndCurrentRecordsReturnsOnlyExpectedRecordsInCorrectOrderForTimeRecord()
+        public void GetReviewableAndCurrentRecordsReturnsOnlyExpectedRecordsInCorrectOrderForTimeRecordWithSupervisor()
         {
-            FakeTimeRecordsToCheckWithGetReviewableAndCurrentRecords();
+            FakeTimeRecordsToCheckWithGetReviewableAndCurrentRecords(false, false);
             var timeRecords = _timeRecordBLL.GetReviewableAndCurrentRecords(_principal);
             Assert.IsNotNull(timeRecords);
             Assert.AreEqual(9, timeRecords.Count());
@@ -1040,7 +1040,96 @@ namespace FSNEP.Tests.BLL
             Assert.AreEqual("ReviewComment8", timeRecordList[6].ReviewComment);
             Assert.AreEqual("ReviewComment9", timeRecordList[7].ReviewComment);
             Assert.AreEqual("ReviewComment10", timeRecordList[8].ReviewComment);            
-        }            
+        }
+
+        /// <summary>
+        /// Get reviewable and current records returns only expected records in correct order for time record.
+        /// </summary>
+        [TestMethod]
+        public void GetReviewableAndCurrentRecordsReturnsOnlyExpectedRecordsInCorrectOrderForTimeRecordWithSupervisorAndDelegate()
+        {
+            FakeTimeRecordsToCheckWithGetReviewableAndCurrentRecords(false, true);
+            var timeRecords = _timeRecordBLL.GetReviewableAndCurrentRecords(_principal);
+            Assert.IsNotNull(timeRecords);
+            Assert.AreEqual(12, timeRecords.Count());
+            
+            var timeRecordList = timeRecords.ToList();
+            //Abby
+            Assert.AreEqual("ReviewComment13", timeRecordList[0].ReviewComment);
+            Assert.AreEqual("ReviewComment12", timeRecordList[1].ReviewComment);
+            Assert.AreEqual("ReviewComment11", timeRecordList[2].ReviewComment);
+            //Chancy
+            Assert.AreEqual("ReviewComment7", timeRecordList[3].ReviewComment);
+            Assert.AreEqual("ReviewComment5", timeRecordList[4].ReviewComment);
+            Assert.AreEqual("ReviewComment6", timeRecordList[5].ReviewComment);
+            //Zeb
+            Assert.AreEqual("ReviewComment8", timeRecordList[6].ReviewComment);
+            Assert.AreEqual("ReviewComment9", timeRecordList[7].ReviewComment);
+            Assert.AreEqual("ReviewComment10", timeRecordList[8].ReviewComment);
+            //Zzzzeeek
+            Assert.AreEqual("ReviewComment19", timeRecordList[9].ReviewComment);
+            Assert.AreEqual("ReviewComment20", timeRecordList[10].ReviewComment);
+            Assert.AreEqual("ReviewComment21", timeRecordList[11].ReviewComment);
+        }
+
+        /// <summary>
+        /// Get reviewable and current records returns only expected records in correct order for time record.
+        /// </summary>
+        [TestMethod]
+        public void GetReviewableAndCurrentRecordsReturnsOnlyExpectedRecordsInCorrectOrderForTimeRecordWithDelegate()
+        {
+            FakeTimeRecordsToCheckWithGetReviewableAndCurrentRecords(true, false);
+            var timeRecords = _timeRecordBLL.GetReviewableAndCurrentRecords(_principal);
+            Assert.IsNotNull(timeRecords);
+            Assert.AreEqual(9, timeRecords.Count());
+            foreach (var timeRecord in timeRecords)
+            {
+                Assert.AreEqual(CurrentUser, timeRecord.User.Supervisor.Delegate);
+            }
+            var timeRecordList = timeRecords.ToList();
+            //Abby
+            Assert.AreEqual("ReviewComment13", timeRecordList[0].ReviewComment);
+            Assert.AreEqual("ReviewComment12", timeRecordList[1].ReviewComment);
+            Assert.AreEqual("ReviewComment11", timeRecordList[2].ReviewComment);
+            //Chancy
+            Assert.AreEqual("ReviewComment7", timeRecordList[3].ReviewComment);
+            Assert.AreEqual("ReviewComment5", timeRecordList[4].ReviewComment);
+            Assert.AreEqual("ReviewComment6", timeRecordList[5].ReviewComment);
+            //Zeb
+            Assert.AreEqual("ReviewComment8", timeRecordList[6].ReviewComment);
+            Assert.AreEqual("ReviewComment9", timeRecordList[7].ReviewComment);
+            Assert.AreEqual("ReviewComment10", timeRecordList[8].ReviewComment);
+        }
+
+        /// <summary>
+        /// Get reviewable and current records returns only expected records in correct order for time record.
+        /// </summary>
+        [TestMethod]
+        public void GetReviewableAndCurrentRecordsReturnsOnlyExpectedRecordsInCorrectOrderForTimeRecordWithDelegateAndSupervisor()
+        {
+            FakeTimeRecordsToCheckWithGetReviewableAndCurrentRecords(true, true);
+            var timeRecords = _timeRecordBLL.GetReviewableAndCurrentRecords(_principal);
+            Assert.IsNotNull(timeRecords);
+            Assert.AreEqual(12, timeRecords.Count());
+            
+            var timeRecordList = timeRecords.ToList();
+            //Abby
+            Assert.AreEqual("ReviewComment13", timeRecordList[0].ReviewComment);
+            Assert.AreEqual("ReviewComment12", timeRecordList[1].ReviewComment);
+            Assert.AreEqual("ReviewComment11", timeRecordList[2].ReviewComment);
+            //Chancy
+            Assert.AreEqual("ReviewComment7", timeRecordList[3].ReviewComment);
+            Assert.AreEqual("ReviewComment5", timeRecordList[4].ReviewComment);
+            Assert.AreEqual("ReviewComment6", timeRecordList[5].ReviewComment);
+            //Zeb
+            Assert.AreEqual("ReviewComment8", timeRecordList[6].ReviewComment);
+            Assert.AreEqual("ReviewComment9", timeRecordList[7].ReviewComment);
+            Assert.AreEqual("ReviewComment10", timeRecordList[8].ReviewComment);
+            //Zzzzeeek
+            Assert.AreEqual("ReviewComment19", timeRecordList[9].ReviewComment);
+            Assert.AreEqual("ReviewComment20", timeRecordList[10].ReviewComment);
+            Assert.AreEqual("ReviewComment21", timeRecordList[11].ReviewComment);
+        }
 
         #endregion GetReviewableAndCurrentRecords Tests
 
@@ -2009,21 +2098,51 @@ namespace FSNEP.Tests.BLL
         /// <summary>
         /// Fakes the time records to check for getReviewableAndCurrentRecords method.
         /// </summary>
-        private void FakeTimeRecordsToCheckWithGetReviewableAndCurrentRecords()
+        private void FakeTimeRecordsToCheckWithGetReviewableAndCurrentRecords(bool useDelegate, bool useBoth)
         {
             var differentSupervisor = CreateValidEntities.User(null);
             differentSupervisor.UserName = "SomeOtherSupervisor";
+
+            var suppervisorWithDelegate = CreateValidEntities.User(null);
+            suppervisorWithDelegate.UserName = "HasDelegate";
+            suppervisorWithDelegate.Delegate = CurrentUser;
+
             var userList = new List<User>();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 userList.Add(CreateValidEntities.User(i+1));
-                userList[i].Supervisor = CurrentUser;
+                if (useDelegate)
+                {
+                    userList[i].Supervisor = suppervisorWithDelegate;                    
+                }
+                else
+                {
+                    userList[i].Supervisor = CurrentUser;
+                }
             }
+            
             userList[1].Supervisor = differentSupervisor;
+            if(useBoth)
+            {
+                if (!useDelegate) //Note the ! to switch them
+                {
+                    userList[4].Supervisor = suppervisorWithDelegate;
+                }
+                else
+                {
+                    userList[4].Supervisor = CurrentUser;
+                }       
+            }
+            else
+            {
+                userList[4].Supervisor = differentSupervisor;
+            }
+            
 
             userList[3].LastName = "Abby";            
             userList[0].LastName = "Chancy";
             userList[2].LastName = "Zeb";
+            userList[4].LastName = "Zzzzeeeek";
 
             var statusCurrent = new Status { NameOption = Status.Option.Current };
             var statusApproved = new Status { NameOption = Status.Option.Approved };
@@ -2123,6 +2242,18 @@ namespace FSNEP.Tests.BLL
             timeRecords[18].User = userList[3];
 
             #endregion Status of Approved and Disapproved are filtered out
+
+            #region TimeRecords for Zzzzeeeek (Who might have a delegate or supervisor of the current user)
+
+            for (int i = 0; i < 3; i++)
+            {
+                timeRecords.Add(CreateValidEntities.TimeRecord(i+19));
+                timeRecords[i + 19].User = userList[4];
+                timeRecords[i + 19].Month = i + 1;
+                timeRecords[i + 19].Status = statusPendingReview;
+            }
+
+            #endregion TimeRecords for Zzzzeeeek (Who might have a delegate or supervisor of the current user)
 
             var timeRecordRepository = MockRepository.GenerateStub<IRepository<TimeRecord>>();
             _repository.Expect(a => a.OfType<TimeRecord>()).Return(timeRecordRepository).Repeat.Any();
