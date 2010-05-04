@@ -51,11 +51,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 var results = fundType.ValidationResults().AsMessageList();
-                Assert.AreEqual(2, results.Count);
-                results.AssertContains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
-                results.AssertContains("Name: The value cannot be null.");
-                //Assert.AreEqual(true, results.Contains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive)."), "Expected the validation result to have \"Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\"");
-                //Assert.AreEqual(true, results.Contains("Name: The value cannot be null."), "Expected the validation result to have \"Name: The value cannot be null.\"");                
+                Assert.AreEqual(1, results.Count);
+                //results.AssertContains("Name: length must be between 0 and 50");
+                results.AssertContains("Name: may not be null or empty");
+                //Assert.AreEqual(true, results.Contains("Name: length must be between 0 and 50"), "Expected the validation result to have \"Name: length must be between 0 and 50\"");
+                //Assert.AreEqual(true, results.Contains("Name: may not be null or empty"), "Expected the validation result to have \"Name: may not be null or empty\"");                
                 throw;
             }
         }
@@ -74,8 +74,8 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = fundType.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
-                //Assert.AreEqual(true, results.Contains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive)."), "Expected the validation result to have \"Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\"");                
+                results.AssertContains("Name: length must be between 0 and 50");
+                //Assert.AreEqual(true, results.Contains("Name: length must be between 0 and 50"), "Expected the validation result to have \"Name: length must be between 0 and 50\"");                
                 throw;
             }
         }   

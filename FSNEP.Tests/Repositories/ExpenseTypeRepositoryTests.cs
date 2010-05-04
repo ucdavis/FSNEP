@@ -57,10 +57,10 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 var results = expenseType.ValidationResults().AsMessageList();
-                Assert.AreEqual(2, results.Count);
-                results.AssertContains("Name: The value cannot be null.");
-                results.AssertContains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
-                //Assert.AreEqual("Object of type FSNEP.Core.Domain.ExpenseType could not be persisted\n\n\r\nValidation Errors: Name, The value cannot be null.\r\nName, The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("Name: may not be null or empty");
+                //results.AssertContains("Name: length must be between 0 and 50");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.ExpenseType could not be persisted\n\n\r\nValidation Errors: Name, may not be null or empty\r\nName, length must be between 0 and 50\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }
@@ -84,8 +84,8 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = expenseType.ValidationResults().AsMessageList(); ;
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
-                //Assert.AreEqual("Object of type FSNEP.Core.Domain.ExpenseType could not be persisted\n\n\r\nValidation Errors: Name, The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                results.AssertContains("Name: length must be between 0 and 50");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.ExpenseType could not be persisted\n\n\r\nValidation Errors: Name, length must be between 0 and 50\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }

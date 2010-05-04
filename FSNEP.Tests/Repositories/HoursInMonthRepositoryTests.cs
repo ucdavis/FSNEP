@@ -59,8 +59,8 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = hoursInMonth.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("Hours: The value must fall within the range \"1\" (Inclusive) - \"0\" (Ignore).");
-                //Assert.AreEqual("Object of type FSNEP.Core.Domain.HoursInMonth could not be persisted\n\n\r\nValidation Errors: Hours, The value must fall within the range \"1\" (Inclusive) - \"0\" (Ignore).\r\n", message.Message, "Expected Exception Not encountered");
+                results.AssertContains("Hours: must be greater than or equal to 1");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.HoursInMonth could not be persisted\n\n\r\nValidation Errors: Hours, must be greater than or equal to 1\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }

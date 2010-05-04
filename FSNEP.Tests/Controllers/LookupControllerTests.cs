@@ -21,7 +21,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// The string that is returned by the validator for a name which exceeds 50 characters.
         /// </summary>
-        public const string InvalidNameMessageTooLong = "Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).";
+        public const string InvalidNameMessageTooLong = "Name: length must be between 0 and 50";
 
         #region Project Tests
         /// <summary>
@@ -312,7 +312,7 @@ namespace FSNEP.Tests.Controllers
             activityTypeRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newActivityType));//make sure we didn't call persist
 
-            Controller.ModelState.AssertErrorsAre("ActivityCategory: The value cannot be null.");
+            Controller.ModelState.AssertErrorsAre("ActivityCategory: may not be empty");
             Assert.IsFalse(Controller.ModelState.IsValid);
             Assert.IsTrue(Controller.Message.StartsWith("Activity Type Creation Failed."));
         }
@@ -1149,7 +1149,7 @@ namespace FSNEP.Tests.Controllers
 
             hoursInMonthRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newHoursInMonth));//make sure we didn't call persist
-            Controller.ModelState.AssertErrorsAre("Hours: The value must fall within the range \"1\" (Inclusive) - \"0\" (Ignore).");
+            Controller.ModelState.AssertErrorsAre("Hours: must be greater than or equal to 1");
             Assert.IsFalse(Controller.ModelState.IsValid);
             Assert.IsTrue(Controller.Message.StartsWith("Hours In Month Creation Failed."));
         }
