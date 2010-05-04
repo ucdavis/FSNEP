@@ -229,7 +229,7 @@ namespace FSNEP.Tests.Controllers
             users.Add(_currentUser); //So it finds it.
 
             _userBLL.Expect(a => a.GetAllViewableUsers()).Return(users).Repeat.Once();
-            _reportBLL.Expect(a => a.GenerateIndividualTimeRecordReport(timeRecord, ReportType.PDF)).Return(
+            _reportBLL.Expect(a => a.GenerateIndividualTimeRecordReport(timeRecord, ReportType.Web)).Return(
                 new ReportResult(new byte[1], "contentType")).Repeat.Once();            
 
             Controller.DisplayViewableTimeRecord(timeRecord.Id).AssertResultIs<FileContentResult>();
@@ -272,7 +272,7 @@ namespace FSNEP.Tests.Controllers
             users.Add(_currentUser); //So it finds it.
 
             _userBLL.Expect(a => a.GetAllViewableUsers()).Return(users).Repeat.Once();
-            _reportBLL.Expect(a => a.GenerateIndividualTimeRecordReport(timeRecord, ReportType.PDF)).Return(
+            _reportBLL.Expect(a => a.GenerateIndividualTimeRecordReport(timeRecord, ReportType.Web)).Return(
                 new ReportResult(new byte[1], "contentType")).Repeat.Once();
             
             Controller.TimeRecord(timeRecord.Id).AssertResultIs<FileContentResult>();
