@@ -127,6 +127,7 @@
     <Compile Include="Repositories\FundTypeRepositoryTests.cs" />
     <Compile Include="Repositories\HoursInMonthRepositoryTests.cs" />
     <Compile Include="Repositories\ProjectRepositoryTests.cs" />
+    <Compile Include="Repositories\RecordTrackingRepositoryTests.cs" />
     <Compile Include="Repositories\TimeRecordEntryRepositoryTests.cs" />
     <Compile Include="Repositories\TimeRecordRepositoryTests.cs" />
     <Compile Include="Repositories\UserRepositoryTests.cs" />
