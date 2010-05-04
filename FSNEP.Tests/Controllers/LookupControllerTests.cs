@@ -123,8 +123,7 @@ namespace FSNEP.Tests.Controllers
             projectRepository.AssertWasCalled(a => a.EnsurePersistent(activeProject), a => a.Repeat.Once()); //Make sure we saved the change
             Assert.AreEqual("Project Removed Successfully", Controller.Message);
         }
-
-        //TODO: Review, do we need this test and is it done correctly? If Yes, add to the other lookup control tests.
+        
         /// <summary>
         /// Inactivate Project Does Not Persists Changes On Invalid ProjectId
         /// </summary>
@@ -340,6 +339,26 @@ namespace FSNEP.Tests.Controllers
             activityTypeRepository.AssertWasCalled(a => a.EnsurePersistent(activeActivityType), a => a.Repeat.Once()); //Make sure we saved the change
             Assert.AreEqual("Activity Type Removed Successfully", Controller.Message);
         }
+
+        /// <summary>
+        /// Inactivate the activity type does not persists changes on invalid activity type id.
+        /// </summary>
+        [TestMethod]
+        public void InactivateActivityTypeDoesNotPersistsChangesOnInvalidActivityTypeId()
+        {
+            var activeActivityType = new ActivityType { IsActive = true };
+
+            var activityTypeRepository = FakeRepository<ActivityType>();
+            activityTypeRepository.Expect(a => a.GetNullableByID(42)).IgnoreArguments().Return(null);
+
+            Controller.Repository.Expect(a => a.OfType<ActivityType>()).Return(activityTypeRepository).Repeat.Any();
+
+            Controller.InactivateActivityType(42);
+
+            Assert.AreEqual(true, activeActivityType.IsActive, "ActivityType should have not been inactivated");
+            activityTypeRepository.AssertWasNotCalled(a => a.EnsurePersistent(activeActivityType), a => a.Repeat.Once()); //Make sure we saved the change
+            Assert.AreEqual("Activity Type Not Found", Controller.Message);
+        }
         
         /// <summary>
         /// Inactivate ActivityType Redirects On Valid ActivityType Id
@@ -542,6 +561,26 @@ namespace FSNEP.Tests.Controllers
         }
 
         /// <summary>
+        /// Inactivate the account does not persists changes on invalid account id.
+        /// </summary>
+        [TestMethod]
+        public void InactivateAccountDoesNotPersistsChangesOnInvalidAccountId()
+        {
+            var activeAccount = new Account { IsActive = true };
+
+            var accountRepository = FakeRepository<Account>();
+            accountRepository.Expect(a => a.GetNullableByID(42)).IgnoreArguments().Return(null);
+
+            Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository).Repeat.Any();
+
+            Controller.InactivateAccount(42);
+
+            Assert.AreEqual(true, activeAccount.IsActive, "Account should have not been inactivated");
+            accountRepository.AssertWasNotCalled(a => a.EnsurePersistent(activeAccount), a => a.Repeat.Once()); //Make sure we didn't save the change
+            Assert.AreEqual("Account Not Found", Controller.Message);
+        }
+
+        /// <summary>
         /// Inactivate Account Redirects On Valid Account Id
         /// </summary>
         [TestMethod]
@@ -728,6 +767,26 @@ namespace FSNEP.Tests.Controllers
         }
 
         /// <summary>
+        /// Inactivate the activity category does not persists changes on invalid activity category id.
+        /// </summary>
+        [TestMethod]
+        public void InactivateActivityCategoryDoesNotPersistsChangesOnInvalidActivityCategoryId()
+        {
+            var activeActivityCategory = new ActivityCategory { IsActive = true };
+
+            var activityCategoryRepository = FakeRepository<ActivityCategory>();
+            activityCategoryRepository.Expect(a => a.GetNullableByID(42)).IgnoreArguments().Return(null);
+
+            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository).Repeat.Any();
+
+            Controller.InactivateActivityCategory(42);
+
+            Assert.AreEqual(true, activeActivityCategory.IsActive, "ActivityCategory should have not been inactivated");
+            activityCategoryRepository.AssertWasNotCalled(a => a.EnsurePersistent(activeActivityCategory), a => a.Repeat.Once()); //Make sure we didn't save the change
+            Assert.AreEqual("Activity Category Not Found", Controller.Message);
+        }
+
+        /// <summary>
         /// Inactivate ActivityCategory Redirects On Valid ActivityCategory Id
         /// </summary>
         [TestMethod]
@@ -906,6 +965,27 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual(false, activeExpenseType.IsActive, "ExpenseType should have been inactivated");
             expenseTypeRepository.AssertWasCalled(a => a.EnsurePersistent(activeExpenseType), a => a.Repeat.Once()); //Make sure we saved the change
             Assert.AreEqual("Expense Type Removed Successfully", Controller.Message);
+        }
+
+
+        /// <summary>
+        /// Inactivate the expense type does not persists changes on invalid expense type id.
+        /// </summary>
+        [TestMethod]
+        public void InactivateExpenseTypeDoesNotPersistsChangesOnInvalidExpenseTypeId()
+        {
+            var activeExpenseType = new ExpenseType { IsActive = true };
+
+            var expenseTypeRepository = FakeRepository<ExpenseType>();
+            expenseTypeRepository.Expect(a => a.GetNullableByID(42)).IgnoreArguments().Return(null);
+
+            Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository).Repeat.Any();
+
+            Controller.InactivateExpenseType(42);
+
+            Assert.AreEqual(true, activeExpenseType.IsActive, "ExpenseType should have not been inactivated");
+            expenseTypeRepository.AssertWasNotCalled(a => a.EnsurePersistent(activeExpenseType), a => a.Repeat.Once()); //Make sure we didn't save the change
+            Assert.AreEqual("Expense Type Not Found", Controller.Message);
         }
 
         /// <summary>
