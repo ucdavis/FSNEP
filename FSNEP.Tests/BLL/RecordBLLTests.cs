@@ -1929,9 +1929,9 @@ namespace FSNEP.Tests.BLL
         /// Get reviewable and current records returns only expected records in correct order for cost share.
         /// </summary>
         [TestMethod]
-        public void GetReviewableAndCurrentRecordsReturnsOnlyExpectedRecordsInCorrectOrderForCostShare()
+        public void GetReviewableAndCurrentRecordsReturnsOnlyExpectedRecordsInCorrectOrderForCostShareWithSupervisor()
         {
-            FakeCostShareRecordsToCheckWithGetReviewableAndCurrentRecords();
+            FakeCostShareRecordsToCheckWithGetReviewableAndCurrentRecords(false, false);
             var costShareRecords = _costShareBLL.GetReviewableAndCurrentRecords(_principal);
             Assert.IsNotNull(costShareRecords);
             Assert.AreEqual(9, costShareRecords.Count());
@@ -1952,6 +1952,93 @@ namespace FSNEP.Tests.BLL
             Assert.AreEqual("ReviewComment8", costShareRecordList[6].ReviewComment);
             Assert.AreEqual("ReviewComment9", costShareRecordList[7].ReviewComment);
             Assert.AreEqual("ReviewComment10", costShareRecordList[8].ReviewComment);
+        }
+        /// <summary>
+        /// Get reviewable and current records returns only expected records in correct order for cost share.
+        /// </summary>
+        [TestMethod]
+        public void GetReviewableAndCurrentRecordsReturnsOnlyExpectedRecordsInCorrectOrderForCostShareWithSupervisorAndDelegate()
+        {
+            FakeCostShareRecordsToCheckWithGetReviewableAndCurrentRecords(false, true);
+            var costShareRecords = _costShareBLL.GetReviewableAndCurrentRecords(_principal);
+            Assert.IsNotNull(costShareRecords);
+            Assert.AreEqual(12, costShareRecords.Count());
+            
+            var costShareRecordList = costShareRecords.ToList();
+            //Abby
+            Assert.AreEqual("ReviewComment13", costShareRecordList[0].ReviewComment);
+            Assert.AreEqual("ReviewComment12", costShareRecordList[1].ReviewComment);
+            Assert.AreEqual("ReviewComment11", costShareRecordList[2].ReviewComment);
+            //Chancy
+            Assert.AreEqual("ReviewComment7", costShareRecordList[3].ReviewComment);
+            Assert.AreEqual("ReviewComment5", costShareRecordList[4].ReviewComment);
+            Assert.AreEqual("ReviewComment6", costShareRecordList[5].ReviewComment);
+            //Zeb
+            Assert.AreEqual("ReviewComment8", costShareRecordList[6].ReviewComment);
+            Assert.AreEqual("ReviewComment9", costShareRecordList[7].ReviewComment);
+            Assert.AreEqual("ReviewComment10", costShareRecordList[8].ReviewComment);
+            //Zzzeeek
+            Assert.AreEqual("ReviewComment19", costShareRecordList[9].ReviewComment);
+            Assert.AreEqual("ReviewComment20", costShareRecordList[10].ReviewComment);
+            Assert.AreEqual("ReviewComment21", costShareRecordList[11].ReviewComment);
+        }
+
+        /// <summary>
+        /// Get reviewable and current records returns only expected records in correct order for cost share.
+        /// </summary>
+        [TestMethod]
+        public void GetReviewableAndCurrentRecordsReturnsOnlyExpectedRecordsInCorrectOrderForCostShareWithDelegate()
+        {
+            FakeCostShareRecordsToCheckWithGetReviewableAndCurrentRecords(true, false);
+            var costShareRecords = _costShareBLL.GetReviewableAndCurrentRecords(_principal);
+            Assert.IsNotNull(costShareRecords);
+            Assert.AreEqual(9, costShareRecords.Count());
+            foreach (var timeRecord in costShareRecords)
+            {
+                Assert.AreEqual(CurrentUser, timeRecord.User.Supervisor.Delegate);
+            }
+            var costShareRecordList = costShareRecords.ToList();
+            //Abby
+            Assert.AreEqual("ReviewComment13", costShareRecordList[0].ReviewComment);
+            Assert.AreEqual("ReviewComment12", costShareRecordList[1].ReviewComment);
+            Assert.AreEqual("ReviewComment11", costShareRecordList[2].ReviewComment);
+            //Chancy
+            Assert.AreEqual("ReviewComment7", costShareRecordList[3].ReviewComment);
+            Assert.AreEqual("ReviewComment5", costShareRecordList[4].ReviewComment);
+            Assert.AreEqual("ReviewComment6", costShareRecordList[5].ReviewComment);
+            //Zeb
+            Assert.AreEqual("ReviewComment8", costShareRecordList[6].ReviewComment);
+            Assert.AreEqual("ReviewComment9", costShareRecordList[7].ReviewComment);
+            Assert.AreEqual("ReviewComment10", costShareRecordList[8].ReviewComment);
+        }
+        /// <summary>
+        /// Get reviewable and current records returns only expected records in correct order for cost share.
+        /// </summary>
+        [TestMethod]
+        public void GetReviewableAndCurrentRecordsReturnsOnlyExpectedRecordsInCorrectOrderForCostShareWithDelegateAndSupervisor()
+        {
+            FakeCostShareRecordsToCheckWithGetReviewableAndCurrentRecords(true, true);
+            var costShareRecords = _costShareBLL.GetReviewableAndCurrentRecords(_principal);
+            Assert.IsNotNull(costShareRecords);
+            Assert.AreEqual(12, costShareRecords.Count());
+
+            var costShareRecordList = costShareRecords.ToList();
+            //Abby
+            Assert.AreEqual("ReviewComment13", costShareRecordList[0].ReviewComment);
+            Assert.AreEqual("ReviewComment12", costShareRecordList[1].ReviewComment);
+            Assert.AreEqual("ReviewComment11", costShareRecordList[2].ReviewComment);
+            //Chancy
+            Assert.AreEqual("ReviewComment7", costShareRecordList[3].ReviewComment);
+            Assert.AreEqual("ReviewComment5", costShareRecordList[4].ReviewComment);
+            Assert.AreEqual("ReviewComment6", costShareRecordList[5].ReviewComment);
+            //Zeb
+            Assert.AreEqual("ReviewComment8", costShareRecordList[6].ReviewComment);
+            Assert.AreEqual("ReviewComment9", costShareRecordList[7].ReviewComment);
+            Assert.AreEqual("ReviewComment10", costShareRecordList[8].ReviewComment);
+            //Zzzeeek
+            Assert.AreEqual("ReviewComment19", costShareRecordList[9].ReviewComment);
+            Assert.AreEqual("ReviewComment20", costShareRecordList[10].ReviewComment);
+            Assert.AreEqual("ReviewComment21", costShareRecordList[11].ReviewComment);
         }
 
         #endregion GetReviewableAndCurrentRecords Tests
@@ -2263,21 +2350,49 @@ namespace FSNEP.Tests.BLL
         /// <summary>
         /// Fakes the cost share records to check for getReviewableAndCurrentRecords method.
         /// </summary>
-        private void FakeCostShareRecordsToCheckWithGetReviewableAndCurrentRecords()
+        private void FakeCostShareRecordsToCheckWithGetReviewableAndCurrentRecords(bool useDelegate, bool useBoth)
         {
             var differentSupervisor = CreateValidEntities.User(null);
             differentSupervisor.UserName = "SomeOtherSupervisor";
+
+            var suppervisorWithDelegate = CreateValidEntities.User(null);
+            suppervisorWithDelegate.UserName = "HasDelegate";
+            suppervisorWithDelegate.Delegate = CurrentUser;
+
             var userList = new List<User>();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 userList.Add(CreateValidEntities.User(i + 1));
-                userList[i].Supervisor = CurrentUser;
+                if (useDelegate)
+                {
+                    userList[i].Supervisor = suppervisorWithDelegate;
+                }
+                else
+                {
+                    userList[i].Supervisor = CurrentUser;
+                }
             }
             userList[1].Supervisor = differentSupervisor;
+            if (useBoth)
+            {
+                if (!useDelegate) //Note the ! to switch them
+                {
+                    userList[4].Supervisor = suppervisorWithDelegate;
+                }
+                else
+                {
+                    userList[4].Supervisor = CurrentUser;
+                }
+            }
+            else
+            {
+                userList[4].Supervisor = differentSupervisor;
+            }
 
             userList[3].LastName = "Abby";
             userList[0].LastName = "Chancy";
             userList[2].LastName = "Zeb";
+            userList[4].LastName = "Zzzzeeeek";
 
             var statusCurrent = new Status { NameOption = Status.Option.Current };
             var statusApproved = new Status { NameOption = Status.Option.Approved };
@@ -2377,6 +2492,18 @@ namespace FSNEP.Tests.BLL
             costShareRecords[18].User = userList[3];
 
             #endregion Status of Approved and Disapproved are filtered out
+
+            #region CostShare Records for Zzzzeeeek (Who might have a delegate or supervisor of the current user)
+
+            for (int i = 0; i < 3; i++)
+            {
+                costShareRecords.Add(CreateValidEntities.CostShare(i + 19));
+                costShareRecords[i + 19].User = userList[4];
+                costShareRecords[i + 19].Month = i + 1;
+                costShareRecords[i + 19].Status = statusPendingReview;
+            }
+
+            #endregion CostShare Records for Zzzzeeeek (Who might have a delegate or supervisor of the current user)
 
             var costShareRepository = MockRepository.GenerateStub<IRepository<CostShare>>();
             _repository.Expect(a => a.OfType<CostShare>()).Return(costShareRepository).Repeat.Any();
