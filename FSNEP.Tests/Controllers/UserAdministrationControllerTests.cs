@@ -194,21 +194,20 @@ namespace FSNEP.Tests.Controllers
         /// </summary>
         [TestMethod, Ignore]
         public void ModifyExistingValidUserSavesValidChanges()
-        {
-            //TODO: This Test
-            CreateUserViewModel userModel = CreateValidUserModel();
+        {           
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
 
-            var user = userModel.User;
+            var newUser = userModelOriginal.User;
 
-            CreateAndAttachProjectsToUser(userModel);
-            CreateAndAttachFundTypesToUser(userModel, false);
-           
+            MockModifySpecificMethods(userModelOriginal);
 
-            Controller.Modify(user, CreateListOfRoles(), userModel.UserName);
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
 
 
             //throw new NotImplementedException("Do this test.");
-        }
+        }        
         
 
         /// <summary>
@@ -733,7 +732,9 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("UserName: Required",
-                "UserName: Must be between 1 and 50 characters long"); 
+                "UserName: Must be between 1 and 50 characters long",
+                "UserName: Username should be set upon creation",
+                "UserName: The length of the value must fall within the range \"1\" (Inclusive) - \"256\" (Inclusive)."); 
         }
         /// <summary>
         /// Creates a user with a invalid user name of Spaces Only.
@@ -1296,6 +1297,15 @@ namespace FSNEP.Tests.Controllers
             projects[1].SetIdTo(3);
             userModel.Projects = projects; //Is this what the view uses to display projects?
             userModel.User.Projects = projects; //These would be the ones selected?
+        }
+
+        /// <summary>
+        /// Mocks the specific methods modify unit tests need.
+        /// </summary>
+        /// <param name="userModelOriginal">The user model original.</param>
+        private void MockModifySpecificMethods(CreateUserViewModel userModelOriginal)
+        {
+            UserBLL.Expect(a => a.GetUser(userModelOriginal.UserName)).Return(userModelOriginal.User);
         }
 
         #endregion Helper Methods

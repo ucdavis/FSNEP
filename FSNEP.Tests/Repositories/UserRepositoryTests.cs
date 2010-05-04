@@ -238,6 +238,7 @@ namespace FSNEP.Tests.Repositories
                 Salary = ValidValueSalary,
                 FTE = ValidValueFte,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -272,6 +273,7 @@ namespace FSNEP.Tests.Repositories
                 Salary = ValidValueSalary,
                 FTE = ValidValueFte,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -304,7 +306,8 @@ namespace FSNEP.Tests.Repositories
                 LastName = " ",
                 Salary = ValidValueSalary,
                 FTE = ValidValueFte,
-                IsActive = true,                
+                IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -336,6 +339,7 @@ namespace FSNEP.Tests.Repositories
                 Salary = ValidValueSalary,
                 FTE = ValidValueFte,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -370,6 +374,7 @@ namespace FSNEP.Tests.Repositories
                 Salary = ValidValueSalary,
                 FTE = ValidValueFte,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -400,6 +405,7 @@ namespace FSNEP.Tests.Repositories
                 Salary = ValidValueSalary,
                 FTE = ValidValueFte,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -424,6 +430,7 @@ namespace FSNEP.Tests.Repositories
                    FTE = ValidValueFte,
                    IsActive = true,
                    Supervisor = null,
+                   UserName = "UserName"
                };
 
             var userId = Guid.NewGuid();
@@ -456,6 +463,7 @@ namespace FSNEP.Tests.Repositories
                 Salary = 0,
                 FTE = ValidValueFte,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -487,6 +495,7 @@ namespace FSNEP.Tests.Repositories
                 Salary = -1,
                 FTE = ValidValueFte,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -520,6 +529,7 @@ namespace FSNEP.Tests.Repositories
                 BenefitRate = -1,
                 FTE = ValidValueFte,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -552,6 +562,7 @@ namespace FSNEP.Tests.Repositories
                 BenefitRate = 2.00001,
                 FTE = ValidValueFte,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -583,6 +594,7 @@ namespace FSNEP.Tests.Repositories
                 BenefitRate = 0,
                 FTE = ValidValueFte,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -603,6 +615,7 @@ namespace FSNEP.Tests.Repositories
                 BenefitRate = 2,
                 FTE = ValidValueFte,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -623,6 +636,7 @@ namespace FSNEP.Tests.Repositories
                 Salary = ValidValueSalary,
                 FTE = -1,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -654,6 +668,7 @@ namespace FSNEP.Tests.Repositories
                 Salary = ValidValueSalary,
                 FTE = 1.0009,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -677,6 +692,7 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithFteOfZero()
         {
+            //TODO: For this test and others expecing an application exception, wrap the whole thing in the try catch block.
             var userBLL = new UserBLL(null);
             var user = new User
             {
@@ -685,6 +701,7 @@ namespace FSNEP.Tests.Repositories
                 Salary = ValidValueSalary,
                 FTE = 0,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 
@@ -715,6 +732,7 @@ namespace FSNEP.Tests.Repositories
                 Salary = ValidValueSalary,
                 FTE = 0.00001,
                 IsActive = true,
+                UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
 

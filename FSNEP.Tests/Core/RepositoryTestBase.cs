@@ -69,7 +69,8 @@ namespace FSNEP.Tests.Core
                                      LastName = "LNameS",
                                      Salary = 10,
                                      FTE = 1,
-                                     IsActive = true
+                                     IsActive = true,
+                                     UserName = "Supervisor"
                                  };
 
             supervisor.Supervisor = supervisor; //i'm my own boss
@@ -89,7 +90,8 @@ namespace FSNEP.Tests.Core
                                    Salary = i + 1,
                                    FTE = 1,
                                    IsActive = true,
-                                   Supervisor = supervisor
+                                   Supervisor = supervisor,
+                                   UserName = "UserName" + i
                                };
 
                 userId = Guid.NewGuid();
