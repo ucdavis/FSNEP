@@ -1,8 +1,8 @@
 ﻿///<reference path="jquery-1.3.2-vsdoc.js">
 $(function() {
     DisplayMessage("Message OnLoad");
-    PopulateAccounts($("#Project"));
-    PopulateAccounts($("#Adjust_Project"));
+    PopulateAccounts($("#Project"), $("#Account"));
+    PopulateAccounts($("#Adjust_Project"), $("#Adjust_Account"));
 
     $(".AddCalendarEntry").live('click', function() {
         var clicked = $(this);
@@ -104,8 +104,8 @@ $(function() {
         return false;
     });
 
-    $("#Adjust_Project").change(function() { PopulateAccounts(this); });
-    $("#Project").change(function() { PopulateAccounts(this); });
+    $("#Adjust_Project").change(function() { PopulateAccounts(this, $("#Adjust_Account")); });
+    $("#Project").change(function() { PopulateAccounts(this, $("#Account")); });
 
     //alert(new Date().getDate());
 
@@ -229,7 +229,7 @@ function GatherEditEntryData() {
     return data;
 }
 
-function PopulateAccounts(el) {
+function PopulateAccounts(el, acctEl) {
     var projectId = $(el).val();
 
     //Get the new accounts for this project
@@ -237,24 +237,22 @@ function PopulateAccounts(el) {
         Services.GetAccountsForProject + "/" + projectId,
         null,
         function(result) {
-            OnPopulateAccountsComplete(result, el);
+            OnPopulateAccountsComplete(result, acctEl);
         }
 
     );
 }
 
-function OnPopulateAccountsComplete(result, el) {
+function OnPopulateAccountsComplete(result, acctEl) {
     LogMessage("Result", result);
     
-    var accountSelect = $("#Account");
-    
-    accountSelect.empty(); //remove the current options
+    acctEl.empty(); //remove the current options
 
     $(result).each(function() { //append in the new elements
         var acct = this;
         var newOption = $("<option>" + acct.Name + "</option>").val(acct.Id);
 
-        accountSelect.append(newOption);
+        acctEl.append(newOption);
     });
 }
 
