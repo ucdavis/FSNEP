@@ -12,6 +12,10 @@
 
     <% using (Html.BeginForm()) {%>
 
+        <h3>
+            Modifying <%= Html.Encode(string.Format("{0} ({1})", Model.User.FullName, Model.User.UserName)) %>
+        </h3>
+
         <% Html.RenderPartial("UserInformation"); %>
         
         <br />
