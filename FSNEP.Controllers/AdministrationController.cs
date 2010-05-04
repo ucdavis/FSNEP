@@ -84,6 +84,19 @@ namespace FSNEP.Controllers
                 return ModifyUser(id);
             }
 
+            user.Supervisor = UserBLL.Repository.GetByID(supervisorId.Value);
+
+            var projects = from proj in UserBLL.Repository.EntitySet<Project>()
+                           where projectList.Contains(proj.ID)
+                           select proj;
+
+            var fundtypes = from ft in UserBLL.Repository.EntitySet<FundType>()
+                            where fundTypeList.Contains(ft.ID)
+                            select ft;
+
+            user.Projects = projects.ToList();
+            user.FundTypes = fundtypes.ToList();
+
             //We have a valid viewstate, so save the changes
             using (var ts = new TransactionScope())
             {
