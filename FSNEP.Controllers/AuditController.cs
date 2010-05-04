@@ -14,7 +14,7 @@ namespace FSNEP.Controllers
     /// Processes admin-level audit actions for cost share and time records
     /// </summary>
     [AdminOnly]
-    public class AuditController : SuperController
+    public class AuditController : ApplicationController
     {
         public ActionResult TimeRecordHistory(int? projectId)
         {

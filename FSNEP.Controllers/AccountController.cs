@@ -17,7 +17,7 @@ using UCDArch.Web.Attributes;
 
 namespace FSNEP.Controllers
 {
-    public class AccountController : SuperController
+    public class AccountController : ApplicationController
     {
         public AccountController(IFormsAuthentication formsAuth, IMembershipService service, IMessageGateway messageGateway)
         {

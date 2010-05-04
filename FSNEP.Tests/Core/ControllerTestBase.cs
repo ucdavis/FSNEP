@@ -5,6 +5,7 @@ using FSNEP.Controllers;
 using UCDArch.Core.DomainModel;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Testing;
+using UCDArch.Web.Controller;
 
 namespace FSNEP.Tests.Core
 {

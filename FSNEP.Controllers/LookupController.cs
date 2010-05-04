@@ -10,7 +10,7 @@ using FSNEP.Controllers.Helpers.Attributes;
 namespace FSNEP.Controllers
 {
     [AdminOnly]
-    public class LookupController : SuperController
+    public class LookupController : ApplicationController
     {
         public ActionResult ActivityTypes()
         {

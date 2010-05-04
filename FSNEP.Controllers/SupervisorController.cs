@@ -14,7 +14,7 @@ using FSNEP.Controllers.Helpers.Attributes;
 namespace FSNEP.Controllers
 {
     [AllSupervisors]
-    public class SupervisorController : SuperController
+    public class SupervisorController : ApplicationController
     {
         private readonly ICostShareBLL _costShareBLL;
         private readonly ITimeRecordBLL _timeRecordBLL;

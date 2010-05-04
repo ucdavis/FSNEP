@@ -10,7 +10,7 @@ using FSNEP.Controllers.Helpers.Attributes;
 namespace FSNEP.Controllers
 {
     [AdminOnly]
-    public class AssociationController : SuperController
+    public class AssociationController : ApplicationController
     {
         [Transaction]
         public ActionResult Projects(int? id)

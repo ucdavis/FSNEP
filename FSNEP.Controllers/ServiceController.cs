@@ -7,7 +7,7 @@ using UCDArch.Web.Attributes;
 
 namespace FSNEP.Controllers
 {
-    public class ServiceController : SuperController
+    public class ServiceController : ApplicationController
     {
         [Transaction]
         public ActionResult GetAccountsForProject(int id)

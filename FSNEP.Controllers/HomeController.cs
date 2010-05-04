@@ -8,9 +8,9 @@ using System.Security.Principal;
 
 namespace FSNEP.Controllers
 {
-    [HandleTransactionsManually]
     [Authorize]
-    public class HomeController : SuperController
+    [HandleTransactionsManually]
+    public class HomeController : ApplicationController
     {
         public ActionResult Index()
         {

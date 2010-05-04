@@ -22,7 +22,7 @@ using FSNEP.Controllers.Helpers.Attributes;
 namespace FSNEP.Controllers
 {
     [AdminAndProjectAdmin]
-    public class UserAdministrationController : SuperController
+    public class UserAdministrationController : ApplicationController
     {
         private static readonly string DefaultPassword = Constants.STR_Default_Pass;
 

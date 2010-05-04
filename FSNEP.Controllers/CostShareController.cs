@@ -16,7 +16,7 @@ using FSNEP.Controllers.Helpers.Attributes;
 namespace FSNEP.Controllers
 {
     [CostShareOnly]
-    public class CostShareController : SuperController
+    public class CostShareController : ApplicationController
     {
         private readonly IRepository<CostShare> _costShareRepository;
         private readonly ICostShareBLL _costShareBLL;

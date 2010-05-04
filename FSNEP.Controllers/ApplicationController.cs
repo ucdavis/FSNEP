@@ -1,11 +1,13 @@
 using System.Web.Mvc;
 using FSNEP.Controllers.Helpers.Attributes;
 using MvcContrib;
+using UCDArch.Web.Controller;
 
 namespace FSNEP.Controllers
 {
     [HandleErrorWithELMAH]
-    public class SuperController : UCDArch.Web.Controller.SuperController
+    [MenuLocationFilter]
+    public class ApplicationController : SuperController
     {
         protected RedirectToRouteResult RedirectToErrorPage(string message)
         {

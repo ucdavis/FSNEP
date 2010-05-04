@@ -12,7 +12,7 @@ using UCDArch.Web.ActionResults;
 namespace FSNEP.Controllers
 {
     [Authorize]
-    public class ReportController : SuperController
+    public class ReportController : ApplicationController
     {
         private readonly ITimeRecordBLL _timeRecordBLL;
         private readonly IReportBLL _reportBLL;

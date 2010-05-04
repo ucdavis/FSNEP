@@ -6,7 +6,7 @@ using UCDArch.Core.PersistanceSupport;
 
 namespace FSNEP.Controllers
 {
-    public class FileController : SuperController
+    public class FileController : ApplicationController
     {
         private readonly IRepository<CostShare> _costShareRepository;
         private readonly ICostShareBLL _costShareBLL;

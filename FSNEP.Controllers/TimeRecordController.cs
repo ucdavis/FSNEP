@@ -16,7 +16,7 @@ using FSNEP.Controllers.Helpers.Attributes;
 namespace FSNEP.Controllers
 {
     [TimeRecordOnly]
-    public class TimeRecordController : SuperController
+    public class TimeRecordController : ApplicationController
     {
         private readonly ITimeRecordBLL _timeRecordBLL;
         private readonly IRepository<TimeRecord> _timeRecordRepository;
