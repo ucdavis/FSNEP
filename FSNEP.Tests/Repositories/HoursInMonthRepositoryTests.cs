@@ -1,21 +1,10 @@
 ﻿using System;
-using System.Linq;
 using CAESArch.BLL;
 using CAESArch.BLL.Repositories;
-using FSNEP.Tests.Core;
-using FSNEP.Tests.Core.Fakes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FSNEP.Core.Domain;
-using FSNEP.BLL.Impl;
-using Rhino.Mocks;
-using FSNEP.BLL.Interfaces;
-using FSNEP.Core.Abstractions;
-using CAESArch.BLL;
-using FSNEP.Tests.Core;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FSNEP.Core.Domain;
 using CAESArch.Core.DataInterfaces;
-using CAESArch.BLL.Repositories;
+using FSNEP.Core.Domain;
+using FSNEP.Tests.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FSNEP.Tests.Repositories
 {
