@@ -148,6 +148,9 @@ namespace FSNEP.Controllers
 
             PopulateDefaultUserViewModel(viewModel);
 
+            //Now the user roles are the roles for the given id
+            viewModel.UserRoles = UserBLL.GetUserRoles(id);
+
             return View(viewModel);
         }
 
@@ -229,7 +232,6 @@ namespace FSNEP.Controllers
                                                       viewModel.User.FundTypes.Select(p => p.ID));
 
             viewModel.AvailableRoles = UserBLL.GetAllRoles();
-            viewModel.UserRoles = UserBLL.GetCurrentRoles();
         }
     }
 

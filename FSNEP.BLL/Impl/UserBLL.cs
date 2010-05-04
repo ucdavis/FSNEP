@@ -20,6 +20,7 @@ namespace FSNEP.BLL.Impl
         User GetUser(string username);
         List<string> GetAllRoles();
         IEnumerable<string> GetCurrentRoles();
+        IEnumerable<string> GetUserRoles(string username);
     }
 
     public class UserBLL : GenericBLL<User,Guid>, IUserBLL
@@ -101,7 +102,12 @@ namespace FSNEP.BLL.Impl
         public IEnumerable<string> GetCurrentRoles()
         {
             //Get roles for the current user
-            return UserAuth.RoleProvider.GetRolesForUser(UserAuth.CurrentUserName);
+            return GetUserRoles(UserAuth.CurrentUserName);
+        }
+
+        public IEnumerable<string> GetUserRoles(string username)
+        {
+            return UserAuth.RoleProvider.GetRolesForUser(username);
         }
     }
 }
