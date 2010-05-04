@@ -18,7 +18,7 @@ namespace FSNEP.Core.Domain
 
         public virtual User CreatedBy { get; set; }
 
-        [NotNullValidator]
+        [NotNullValidator(MessageTemplate = "You must select a supervisor")]
         public virtual User Supervisor { get; set; }
 
         [IgnoreNulls]
