@@ -2,8 +2,6 @@ using System.Linq;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UCDArch.Core.PersistanceSupport;
-using UCDArch.Data.NHibernate;
 
 namespace FSNEP.Tests.Repositories
 {
@@ -28,31 +26,6 @@ namespace FSNEP.Tests.Repositories
             Repository.OfType<TimeRecord>().EnsurePersistent(record);
 
             Assert.AreEqual(false, record.IsTransient());
-        }
-
-        protected override void LoadData()
-        {
-            using (var ts = new TransactionScope())
-            {
-                LoadStatus();
-
-                ts.CommitTransaction();
-            }
-
-            base.LoadData();
-
-            NHibernateSessionManager.Instance.GetSession().Flush();
-        }
-
-        public void LoadStatus()
-        {
-            var status1 = new Status { Name = "S1" };
-            var status2 = new Status { Name = "S2" };
-
-            var statusRepository = Repository.OfType<Status>();
-
-            statusRepository.EnsurePersistent(status1);
-            statusRepository.EnsurePersistent(status2);
         }
     }
 }

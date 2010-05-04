@@ -79,6 +79,7 @@
     <Compile Include="Domain\Record.cs" />
     <Compile Include="Domain\Status.cs" />
     <Compile Include="Domain\TimeRecord.cs" />
+    <Compile Include="Domain\TimeRecordEntry.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

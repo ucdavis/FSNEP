@@ -45,10 +45,21 @@ namespace FSNEP.Tests.Core
                 //load base data
                 CreateProjects();
                 CreateUsers();
-                
+                CreateStatus();
 
                 ts.CommitTransaction();
             }
+        }
+
+        private void CreateStatus()
+        {
+            var status1 = new Status { Name = "S1" };
+            var status2 = new Status { Name = "S2" };
+
+            var statusRepository = Repository.OfType<Status>();
+
+            statusRepository.EnsurePersistent(status1);
+            statusRepository.EnsurePersistent(status2);
         }
 
         private void CreateProjects()

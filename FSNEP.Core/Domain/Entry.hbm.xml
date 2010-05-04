@@ -11,10 +11,11 @@
 
     <many-to-one name="Record" class="Record" column="RecordID"></many-to-one>
     
-    <!--<joined-subclass name="TimeRecord" table="TimeRecords">
+    <joined-subclass name="TimeRecordEntry" table="TimeRecordEntries">
       <key column="ID"></key>
-      <property name="Salary"></property>
-    </joined-subclass>-->
+      <property name="Date"></property>
+      <property name="Hours"></property>
+    </joined-subclass>
     
   </class>
 </hibernate-mapping>
