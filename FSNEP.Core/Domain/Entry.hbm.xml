@@ -10,6 +10,10 @@
     <property name="Comment" />
 
     <many-to-one name="Record" class="Record" column="RecordID"></many-to-one>
+
+    <many-to-one name="Project" class="Project" column="ProjectID"></many-to-one>
+    <many-to-one name="FundType" class="FundType" column="FundTypeID"></many-to-one>
+    <many-to-one name="Account" class="Account" column="FinanceAccountID"></many-to-one>
     
     <joined-subclass name="TimeRecordEntry" table="TimeRecordEntries">
       <key column="ID"></key>
