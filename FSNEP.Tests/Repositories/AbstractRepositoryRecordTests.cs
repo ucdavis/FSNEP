@@ -264,13 +264,10 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(record);
-                if (record != null)
-                {
-                    var results = record.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Month: must be between 1 and 12");
-                    Assert.IsTrue(record.IsTransient());
-                    Assert.IsFalse(record.IsValid());
-                }
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Month: must be between 1 and 12");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
                 throw;
             }
         }
@@ -292,13 +289,10 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(record);
-                if (record != null)
-                {
-                    var results = record.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Month: must be between 1 and 12");
-                    Assert.IsTrue(record.IsTransient());
-                    Assert.IsFalse(record.IsValid());
-                }
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Month: must be between 1 and 12");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
                 throw;
             }
         }
@@ -320,13 +314,10 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(record);
-                if (record != null)
-                {
-                    var results = record.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Month: must be between 1 and 12");
-                    Assert.IsTrue(record.IsTransient());
-                    Assert.IsFalse(record.IsValid());
-                }
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Month: must be between 1 and 12");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
 
                 throw;
             }
@@ -352,13 +343,10 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(record);
-                if (record != null)
-                {
-                    var results = record.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Year: must be greater than or equal to 1");
-                    Assert.IsTrue(record.IsTransient());
-                    Assert.IsFalse(record.IsValid());
-                }
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Year: must be greater than or equal to 1");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
 
                 throw;
             }
@@ -381,13 +369,10 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(record);
-                if (record != null)
-                {
-                    var results = record.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Year: must be greater than or equal to 1");
-                    Assert.IsTrue(record.IsTransient());
-                    Assert.IsFalse(record.IsValid());
-                }
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Year: must be greater than or equal to 1");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
 
                 throw;
             }
@@ -413,13 +398,10 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(record);
-                if (record != null)
-                {
-                    var results = record.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("User: may not be empty");
-                    Assert.IsTrue(record.IsTransient());
-                    Assert.IsFalse(record.IsValid());
-                }
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("User: may not be empty");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
 
                 throw;
             }
@@ -446,13 +428,10 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(record);
-                if (record != null)
-                {
-                    var results = record.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Status: may not be empty");
-                    Assert.IsTrue(record.IsTransient());
-                    Assert.IsFalse(record.IsValid());
-                }
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Status: may not be empty");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
 
                 throw;
             }
@@ -514,13 +493,10 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(record);
-                if (record != null)
-                {
-                    var results = record.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("ReviewComment: length must be between 0 and 512");
-                    Assert.IsTrue(record.IsTransient());
-                    Assert.IsFalse(record.IsValid());
-                }
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("ReviewComment: length must be between 0 and 512");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
 
                 throw;
             }
@@ -546,13 +522,10 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(record);
-                if (record != null)
-                {
-                    var results = record.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Entries: may not be empty");
-                    Assert.IsTrue(record.IsTransient());
-                    Assert.IsFalse(record.IsValid());
-                }
+                var results = record.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Entries: may not be empty");
+                Assert.IsTrue(record.IsTransient());
+                Assert.IsFalse(record.IsValid());
 
                 throw;
             }
