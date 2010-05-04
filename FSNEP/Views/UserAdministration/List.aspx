@@ -26,92 +26,31 @@
             <%= this.Select("dlUserJump").Options(Model, a=>a.Id, a=>a.FullNameLastFirst).FirstOption("--Search--") %>
     </p>
     
-    <table>
-        <tr>
-            <th></th>
-            <th>Username</th>
-            <th>
-                FirstName
-            </th>
-            <th>
-                LastName
-            </th>
-            <th>
-                Salary
-            </th>
-            <th>
-                BenefitRate
-            </th>
-            <th>
-                FTE
-            </th>
-            <th>
-                ResetPassword
-            </th>
-            <th>
-                IsActive
-            </th>
-            <th>
-                FullName
-            </th>
-            <th>
-                FullNameLastFirst
-            </th>
-            <th>
-                Token
-            </th>
-            <th>
-                ID
-            </th>
-        </tr>
-
-    <% foreach (var item in Model) { %>
-    
-        <tr>
-            <td>
-                <%= Html.ActionLink("Edit", "ModifyById", new {id = item.Id}) %>
-            </td>
-            <td>
-                <%= Html.Encode(item.UserName) %>
-            </td>
-            <td>
-                <%= Html.Encode(item.FirstName) %>
-            </td>
-            <td>
-                <%= Html.Encode(item.LastName) %>
-            </td>
-            <td>
-                <%= Html.Encode(String.Format("{0:F}", item.Salary)) %>
-            </td>
-            <td>
-                <%= Html.Encode(String.Format("{0:F}", item.BenefitRate)) %>
-            </td>
-            <td>
-                <%= Html.Encode(String.Format("{0:F}", item.FTE)) %>
-            </td>
-            <td>
-                <%= Html.Encode(item.ResetPassword) %>
-            </td>
-            <td>
-                <%= Html.Encode(item.IsActive) %>
-            </td>
-            <td>
-                <%= Html.Encode(item.FullName) %>
-            </td>
-            <td>
-                <%= Html.Encode(item.FullNameLastFirst) %>
-            </td>
-            <td>
-                <%= Html.Encode(item.Token) %>
-            </td>
-            <td>
-                <%= Html.Encode(item.Id) %>
-            </td>
-        </tr>
-    
-    <% } %>
-
-    </table>
+    <%
+        Html.Grid(Model)
+            .Transactional()
+            .Name("Users")
+            .PrefixUrlParameters(false)
+            .Columns(col =>
+                         {
+                             col.Add(u =>
+                                         {%>
+                                            <%=Html.ActionLink("Edit", "Modify", new {id = u.UserName})%>
+                                            <%
+                                         });
+                             col.Add(x => x.UserName);
+                             col.Add(x => x.FirstName);
+                             col.Add(x => x.LastName);
+                             col.Add(x => x.Salary);
+                             col.Add(x => x.BenefitRate);
+                             col.Add(x => x.FTE);
+                             col.Add(x => x.Token);
+                         })
+            .Pageable(x => x.PageSize(20))
+            .Sortable()
+            .Render();
+           
+            %>
 
     <p>
         <%= Html.ActionLink("Create New", "Create") %>
