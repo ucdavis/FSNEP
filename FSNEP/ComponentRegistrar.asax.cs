@@ -1,9 +1,12 @@
+using System;
 using System.Linq;
 using System.Security.Principal;
 using Castle.Windsor;
 using FSNEP.BLL.Impl;
 using FSNEP.Core.Abstractions;
 using System.Web.Security;
+using CAESArch.Core.DataInterfaces;
+using CAESArch.BLL.Repositories;
 
 namespace FSNEP
 {
@@ -20,7 +23,14 @@ namespace FSNEP
 
             container.AddComponent("roleProvider", typeof (RoleProvider), typeof (RoleProviderService));
 
+            AddRepositoriesTo(container);
+
             AddBLLClassesTo(container);
+        }
+
+        private static void AddRepositoriesTo(IWindsorContainer container)
+        {
+            container.AddComponent("repository", typeof (IRepository), typeof (Repository));
         }
 
         /// <summary>

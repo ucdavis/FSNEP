@@ -1,5 +1,7 @@
+using System.Linq;
 using System.Web.Mvc;
 using CAESArch.BLL;
+using CAESArch.Core.DataInterfaces;
 using FSNEP.BLL.Impl;
 using FSNEP.Controllers.Helpers;
 using FSNEP.Controllers.Helpers.Attributes;
@@ -11,25 +13,29 @@ namespace FSNEP.Controllers
 {
     public class LookupController : SuperController
     {
+        public IRepository Repository;
+
         public IProjectBLL ProjectBLL;
         public IAccountBLL AccountBLL;
         public IExpenseTypeBLL ExpenseTypeBLL;
         public IActivityTypeBLL ActivityTypeBLL;
 
-        public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL, IExpenseTypeBLL expenseTypeBLL, IActivityTypeBLL activityTypeBLL)
+        public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL, IExpenseTypeBLL expenseTypeBLL, IActivityTypeBLL activityTypeBLL, IRepository repository)
         {
             ProjectBLL = projectBLL;
             AccountBLL = accountBLL;
             ExpenseTypeBLL = expenseTypeBLL;
             ActivityTypeBLL = activityTypeBLL;
+            Repository = repository;
         }
 
         [Transaction]
         public ActionResult ActivityTypes()
         {
-            var activeActivityTypes = ActivityTypeBLL.GetActive();
+            var activeActivityTypes =
+                Repository.OfType<ActivityType>().Queryable.Where(a => a.IsActive).OrderBy(a => a.Name).ToList();
 
-            ViewData["ActivityCategories"] = ActivityTypeBLL.GetActiveActivityCategories();
+            ViewData["ActivityCategories"] = Repository.OfType<ActivityCategory>().Queryable.Where(a => a.IsActive).OrderBy(a => a.Name).ToList();
 
             return View(activeActivityTypes);
         }
