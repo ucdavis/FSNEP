@@ -60,7 +60,7 @@ namespace FSNEP.Tests.Repositories
                     ts.CommitTransaction();
                 }
             }
-            catch (Exception message)
+            catch (Exception)
             {
                 var results = ValidateBusinessObject<FundType>.GetValidationResults(fundType).AsMessageList();
                 Assert.AreEqual(2, results.Count);
@@ -85,9 +85,11 @@ namespace FSNEP.Tests.Repositories
                     ts.CommitTransaction();
                 }
             }
-            catch (Exception message)
+            catch (Exception)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.FundType could not be persisted\n\n\r\nValidation Errors: Name, The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<FundType>.GetValidationResults(fundType).AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                Assert.AreEqual(true, results.Contains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive)."), "Expected the valadion result to have \"Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\"");                
                 throw;
             }
         }   
