@@ -75,7 +75,8 @@ $(function() {
 });
 
 function RemoveEntry(entryId) {
-    var data = { entryId: entryId };
+    
+    var data = { entryId: entryId, __RequestVerificationToken: __RequestVerificationToken };
 
     $.post(
         Services.RemoveEntry,
@@ -97,7 +98,9 @@ function GatherAddEntryData() {
     var account = $("#Account").val();
     var comment = $("#Comment").val();
 
-    var data = { Date : date, Hours: hours, ActivityType: activityType, FundType: fundType, Project: project, Account: account, Comment: comment };
+    var data = { Date: date, Hours: hours, ActivityType: activityType, FundType: fundType,
+                    Project: project, Account: account, Comment: comment, 
+                    __RequestVerificationToken: __RequestVerificationToken };
 
     return data;
 }

@@ -8,8 +8,16 @@
         GetEntry: '<%= Url.Action("GetEntry", "TimeRecord") %>',
         GetAccountsForProject: '<%= Url.Action("GetAccountsForProject", "Association") %>'
     }
+
+    var __RequestVerificationToken = null;
+
+    $(function() {
+        __RequestVerificationToken = $("input:hidden[name=__RequestVerificationToken]").val();
+    });
+    
 </script>
 
+<%= Html.AntiForgeryToken() %>
 <div style="width: 847px; margin: 0 auto;">
     <img src="../Images/cal_sunday.gif" alt="sunday" style="margin-left: 1px;" /><img
         src="../Images/cal_monday.gif" alt="monday" style="margin-left: 1px;" /><img src="../Images/cal_tuesday.gif"
