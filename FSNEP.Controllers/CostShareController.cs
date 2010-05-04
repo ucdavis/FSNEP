@@ -10,6 +10,7 @@ using UCDArch.Core.Utils;
 using UCDArch.Web.Attributes;
 using MvcContrib;
 using UCDArch.Web.Helpers;
+using System.Web;
 
 namespace FSNEP.Controllers
 {
@@ -93,10 +94,10 @@ namespace FSNEP.Controllers
         [AcceptPost]
         [Transaction]
         [ValidateAntiForgeryToken]
-        public ActionResult Entry(int id, CostShareEntry entry)
+        public ActionResult Entry(int id, CostShareEntry entry, HttpPostedFileBase postedFile)
         {
             var costShare = _costShareRepository.GetNullableByID(id);
-
+            
             Check.Require(costShare != null, "Invalid cost share indentifier");
 
             Check.Require(_costShareBLL.HasAccess(CurrentUser, costShare),
@@ -104,9 +105,25 @@ namespace FSNEP.Controllers
 
             entry.Record = costShare;
 
+            if (postedFile != null && postedFile.ContentLength != 0)
+            {
+                var entryFile = new EntryFile { Name = postedFile.FileName, Content = new byte[postedFile.ContentLength] };
+
+                postedFile.InputStream.Read(entryFile.Content, 0, postedFile.ContentLength);
+
+                if (entryFile.IsValid())
+                {
+                    entry.EntryFile = entryFile;
+                }
+                else
+                {
+                    entryFile.TransferValidationMessagesTo(ModelState);
+                }
+            }
+            
             entry.TransferValidationMessagesTo(ModelState);
 
-            if (!entry.IsValid())
+            if (!ModelState.IsValid)
             {
                 var viewModel = CostShareEntryViewModel.Create(Repository, _userBLL, _costShareBLL, costShare);
                 viewModel.Entry = entry;

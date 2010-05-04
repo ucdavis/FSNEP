@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -100,7 +100,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void RoutingCostShareEntryWithParametersMapsToEntry()
         {
-            "~/CostShare/Entry".ShouldMapTo<CostShareController>(a => a.Entry(5, new CostShareEntry()), true);
+            "~/CostShare/Entry".ShouldMapTo<CostShareController>(a => a.Entry(5, new CostShareEntry(), null), true);
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace FSNEP.Tests.Controllers
                 const int invalidId = 5;
                 _costShareRepository.Expect(a => a.GetNullableByID(invalidId)).Return(null).Repeat.Once();
                 var costShareEntry = CreateValidEntities.CostShareEntry(null);
-                Controller.Entry(invalidId, costShareEntry);
+                Controller.Entry(invalidId, costShareEntry, null);
             }
             catch (Exception message)
             {
@@ -415,7 +415,7 @@ namespace FSNEP.Tests.Controllers
                 _costShareRepository.Expect(a => a.GetNullableByID(validId)).Return(costShare).Repeat.Once();
                 _costShareBLL.Expect(a => a.HasAccess(_principal, costShare)).Return(false).Repeat.Once();
                 var costShareEntry = CreateValidEntities.CostShareEntry(null);
-                Controller.Entry(validId, costShareEntry);
+                Controller.Entry(validId, costShareEntry, null);
             }
             catch (Exception message)
             {
@@ -447,7 +447,7 @@ namespace FSNEP.Tests.Controllers
 
             var costShareEntry = CreateValidEntities.CostShareEntry(null);
             costShareEntry.ExpenseType = null;
-            var result = Controller.Entry(validId, costShareEntry)
+            var result = Controller.Entry(validId, costShareEntry, null)
                 .AssertViewRendered()
                 .WithViewData<CostShareEntryViewModel>();
 
@@ -484,7 +484,7 @@ namespace FSNEP.Tests.Controllers
 
 
             var costShareEntry = CreateValidEntities.CostShareEntry(null);
-            Controller.Entry(validId, costShareEntry)
+            Controller.Entry(validId, costShareEntry, null)
                 .AssertActionRedirect()
                 .ToAction<CostShareController>(a => a.Entry(validId));
                 

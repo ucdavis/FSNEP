@@ -44,8 +44,11 @@
     
     <%= Html.ValidationSummary("Cost Share Entry was unsuccessful. Please correct the errors and try again.") %>
     <%= Html.ClientSideValidation<FSNEP.Core.Domain.CostShareEntry>("Entry") %>
+    <%= Html.ClientSideValidation<FSNEP.Core.Domain.CostShareEntry>()
+            .AddRule("PostedFile", new xVal.Rules.RegularExpressionRule(@"^.+\.(pdf)$", RegexOptions.IgnoreCase) { ErrorMessage = "File Must be a PDF" })
+    %>
     
-    <% using(Html.BeginForm()) {%>
+    <% using(Html.BeginForm("Entry", "CostShare", FormMethod.Post, new { id = "entryForm", enctype = "multipart/form-data" })) {%>
         <%= Html.AntiForgeryToken() %>
         
         <%= Html.Hidden("id", Model.CostShare.Id) %>
@@ -64,6 +67,9 @@
             </p>
             <p>
                 <%= this.TextBox("Entry.Description").Label("Expense Description:")%>
+            </p>
+            <p>
+                <%= this.FileUpload("PostedFile").Label("Expense Recepit:") %>
             </p>
             <p>
                 <%= this.Select("Entry.FundType")

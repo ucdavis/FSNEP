@@ -3,6 +3,7 @@ using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
 using UCDArch.Core.NHibernateValidator.Extensions;
 using FSNEP.Core.Abstractions;
+using System.Text.RegularExpressions;
 
 namespace FSNEP.Core.Domain
 {
@@ -18,6 +19,7 @@ namespace FSNEP.Core.Domain
 
         [Required]
         [Length(50)]
+        [Pattern(@"^.+\.(pdf)$", RegexOptions.IgnoreCase, "File must be a PDF")]
         public virtual string Name { get; set; }
 
         public virtual DateTime DateAdded { get; set; }
