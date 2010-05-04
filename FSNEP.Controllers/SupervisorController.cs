@@ -1,12 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Elmah;
+using FSNEP.BLL.Impl;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Core.Utils;
 using MvcContrib;
+using MvcContrib.Attributes;
+using ApplicationException=Elmah.ApplicationException;
 
 namespace FSNEP.Controllers
 {
@@ -14,11 +17,13 @@ namespace FSNEP.Controllers
     {
         private readonly ICostShareBLL _costShareBLL;
         private readonly ITimeRecordBLL _timeRecordBLL;
+        private readonly IUserBLL _userBLL;
 
-        public SupervisorController(ICostShareBLL costShareBLL, ITimeRecordBLL timeRecordBLL)
+        public SupervisorController(ICostShareBLL costShareBLL, ITimeRecordBLL timeRecordBLL, IUserBLL userBLL)
         {
             _costShareBLL = costShareBLL;
             _timeRecordBLL = timeRecordBLL;
+            _userBLL = userBLL;
         }
 
         public ActionResult CostShareList()
@@ -139,21 +144,35 @@ namespace FSNEP.Controllers
         [Authorize(Roles = "Supervisor")]
         public ActionResult AssignDelegate()
         {
-            var users = Repository.OfType<User>().Queryable.Where(x => x.IsActive && x.UserName != CurrentUser.Identity.Name).ToList();
+            var users = Repository.OfType<User>().Queryable.Where(x => x.IsActive && x.UserName != CurrentUser.Identity.Name).OrderBy(x=>x.LastName).ToList();
 
             return View(users);
+        }
+
+        [AcceptPost]
+        public ActionResult AssignDelegate(Guid userId)
+        {
+            throw new NotImplementedException();
         }
 
         [Authorize(Roles="Supervisor")]
         public ActionResult RemoveDelegate()
         {
-            var delegateUser =
-                Repository.OfType<User>().Queryable.Where(x => x.UserName == CurrentUser.Identity.Name).Select(
-                    x => x.Delegate).SingleOrDefault();
-
-            if (delegateUser == null) this.RedirectToAction(x => x.Delegate());
+            Guid delegateUserId =
+                _userBLL.Queryable.Where(x => x.UserName == CurrentUser.Identity.Name && x.Delegate != null).Select(
+                x => x.Delegate.Id).SingleOrDefault();
+            
+            var delegateUser = _userBLL.GetNullableByID(delegateUserId);
+            
+            if (delegateUser == null) return this.RedirectToAction(x => x.AssignDelegate());
 
             return View(delegateUser);
+        }
+
+        [AcceptPost]
+        public ActionResult RemoveDelegate(Guid userId)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -10,6 +10,15 @@
 
     <p><%= Html.Encode(Model.FullName) %> is currently assigned as your delegate</p>
     
-    <p><input type="submit" value="Click Here To Remove Your Delegate" /></p>
+    <% using(Html.BeginForm()) { %>
+        <%= Html.AntiForgeryToken() %>
+        
+        <%= this.Hidden("UserId").Value(Model.Id) %>
+        
+        <p>
+            <input type="submit" value="Click Here To Remove Your Delegate" />
+        </p>
+
+    <% } %>
 
 </asp:Content>
