@@ -108,6 +108,7 @@
     <Compile Include="BLL\RecordBLLTests.cs" />
     <Compile Include="BLL\ReportBLLTests.cs" />
     <Compile Include="Controllers\AssociationControllerTests.cs" />
+    <Compile Include="Controllers\CostShareAuditControllerTests.cs" />
     <Compile Include="Controllers\CostShareControllerTests.cs" />
     <Compile Include="Controllers\FileControllerTests.cs" />
     <Compile Include="Controllers\LookupControllerTests.cs" />
