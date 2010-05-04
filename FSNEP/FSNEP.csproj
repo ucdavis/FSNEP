@@ -72,10 +72,6 @@
       <HintPath>..\Bin\HibernatingRhinos.NHibernate.Profiler.Appender.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL" />
-    <Reference Include="LinFu.DynamicProxy, Version=1.0.3.14911, Culture=neutral, PublicKeyToken=62a6874124340d6e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\LinFu.DynamicProxy.dll</HintPath>
-    </Reference>
     <Reference Include="MvcContrib, Version=1.0.0.916, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\MvcContrib.dll</HintPath>
@@ -92,9 +88,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate.ByteCode.LinFu, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="NHibernate.ByteCode.Spring, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\NHibernate.ByteCode.LinFu.dll</HintPath>
+      <HintPath>..\Bin\NHibernate.ByteCode.Spring.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
