@@ -101,7 +101,7 @@ namespace FSNEP.Controllers
         /// <returns></returns>
         public ActionResult CostShare()
         {
-            var projects = _userBLL.GetAllProjectsByUser(Repository.OfType<Project>()).ToList();
+            var projects = _userBLL.GetAllProjectsByUser(Repository.OfType<Project>()).OrderBy(x=>x.Name).ToList();
 
             return View(projects);
         }
