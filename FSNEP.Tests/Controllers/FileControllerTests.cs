@@ -73,9 +73,9 @@ namespace FSNEP.Tests.Controllers
         /// Tests the view entry file returns file result when user has access.
         /// </summary>
         [TestMethod]
-        public void TestViewEntryFileReturnsFileResultWhenUserHasAccess()
+        public void TestViewEntryFileReturnsFileResultWhenUserHasReviewAccess()
         {
-            const bool hasAccess = true;
+            const bool hasReviewAccess = true;
 
             var costShareEntries = new List<CostShareEntry>();
             FakeCostShareEntries(costShareEntries, 3);
@@ -86,7 +86,7 @@ namespace FSNEP.Tests.Controllers
             FakeCostShareRecords(costShareRecords, 3);
             _costShareRepository.Expect(a => a.GetNullableByID(2)).Return(costShareRecords[1]).Repeat.Once();
 
-            _costShareBLL.Expect(a => a.HasAccess(_principal, costShareRecords[1])).Return(hasAccess).Repeat.Once();
+            _costShareBLL.Expect(a => a.HasReviewAccess(_principal, costShareRecords[1])).Return(hasReviewAccess).Repeat.Once();
 
             var result = Controller.ViewEntryFile(1)
                 .AssertResultIs<FileResult>();
