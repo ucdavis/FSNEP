@@ -21,6 +21,17 @@ namespace FSNEP.Core.Domain
             }
         }
 
+        /// <summary>
+        /// Readonly property that returns the full month name
+        /// </summary>
+        public virtual string MonthName
+        {
+            get
+            {
+                return Date.ToString("MMMM");
+            }
+        }
+
         [NotNull]
         public virtual User User { get; set; }
 
