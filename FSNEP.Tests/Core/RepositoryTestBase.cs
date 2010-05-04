@@ -32,10 +32,6 @@ namespace FSNEP.Tests.Core
             
             ServiceLocatorInitializer.Init();
             LoadData();
-
-            
-
-            HibernatingRhinos.NHibernate.Profiler.Appender.NHibernateProfiler.Initialize();
         }
 
         protected virtual void LoadData()
