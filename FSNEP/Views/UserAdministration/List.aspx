@@ -28,7 +28,6 @@
     
     <%
         Html.Grid(Model)
-            .Transactional()
             .Name("Users")
             .PrefixUrlParameters(false)
             .Columns(col =>

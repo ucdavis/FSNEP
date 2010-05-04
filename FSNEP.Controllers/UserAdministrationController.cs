@@ -37,12 +37,12 @@ namespace FSNEP.Controllers
         /// <summary>
         /// Provides a list of all active users in the system
         /// </summary>
-        [HandleTransactionManually] //List will handle the transaction
+        [Transaction]
         public ActionResult List()
         {
             var users = UserBLL.GetAllUsers();
 
-            return View(users);
+            return View(users.ToList());
         }
 
         /// <summary>
