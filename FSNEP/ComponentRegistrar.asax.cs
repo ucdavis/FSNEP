@@ -1,7 +1,6 @@
 using System.Linq;
 using Castle.Windsor;
 using FSNEP.BLL.Impl;
-using FSNEP.Controllers;
 using FSNEP.Core.Abstractions;
 
 namespace FSNEP

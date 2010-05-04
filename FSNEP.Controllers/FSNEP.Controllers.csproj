@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CAESArch.BLL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=667f3cb07abadf4b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\CAESArch.BLL.dll</HintPath>
+    </Reference>
     <Reference Include="CAESArch.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=667f3cb07abadf4b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\CAESArch.Core.dll</HintPath>
@@ -86,6 +90,10 @@
     <Compile Include="SuperController.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FSNEP.BLL\FSNEP.BLL.csproj">
+      <Project>{C99762B2-05D5-4DD8-8F98-E0B5244EB402}</Project>
+      <Name>FSNEP.BLL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FSNEP.Core\FSNEP.Core.csproj">
       <Project>{E8EF47BB-45DB-480D-94B0-0F5E43E7DFC4}</Project>
       <Name>FSNEP.Core</Name>
