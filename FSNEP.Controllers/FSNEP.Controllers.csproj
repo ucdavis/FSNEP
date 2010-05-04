@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountController.cs" />
+    <Compile Include="AdministrationController.cs" />
     <Compile Include="Helpers\Attributes\HandleErrorWithELMAHAttribute.cs" />
     <Compile Include="Helpers\Attributes\TransactionAttribute.cs" />
     <Compile Include="HomeController.cs" />
