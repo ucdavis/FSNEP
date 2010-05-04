@@ -119,45 +119,60 @@ namespace FSNEP.Controllers
                 }
                 else
                 {
-                    //This approach clears out all entered info for the user if there is an error
+                    //This approach maintains all entered info for the user if there is an error
                     switch (createStatus)
                     {
                         case MembershipCreateStatus.DuplicateEmail:
                             //This is currently disabled in the Web.config
                             ModelState.AddModelError("_FORM", "Create Failed Duplicate Email");
-                            return Create();
+                            break; // return Create();
                         case MembershipCreateStatus.DuplicateProviderUserKey:
                             ModelState.AddModelError("_FORM", "Create Failed Duplicate Provider User Key");
-                            return Create();
+                            break; // return Create();
                         case MembershipCreateStatus.DuplicateUserName:
                             //This one should be working 
                             ModelState.AddModelError("UserName", "Username already exists");
-                            return Create();
+                            break; // return Create();
                         case MembershipCreateStatus.InvalidAnswer:
                             ModelState.AddModelError("_FORM", "Create Failed Invalid Answer");
-                            return Create();
+                            break; // return Create();
                         case MembershipCreateStatus.InvalidEmail:
                             ModelState.AddModelError("_FORM", "Create Failed Invalid Email");
-                            return Create();
+                            break; // return Create();
                         case MembershipCreateStatus.InvalidQuestion:
                             ModelState.AddModelError("_FORM", "Create Failed Invalid Question");
-                            return Create();
+                            break; // return Create();
                         case MembershipCreateStatus.InvalidUserName:
                             ModelState.AddModelError("_FORM", "Create Failed Invalid User Name");
-                            return Create();
+                            break; // return Create();
                         case MembershipCreateStatus.ProviderError:
                             ModelState.AddModelError("_FORM", "Create Failed Provider Error");
-                            return Create();
+                            break; // return Create();
+                        //Added these two back, if we don't want them here we can disable the two unit tests.
+                        case MembershipCreateStatus.InvalidProviderUserKey:
+                            ModelState.AddModelError("_FORM", "Create Failed Invalid Provider User Key");
+                            break; // return Create();
+                        case MembershipCreateStatus.InvalidPassword:
+                            ModelState.AddModelError("_FORM", "Create Failed Invalid Password");
+                            break; // return Create();
                         case MembershipCreateStatus.Success:
+                            throw new ApplicationException("Unexpected value.");
                             break;
                         case MembershipCreateStatus.UserRejected:
                             ModelState.AddModelError("_FORM", "Create Failed User Rejected");
-                            return Create();
+                            break; // return Create();
                         default:
                             ModelState.AddModelError("_FORM", "Create Failed");
-                            return Create();
+                            break; // return Create();
 
                     }
+                    //If we aren't valid, return to the create page
+                    var viewModel = CreateUserViewModel.Create(UserBLL);
+                    viewModel.TransferValuesFrom(model);
+
+                    viewModel.UserRoles = roleList;
+
+                    return View(viewModel);
                 }
 
 
