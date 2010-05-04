@@ -192,16 +192,29 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Modifies the existing valid user saves valid changes.
         /// </summary>
-        [TestMethod, Ignore]
+        [TestMethod]
         public void ModifyExistingValidUserSavesValidChanges()
         {           
             CreateUserViewModel userModelOriginal = CreateValidUserModel();
             CreateAndAttachProjectsToUser(userModelOriginal);
-            CreateAndAttachFundTypesToUser(userModelOriginal, false);
-
-            var newUser = userModelOriginal.User;
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);            
 
             MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = new User
+                              {
+                                  FirstName = userModelOriginal.User.FirstName,
+                                  LastName = userModelOriginal.User.LastName,
+                                  Salary = userModelOriginal.User.Salary,
+                                  FTE = userModelOriginal.User.FTE,
+                                  BenefitRate = userModelOriginal.User.BenefitRate,
+                                  IsActive = userModelOriginal.User.IsActive,
+                                  Supervisor = userModelOriginal.User.Supervisor,
+                                  FundTypes = userModelOriginal.User.FundTypes,
+                                  Projects = userModelOriginal.User.Projects
+                              };
+
+            newUser.LastName = "NewLastName"; //Change it
 
             Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
 
@@ -1086,6 +1099,7 @@ namespace FSNEP.Tests.Controllers
                 FTE = validValueFte,
                 IsActive = true,
                 Supervisor = supervisor,
+                UserName = "UserName"
             };
 
             var userId = Guid.NewGuid();
