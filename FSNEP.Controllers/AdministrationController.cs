@@ -32,6 +32,16 @@ namespace FSNEP.Controllers
         }
 
         /// <summary>
+        /// Provides a list of all active users in the system
+        /// </summary>
+        public ActionResult ListUsers()
+        {
+            var users = UserBLL.GetAllUsers();
+
+            return View(users);
+        }
+
+        /// <summary>
         /// TODO: Remove this testing method
         /// </summary>
         public ActionResult DeleteUser(string id)

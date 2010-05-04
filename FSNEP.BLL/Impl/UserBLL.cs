@@ -24,6 +24,7 @@ namespace FSNEP.BLL.Impl
         void AddUserToRoles(string name, List<string> roleList);
         IQueryable<User> GetSubordinates(User user);
         void SetRoles(string username, List<string> roleList);
+        IQueryable<User> GetAllUsers();
     }
 
     public class UserBLL : GenericBLL<User,Guid>, IUserBLL
@@ -135,6 +136,38 @@ namespace FSNEP.BLL.Impl
 
             //now add in their new roles
             UserAuth.RoleProvider.AddUsersToRoles(new[] {username}, roleList.ToArray());
+        }
+
+        public IQueryable<User> GetAllUsers()
+        {
+            if (UserAuth.IsCurrentUserInRole(RoleNames.RoleAdmin))
+            {
+                //Admins can get all active users
+                return Repository.Queryable.Where(u => u.IsActive).OrderBy(u => u.LastName);
+            }
+            
+            if (UserAuth.IsCurrentUserInRole(RoleNames.RoleProjectAdmin))
+            {
+                //Filtered admin can only get users who are associated with their projects
+                /*
+
+                var projectIds = new List<int>();
+
+                foreach (var project in GetUser().Projects)
+                {
+                    projectIds.Add(project.ID);
+                }
+                */
+                var currentUserProjects = GetUser().Projects;
+
+                var users = from u in Repository.Queryable
+                            where u.IsActive && u.Projects.Any(p => currentUserProjects.Contains(p))
+                            select u;
+
+                return users;
+            }
+
+            return null;
         }
     }
 }
