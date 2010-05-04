@@ -25,7 +25,14 @@ namespace FSNEP.BLL.Dev
 
         public ReportResult GenerateCostShare(Project project, int year, ReportType reportType)
         {
-            throw new NotImplementedException();
+            const string reportPath = "/FSNEP.Report/CostShare";
+
+            var parameters = new ListDictionary();
+
+            parameters["projectID"] = project.Id;
+            parameters["year"] = year;
+
+            return GetReport(reportPath, parameters, reportType);
         }
 
         public ReportResult GetReport(string reportPath, ListDictionary parameters, ReportType reportType)
