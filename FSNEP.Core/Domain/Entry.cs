@@ -19,15 +19,12 @@ namespace FSNEP.Core.Domain
         public virtual string Comment { get; set; }
 
         [NotNull]
-        //[JsonProperty(IsReference = true)]
         public virtual Project Project { get; set; }
 
         [NotNull]
-        [JsonProperty]
         public virtual FundType FundType { get; set; }
 
         [NotNull]
-        [JsonProperty]
         public virtual Account Account { get; set; }
     }
 }

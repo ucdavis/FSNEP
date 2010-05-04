@@ -115,7 +115,17 @@ namespace FSNEP.Controllers
 
             Check.Require(entry != null, "Entry not found");
 
-            return new JsonNetResult(entry);
+            var result = new
+                             {
+                                 entry.Hours, 
+                                 entry.Id, 
+                                 entry.Comment, 
+                                 Project = entry.Project.Name,
+                                 Account = entry.Account.Name,
+                                 FundType = entry.FundType.Name
+                             };
+
+            return new JsonNetResult(result);
         }
 
         /// <summary>
