@@ -17,7 +17,7 @@
         <% if (currentUserName != lastUserName) { %>
         
             <tr class="ui-widget-header">
-                <td colspan="4"><%= Html.Encode(currentUserName)%></td>
+                <td colspan="4"><h3><%= Html.Encode(currentUserName)%></h3></td>
             </tr>
         
         <% lastUserName = currentUserName; %>
