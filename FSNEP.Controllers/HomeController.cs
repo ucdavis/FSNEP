@@ -25,6 +25,7 @@ namespace FSNEP.Controllers
             return View("Error", errorMessage);
         }
 
+        [BypassAntiForgeryToken]
         public ActionResult Menu()
         {
             var viewModel = UserPermissionsViewModel.Create(CurrentUser);
