@@ -1,9 +1,12 @@
-﻿using System.Security.Principal;
+﻿using System;
+using System.Security.Principal;
 using System.Web;
+using System.Web.Mvc;
 using FSNEP.BLL.Dev;
 using FSNEP.BLL.Impl;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Controllers;
+using FSNEP.Core.Abstractions;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core.Extensions;
 using FSNEP.Tests.Core.Helpers;
@@ -11,6 +14,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
 using UCDArch.Core.PersistanceSupport;
+using UCDArch.Testing;
 
 namespace FSNEP.Tests.Controllers
 {
@@ -32,6 +36,7 @@ namespace FSNEP.Tests.Controllers
         {
             Controller.ControllerContext.HttpContext.User = _principal;
             _timeRecordRepository = FakeRepository<TimeRecord>();
+            Controller.Repository.Expect(a => a.OfType<TimeRecord>()).Return(_timeRecordRepository);
         }
 
         protected override void SetupController()
@@ -100,6 +105,56 @@ namespace FSNEP.Tests.Controllers
         }
 
         #endregion Routing Tests
+
+        #region PrintOwnTimeRecord Tests
+
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void PrintOwnTimeRecordThrowsExceptionWhenIdNotFound()
+        {
+            try
+            {
+                Controller.PrintOwnTimeRecord(5);
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Record not found", ex.Message);
+                throw;
+            }
+            
+        }
+
+        [TestMethod]
+        public void PrintOwnTimeRecordWhenNoAccessReturnsHttpUnauthorizedResult()
+        {
+            var timeRecord = CreateValidEntities.TimeRecord(null);
+            timeRecord.User = _currentUser;
+            timeRecord.SetIdTo(5);
+            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+
+            //We do not care about the comparison that HasAccess is doing in the BLL
+            _timeRecordBLL.Expect(a => a.HasAccess(_principal, timeRecord)).Return(false).Repeat.Once();
+
+            Controller.PrintOwnTimeRecord(timeRecord.Id).AssertResultIs<HttpUnauthorizedResult>();
+        }
+
+        [TestMethod]
+        public void PrintOwnTimeRecordWhenHasAccessReturnsFileContentResult()
+        {
+            var timeRecord = CreateValidEntities.TimeRecord(null);
+            timeRecord.User = _currentUser;
+            timeRecord.SetIdTo(5);
+            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+
+            //We do not care about the comparison that HasAccess is doing in the BLL
+            _timeRecordBLL.Expect(a => a.HasAccess(_principal, timeRecord)).Return(true).Repeat.Once();
+            _reportBLL.Expect(a => a.GenerateIndividualTimeRecordReport(timeRecord, ReportType.PDF)).Return(
+                new ReportResult(new byte[1], "contentType")).Repeat.Once();
+
+            Controller.PrintOwnTimeRecord(timeRecord.Id).AssertResultIs<FileContentResult>();
+        }
+
+        #endregion PrintOwnTimeRecord Tests
 
         #region mocks
         /// <summary>
