@@ -33,6 +33,9 @@
         <p>
             <input type="submit" value="Generate!" />
         </p>
+        <p>
+            *Year Represents The Larger Year During A Fiscal Cycle (i.e. Oct 2008 -- Sept 2009 would be 2009)  
+        </p>
     </fieldset>
     
     <% } %>

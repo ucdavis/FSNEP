@@ -7,10 +7,10 @@ using FSNEP.Controllers.Helpers.Extensions;
 using FSNEP.Core.Domain;
 using UCDArch.Core.Utils;
 using MvcContrib.Attributes;
-using FSNEP.Core.Abstractions;
 
 namespace FSNEP.Controllers
 {
+    [Authorize]
     public class ReportController : SuperController
     {
         private readonly ITimeRecordBLL _timeRecordBLL;
