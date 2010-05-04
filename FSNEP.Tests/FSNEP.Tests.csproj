@@ -136,6 +136,7 @@
     <Compile Include="Repositories\RecordTrackingRepositoryTests.cs" />
     <Compile Include="Repositories\TimeRecordEntryRepositoryTests.cs" />
     <Compile Include="Repositories\TimeRecordRepositoryTests.cs" />
+    <Compile Include="Repositories\UserBllRepositoryTests.cs" />
     <Compile Include="Repositories\UserRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>

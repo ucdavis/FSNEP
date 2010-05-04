@@ -41,24 +41,38 @@ namespace FSNEP.BLL.Impl
             return fundTypeRepository.Queryable;
         }
 
+        /// <summary>
+        /// Gets all projects by user.
+        /// All active projects will be returned if the current user is in the role "RoleNames.RoleAdmin"
+        /// Otherwise, all active projects will be returned that are linked to the current user.
+        /// </summary>
+        /// <param name="projectRepository">The project repository.</param>
+        /// <returns></returns>
         public IQueryable<Project> GetAllProjectsByUser(IRepository<Project> projectRepository)
-        {
+        {            
             if (UserAuth.IsCurrentUserInRole(RoleNames.RoleAdmin))
             {
                 return projectRepository.Queryable.Where(p => p.IsActive);
             }
 
-            if (UserAuth.IsCurrentUserInRole(RoleNames.RoleProjectAdmin))
-            {
-                var currentUser = GetUser();
-                
-                Check.Ensure(currentUser != null);
-                Check.Ensure(currentUser.Projects != null, "User must have at least one project");
+            //if (UserAuth.IsCurrentUserInRole(RoleNames.RoleProjectAdmin))
+            //{
+            //    var currentUser = GetUser();                
+            //    Check.Ensure(currentUser != null);
+            //    Check.Ensure(currentUser.Projects != null, "User must have at least one project");
+            //    return currentUser.Projects.Where(p => p.IsActive).AsQueryable();
+            //}
 
-                return currentUser.Projects.Where(p => p.IsActive).AsQueryable();
-            }
+            var currentUser = GetUser();
+            Check.Ensure(currentUser != null);
+            Check.Ensure(currentUser.Projects != null, "User must have at least one project");
+            
+            //Extra checks may not be needed
+            var projects = currentUser.Projects.Where(p => p.IsActive).ToList();
+            Check.Ensure(projects != null, "User must have at least one project");
+            Check.Ensure(projects.Count() != 0, "User must have at least one active project");
 
-            return null;
+            return currentUser.Projects.Where(p => p.IsActive).AsQueryable();
         }
 
         public IQueryable<User> GetSupervisors()
@@ -77,6 +91,10 @@ namespace FSNEP.BLL.Impl
             return users;
         }
 
+        /// <summary>
+        /// Gets the user from the UserAuth.CurrentUsername.
+        /// </summary>
+        /// <returns></returns>
         public User GetUser()
         {
             return GetUser(UserAuth.CurrentUserName);
