@@ -47,7 +47,7 @@ namespace FSNEP.Controllers
         {
             user = new User();
 
-            ValidationHelper<User>.Validate(user, ModelState);
+            ValidationHelper<User>.Validate(user, ModelState, "User");
 
             
             //Look for errors
