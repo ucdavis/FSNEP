@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using FSNEP.Tests.Core;
 using FSNEP.Tests.Core.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -245,12 +246,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("FirstName: may not be null or empty");
-                }
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("FirstName: may not be null or empty");
+
                 throw;
             }
         }
@@ -270,12 +270,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("FirstName: length must be between 0 and 50");
-                }
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("FirstName: length must be between 0 and 50");
+
                 throw;
             }
         }
@@ -297,12 +296,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("LastName: may not be null or empty");
-                }
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("LastName: may not be null or empty");
+
                 throw;
             }
         }
@@ -322,12 +320,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("LastName: may not be null or empty");
-                }
+ 
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("LastName: may not be null or empty");
+
                 throw;
             }
         }
@@ -347,12 +344,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("LastName: length must be between 0 and 50");
-                }
+    
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("LastName: length must be between 0 and 50");
+   
                 throw;
             }
         }
@@ -383,12 +379,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("Supervisor: may not be empty");
-                }
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("Supervisor: may not be empty");
+  
                 throw;
             }
         }
@@ -412,12 +407,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("Salary: Must be greater than zero");
-                }
+     
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("Salary: Must be greater than zero");
+     
                 throw;
             }
         }
@@ -437,12 +431,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("Salary: Must be greater than zero");
-                }
+                
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("Salary: Must be greater than zero");
+            
                 throw;
             }
         }
@@ -463,12 +456,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("BenefitRate: must be between 0 and 2");
-                }
+           
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("BenefitRate: must be between 0 and 2");
+             
                 throw;
             }
         }
@@ -488,12 +480,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("BenefitRate: must be between 0 and 2");
-                }
+             
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("BenefitRate: must be between 0 and 2");
+             
                 throw;
             }
         }
@@ -529,12 +520,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("FTE: must be between 0.01 and 1");
-                }
+           
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("FTE: must be between 0.01 and 1");
+         
                 throw;
             }
         }
@@ -554,12 +544,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("FTE: must be between 0.01 and 1");
-                }
+     
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("FTE: must be between 0.01 and 1");
+
                 throw;
             }
         }
@@ -579,12 +568,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 Assert.IsNotNull(user);
-                if (user != null)
-                {
-                    var results = user.ValidationResults().AsMessageList();
-                    Assert.AreEqual(1, results.Count);
-                    results.AssertContains("FTE: must be between 0.01 and 1");
-                }
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("FTE: must be between 0.01 and 1");
+
                 throw;
             }          
         }
@@ -596,6 +584,252 @@ namespace FSNEP.Tests.Repositories
             user.FTE = 0.01;
             UserBLL.EnsurePersistent(user, true);
         }
+
+        #region Email Tests
+
+        /// <summary>
+        /// Users the does not save with null email.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithNullEmail()
+        {
+            User user = null;
+            try
+            {
+                user = CreateValidUser();
+                user.Email = null;
+
+                UserBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(user);
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("Email: Email should be set upon creation");
+
+                throw;
+            }  
+        }
+
+        /// <summary>
+        /// Users the does not save with empty email.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithEmptyEmail()
+        {
+            User user = null;
+            try
+            {
+                user = CreateValidUser();
+                user.Email = string.Empty;
+
+                UserBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(user);
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(2, results.Count);
+                results.AssertContains(
+                    "Email: Email should be set upon creation",
+                    "Email: length must be between 1 and 256");
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Users the does not save with spaces only email.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithSpacesOnlyEmail()
+        {
+            User user = null;
+            try
+            {
+                user = CreateValidUser();
+                user.Email = " ";
+
+                UserBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(user);
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains(
+                    "Email: Email should be set upon creation");
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Users the does not save with too long email.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithTooLongEmail()
+        {
+            User user = null;
+            try
+            {
+                user = CreateValidUser();
+                var sb = new StringBuilder();
+                for (int i = 0; i < 25; i++)
+                {
+                    sb.Append("1234567890");
+                }
+                sb.Append("1234567");
+                user.Email = sb.ToString();
+
+                Assert.AreEqual(257, user.Email.Length);
+
+                UserBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(user);
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("Email: length must be between 1 and 256");
+
+                throw;
+            }
+        }
+
+        #endregion Email Tests
+
+        #region UserName Tests
+
+        /// <summary>
+        /// User does not save with null user name.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithNullUserName()
+        {
+            User user = null;
+            try
+            {
+                user = CreateValidUser();
+                user.UserName = null;
+
+                UserBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(user);
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("UserName: Username should be set upon creation");
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// User does not save with empty user name.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithEmptyUserName()
+        {
+            User user = null;
+            try
+            {
+                user = CreateValidUser();
+                user.UserName = string.Empty;
+
+                UserBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(user);
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(2, results.Count);
+                results.AssertContains(
+                    "UserName: Username should be set upon creation",
+                    "UserName: length must be between 1 and 256");
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// User does not save with spaces only user name.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithSpacesOnlyUserName()
+        {
+            User user = null;
+            try
+            {
+                user = CreateValidUser();
+                user.UserName = " ";
+
+                UserBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(user);
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("UserName: Username should be set upon creation");
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Users the does not save with too long user name.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithTooLongUserName()
+        {
+            User user = null;
+            try
+            {
+                user = CreateValidUser();
+                var sb = new StringBuilder();
+                for (int i = 0; i < 25; i++)
+                {
+                    sb.Append("1234567890");
+                }
+                sb.Append("1234567");
+                user.UserName = sb.ToString();
+
+                Assert.AreEqual(257, user.UserName.Length);
+
+                UserBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(user);
+
+                var results = user.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("UserName: length must be between 1 and 256");
+
+                throw;
+            }
+        }
+
+        #endregion UserName Tests
+
 
         #region Helper Methods
         private static IList<FundType> FakeFundTypes()
