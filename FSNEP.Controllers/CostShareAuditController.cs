@@ -16,7 +16,8 @@ namespace FSNEP.Controllers
         public ActionResult History(int? projectId)
         {
             var viewModel = CostShareAuditHistoryViewModel.Create(Repository.OfType<Project>(),
-                                                                  Repository.OfType<CostShare>(), projectId);
+                                                                  Repository.OfType<Record>(), Repository.OfType<User>(),
+                                                                  projectId);
 
             return View(viewModel);
         }
@@ -24,7 +25,7 @@ namespace FSNEP.Controllers
 
     public class CostShareAuditHistoryViewModel
     {
-        public static CostShareAuditHistoryViewModel Create(IRepository<Project> projectRepository, IRepository<CostShare> costShareRepository, int? projectId)
+        public static CostShareAuditHistoryViewModel Create(IRepository<Project> projectRepository, IRepository<Record> recordRepository, IRepository<User> userRepository, int? projectId)
         {
             var chosenProject = projectId.HasValue ? projectRepository.GetNullableByID(projectId.Value) : null;
 
@@ -34,15 +35,17 @@ namespace FSNEP.Controllers
 
             if (chosenProject != null)
             {
-                viewModel.CostShares =
-                    costShareRepository.Queryable.Where(x => x.User.Projects.Contains(chosenProject)).OrderByDescending(
+                var availableCostShareUserIds = userRepository.Queryable.Where(x => x.Projects.Contains(chosenProject)).Select(x=>x.Id).ToList();
+
+                viewModel.Records =
+                    recordRepository.Queryable.Where(x => availableCostShareUserIds.Contains(x.User.Id)).OrderByDescending(
                         x => x.Year).ThenByDescending(x => x.Month).ToList();
             }
 
             return viewModel;
         }
 
-        public IEnumerable<CostShare> CostShares { get; set; }
+        public IEnumerable<Record> Records { get; set; }
 
         public IEnumerable<Project> Projects { get; set; }
 

@@ -39,6 +39,10 @@
             <%=Html.ActionLink("Associations (Project/Account)", "Projects", "Association")%></li>
         <li>
             <%=Html.ActionLink("User Admin", "List", "UserAdministration")%></li>
+        <li>
+            <%=Html.ActionLink("Cost Share Audit", "History", "CostShareAudit") %>
+        </li>
+            
     </ul>
         <h3>Reports</h3>
     <ul>
