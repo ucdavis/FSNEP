@@ -1,6 +1,6 @@
 using CAESArch.BLL;
 
-namespace FSNEP.BLL
+namespace FSNEP.BLL.Impl
 {
     public class GenericBLL<T, IdT> : AbstractGenericBLLBase<T, IdT> { }
 }
