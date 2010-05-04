@@ -118,6 +118,7 @@ namespace FSNEP.Controllers
                 switch (createStatus)
                 {
                     case MembershipCreateStatus.DuplicateEmail:
+                        //This is currently disabled in the Web.config
                         ModelState.AddModelError("_FORM", "Create Failed Duplicate Email");
                         return Create();
                     case MembershipCreateStatus.DuplicateProviderUserKey:
