@@ -30,6 +30,30 @@ namespace FSNEP.Tests.Core.Helpers
                        };
         }
 
+
+        /// <summary>
+        /// Records the specified counter.
+        /// </summary>
+        /// <param name="counter">The counter.</param>
+        /// <returns></returns>
+        public static Record Record(int? counter)
+        {
+            var extra = "";
+            if (counter != null)
+            {
+                extra = counter.ToString();
+            }
+
+            return new Record
+                       {
+                           Month = 01, 
+                           Year = 2009, 
+                           Status = new Status(), 
+                           User = new User(), 
+                           ReviewComment = "ReviewComent" + extra
+                       };
+        }
+
         //TODO: add and use other entities
     }
 }

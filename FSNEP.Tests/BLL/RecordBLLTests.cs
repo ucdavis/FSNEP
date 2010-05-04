@@ -7,6 +7,7 @@ using FSNEP.BLL.Dev;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Abstractions;
 using FSNEP.Core.Domain;
+using FSNEP.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
 using UCDArch.Core.PersistanceSupport;
@@ -42,7 +43,9 @@ namespace FSNEP.Tests.BLL
         {
             var status = new Status {NameOption = Status.Option.Current};
 
-            var record = new Record {Status = status};
+            //var record = new Record {Status = status};
+            var record = CreateValidEntities.Record(null);
+            record.Status = status;
 
             var editable = _recordBLL.IsEditable(record);
 
@@ -54,7 +57,9 @@ namespace FSNEP.Tests.BLL
         {
             var status = new Status { NameOption = Status.Option.Disapproved };
 
-            var record = new Record { Status = status };
+            //var record = new Record { Status = status };
+            var record = CreateValidEntities.Record(null);
+            record.Status = status;
 
             var editable = _recordBLL.IsEditable(record);
 
@@ -70,7 +75,9 @@ namespace FSNEP.Tests.BLL
         {
             var status = new Status { Name = "Junk data" };
 
-            var record = new Record { Status = status };
+            //var record = new Record { Status = status };
+            var record = CreateValidEntities.Record(null);
+            record.Status = status;
 
             var editable = _recordBLL.IsEditable(record);
 
@@ -82,7 +89,9 @@ namespace FSNEP.Tests.BLL
         {
             var status = new Status { NameOption = Status.Option.Approved };
 
-            var record = new Record { Status = status };
+            //var record = new Record { Status = status };
+            var record = CreateValidEntities.Record(null);
+            record.Status = status;
 
             var editable = _recordBLL.IsEditable(record);
 
@@ -94,7 +103,9 @@ namespace FSNEP.Tests.BLL
         {
             var status = new Status { NameOption = Status.Option.PendingReview };
 
-            var record = new Record { Status = status };
+            //var record = new Record { Status = status };
+            var record = CreateValidEntities.Record(null);
+            record.Status = status;
 
             var editable = _recordBLL.IsEditable(record);
 
@@ -110,7 +121,9 @@ namespace FSNEP.Tests.BLL
         [TestMethod]
         public void HasAccessReturnsTrueIfRecordHasSameNameAsCurrentUser()
         {
-            var record = new Record {User = CurrentUser};
+            //var record = new Record {User = CurrentUser};
+            var record = CreateValidEntities.Record(null);
+            record.User = CurrentUser;
             Assert.IsTrue(_recordBLL.HasAccess(_principal, record));
         }
 
@@ -165,7 +178,9 @@ namespace FSNEP.Tests.BLL
         [TestMethod]
         public void HasReviewAccessReturnsTrueIfCurrentUserIsInRecord()
         {
-            var record = new Record { User = CurrentUser };
+            //var record = new Record { User = CurrentUser };
+            var record = CreateValidEntities.Record(null);
+            record.User = CurrentUser;
             _principal.Expect(a => a.IsInRole(RoleNames.RoleAdmin)).Return(false).Repeat.Once();
             Assert.IsTrue(_recordBLL.HasReviewAccess(_principal, record));
         }
@@ -180,7 +195,9 @@ namespace FSNEP.Tests.BLL
             newUser.UserName = "NewUser";
             newUser.Supervisor = CurrentUser;
 
-            var record = new Record { User = newUser }; //We are not passing the current user, but this use has the current user as a supervisor.
+            //var record = new Record { User = newUser }; //We are not passing the current user, but this use has the current user as a supervisor.
+            var record = CreateValidEntities.Record(null);
+            record.User = newUser;
             _principal.Expect(a => a.IsInRole(RoleNames.RoleAdmin)).Return(false).Repeat.Once();
             Assert.IsTrue(_recordBLL.HasReviewAccess(_principal, record));
         }
@@ -195,7 +212,9 @@ namespace FSNEP.Tests.BLL
             newUser.UserName = "NewUser";
             newUser.Supervisor = CreateValidUser();
 
-            var record = new Record { User = newUser }; //We are not passing the current user, but this use has the current user as a supervisor.
+            //var record = new Record { User = newUser }; //We are not passing the current user, but this use has the current user as a supervisor.
+            var record = CreateValidEntities.Record(null);
+            record.User = newUser;
             _principal.Expect(a => a.IsInRole(RoleNames.RoleAdmin)).Return(false).Repeat.Once();
             Assert.IsFalse(_recordBLL.HasReviewAccess(_principal, record));
         }
@@ -225,16 +244,21 @@ namespace FSNEP.Tests.BLL
         public void GetCurrentRecordReturnsTheCurrentUsersRecord()
         {
             FakeRecordsToCheck();
-
-            Records.Add(new Record
-            {
-                Month = 12,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status{NameOption = Status.Option.Current},
-                ReviewComment = "ReturnThisRecord",
-                Entries = new List<Entry>()
-            });
+            var record = CreateValidEntities.Record(null);
+            record.Status = new Status {NameOption = Status.Option.Current};
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
+            //Records.Add(new Record
+            //{
+            //    Month = 12,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status{NameOption = Status.Option.Current},
+            //    ReviewComment = "ReturnThisRecord",
+            //    Entries = new List<Entry>()
+            //});
 
             var currentRecord = _recordBLL.GetCurrentRecord(_principal);
             Assert.IsNotNull(currentRecord);
@@ -248,16 +272,22 @@ namespace FSNEP.Tests.BLL
         public void GetCurrentRecordReturnsNullWhenCurrentUsersRecordStatusIsNotCurrentTest1()
         {
             FakeRecordsToCheck();
+            var record = CreateValidEntities.Record(null);
+            record.Status = new Status { NameOption = Status.Option.Approved };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
 
-            Records.Add(new Record
-            {
-                Month = 12,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.Approved },
-                ReviewComment = "ReturnThisRecord",
-                Entries = new List<Entry>()
-            });
+            //Records.Add(new Record
+            //{
+            //    Month = 12,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.Approved },
+            //    ReviewComment = "ReturnThisRecord",
+            //    Entries = new List<Entry>()
+            //});
 
             var currentRecord = _recordBLL.GetCurrentRecord(_principal);
             Assert.IsNull(currentRecord);
@@ -270,16 +300,22 @@ namespace FSNEP.Tests.BLL
         public void GetCurrentRecordReturnsNullWhenCurrentUsersRecordStatusIsNotCurrentTest2()
         {
             FakeRecordsToCheck();
+            var record = CreateValidEntities.Record(null);
+            record.Status = new Status { NameOption = Status.Option.Disapproved };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
 
-            Records.Add(new Record
-            {
-                Month = 12,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.Disapproved },
-                ReviewComment = "ReturnThisRecord",
-                Entries = new List<Entry>()
-            });
+            //Records.Add(new Record
+            //{
+            //    Month = 12,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.Disapproved },
+            //    ReviewComment = "ReturnThisRecord",
+            //    Entries = new List<Entry>()
+            //});
 
             var currentRecord = _recordBLL.GetCurrentRecord(_principal);
             Assert.IsNull(currentRecord);
@@ -292,16 +328,21 @@ namespace FSNEP.Tests.BLL
         public void GetCurrentRecordReturnsNullWhenCurrentUsersRecordStatusIsNotCurrentTest3()
         {
             FakeRecordsToCheck();
-
-            Records.Add(new Record
-            {
-                Month = 12,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.PendingReview },
-                ReviewComment = "ReturnThisRecord",
-                Entries = new List<Entry>()
-            });
+            var record = CreateValidEntities.Record(null);
+            record.Status = new Status { NameOption = Status.Option.PendingReview };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
+            //Records.Add(new Record
+            //{
+            //    Month = 12,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.PendingReview },
+            //    ReviewComment = "ReturnThisRecord",
+            //    Entries = new List<Entry>()
+            //});
 
             var currentRecord = _recordBLL.GetCurrentRecord(_principal);
             Assert.IsNull(currentRecord);
@@ -314,16 +355,21 @@ namespace FSNEP.Tests.BLL
         public void GetCurrentRecordReturnsNullWhenCurrentUsersRecordStatusIsNotCurrentTest4()
         {
             FakeRecordsToCheck();
-
-            Records.Add(new Record
-            {
-                Month = 12,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { Name= "Junk" },
-                ReviewComment = "ReturnThisRecord",
-                Entries = new List<Entry>()
-            });
+            var record = CreateValidEntities.Record(null);
+            record.Status = new Status { Name = "Junk" };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
+            //Records.Add(new Record
+            //{
+            //    Month = 12,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { Name= "Junk" },
+            //    ReviewComment = "ReturnThisRecord",
+            //    Entries = new List<Entry>()
+            //});
 
             var currentRecord = _recordBLL.GetCurrentRecord(_principal);
             Assert.IsNull(currentRecord);
@@ -337,27 +383,41 @@ namespace FSNEP.Tests.BLL
         public void GetCurrentRecordReturnsCorrectRecordFirstByDateOrderTest1()
         {
             FakeRecordsToCheck();
-
             //We expect This one
-            Records.Add(new Record
-            {
-                Month = 12,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.Current },
-                ReviewComment = "ReturnThisRecord",
-                Entries = new List<Entry>()
-            });
+            var record = CreateValidEntities.Record(null);
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
 
-            Records.Add(new Record
-            {
-                Month = 12,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.Current },
-                ReviewComment = "OrReturnThisRecord",
-                Entries = new List<Entry>()
-            });
+            ////We expect This one
+            //Records.Add(new Record
+            //{
+            //    Month = 12,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.Current },
+            //    ReviewComment = "ReturnThisRecord",
+            //    Entries = new List<Entry>()
+            //});
+
+            record = CreateValidEntities.Record(null);
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "OrReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
+
+            //Records.Add(new Record
+            //{
+            //    Month = 12,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.Current },
+            //    ReviewComment = "OrReturnThisRecord",
+            //    Entries = new List<Entry>()
+            //});
 
             var currentRecord = _recordBLL.GetCurrentRecord(_principal);
             Assert.IsNotNull(currentRecord);
@@ -372,36 +432,61 @@ namespace FSNEP.Tests.BLL
         {
             FakeRecordsToCheck();
 
-            Records.Add(new Record
-            {
-                Month = 12,
-                Year = 2008,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.Current },
-                ReviewComment = "NotThisRecord",
-                Entries = new List<Entry>()
-            });
+            var record = CreateValidEntities.Record(null);
+            record.Month = 12;
+            record.Year = 2008;
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "NotThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
+
+            //Records.Add(new Record
+            //{
+            //    Month = 12,
+            //    Year = 2008,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.Current },
+            //    ReviewComment = "NotThisRecord",
+            //    Entries = new List<Entry>()
+            //});
 
             //We expect This one
-            Records.Add(new Record
-            {
-                Month = 10,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.Current },
-                ReviewComment = "ReturnThisRecord",
-                Entries = new List<Entry>()
-            });
+            record = CreateValidEntities.Record(null);
+            record.Month = 10;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
+            //Records.Add(new Record
+            //{
+            //    Month = 10,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.Current },
+            //    ReviewComment = "ReturnThisRecord",
+            //    Entries = new List<Entry>()
+            //});
 
-            Records.Add(new Record
-            {
-                Month = 09,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.Current },
-                ReviewComment = "NotThisRecord",
-                Entries = new List<Entry>()
-            });
+            record = CreateValidEntities.Record(null);
+            record.Month = 09;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "NotThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
+            //Records.Add(new Record
+            //{
+            //    Month = 09,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.Current },
+            //    ReviewComment = "NotThisRecord",
+            //    Entries = new List<Entry>()
+            //});
 
             var currentRecord = _recordBLL.GetCurrentRecord(_principal);
             Assert.IsNotNull(currentRecord);
@@ -533,16 +618,24 @@ namespace FSNEP.Tests.BLL
             SystemTime.Now = () => fakeDate;
 
             FakeRecordsToCheck();
+            var record = CreateValidEntities.Record(null);
+            record.Month = 11;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
 
-            Records.Add(new Record
-            {
-                Month = 11,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.Current },
-                ReviewComment = "ReturnThisRecord",
-                Entries = new List<Entry>()
-            });
+            //Records.Add(new Record
+            //{
+            //    Month = 11,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.Current },
+            //    ReviewComment = "ReturnThisRecord",
+            //    Entries = new List<Entry>()
+            //});
 
             var currentRecord = _recordBLL.GetCurrent(_principal);
             Assert.IsNotNull(currentRecord);
@@ -562,16 +655,24 @@ namespace FSNEP.Tests.BLL
             SystemTime.Now = () => fakeDate;
 
             FakeRecordsToCheck();
+            var record = CreateValidEntities.Record(null);
+            record.Month = 11;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
 
-            Records.Add(new Record
-            {
-                Month = 11,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.Current },
-                ReviewComment = "ReturnThisRecord",
-                Entries = new List<Entry>()
-            });
+            //Records.Add(new Record
+            //{
+            //    Month = 11,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.Current },
+            //    ReviewComment = "ReturnThisRecord",
+            //    Entries = new List<Entry>()
+            //});
 
             var currentRecord = _recordBLL.GetCurrent(_principal);
             Assert.IsNotNull(currentRecord);
@@ -674,25 +775,42 @@ namespace FSNEP.Tests.BLL
             SystemTime.Now = () => fakeDate;
 
             FakeRecordsToCheck(); //No records for the current user.
+            var record = CreateValidEntities.Record(null);
+            record.Month = 09;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.Approved };
+            record.ReviewComment = "ReturnThisRecord1";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
 
-            Records.Add(new Record
-            {
-                Month = 09,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.Approved },
-                ReviewComment = "ReturnThisRecord1",
-                Entries = new List<Entry>()
-            });
-            Records.Add(new Record
-            {
-                Month = 10,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.PendingReview },
-                ReviewComment = "ReturnThisRecord2",
-                Entries = new List<Entry>()
-            });
+            //Records.Add(new Record
+            //{
+            //    Month = 09,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.Approved },
+            //    ReviewComment = "ReturnThisRecord1",
+            //    Entries = new List<Entry>()
+            //});
+
+            record = CreateValidEntities.Record(null);
+            record.Month = 10;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.PendingReview };
+            record.ReviewComment = "ReturnThisRecord2";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
+            //Records.Add(new Record
+            //{
+            //    Month = 10,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.PendingReview },
+            //    ReviewComment = "ReturnThisRecord2",
+            //    Entries = new List<Entry>()
+            //});
          
 
             FakeStatusQuery();
@@ -718,25 +836,42 @@ namespace FSNEP.Tests.BLL
             SystemTime.Now = () => fakeDate;
 
             FakeRecordsToCheck(); //No records for the current user.
+            var record = CreateValidEntities.Record(null);
+            record.Month = 09;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.Approved };
+            record.ReviewComment = "ReturnThisRecord1";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
 
-            Records.Add(new Record
-            {
-                Month = 09,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.Approved },
-                ReviewComment = "ReturnThisRecord1",
-                Entries = new List<Entry>()
-            });
-            Records.Add(new Record
-            {
-                Month = 10,
-                Year = 2009,
-                User = CurrentUser,
-                Status = new Status { NameOption = Status.Option.PendingReview },
-                ReviewComment = "ReturnThisRecord2",
-                Entries = new List<Entry>()
-            });
+            //Records.Add(new Record
+            //{
+            //    Month = 09,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.Approved },
+            //    ReviewComment = "ReturnThisRecord1",
+            //    Entries = new List<Entry>()
+            //});
+            record = CreateValidEntities.Record(null);
+            record.Month = 10;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.PendingReview };
+            record.ReviewComment = "ReturnThisRecord2";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            Records.Add(record);
+
+            //Records.Add(new Record
+            //{
+            //    Month = 10,
+            //    Year = 2009,
+            //    User = CurrentUser,
+            //    Status = new Status { NameOption = Status.Option.PendingReview },
+            //    ReviewComment = "ReturnThisRecord2",
+            //    Entries = new List<Entry>()
+            //});
 
 
             FakeStatusQuery();
@@ -800,15 +935,23 @@ namespace FSNEP.Tests.BLL
 
             for (int i = 0; i < 5; i++)
             {
-                Records.Add(new Record
-                                 {
-                                     Month = 12,
-                                     Year = 2009,
-                                     User = nonCurrentUser,
-                                     Status = statusCurrent,
-                                     ReviewComment = "Comment" + (i + 1),
-                                     Entries = new List<Entry>()
-                                 });
+                var record = CreateValidEntities.Record(i+1);
+                record.Month = 12;
+                record.Year = 2009;
+                record.Status = statusCurrent;
+                record.Entries = new List<Entry>();
+                record.User = nonCurrentUser;
+                Records.Add(record);
+
+                //Records.Add(new Record
+                //                 {
+                //                     Month = 12,
+                //                     Year = 2009,
+                //                     User = nonCurrentUser,
+                //                     Status = statusCurrent,
+                //                     ReviewComment = "Comment" + (i + 1),
+                //                     Entries = new List<Entry>()
+                //                 });
             }
             Records[1].Status = statusApproved;
             Records[2].Status = statusDisapproved;

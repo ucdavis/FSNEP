@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core;
+using FSNEP.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
@@ -41,13 +42,16 @@ namespace FSNEP.Tests.Repositories
 
         private Record CreateValidRecord()
         {
-            var record = new Record
-            {
-                Month = ValidMonth,
-                Year = ValidYear,
-                Status = Repository.OfType<Status>().Queryable.First(),
-                User = Repository.OfType<User>().Queryable.First()
-            };
+            var record = CreateValidEntities.Record(null);
+            record.Status = Repository.OfType<Status>().Queryable.First();
+            record.User = Repository.OfType<User>().Queryable.First();
+            //var record = new Record
+            //{
+            //    Month = ValidMonth,
+            //    Year = ValidYear,
+            //    Status = Repository.OfType<Status>().Queryable.First(),
+            //    User = Repository.OfType<User>().Queryable.First()
+            //};
 
             return record;
         }

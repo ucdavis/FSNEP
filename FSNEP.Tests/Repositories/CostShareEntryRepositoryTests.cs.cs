@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using FSNEP.Core.Domain;
+using FSNEP.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Testing.Extensions;
@@ -54,14 +55,17 @@ namespace FSNEP.Tests.Repositories
         /// </summary>
         private void LoadRecords()
         {
-            var record = new Record
-                             {
-                                 Month = 12,
-                                 ReviewComment = "reviewComment",
-                                 Status = Repository.OfType<Status>().Queryable.First(),
-                                 User = Repository.OfType<User>().Queryable.First(),
-                                 Year = 2009
-                             };
+            //var record = new Record
+            //                 {
+            //                     Month = 12,
+            //                     ReviewComment = "reviewComment",
+            //                     Status = Repository.OfType<Status>().Queryable.First(),
+            //                     User = Repository.OfType<User>().Queryable.First(),
+            //                     Year = 2009
+            //                 };
+            var record = CreateValidEntities.Record(null);
+            record.Status = Repository.OfType<Status>().Queryable.First();
+            record.User = Repository.OfType<User>().Queryable.First();
 
             Repository.OfType<Record>().EnsurePersistent(record);
         }
