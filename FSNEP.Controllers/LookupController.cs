@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Web.Mvc;
-using CAESArch.BLL;
 using CAESArch.Core.DataInterfaces;
 using CAESArch.Core.Domain;
 using FSNEP.Controllers.Helpers;
@@ -41,30 +40,13 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [Transaction]
         public ActionResult CreateActivityType(ActivityType newActivityType, int activityCategoryId)
         {
-            newActivityType.IsActive = true;
             newActivityType.ActivityCategory = Repository.OfType<ActivityCategory>().GetNullableByID(activityCategoryId);
+
+            CreateEntity<ActivityType, int>(newActivityType, "Activity Type");
             
-            ValidationHelper<ActivityType>.Validate(newActivityType, ModelState);
-
-            if (!ModelState.IsValid)
-            {
-                Message = "Activity Type Creation Failed";
-
-                return this.RedirectToAction(a => a.ActivityTypes());
-            }
-
-            //Add the new project
-            using (var ts = new TransactionScope())
-            {
-                Repository.OfType<ActivityType>().EnsurePersistent(newActivityType);
-
-                ts.CommitTransaction();
-            }
-
-            Message = "Activity Type Created Successfully";
-
             return this.RedirectToAction(a => a.ActivityTypes());
         }
 
@@ -88,28 +70,10 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [Transaction]
         public ActionResult CreateActivityCategory(ActivityCategory newActivityCategory)
         {
-            newActivityCategory.IsActive = true;
-
-            ValidationHelper<ActivityCategory>.Validate(newActivityCategory, ModelState);
-
-            if (!ModelState.IsValid)
-            {
-                Message = "Activity Category Creation Failed";
-
-                return this.RedirectToAction(a => a.ActivityCategories());
-            }
-
-            //Add the new project
-            using (var ts = new TransactionScope())
-            {
-                Repository.OfType<ActivityCategory>().EnsurePersistent(newActivityCategory);
-
-                ts.CommitTransaction();
-            }
-
-            Message = "Activity Category Created Successfully";
+            CreateEntity<ActivityCategory, int>(newActivityCategory, "Activity Category");
 
             return this.RedirectToAction(a => a.ActivityCategories());
         }
@@ -134,28 +98,10 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [Transaction]
         public ActionResult CreateExpenseType(ExpenseType newExpenseType)
         {
-            newExpenseType.IsActive = true;
-
-            ValidationHelper<ExpenseType>.Validate(newExpenseType, ModelState);
-
-            if (!ModelState.IsValid)
-            {
-                Message = "Expense Type Creation Failed";
-
-                return this.RedirectToAction(a => a.ExpenseTypes());
-            }
-
-            //Add the new project
-            using (var ts = new TransactionScope())
-            {
-                Repository.OfType<ExpenseType>().EnsurePersistent(newExpenseType);
-
-                ts.CommitTransaction();
-            }
-
-            Message = "Expense Type Created Successfully";
+            CreateEntity<ExpenseType, int>(newExpenseType, "Expense Type");
 
             return this.RedirectToAction(a => a.ExpenseTypes());
         }
@@ -180,29 +126,11 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [Transaction]
         public ActionResult CreateAccount(Account newAccount)
         {
-            newAccount.IsActive = true;
-
-            ValidationHelper<Account>.Validate(newAccount, ModelState);
-
-            if (!ModelState.IsValid)
-            {
-                Message = "Account Creation Failed";
-
-                return this.RedirectToAction(a => a.Accounts());
-            }
-
-            //Add the new project
-            using (var ts = new TransactionScope())
-            {
-                Repository.OfType<Account>().EnsurePersistent(newAccount);
-
-                ts.CommitTransaction();
-            }
-
-            Message = "Account Created Successfully";
-
+            CreateEntity<Account, int>(newAccount, "Account");
+            
             return this.RedirectToAction(a => a.Accounts());
         }
 
