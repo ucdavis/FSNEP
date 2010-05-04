@@ -125,8 +125,8 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 var results = accountCategory.ValidationResults().AsMessageList();
-                Assert.AreEqual(2, results.Count);
-                results.AssertContains("IndirectCost: must be between 0 and 0.3");
+                Assert.AreEqual(1, results.Count);
+                //results.AssertContains("IndirectCost: must be between 0 and 0.3");
                 results.AssertContains("IndirectCostPercent: must be between 0 and 30");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.Account could not be persisted\n\n\r\nValidation Errors: IndirectCost, The value must fall within the range \"0\" (Inclusive) - \"0.3\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
@@ -155,8 +155,8 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 var results = accountCategory.ValidationResults().AsMessageList();
-                Assert.AreEqual(2, results.Count);
-                results.AssertContains("IndirectCost: must be between 0 and 0.3");
+                Assert.AreEqual(1, results.Count);
+                //results.AssertContains("IndirectCost: must be between 0 and 0.3");
                 results.AssertContains("IndirectCostPercent: must be between 0 and 30");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.Account could not be persisted\n\n\r\nValidation Errors: IndirectCost, The value must fall within the range \"0\" (Inclusive) - \"0.3\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;

@@ -5,7 +5,6 @@ namespace FSNEP.Core.Domain
 {
     public class Account : LookupObject
     {
-        [RangeDouble(0,0.3)]
         public virtual double IndirectCost { get; set; }
 
         [RangeDouble(0, 30)]
