@@ -82,7 +82,7 @@ namespace FSNEP.Tests.Repositories
                     ts.CommitTransaction();
                 }
             }
-            catch (Exception message)
+            catch (Exception)
             {
                 var results = ValidateBusinessObject<ExpenseType>.GetValidationResults(expenseType).AsMessageList();
                 Assert.AreEqual(1, results.Count);
