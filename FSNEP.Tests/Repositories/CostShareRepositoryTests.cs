@@ -25,7 +25,7 @@ namespace FSNEP.Tests.Repositories
                 ts.CommitTransaction();
             }
 
-            NHibernateSessionManager.Instance.GetSession().Flush();
+            //NHibernateSessionManager.Instance.GetSession().Flush();
         }
 
         private void LoadRecords()
@@ -385,6 +385,31 @@ namespace FSNEP.Tests.Repositories
                 throw;
             }
         }
+
+        /// <summary>
+        /// Cost share record does not commit with new user value.
+        /// This would not throw an exception
+        /// </summary>
+        //[TestMethod, Ignore]
+        //[ExpectedException(typeof(NHibernate.TransientObjectException))]
+        //public void CostShareRecordDoesNotCommitWithNewUserValue()
+        //{
+        //    CostShare costShare = null;
+        //    try
+        //    {
+        //        costShare = CreateValidCostShare();
+        //        costShare.User = new User();
+        //        Repository.OfType<CostShare>().EnsurePersistent(costShare);
+        //        Assert.IsFalse(costShare.IsTransient());
+        //        Repository.OfType<CostShare>().DbContext.CommitChanges();
+        //    }
+        //    catch (Exception message)
+        //    {
+        //        Assert.IsNotNull(costShare);
+        //        Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: FSNEP.Core.Domain.Record, Entity: FSNEP.Core.Domain.Record", message.Message);
+        //        throw;
+        //    }
+        //}
         #endregion User Tests
 
         #region Status Tests
@@ -413,6 +438,32 @@ namespace FSNEP.Tests.Repositories
                     Assert.IsFalse(costShare.IsValid());
                 }
 
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Cost share record does not commit with new Status value.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(NHibernate.TransientObjectException))]
+        public void CostShareRecordDoesNotCommitWithNewStatusValue()
+        {
+            CostShare costShare = null;
+            try
+            {
+                costShare = CreateValidCostShare();
+                costShare.Status = new Status();
+                Repository.OfType<CostShare>().EnsurePersistent(costShare);
+                Assert.IsFalse(costShare.IsTransient());
+
+                Repository.OfType<CostShare>().DbContext.CommitChanges();
+            }
+            catch (Exception message)
+            {
+
+                Assert.IsNotNull(costShare);
+                Assert.AreEqual("object references an unsaved transient instance - save the transient instance before flushing. Type: FSNEP.Core.Domain.Status, Entity: FSNEP.Core.Domain.Status", message.Message);
                 throw;
             }
         }
