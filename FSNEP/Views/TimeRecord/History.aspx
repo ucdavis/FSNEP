@@ -27,7 +27,7 @@
                              col.Add(x =>
                                          {
                                     %>
-                                    PRINT PDF (TODO)
+                                    <%= Html.ActionLink<ReportController>(a=>a.PrintOwnTimeRecord(x.Id), "Print PDF (TODO)") %>
                                  <%
                                          });
                          })

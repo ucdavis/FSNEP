@@ -44,5 +44,8 @@
         <li>
             <%= Html.ActionLink("Cost Share", "CostShare", "Report") %>
         </li>
+        <li>
+            <%= Html.ActionLink<ReportController>(x=>x.TimeRecord(), "Time Record") %>
+        </li>
     </ul>
 </asp:Content>
