@@ -59,11 +59,7 @@ namespace FSNEP.Controllers
         {
             var records = _timeRecordBLL.GetReviewableAndCurrentRecords(CurrentUser);
 
-            return View(records.Cast<Record>().ToList()
-                .OrderByDescending(a => a.Year)
-                .ThenByDescending(a => a.Month)
-                .ThenBy(a => a.User.FullNameLastFirst)
-                );
+            return View(records.Cast<Record>().ToList());
         }
 
         public ActionResult TimeRecordReview(int id)

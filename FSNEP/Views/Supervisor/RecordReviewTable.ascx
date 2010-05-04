@@ -10,7 +10,8 @@
     </thead>
     <tbody>     
         <% int lastMonth = 0; %>
-        <% foreach (var record in Model) { %>
+        <% foreach (var record in Model.OrderByDescending(a => a.Year).ThenByDescending(a => a.Month).ThenBy(a => a.User.FullNameLastFirst))
+           { %>
             <% int currentMonth = record.Month; %>
             <% if (currentMonth != lastMonth) { %>
             
