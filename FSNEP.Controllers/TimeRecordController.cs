@@ -42,6 +42,19 @@ namespace FSNEP.Controllers
             return View(recordHistory.ToList());
         }
 
+        public ActionResult Current()
+        {
+            var timeRecord = _timeRecordBLL.GetCurrent(CurrentUser);
+
+            if (timeRecord == null)
+            {
+                Message = Constants.NoTimeRecord;
+                return RedirectToAction("History");
+            }
+
+            return RedirectToAction("Entry", new {id = timeRecord.Id});
+        }
+
         [ActionName("Entry")]
         public ActionResult TimeRecordEntry(int id)
         {

@@ -32,7 +32,7 @@ namespace FSNEP.BLL.Dev
 
         public T GetCurrent(IPrincipal user)
         {
-            throw new NotImplementedException();
+            return _repository.OfType<T>().GetById(2);
         }
 
         public T GetCurrentRecord(IPrincipal user)

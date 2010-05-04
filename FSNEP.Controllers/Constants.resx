@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="NoTimeRecord" xml:space="preserve">
+    <value>No current time record available.  You can view your time record history here.</value>
+  </data>
   <data name="STR_Default_Pass" xml:space="preserve">
     <value>jaskidjflkajsdlf$#12</value>
     <comment>Default password for a new user account</comment>

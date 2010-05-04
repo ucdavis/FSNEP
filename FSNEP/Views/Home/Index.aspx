@@ -10,7 +10,9 @@
         
         <h3>Records</h3>
         <ul>
-            <li><%= Html.ActionLink("Time Record", "Entry", "TimeRecord", new {id=2}, null) %></li>
+            <li><%= Html.ActionLink("View Time Record #2", "Entry", "TimeRecord", new {id=2}, null) %></li>
+            <li><%= Html.ActionLink<TimeRecordController>(x=>x.Current(), "Current time record") %></li>
+            <li><%= Html.ActionLink<TimeRecordController>(x=>x.History(), "Time Record History") %></li>
         </ul>
         <h3>Administration</h3>
         <ul>
