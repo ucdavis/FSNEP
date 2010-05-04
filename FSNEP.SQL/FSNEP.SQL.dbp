@@ -13,6 +13,10 @@ Begin DataProject = "FSNEP.SQL"
          Colorizer = 6
       End
    End
+   Begin Folder = "Reporting"
+      Script = "usp_GenerateExpenseCostShare.sql"
+      Script = "usp_GenerateTimeCostShare.sql"
+   End
    Begin Folder = "Scheema"
       Script = "InsertLookupData.sql"
       Script = "Scheema.sql"
