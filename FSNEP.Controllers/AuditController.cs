@@ -8,12 +8,12 @@ using UCDArch.Core.PersistanceSupport;
 namespace FSNEP.Controllers
 {
     /// <summary>
-    /// Viewable list of time records for admins which will be used for verifying electronic signatures
+    /// Processes admin-level audit actions for cost share and time records
     /// </summary>
     [AdminOnly]
-    public class TimeRecordAuditController : SuperController
+    public class AuditController : SuperController
     {
-        public ActionResult History(int? projectId)
+        public ActionResult TimeRecordHistory(int? projectId)
         {
             var viewModel = TimeRecordAuditHistoryViewModel.Create(Repository.OfType<Project>(),
                                                                   Repository.OfType<TimeRecord>(), Repository.OfType<User>(),
@@ -23,7 +23,7 @@ namespace FSNEP.Controllers
         }
     }
 
-    /// <summary>
+    // <summary>
     /// Model for selecting time records and displaying them to the user on the History view
     /// </summary>
     public class TimeRecordAuditHistoryViewModel

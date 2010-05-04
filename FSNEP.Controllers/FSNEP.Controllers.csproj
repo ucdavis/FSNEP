@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="AccountController.cs" />
     <Compile Include="AssociationController.cs" />
+    <Compile Include="AuditController.cs" />
     <Compile Include="Constants.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -108,7 +109,6 @@
     <Compile Include="ReportController.cs" />
     <Compile Include="ServiceController.cs" />
     <Compile Include="SupervisorController.cs" />
-    <Compile Include="TimeRecordAuditController.cs" />
     <Compile Include="TimeRecordController.cs" />
     <Compile Include="UserAdministrationController.cs" />
     <Compile Include="Helpers\Attributes\HandleErrorWithELMAHAttribute.cs" />
