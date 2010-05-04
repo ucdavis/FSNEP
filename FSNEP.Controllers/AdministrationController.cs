@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using CAESArch.BLL;
 using FSNEP.BLL.Impl;
 using FSNEP.Controllers.Helpers;
@@ -23,15 +24,9 @@ namespace FSNEP.Controllers
         public ActionResult CreateUser()
         {
             //Create the viewmodel with a blank user
-            var viewModel = new CreateUserViewModel
-                                {
-                                    User = new User(),
-                                    Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName"),
-                                    Projects =
-                                        new MultiSelectList(UserBLL.GetAllProjectsByUser().ToList(), "ID", "Name"),
-                                    FundTypes =
-                                        new MultiSelectList(UserBLL.GetAvailableFundTypes().ToList(), "ID", "Name")
-                                };
+            var viewModel = new CreateUserViewModel { User = new User() };
+
+            PopulateDefaultUserViewModel(viewModel);
 
             return View(viewModel);
         }
@@ -52,38 +47,57 @@ namespace FSNEP.Controllers
             //If the user could not be found, redirect to creating a user
             if (viewModel.User == null) return this.RedirectToAction(a => a.CreateUser());
 
-            viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
-                                                   viewModel.User.Supervisor.ID);
-
-            viewModel.Projects = new MultiSelectList(UserBLL.GetAllProjectsByUser().ToList(), "ID", "Name",
-                                                     viewModel.User.Projects.Select(p => p.ID));
-
-            viewModel.FundTypes = new MultiSelectList(UserBLL.GetAvailableFundTypes().ToList(), "ID", "Name",
-                                                     viewModel.User.FundTypes.Select(p => p.ID));
+            PopulateDefaultUserViewModel(viewModel);
 
             return View(viewModel);
         }
 
         [AcceptPost]
-        public ActionResult ModifyUser(string id, Guid? supervisorId, int[] projectList, int[] fundTypeList)
+        public ActionResult ModifyUser(string id, Guid? supervisorId, IEnumerable<int> projectList, IEnumerable<int> fundTypeList)
         {
             var user = UserBLL.GetUser(id);
             UpdateModel(user, "User"); //Update the user from the data entered in the form
             
             ValidationHelper<User>.Validate(user, ModelState, "User");
             
-            //Make sure we get a supervisor, some projects and some fundtypes
-            if (!supervisorId.HasValue) ModelState.AddModelError("SupervisorID", "You must select a supervisor");
-
-            if (projectList == null) ModelState.AddModelError("ProjectList", "You must select at least one project");
-
-            if (fundTypeList == null) ModelState.AddModelError("FundTypeList", "You must select at least one fund type");
+            CheckUserProperties(supervisorId, projectList, fundTypeList);
 
             if (!ModelState.IsValid)
             {
                 return ModifyUser(id);
             }
 
+            PopulateUserProperties(user, supervisorId, projectList, fundTypeList);
+
+            //We have a valid viewstate, so save the changes
+            using (var ts = new TransactionScope())
+            {
+                UserBLL.Repository.EnsurePersistent(user);
+
+                ts.CommitTransaction();
+            }
+
+            return this.RedirectToAction<HomeController>(a => a.Index());
+        }
+
+        /// <summary>
+        /// Check the associated user properties for validity
+        /// </summary>
+        private void CheckUserProperties(Guid? supervisorId, IEnumerable<int> projectList, IEnumerable<int> fundTypeList)
+        {
+            //Make sure we get a supervisor, some projects and some fundtypes
+            if (!supervisorId.HasValue) ModelState.AddModelError("SupervisorID", "You must select a supervisor");
+
+            if (projectList == null) ModelState.AddModelError("ProjectList", "You must select at least one project");
+
+            if (fundTypeList == null) ModelState.AddModelError("FundTypeList", "You must select at least one fund type");
+        }
+
+        /// <summary>
+        /// Populate the given user with the proper associated properties
+        /// </summary>
+        private void PopulateUserProperties(User user, Guid? supervisorId, IEnumerable<int> projectList, IEnumerable<int> fundTypeList)
+        {
             user.Supervisor = UserBLL.Repository.GetByID(supervisorId.Value);
 
             var projects = from proj in UserBLL.Repository.EntitySet<Project>()
@@ -96,16 +110,19 @@ namespace FSNEP.Controllers
 
             user.Projects = projects.ToList();
             user.FundTypes = fundtypes.ToList();
+        }
 
-            //We have a valid viewstate, so save the changes
-            using (var ts = new TransactionScope())
-            {
-                UserBLL.Repository.EnsurePersistent(user);
+        private void PopulateDefaultUserViewModel(UserViewModel viewModel)
+        {
+            viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
+                                                  viewModel.User.Supervisor != null ? viewModel.User.Supervisor.ID : Guid.Empty);
 
-                ts.CommitTransaction();
-            }
+            viewModel.Projects = new MultiSelectList(UserBLL.GetAllProjectsByUser().ToList(), "ID", "Name",
+                                                     viewModel.User.Projects.Select(p => p.ID));
 
-            return this.RedirectToAction<HomeController>(a => a.Index());
+            viewModel.FundTypes = new MultiSelectList(UserBLL.GetAvailableFundTypes().ToList(), "ID", "Name",
+                                                     viewModel.User.FundTypes.Select(p => p.ID));
+
         }
     }
 
