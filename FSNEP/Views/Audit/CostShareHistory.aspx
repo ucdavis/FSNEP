@@ -10,7 +10,7 @@
         $(function() {
             $("#project").change(function() {
 
-                var listUrlBase = '<%= Url.Action("History") %>';
+                var listUrlBase = '<%= Url.Action("CostShareHistory") %>';
 
                 var projectId = $(this).val();
 
@@ -43,7 +43,7 @@
                          {
                              col.Add(cs =>
                                          {%>
-                                            <%= Html.ActionLink<CostShareAuditController>(x=>x.Review(cs.Id), "Review") %>
+                                            <%= Html.ActionLink<AuditController>(x=>x.CostShareReview(cs.Id), "Review") %>
                                             <%
                                          });
                              col.Add(x => x.User.FullName).Title("User");

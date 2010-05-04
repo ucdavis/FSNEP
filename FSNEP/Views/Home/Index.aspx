@@ -43,7 +43,10 @@
         <li>
             <%=Html.ActionLink("User Admin", "List", "UserAdministration")%></li>
         <li>
-            <%=Html.ActionLink("Cost Share Audit", "History", "CostShareAudit") %>
+            <%=Html.ActionLink("Cost Share Audit", "CostShareHistory", "Audit") %>
+        </li>
+        <li>
+            <%=Html.ActionLink("Time Record Audit", "TimeRecordHistory", "Audit") %>
         </li>
             
     </ul>

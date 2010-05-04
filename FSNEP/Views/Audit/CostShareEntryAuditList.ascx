@@ -26,7 +26,7 @@
         $('form').submit(function(event) {
             if ($(this).valid()) {
                 var data = GatherExcludeEntryData();
-                var serviceUrl = '<%= Url.Action("Exclude") %>';
+                var serviceUrl = '<%= Url.Action("CostShareExclude") %>';
 
                 $.post(
                     serviceUrl,
@@ -112,7 +112,7 @@
         Loading ...
     </span>
     <div id="divEntryDetails">
-        <% using (Html.BeginForm("Exclude", "CostShareAudit")) { %>
+        <% using (Html.BeginForm("CostShareExclude", "Audit")) { %>
             <%= Html.AntiForgeryToken() %>
             <%= Html.Hidden("id") %>
     
