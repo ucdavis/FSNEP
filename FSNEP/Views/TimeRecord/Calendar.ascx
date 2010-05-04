@@ -73,7 +73,7 @@
 
 <div class="TimeRecordOptionsBox">
     <div class="TimeRecordTotals">
-        TimeRecord Totals: <span id="timeSheetHours">0</span> Hour(s)
+        TimeRecord Totals: <span id="timeSheetHours"><%= Html.Encode(Model.TotalHours) %></span> Hour(s)
     </div>
     <div class="TimeRecordTarget">
         Target Hours For Month: <%= Html.Encode(Model.TimeRecord.TargetHours) %> Hour(s)

@@ -229,6 +229,11 @@ namespace FSNEP.Controllers
             var viewModel = new TimeRecordEntryViewModel
                                 {
                                     TimeRecord = timeRecord,
+                                    TotalHours =
+                                        repository.OfType<TimeRecordEntry>()
+                                            .Queryable
+                                            .Where(x => x.Record.Id == timeRecord.Id)
+                                            .Sum(x => x.Hours),
                                     CalendarDays = calendarGenerator.GenerateCalendar(timeRecord),
                                     Projects = userBLL.GetAllProjectsByUser(repository.OfType<Project>()).ToList(),
                                     FundTypes = userBLL.GetUser().FundTypes,
@@ -250,6 +255,7 @@ namespace FSNEP.Controllers
         }
 
         public TimeRecord TimeRecord { get; set; }
+        public double TotalHours { get; set; }
         public IList<TimeRecordCalendarDay> CalendarDays { get; set; }
         public IList<Project> Projects { get; set; }
         public IList<FundType> FundTypes { get; set; }
