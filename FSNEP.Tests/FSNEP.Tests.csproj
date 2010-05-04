@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auditing\AuditInterceptorTests.cs" />
+    <Compile Include="BLL\DelegateBLLTests.cs" />
     <Compile Include="BLL\RecordBLLTests.cs" />
     <Compile Include="BLL\ReportBLLTests.cs" />
     <Compile Include="Controllers\AssociationControllerTests.cs" />
