@@ -55,6 +55,9 @@
         <ul id="navigation3">
             <li><a id="A1" href='<%= Url.Action("Index", "Home") %>' class="homebutton">Home</a></li>
         </ul>
+        
+        <%--<% Html.RenderPartial("Menu"); %>--%>
+        
         <div id="welcome">
             <% Html.RenderPartial("LogOnUserControl"); %>
         </div>
