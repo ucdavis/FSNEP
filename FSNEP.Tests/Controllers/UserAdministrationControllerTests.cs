@@ -125,7 +125,7 @@ namespace FSNEP.Tests.Controllers
         }
         #endregion Routing Tests
 
-       // #region First Name Validation Tests
+        #region First Name Validation Tests
         /// <summary>
         /// Create User Saves New user
         /// Redirects to Home Controller Index
@@ -183,13 +183,12 @@ namespace FSNEP.Tests.Controllers
             Controller.Create(userModel, roleList)
                 .AssertActionRedirect()
                 .ToAction<UserAdministrationController>(a => a.List());
-
-
+            Assert.AreEqual("ValidUserName Created Successfully", Controller.Message);
         }
 
 
 
-        /*
+        
         /// <summary>
         /// Modifies the existing valid user saves valid changes.
         /// </summary>
@@ -201,29 +200,8 @@ namespace FSNEP.Tests.Controllers
 
             var user = userModel.User;
 
-            //OK, this is stuff that would normally happen when the user is created:
-            var projects = new List<Project>
-                               {
-                                   new Project {Name = "Name", IsActive = true},
-                                   new Project{Name = "Name2", IsActive = true}
-                               };
-            projects[0].SetIdTo(2);
-            projects[1].SetIdTo(3);
-            user.Projects = projects;
-
-
-            //TODO: Create some "State" fund types to test those rules.
-            var fundTypes = new List<FundType>
-                                {
-                                    new FundType {Name = "Name1"},
-                                    new FundType {Name = "Name2"},
-                                    new FundType {Name = "Name3"}
-                                };
-            fundTypes[0].SetIdTo(4);
-            fundTypes[1].SetIdTo(5);
-            fundTypes[2].SetIdTo(6);
-
-            user.FundTypes = fundTypes;
+            CreateAndAttachProjectsToUser(userModel);
+            CreateAndAttachFundTypesToUser(userModel, false);
            
 
             Controller.Modify(user, CreateListOfRoles(), userModel.UserName);
@@ -231,6 +209,7 @@ namespace FSNEP.Tests.Controllers
 
             //throw new NotImplementedException("Do this test.");
         }
+        
 
         /// <summary>
         /// Creates a user with a valid first name of spaces.
@@ -240,14 +219,16 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void CreateUserSavesWithSpacesOnlyInFirstName()
         {
-            const string invalidValueName = "  ";
+            const string validValueName = "  ";
             CreateUserViewModel userModel = CreateValidUserModel();
-            userModel.User.FirstName = invalidValueName;
+            userModel.User.FirstName = validValueName;
 
-            Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles())
+            Controller.Create(userModel, CreateListOfRoles())
                 .AssertActionRedirect()
-                .ToAction<HomeController>(a => a.Index());
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName Created Successfully", Controller.Message);
         }
+        
 
         /// <summary>
         /// Creates a user with a invalid first name of 51 characters.
@@ -261,7 +242,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.FirstName = invalidValueName;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");            
         }        
 
@@ -277,7 +258,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.FirstName = invalidValueName;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());            
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());            
             newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: The value cannot be null.",
                 "FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
         }        
@@ -296,7 +277,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.LastName = invalidValueName;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
         }
 
@@ -312,7 +293,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.LastName = invalidValueName;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: Required",
                 "LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");            
         }
@@ -329,7 +310,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.LastName = invalidValueName;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: Required"); 
         }
 
@@ -346,23 +327,25 @@ namespace FSNEP.Tests.Controllers
         {
             CreateUserViewModel userModel = CreateValidUserModel();
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, null, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("You must select a supervisor"); 
-        }
+            userModel.User.Supervisor = null;
 
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Supervisor: You must select a supervisor"); 
+        }
+        
         /// <summary>
-        /// Creates a user with a null Project List (The User didn't select one from the list).
+        /// Creates a user with an empty Project List (The User didn't select one from the list).
         /// User is not saved.
         /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
-        public void CreateUserDoesNotSaveWithNullProjectList()
+        public void CreateUserDoesNotSaveWithEmptyProjectList()
         {
             CreateUserViewModel userModel = CreateValidUserModel();
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, null,
-                                      CreateListOfFundTypes(), CreateListOfRoles());
+            userModel.User.Projects = new List<Project>();
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("You must select at least one project"); 
         }
 
@@ -372,12 +355,13 @@ namespace FSNEP.Tests.Controllers
         /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
-        public void CreateUserDoesNotSaveWithNullFundTypeList()
+        public void CreateUserDoesNotSaveWithEmptyFundTypeList()
         {
             CreateUserViewModel userModel = CreateValidUserModel();
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      null, CreateListOfRoles());
+            userModel.User.FundTypes = new List<FundType>();
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("You must select at least one fund type"); 
         }
 
@@ -391,9 +375,20 @@ namespace FSNEP.Tests.Controllers
         {
             CreateUserViewModel userModel = CreateValidUserModel();
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), null);
+            var newUserModel = (ViewResult)Controller.Create(userModel, null);
             newUserModel.ViewData.ModelState.AssertErrorsAre("User must have at least one role"); 
+        }
+
+        /// <summary>
+        /// Creates the user does not save with empty role list.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithEmptyRoleList()
+        {
+            CreateUserViewModel userModel = CreateValidUserModel();
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, new List<string>());
+            newUserModel.ViewData.ModelState.AssertErrorsAre("User must have at least one role");
         }
 
         /// <summary>
@@ -406,8 +401,7 @@ namespace FSNEP.Tests.Controllers
         {          
             CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.DuplicateUserName);
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Username already exists"); 
         }
         #endregion Other Validation Tests
@@ -416,7 +410,8 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
         /// User is not saved.
-        /// Ensures the correct message is displayed. (Note, we would expect this to fail when the code is updated)
+        /// Ensures the correct message is displayed.
+        /// Note: this is turned off in the Web.Config
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithCreateStatusErrorDuplicateEmail()
@@ -424,10 +419,10 @@ namespace FSNEP.Tests.Controllers
             
             CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.DuplicateEmail);
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Create Failed Duplicate Email");                      
         }
+                
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
         /// User is not saved.
@@ -439,8 +434,7 @@ namespace FSNEP.Tests.Controllers
 
             CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.DuplicateProviderUserKey);
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Create Failed Duplicate Provider User Key"); 
         }
         /// <summary>
@@ -454,8 +448,7 @@ namespace FSNEP.Tests.Controllers
 
             CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.InvalidAnswer);
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Create Failed Invalid Answer");             
         }
         /// <summary>
@@ -469,8 +462,7 @@ namespace FSNEP.Tests.Controllers
 
             CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.InvalidEmail);
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Create Failed Invalid Email"); 
         }
         /// <summary>
@@ -484,8 +476,7 @@ namespace FSNEP.Tests.Controllers
 
             CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.InvalidPassword);
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Create Failed Invalid Password"); 
         }
         /// <summary>
@@ -499,8 +490,7 @@ namespace FSNEP.Tests.Controllers
 
             CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.InvalidProviderUserKey);
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Create Failed Invalid Provider User Key"); 
         }
         /// <summary>
@@ -514,8 +504,7 @@ namespace FSNEP.Tests.Controllers
 
             CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.InvalidQuestion);
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Create Failed Invalid Question"); 
         }
         /// <summary>
@@ -529,8 +518,7 @@ namespace FSNEP.Tests.Controllers
 
             CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.InvalidUserName);
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Create Failed Invalid User Name"); 
         }
         /// <summary>
@@ -544,8 +532,7 @@ namespace FSNEP.Tests.Controllers
 
             CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.ProviderError);
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Create Failed Provider Error"); 
         }
         /// <summary>
@@ -559,12 +546,11 @@ namespace FSNEP.Tests.Controllers
 
             CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.UserRejected);
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                      CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Create Failed User Rejected"); 
         }
         #endregion MembershipCreateStatus tests that still need to be done. These will fail when code is added
-
+        
         #region Salary Validation Tests
         /// <summary>
         /// Creates a user with a invalid salary .
@@ -578,7 +564,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.Salary = invalidValueSalary;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Salary: Must be greater than zero"); 
         }
 
@@ -594,7 +580,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.Salary = invalidValueSalary;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Salary: Must be greater than zero"); 
         }
         #endregion Salary Validation Tests
@@ -612,7 +598,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.BenefitRate = invalidValueBenefitRate;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive)."); 
         }
         /// <summary>
@@ -627,7 +613,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.BenefitRate = invalidValueBenefitRate;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive)."); 
         }
 
@@ -643,9 +629,10 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.BenefitRate = validValueBenefitRate;
 
-            Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles())
+            Controller.Create(userModel, CreateListOfRoles())
                 .AssertActionRedirect()
-                .ToAction<HomeController>(a => a.Index());
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName Created Successfully", Controller.Message);
         }
 
         /// <summary>
@@ -660,9 +647,11 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.BenefitRate = validValueBenefitRate;
 
-            Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles())
+            Controller.Create(userModel, CreateListOfRoles())
                 .AssertActionRedirect()
-                .ToAction<HomeController>(a => a.Index());
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName Created Successfully", Controller.Message);
+            Assert.AreEqual(validValueBenefitRate, userModel.User.BenefitRate); //Make sure it wasn't changed?
         }
         #endregion Benefit Rate Valadation Tests
 
@@ -679,7 +668,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.FTE = invalidValueFte;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive)."); 
         }
         /// <summary>
@@ -694,7 +683,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.FTE = invalidValueFte;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive)."); 
         }
         /// <summary>
@@ -709,7 +698,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.FTE = invalidValueFte;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive)."); 
         }
         #endregion FTE Validation Tests
@@ -727,7 +716,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.UserName = invalidValueUserName;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("UserName: Must be between 1 and 50 characters long"); 
         }
         /// <summary>
@@ -742,7 +731,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.UserName = invalidValueUserName;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("UserName: Required",
                 "UserName: Must be between 1 and 50 characters long"); 
         }
@@ -758,7 +747,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.UserName = invalidValueUserName;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("UserName: Required");
         } 
         #endregion userName Tests
@@ -776,7 +765,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.Question = invalidValueQuestion;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Question: Must be between 1 and 50 characters long");
         }
         /// <summary>
@@ -791,7 +780,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.Question = invalidValueQuestion;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Question: Must be between 1 and 50 characters long",
                 "Question: Required"); 
         }
@@ -807,7 +796,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.Question = invalidValueQuestion;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Question: Required");
         }
         #endregion Question Tests
@@ -825,7 +814,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.Answer = invalidValueAnswer;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Answer: Must be between 1 and 50 characters long");
         }
         /// <summary>
@@ -840,7 +829,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.Answer = invalidValueAnswer;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Answer: Required",
                 "Answer: Must be between 1 and 50 characters long");            
         }
@@ -856,7 +845,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.Answer = invalidValueAnswer;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Answer: Required");
         }
         #endregion Answer Tests
@@ -874,7 +863,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.Email = invalidValueEmail;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Email: Required",
                 "Email: Must be between 1 and 50 characters long",
                 "Email: Must be a valid email address");
@@ -891,7 +880,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.Email = invalidValueEmail;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Email: Required",
                 "Email: Must be a valid email address");
         }
@@ -907,7 +896,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.Email = invalidValueEmail;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Email: Must be between 1 and 50 characters long",
                 "Email: Must be a valid email address");            
         }
@@ -924,7 +913,7 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.Email = invalidValueEmail;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Email: Must be between 1 and 50 characters long",
                 "Email: Must be a valid email address"); 
         }
@@ -943,7 +932,7 @@ namespace FSNEP.Tests.Controllers
 
             userModel.Email = invalidEmail;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Email: Must be a valid email address");          
         }
         /// <summary>
@@ -961,7 +950,7 @@ namespace FSNEP.Tests.Controllers
 
             userModel.Email = invalidEmail;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Email: Must be a valid email address");        
         }
         #endregion Email Tests
@@ -1038,22 +1027,22 @@ namespace FSNEP.Tests.Controllers
         }
         #endregion Tests to ensure Mocking is working as expected. These could be removed.
 
-        */
+        
         #region Helper Methods
 
-        private static List<int> CreateListOfProjects()
-        {
-            var projectList = new List<int> {2, 3};
+        //private static List<int> CreateListOfProjects()
+        //{
+        //    var projectList = new List<int> {2, 3};
 
-            return projectList;
-        }
-        private static List<int> CreateListOfFundTypes()
-        {
-            var fundTypeList = new List<int> {4, 5};
+        //    return projectList;
+        //}
+        //private static List<int> CreateListOfFundTypes()
+        //{
+        //    var fundTypeList = new List<int> {4, 5};
 
 
-            return fundTypeList;
-        }
+        //    return fundTypeList;
+        //}
         private static List<string> CreateListOfRoles()
         {
             var roleList = new List<string> {"Supervisor", "Timesheet User"};
@@ -1082,8 +1071,8 @@ namespace FSNEP.Tests.Controllers
             const int validValueSalary = 1;
             const int validValueFte = 1;
 
-            FakeProjects();
-            FakeFundTypes();
+            //FakeProjects();
+            //FakeFundTypes();
 
             var supervisor = FakeSupervisor();
 
@@ -1110,6 +1099,9 @@ namespace FSNEP.Tests.Controllers
                 UserName = "ValidUserName",
                 Email = "test@test.edu"
             };
+
+            CreateAndAttachProjectsToUser(userModel);
+            CreateAndAttachFundTypesToUser(userModel, false);
 
             MockMethods(userModel, wantedCreateStatus);
             MocksForUserLists(userModel);
@@ -1189,8 +1181,7 @@ namespace FSNEP.Tests.Controllers
             //Mock the GetSubordinates so it doesn't require this user to gave the supervisor role.
             //TODO: Change this with a parameter to test having subordinates
             var emptyList = new List<User>().AsQueryable();            
-            UserBLL.Expect(a => a.GetSubordinates(userModel.User)).Return(emptyList).Repeat.Any();
-            //UserBLL.Expect(a => a.GetSubordinates(userModel.User)).IgnoreArguments().Return(emptyList).Repeat.Any();
+            UserBLL.Expect(a => a.GetSubordinates(userModel.User)).Return(emptyList).Repeat.Any();            
             #endregion Mocks for the URL methods (In Create)
 
         }
@@ -1220,49 +1211,49 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Generate 2 fake projects.
         /// </summary>
-        private void FakeProjects()
-        {                    
-            var projects = new List<Project>
-                               {
-                                   new Project {Name = "Name", IsActive = true},
-                                   new Project{Name = "Name2", IsActive = true}
-                               };
-            projects[0].SetIdTo(2);
-            projects[1].SetIdTo(3);  
+        //private void FakeProjects()
+        //{                    
+        //    var projects = new List<Project>
+        //                       {
+        //                           new Project {Name = "Name", IsActive = true},
+        //                           new Project{Name = "Name2", IsActive = true}
+        //                       };
+        //    projects[0].SetIdTo(2);
+        //    projects[1].SetIdTo(3);  
             
-            var projectRepository = FakeRepository<Project>();
+        //    var projectRepository = FakeRepository<Project>();
 
-            //This ties the "().Queryable" to return "projects"
-            projectRepository.Expect(a => a.Queryable).Return(projects.AsQueryable());
+        //    //This ties the "().Queryable" to return "projects"
+        //    projectRepository.Expect(a => a.Queryable).Return(projects.AsQueryable());
 
-            //This ties the call "Repository.OfType<Project>()" to my repository here "projectRepository"
-            Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
+        //    //This ties the call "Repository.OfType<Project>()" to my repository here "projectRepository"
+        //    Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
  
-            /* This is what is calling the above code.
-            var projects = from proj in Repository.OfType<Project>().Queryable
-                           where projectList.Contains(proj.ID)
-                           select proj;
-             */
-        }
+        //    /* This is what is calling the above code.
+        //    var projects = from proj in Repository.OfType<Project>().Queryable
+        //                   where projectList.Contains(proj.ID)
+        //                   select proj;
+        //     */
+        //}
 
-        /// <summary>
-        /// Generate 3 fake fund types
-        /// </summary>
-        private void FakeFundTypes()
-        {
-            var fundTypes = new List<FundType>
-                                {
-                                    new FundType {Name = "Name1"},
-                                    new FundType {Name = "Name2"},
-                                    new FundType {Name = "Name3"}
-                                };
-            fundTypes[0].SetIdTo(4);
-            fundTypes[1].SetIdTo(5);
-            fundTypes[2].SetIdTo(6);
-            var fundRepository = FakeRepository<FundType>();
-            fundRepository.Expect(a => a.Queryable).Return(fundTypes.AsQueryable());
-            Controller.Repository.Expect(a => a.OfType<FundType>()).Return(fundRepository);
-        }
+        ///// <summary>
+        ///// Generate 3 fake fund types
+        ///// </summary>
+        //private void FakeFundTypes()
+        //{
+        //    var fundTypes = new List<FundType>
+        //                        {
+        //                            new FundType {Name = "Name1"},
+        //                            new FundType {Name = "Name2"},
+        //                            new FundType {Name = "Name3"}
+        //                        };
+        //    fundTypes[0].SetIdTo(4);
+        //    fundTypes[1].SetIdTo(5);
+        //    fundTypes[2].SetIdTo(6);
+        //    var fundRepository = FakeRepository<FundType>();
+        //    fundRepository.Expect(a => a.Queryable).Return(fundTypes.AsQueryable());
+        //    Controller.Repository.Expect(a => a.OfType<FundType>()).Return(fundRepository);
+        //}
 
         /// <summary>
         /// Creates the fund types and attaches them to user.

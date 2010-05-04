@@ -436,7 +436,7 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("Supervisor: The value cannot be null.");
+                results.AssertContains("Supervisor: You must select a supervisor");
                 //Assert.AreEqual(true, results.Contains("Supervisor: The value cannot be null."), "Expected the validation result to have \"Supervisor: The value cannot be null.\"");
                 throw;
             }
