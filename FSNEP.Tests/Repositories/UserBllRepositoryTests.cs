@@ -17,6 +17,7 @@ namespace FSNEP.Tests.Repositories
     public class UserBllRepositoryTests : RepositoryTestBase
     {
         public IUserBLL UserBLL { get; set; }
+        private User Supervisor { get; set;}
 
         #region Init
         public UserBllRepositoryTests()
@@ -64,16 +65,16 @@ namespace FSNEP.Tests.Repositories
         private void LoadUsers()
         {
             var users = new User[4];
-            var supervisor = CreateValidUser(1);
-            supervisor.Supervisor = supervisor;
-            supervisor.UserName = "Supervisor1";
-            supervisor.Projects.Add(Repository.OfType<Project>().GetById(1));
-            Repository.OfType<User>().EnsurePersistent(supervisor);
+            Supervisor = CreateValidUser(1);
+            Supervisor.Supervisor = Supervisor;
+            Supervisor.UserName = "Supervisor1";
+            Supervisor.Projects.Add(Repository.OfType<Project>().GetById(1));
+            Repository.OfType<User>().EnsurePersistent(Supervisor);
 
             for (int i = 0; i < 4; i++)
             {
                 users[i] = CreateValidUser(i + 1);
-                users[i].Supervisor = supervisor;
+                users[i].Supervisor = Supervisor;
             }
 
             //Now set individual projects for each user
@@ -236,6 +237,123 @@ namespace FSNEP.Tests.Repositories
 
         #endregion GetAllProjectsByUser Tests
 
+        #region GetAllUsers Tests
+
+        /// <summary>
+        /// GetAllUsers For A User With RoleProjectAdmin
+        /// This will only return users that have the same project(s) as the project Admin user.
+        /// </summary>
+        [TestMethod]
+        public void GetAllUsersForAUserWithRoleProjectAdmin()
+        {
+            Project newProject = null;
+            User projAdmin = null;
+            var peons = new User[2];
+
+            //Create a project that is not linked to any other users in the repository.
+            using (var ts = new TransactionScope())
+            {
+                newProject = CreateValidProject(10);
+                Repository.OfType<Project>().EnsurePersistent(newProject);
+                ts.CommitTransaction();
+            }
+            //Create 3 users that are only linked to the newly created project
+            using (var ts = new TransactionScope())
+            {
+                //Create the project admin
+                projAdmin = CreateValidUser(10);
+                projAdmin.Projects.Add(newProject);
+                projAdmin.UserName = "ProjAdmin";
+                projAdmin.Supervisor = Supervisor;
+                Repository.OfType<User>().EnsurePersistent(projAdmin);
+
+                //Create the two users working on that project
+                peons[0] = CreateValidUser(11);
+                peons[0].Projects.Add(newProject);
+                peons[0].Supervisor = Supervisor;
+                Repository.OfType<User>().EnsurePersistent(peons[0]);
+                peons[1] = CreateValidUser(12);
+                peons[1].Projects.Add(newProject);
+                peons[1].Supervisor = Supervisor;
+                Repository.OfType<User>().EnsurePersistent(peons[1]);
+
+                ts.CommitTransaction();
+            }
+
+
+            UserBLL.UserAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleProjectAdmin)).Return(true).Repeat.Any();
+            UserBLL.UserAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleAdmin)).Return(false).Repeat.Any();
+            UserBLL.UserAuth.Expect(a => a.CurrentUserName).Return("ProjAdmin").Repeat.Any();
+            UserBLL.UserAuth.Expect(a => a.GetUser("ProjAdmin")).Return(new FakeMembershipUser(projAdmin.Id)).Repeat.Any();
+
+
+            var usersLinkedToMyprojects = UserBLL.GetAllUsers().ToList();
+            Assert.IsNotNull(usersLinkedToMyprojects);
+            Assert.AreEqual(3, usersLinkedToMyprojects.Count);
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(projAdmin));
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(peons[0]));
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(peons[1]));
+
+        }
+
+        /// <summary>
+        /// GetAllUsers For A User With RoleAdmin
+        /// This will return all users in the repository.
+        /// </summary>
+        [TestMethod]
+        public void GetAllUsersForAUserWithRoleAdmin()
+        {
+            Project newProject = null;
+            User projAdmin = null;
+            var peons = new User[2];
+
+            //Create a project that is not linked to any other users in the repository.
+            using (var ts = new TransactionScope())
+            {
+                newProject = CreateValidProject(10);
+                Repository.OfType<Project>().EnsurePersistent(newProject);
+                ts.CommitTransaction();
+            }
+            //Create 3 users that are only linked to the newly created project
+            using (var ts = new TransactionScope())
+            {
+                //Create the project admin
+                projAdmin = CreateValidUser(10);
+                projAdmin.Projects.Add(newProject);
+                projAdmin.UserName = "ProjAdmin";
+                projAdmin.Supervisor = Supervisor;
+                Repository.OfType<User>().EnsurePersistent(projAdmin);
+
+                //Create the two users working on that project
+                peons[0] = CreateValidUser(11);
+                peons[0].Projects.Add(newProject);
+                peons[0].Supervisor = Supervisor;
+                Repository.OfType<User>().EnsurePersistent(peons[0]);
+                peons[1] = CreateValidUser(12);
+                peons[1].Projects.Add(newProject);
+                peons[1].Supervisor = Supervisor;
+                Repository.OfType<User>().EnsurePersistent(peons[1]);
+
+                ts.CommitTransaction();
+            }
+
+
+            UserBLL.UserAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleProjectAdmin)).Return(false).Repeat.Any();
+            UserBLL.UserAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleAdmin)).Return(true).Repeat.Any();
+            UserBLL.UserAuth.Expect(a => a.CurrentUserName).Return("ProjAdmin").Repeat.Any();
+            UserBLL.UserAuth.Expect(a => a.GetUser("ProjAdmin")).Return(new FakeMembershipUser(projAdmin.Id)).Repeat.Any();
+
+
+            var usersLinkedToMyprojects = UserBLL.GetAllUsers().ToList();
+            Assert.IsNotNull(usersLinkedToMyprojects);
+            Assert.AreEqual(UserIds.Count, usersLinkedToMyprojects.Count, "All users should have been retrieved"); //Should be 8, but if more are added to the load data, this will let it pass without changing a hard coded value.
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(projAdmin));
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(peons[0]));
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(peons[1]));
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(Supervisor)); //It has more, this is just a sample
+        }
+
+        #endregion GetAllUsers Tests
 
         #region Helper Methods
         /// <summary>
