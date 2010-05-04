@@ -87,7 +87,7 @@ namespace FSNEP.Controllers
         {
             var record = Repository.OfType<Record>().GetNullableByID(id);
             
-            Check.Require(record != null, "Invalid record indentifier");
+            Check.Require(record != null, "Invalid record identifier");
 
             record.ReviewComment = reviewComment;
 

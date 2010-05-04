@@ -61,7 +61,7 @@ namespace FSNEP.Controllers
         {
             var timeRecord = _timeRecordRepository.GetNullableByID(id);
 
-            Check.Require(timeRecord != null, "Invalid cost share indentifier");
+            Check.Require(timeRecord != null, "Invalid cost share identifier");
 
             if (!_timeRecordBLL.HasAccess(CurrentUser, timeRecord))
             {
@@ -77,7 +77,7 @@ namespace FSNEP.Controllers
         {
             var timeRecord = _timeRecordRepository.GetNullableByID(id);
 
-            Check.Require(timeRecord != null, "Invalid time record indentifier");
+            Check.Require(timeRecord != null, "Invalid time record identifier");
             
             if (!_timeRecordBLL.HasAccess(CurrentUser, timeRecord))
             {
@@ -100,7 +100,7 @@ namespace FSNEP.Controllers
         {
             var timeRecord = _timeRecordRepository.GetNullableByID(recordId);
 
-            Check.Require(timeRecord != null, "Invalid time record indentifier");
+            Check.Require(timeRecord != null, "Invalid time record identifier");
 
             Check.Require(_timeRecordBLL.HasAccess(CurrentUser, timeRecord),
                           "Current user does not have access to this record");
@@ -184,7 +184,7 @@ namespace FSNEP.Controllers
         {
             var timeRecord = _timeRecordRepository.GetNullableByID(id);
 
-            Check.Require(timeRecord != null, "Invalid time record indentifier");
+            Check.Require(timeRecord != null, "Invalid time record identifier");
 
             if (!_timeRecordBLL.HasAccess(CurrentUser, timeRecord))
             {

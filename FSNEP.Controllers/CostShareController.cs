@@ -56,7 +56,7 @@ namespace FSNEP.Controllers
         {
             var costShare = _costShareRepository.GetNullableByID(id);
 
-            Check.Require(costShare != null, "Invalid cost share indentifier");
+            Check.Require(costShare != null, "Invalid cost share identifier");
 
             if (!_costShareBLL.HasAccess(CurrentUser, costShare))
             {
@@ -72,7 +72,7 @@ namespace FSNEP.Controllers
         {
             var costShare = _costShareRepository.GetNullableByID(id);
 
-            Check.Require(costShare != null, "Invalid cost share indentifier");
+            Check.Require(costShare != null, "Invalid cost share identifier");
 
             if (!_costShareBLL.HasAccess(CurrentUser, costShare))
             {
@@ -98,7 +98,7 @@ namespace FSNEP.Controllers
         {
             var costShare = _costShareRepository.GetNullableByID(id);
             
-            Check.Require(costShare != null, "Invalid cost share indentifier");
+            Check.Require(costShare != null, "Invalid cost share identifier");
 
             Check.Require(_costShareBLL.HasAccess(CurrentUser, costShare),
                           "Current user does not have access to this record");
@@ -169,7 +169,7 @@ namespace FSNEP.Controllers
         {
             var costShare = _costShareRepository.GetNullableByID(id);
 
-            Check.Require(costShare != null, "Invalid cost share indentifier");
+            Check.Require(costShare != null, "Invalid cost share identifier");
 
             if (!_costShareBLL.HasAccess(CurrentUser, costShare))
             {

@@ -175,7 +175,7 @@ namespace FSNEP.Tests.Controllers
             {
                 Assert.IsNotNull(_timeRecord);
                 Assert.IsNull(result);
-                Assert.AreEqual("Invalid time record indentifier", message.Message);
+                Assert.AreEqual("Invalid time record identifier", message.Message);
                 _timeRecordRepository.AssertWasNotCalled(a => a.EnsurePersistent(_timeRecord));
                 throw;
             }
@@ -370,7 +370,7 @@ namespace FSNEP.Tests.Controllers
             }
             catch (Exception message)
             {
-                Assert.AreEqual("Invalid time record indentifier", message.Message);
+                Assert.AreEqual("Invalid time record identifier", message.Message);
                 throw;
             }
             

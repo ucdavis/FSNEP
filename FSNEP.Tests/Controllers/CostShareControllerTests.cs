@@ -205,7 +205,7 @@ namespace FSNEP.Tests.Controllers
             catch (Exception message)
             {
                 Assert.IsNotNull(message);
-                Assert.AreEqual("Invalid cost share indentifier", message.Message);
+                Assert.AreEqual("Invalid cost share identifier", message.Message);
                 throw;
             }
         }
@@ -286,7 +286,7 @@ namespace FSNEP.Tests.Controllers
             catch (Exception message)
             {
                 Assert.IsNotNull(message);
-                Assert.AreEqual("Invalid cost share indentifier", message.Message);
+                Assert.AreEqual("Invalid cost share identifier", message.Message);
                 throw;
             }
         }
@@ -391,7 +391,7 @@ namespace FSNEP.Tests.Controllers
             catch (Exception message)
             {
                 Assert.IsNotNull(message);
-                Assert.AreEqual("Invalid cost share indentifier", message.Message);
+                Assert.AreEqual("Invalid cost share identifier", message.Message);
                 throw;
             }           
         }
@@ -557,7 +557,7 @@ namespace FSNEP.Tests.Controllers
             catch (Exception message)
             {
                 Assert.IsNotNull(message);
-                Assert.AreEqual("Invalid cost share indentifier", message.Message);
+                Assert.AreEqual("Invalid cost share identifier", message.Message);
                 throw;
             }
         }

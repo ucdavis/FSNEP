@@ -136,7 +136,7 @@ namespace FSNEP.Tests.Controllers
             }
             catch (Exception ex)
             {
-                Assert.AreEqual("Invalid entry indentifier", ex.Message);
+                Assert.AreEqual("Invalid entry identifier", ex.Message);
                 throw;
             } 
         }
@@ -161,7 +161,7 @@ namespace FSNEP.Tests.Controllers
             }
             catch (Exception ex)
             {
-                Assert.AreEqual("Invalid cost share indentifier", ex.Message);
+                Assert.AreEqual("Invalid cost share identifier", ex.Message);
                 throw;
             }
         }
