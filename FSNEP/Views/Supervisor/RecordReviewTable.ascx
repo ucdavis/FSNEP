@@ -22,15 +22,13 @@
         
         <% lastUserName = currentUserName; %>
         <% } %>
-        <% else { %>
            <tr>
             <td><%= Html.ActionLink("Select", (string)ViewData["ReviewAction"], new {id = record.Id}) %></td>
             <td><%= Html.Encode(record.MonthName)%></td>
             <td><%= Html.Encode(record.Year)%></td>
             <td><%= Html.Encode(record.Status.Name)%></td>
            </tr>                    
-        <% }
-        }%>
+        <% } %>
     </tbody>
 
 </table>
