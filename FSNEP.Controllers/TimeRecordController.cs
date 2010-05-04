@@ -46,7 +46,7 @@ namespace FSNEP.Controllers
                 throw new NotImplementedException("Need to redirect to time record review page");
             }
 
-            var viewModel = TimeRecordEntryViewModel.Create(Repository, timeRecord, _userBLL, _timeRecordCalendarGenerator);
+            var viewModel = TimeRecordEntryViewModel.Create(Repository, _userBLL, _timeRecordBLL, timeRecord, _timeRecordCalendarGenerator);
 
             return View(viewModel);
         }
@@ -61,11 +61,12 @@ namespace FSNEP.Controllers
 
     public class TimeRecordEntryViewModel
     {
-        public static TimeRecordEntryViewModel Create(IRepository repository, TimeRecord timeRecord, IUserBLL userBLL, ITimeRecordCalendarGenerator calendarGenerator)
+        public static TimeRecordEntryViewModel Create(IRepository repository, IUserBLL userBLL, ITimeRecordBLL timeRecordBLL, TimeRecord timeRecord, ITimeRecordCalendarGenerator calendarGenerator)
         {
             var viewModel = new TimeRecordEntryViewModel
                                 {
                                     TimeRecord = timeRecord,
+                                    IsSubmittable = timeRecordBLL.IsSubmittable(timeRecord),
                                     CalendarDays = calendarGenerator.GenerateCalendar(timeRecord),
                                     Projects = userBLL.GetAllProjectsByUser(repository.OfType<Project>()).ToList(),
                                     FundTypes = userBLL.GetUser().FundTypes,
@@ -82,5 +83,6 @@ namespace FSNEP.Controllers
         public IList<Project> Projects { get; set; }
         public IList<FundType> FundTypes { get; set; }
         public IList<ActivityCategory> ActivityCategories { get; set; }
+        public bool IsSubmittable { get; set; }
     }
 }

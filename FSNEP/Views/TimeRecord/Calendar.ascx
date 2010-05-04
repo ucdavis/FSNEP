@@ -52,3 +52,24 @@
     </div>
     <% } %>
 </div>
+
+<div class="TimeRecordOptionsBox">
+    <div class="TimeRecordTotals">
+        TimeRecord Totals: <span id="timeSheetHours">0</span> Hour(s)
+    </div>
+    <div class="TimeRecordAdjustment">
+        <a href="javascript:;" id="addAdjustment">Add Adjustment [TODO]</a>
+    </div>
+    <div class="TimeRecordSubmit">
+        <% if (Model.IsSubmittable)
+           {
+               using (Html.BeginForm("Submit"))
+               {
+        %>
+        <input type="submit" id="submitTimeRecord" value="Submit" />
+        <%
+            }
+           }
+        %>
+    </div>
+</div>
