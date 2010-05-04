@@ -28,14 +28,23 @@ namespace FSNEP.Controllers
         {
             var chosenProject = projectId.HasValue ? projectRepository.GetNullableByID(projectId.Value) : null;
 
-            var costSharesInProject =
-                costShareRepository.Queryable.Where(x => x.User.Projects.Contains(chosenProject)).OrderByDescending(
-                    x => x.Year).ThenByDescending(x => x.Month);
+            var projects = projectRepository.Queryable.Where(x=>x.IsActive).OrderBy(x => x.Name).ToList();
            
-            return new CostShareAuditHistoryViewModel {CostShares = costSharesInProject, Project = chosenProject};
+            var viewModel = new CostShareAuditHistoryViewModel {Project = chosenProject, Projects = projects};
+
+            if (chosenProject != null)
+            {
+                viewModel.CostShares =
+                    costShareRepository.Queryable.Where(x => x.User.Projects.Contains(chosenProject)).OrderByDescending(
+                        x => x.Year).ThenByDescending(x => x.Month).ToList();
+            }
+
+            return viewModel;
         }
 
         public IEnumerable<CostShare> CostShares { get; set; }
+
+        public IEnumerable<Project> Projects { get; set; }
 
         public Project Project { get; set; }
     }
