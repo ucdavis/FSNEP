@@ -200,7 +200,8 @@ namespace FSNEP.Controllers
                     //MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail,
                     //                                    Url.AbsoluteAction("Index", "Home", new {token = user.Token}));
                     MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail,
-                                                        Url.AbsoluteAction("NewUser", "Account", new {id = new Guid(user.Token.ToString())}));
+                                                        Url.AbsoluteAction("NewUser", "Account", new {id = user.Token}));
+                    
 
                     UserBLL.DbContext.CommitTransaction();
                 }
