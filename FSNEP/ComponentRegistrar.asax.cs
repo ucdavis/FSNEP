@@ -40,6 +40,9 @@ namespace FSNEP
         {
             container.AddComponent("repository", typeof (IRepository), typeof (Repository));
             container.AddComponent("genericRepository", typeof (IRepository<>), typeof (Repository<>));
+            container.AddComponent("typedRepository", typeof (IRepositoryWithTypedId<,>),
+                                   typeof (RepositoryWithTypedId<,>));
+
         }
 
         /// <summary>

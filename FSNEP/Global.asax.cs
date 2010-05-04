@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using Castle.Windsor;
 using FSNEP.Controllers;
+using FSNEP.ModelBinder;
 using Microsoft.Practices.ServiceLocation;
 using MvcContrib.Castle;
 using NHibernate;
@@ -26,7 +27,7 @@ namespace FSNEP
 
             var windsorContainer = InitializeDependencyLocator();
 
-            ModelBinders.Binders.DefaultBinder = new UCDArchModelBinder();
+            ModelBinders.Binders.DefaultBinder = new CustomBinder(); //UCDArchModelBinder();
 
             //Configure the audit interceptor
             NHibernateSessionManager.Instance.RegisterInterceptor(windsorContainer.Resolve<IInterceptor>());

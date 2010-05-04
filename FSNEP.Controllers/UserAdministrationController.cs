@@ -282,7 +282,7 @@ namespace FSNEP.Controllers
             if (!ModelState.IsValid)
             {
                 var viewModel = UserViewModel.Create(UserBLL, Repository);
-                viewModel.User = userToUpdate;
+                viewModel.User = user;
                 viewModel.UserRoles = roleList; //Prevent the roles from being cleared out with an error
 
                 return View(viewModel);
