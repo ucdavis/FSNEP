@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -6,6 +5,7 @@ using FSNEP.Controllers.Helpers.Attributes;
 using FSNEP.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Core.Utils;
+using MvcContrib.Attributes;
 
 namespace FSNEP.Controllers
 {
@@ -33,6 +33,26 @@ namespace FSNEP.Controllers
             var viewModel = CostShareAuditReviewViewModel.Create(Repository.OfType<CostShareEntry>(), costShare);
 
             return View(viewModel);
+        }
+
+        [AcceptPost]
+        public JsonResult Exclude(int id, string excludeReason)
+        {
+            var costShareEntryRepository = Repository.OfType<CostShareEntry>();
+
+            var costShareEntry = costShareEntryRepository.GetNullableByID(id);
+
+            Check.Require(costShareEntry != null, "Invalid Entry Identifier");
+
+            //Set the entry to be excluded and include the reason, which can't be null
+            Check.Require(string.IsNullOrEmpty(excludeReason) == false, "Exclude Reason is required");
+
+            costShareEntry.Exclude = true;
+            costShareEntry.ExcludeReason = excludeReason;
+
+            costShareEntryRepository.EnsurePersistent(costShareEntry);
+
+            return Json(new {Success = true, EntryId = costShareEntry.Id});
         }
     }
 

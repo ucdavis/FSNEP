@@ -26,8 +26,18 @@
         $('form').submit(function(event) {
             if ($(this).valid()) {
                 var data = GatherExcludeEntryData();
+                var serviceUrl = '<%= Url.Action("Exclude") %>';
 
                 console.dir(data);
+
+                $.post(
+                    serviceUrl,
+                    data,
+                    function(result) {
+                        alert("success for " + result.EntryId);
+                    },
+                    'json'
+                );
             }
 
             event.preventDefault();
@@ -91,7 +101,7 @@
         Loading ...
     </span>
     <div id="divEntryDetails">
-        <% using (Html.BeginForm()) { %>
+        <% using (Html.BeginForm("Exclude", "CostShareAudit")) { %>
             <%= Html.AntiForgeryToken() %>
             <%= Html.Hidden("id") %>
     
