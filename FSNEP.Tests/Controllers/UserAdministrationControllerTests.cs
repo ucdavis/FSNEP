@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using FSNEP.BLL.Impl;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Controllers;
@@ -120,11 +121,12 @@ namespace FSNEP.Tests.Controllers
         }
 
         /// <summary>
-        /// WIP. FundTypes fake needs ID to pass the Unit Test.
+        /// Create User Saves New user
         /// </summary>
         [TestMethod]
         public void CreateUserSavesNewUser()
         {            
+            //TODO: Clean up code.
             const string validValueName = "ValidName";
             const int validValueSalary = 1;
             const int validValueFte = 1;
@@ -154,14 +156,14 @@ namespace FSNEP.Tests.Controllers
             
 
             var newUser = new User
-            {
-                FirstName = validValueName,
-                LastName = validValueName,
-                Salary = validValueSalary,
-                FTE = validValueFte,
-                IsActive = true,
-            };
-            newUser.Supervisor = supervisor;
+                              {
+                                  FirstName = validValueName,
+                                  LastName = validValueName,
+                                  Salary = validValueSalary,
+                                  FTE = validValueFte,
+                                  IsActive = true,
+                                  Supervisor = supervisor,
+                              };
 
             var userId = Guid.NewGuid();
             newUser.SetUserID(userId);
@@ -234,7 +236,13 @@ namespace FSNEP.Tests.Controllers
             //If IgnoreArguments is not used, the params don't match and it isn't mocked.
             UserBLL.UserAuth.MembershipService.Expect(a => a.CreateUser(userModel.UserName, "jaskidjflkajsdlf$#12", userModel.Email, userModel.Question, userModel.Answer, true,
                                                                 null, out createStatus)).OutRef(createStatus = MembershipCreateStatus.Success).Return(memberShipUser);
-          
+
+            Controller.Url = MockRepository.GenerateStub<UrlHelper>(Controller.ControllerContext.RequestContext);
+
+            Controller.Url.RequestContext.HttpContext.Request.Expect(a => a.Url).Return(new Uri("http://sample.com")).
+                            Repeat.Any();
+
+
             Controller.MessageGateway.Expect(a => a.SendMessageToNewUser(newUser, "ignore", "ignore", "ignore", "ignore")).IgnoreArguments().Repeat.Any();
 
             Controller.Create(userModel, supervisorId, projectList, fundTypeList, roleList);
@@ -247,7 +255,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void MockTest()
         {
-            var status = MembershipCreateStatus.Success;
+            MembershipCreateStatus status;
 
             var mockGuid = Guid.NewGuid();
             UserBLL = MockRepository.GenerateStub<IUserBLL>();
@@ -263,7 +271,8 @@ namespace FSNEP.Tests.Controllers
                                                                 null, out status)).IgnoreArguments().OutRef(status = MembershipCreateStatus.Success).Return(memberShipUser);
   
 
-            var testStatus = MembershipCreateStatus.UserRejected; //Prime to a different value to make sure the OutRef works as expected.
+            MembershipCreateStatus testStatus; 
+
             var testMemebershipUser = UserBLL.UserAuth.MembershipService.CreateUser("1Test", "1dfgsdf345234",
                                                                                     "1Test@test.edu", "1Q", "A", true,
                                                                                     null, out testStatus);
@@ -275,7 +284,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void MockTest2()
         {
-            var status = MembershipCreateStatus.Success;
+            MembershipCreateStatus status;
 
             var mockGuid = Guid.NewGuid();
             UserBLL = MockRepository.GenerateStub<IUserBLL>();
@@ -290,8 +299,10 @@ namespace FSNEP.Tests.Controllers
             UserBLL.UserAuth.MembershipService.Expect(a => a.CreateUser("Test", "dfgsdf345234", "Test@test.edu", "Q", "A", true,
                                                                 null, out status)).IgnoreArguments().OutRef(status = MembershipCreateStatus.Success).Return(memberShipUser);
 
-
-            var testStatus = MembershipCreateStatus.UserRejected; //Prime to a different value to make sure the OutRef works as expected.
+            
+// ReSharper disable RedundantAssignment
+            var testStatus = MembershipCreateStatus.UserRejected;  //Prime to a different value to make sure the OutRef works as expected.
+// ReSharper restore RedundantAssignment
             var testMemebershipUser = UserBLL.UserAuth.MembershipService.CreateUser("1Test", "1dfgsdf345234",
                                                                                     "1Test@test.edu", "1Q", "A", true,
                                                                                     null, out testStatus);
@@ -312,8 +323,7 @@ namespace FSNEP.Tests.Controllers
         /// Generate 2 fake projects.
         /// </summary>
         private void FakeProjects()
-        {                  
-            var project = new Project {Name = "Name", IsActive = true};
+        {                    
             var projects = new List<Project>
                                {
                                    new Project {Name = "Name", IsActive = true},
@@ -329,8 +339,7 @@ namespace FSNEP.Tests.Controllers
 
             //This ties the call "Repository.OfType<Project>()" to my repository here "projectRepository"
             Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
-
-            //Note: I can't set/mock the ID of projects, so the code below will never have any matches.  
+ 
             /* This is what is calling the above code.
             var projects = from proj in Repository.OfType<Project>().Queryable
                            where projectList.Contains(proj.ID)
