@@ -23,6 +23,7 @@ namespace FSNEP.Tests.BLL
         private IMessageGateway _messageGateway;
         private readonly IPrincipal _principal = MockRepository.GenerateStub<MockPrincipal>();
         private List<Record> Records { get; set; }
+        private List<CostShare> CostShareRecords { get; set; }
 
         private User CurrentUser { get; set; }
 
@@ -984,8 +985,6 @@ namespace FSNEP.Tests.BLL
 
         #endregion Submit Tests
 
-
-
         #region GetReviewableAndCurrentRecords Tests
 
         /// <summary>
@@ -1100,6 +1099,278 @@ namespace FSNEP.Tests.BLL
         }
          
         #endregion IsEditable Tests
+
+        #region HasAccess Tests
+
+        /// <summary>
+        /// Determines whether [has access returns true if record has same name as current user].
+        /// </summary>
+        [TestMethod]
+        public void CostShareHasAccessReturnsTrueIfRecordHasSameNameAsCurrentUser()
+        {
+            //var record = new Record {User = CurrentUser};
+            var record = CreateValidEntities.CostShare(null);
+            record.User = CurrentUser;
+            Assert.IsTrue(_recordBLL.HasAccess(_principal, record));
+        }
+
+        /// <summary>
+        /// Determines whether [has access returns false if record has different name as current user].
+        /// </summary>
+        [TestMethod]
+        public void CostShareHasAccessReturnsFalseIfRecordHasDifferentNameAsCurrentUser()
+        {
+            FakeCostShareRecordsToCheck();
+            Assert.IsFalse(_costShareBLL.HasAccess(_principal, CostShareRecords[1]));
+        }
+        
+        /// <summary>
+        /// Determines whether [has access throws exception if record is null].
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void CostShareHasAccessThrowsExceptionIfRecordIsNull()
+        {
+            try
+            {
+                Assert.IsFalse(_costShareBLL.HasAccess(_principal, null));
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(message);
+                Assert.AreEqual("Precondition failed.", message.Message);
+                throw;
+            }
+
+        }
+        
+        #endregion HasAccess Tests
+
+        #region HasReviewAccess Tests
+
+        /// <summary>
+        /// Determines whether [has review access returns true if current user is in record].
+        /// </summary>
+        [TestMethod]
+        public void CostShareHasReviewAccessReturnsTrueIfCurrentUserIsInRecord()
+        {
+            //var record = new Record { User = CurrentUser };
+            var record = CreateValidEntities.CostShare(null);
+            record.User = CurrentUser;
+            _principal.Expect(a => a.IsInRole(RoleNames.RoleAdmin)).Return(false).Repeat.Once();
+            Assert.IsTrue(_costShareBLL.HasReviewAccess(_principal, record));
+        }
+
+        /// <summary>
+        /// Determines whether [has review access returns true if current user is users supervisor in record].
+        /// </summary>
+        [TestMethod]
+        public void CostShareHasReviewAccessReturnsTrueIfCurrentUserIsUsersSupervisorInRecord()
+        {
+            var newUser = CreateValidUser();
+            newUser.UserName = "NewUser";
+            newUser.Supervisor = CurrentUser;
+
+            //var record = new Record { User = newUser }; //We are not passing the current user, but this use has the current user as a supervisor.
+            var record = CreateValidEntities.CostShare(null);
+            record.User = newUser;
+            _principal.Expect(a => a.IsInRole(RoleNames.RoleAdmin)).Return(false).Repeat.Once();
+            Assert.IsTrue(_costShareBLL.HasReviewAccess(_principal, record));
+        }
+
+        /// <summary>
+        /// Determines whether [has review access returns fasle if current user is not users supervisor in record].
+        /// </summary>
+        [TestMethod]
+        public void CostShareHasReviewAccessReturnsFasleIfCurrentUserIsNotUsersSupervisorInRecord()
+        {
+            var newUser = CreateValidUser();
+            newUser.UserName = "NewUser";
+            newUser.Supervisor = CreateValidUser();
+
+            //var record = new Record { User = newUser }; //We are not passing the current user, but this use has the current user as a supervisor.
+            var record = CreateValidEntities.CostShare(null);
+            record.User = newUser;
+            _principal.Expect(a => a.IsInRole(RoleNames.RoleAdmin)).Return(false).Repeat.Once();
+            Assert.IsFalse(_costShareBLL.HasReviewAccess(_principal, record));
+        }
+
+        #endregion HasReviewAccess Tests
+
+        #region GetCurrentRecord Tests
+
+        /// <summary>
+        /// Get current record returns null when the current user has no records.
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentRecordReturnsNullWhenTheCurrentUserHasNoRecords()
+        {
+            FakeCostShareRecordsToCheck();
+
+            var currentRecord = _costShareBLL.GetCurrentRecord(_principal);
+            Assert.IsNull(currentRecord);
+        }
+
+        /// <summary>
+        /// Get current record returns the current users record.
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentRecordReturnsTheCurrentUsersRecord()
+        {
+            FakeCostShareRecordsToCheck();
+            var record = CreateValidEntities.CostShare(null);
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+
+            var currentRecord = _costShareBLL.GetCurrentRecord(_principal);
+            Assert.IsNotNull(currentRecord);
+            Assert.AreEqual("ReturnThisRecord", currentRecord.ReviewComment);
+        }
+
+        /// <summary>
+        /// Get current record returns null when current users record status is not current test1.
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentRecordReturnsNullWhenCurrentUsersRecordStatusIsNotCurrentTest1()
+        {
+            FakeCostShareRecordsToCheck();
+            var record = CreateValidEntities.CostShare(null);
+            record.Status = new Status { NameOption = Status.Option.Approved };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+
+            var currentRecord = _costShareBLL.GetCurrentRecord(_principal);
+            Assert.IsNull(currentRecord);
+        }
+
+        /// <summary>
+        /// Get current record returns null when current users record status is not current test2.
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentRecordReturnsNullWhenCurrentUsersRecordStatusIsNotCurrentTest2()
+        {
+            FakeCostShareRecordsToCheck();
+            var record = CreateValidEntities.CostShare(null);
+            record.Status = new Status { NameOption = Status.Option.Disapproved };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+
+            var currentRecord = _costShareBLL.GetCurrentRecord(_principal);
+            Assert.IsNull(currentRecord);
+        }
+
+        /// <summary>
+        /// Get current record returns null when current users record status is not current test3.
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentRecordReturnsNullWhenCurrentUsersRecordStatusIsNotCurrentTest3()
+        {
+            FakeCostShareRecordsToCheck();
+            var record = CreateValidEntities.CostShare(null);
+            record.Status = new Status { NameOption = Status.Option.PendingReview };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+            
+            var currentRecord = _costShareBLL.GetCurrentRecord(_principal);
+            Assert.IsNull(currentRecord);
+        }
+
+        /// <summary>
+        /// Get current record returns null when current users record status is not current test4.
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentRecordReturnsNullWhenCurrentUsersRecordStatusIsNotCurrentTest4()
+        {
+            FakeCostShareRecordsToCheck();
+            var record = CreateValidEntities.CostShare(null);
+            record.Status = new Status { Name = "Junk" };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+         
+            var currentRecord = _costShareBLL.GetCurrentRecord(_principal);
+            Assert.IsNull(currentRecord);
+        }
+
+        /// <summary>
+        /// Gets the current record returns correct record first by date order test1.
+        /// If this fails, it may be ok.
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentRecordReturnsCorrectRecordFirstByDateOrderTest1()
+        {
+            FakeCostShareRecordsToCheck();
+            //We expect This one
+            var record = CreateValidEntities.CostShare(null);
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+
+            record = CreateValidEntities.CostShare(null);
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "OrReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+  
+            var currentRecord = _costShareBLL.GetCurrentRecord(_principal);
+            Assert.IsNotNull(currentRecord);
+            Assert.AreEqual("ReturnThisRecord", currentRecord.ReviewComment); //We expect This one
+        }
+
+        /// <summary>
+        /// Gets the current record returns correct record first by date order test2.
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentRecordReturnsCorrectRecordFirstByDateOrderTest2()
+        {
+            FakeCostShareRecordsToCheck();
+
+            var record = CreateValidEntities.CostShare(null);
+            record.Month = 12;
+            record.Year = 2008;
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "NotThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+
+            //We expect This one
+            record = CreateValidEntities.CostShare(null);
+            record.Month = 10;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+
+            record = CreateValidEntities.CostShare(null);
+            record.Month = 09;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "NotThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+         
+            var currentRecord = _costShareBLL.GetCurrentRecord(_principal);
+            Assert.IsNotNull(currentRecord);
+            Assert.AreEqual("ReturnThisRecord", currentRecord.ReviewComment); //We expect This one
+        }
+
+        #endregion GetCurrentRecord Tests
 
         #region Submit Tests
 
@@ -1280,6 +1551,38 @@ namespace FSNEP.Tests.BLL
             var recordRepository = MockRepository.GenerateStub<IRepository<Record>>();
             _repository.Expect(a => a.OfType<Record>()).Return(recordRepository).Repeat.Any();
             recordRepository.Expect(a => a.Queryable).Return(Records.AsQueryable()).Repeat.Any();
+        }
+
+        private void FakeCostShareRecordsToCheck()
+        {
+            var nonCurrentUser = CreateValidUser();
+            nonCurrentUser.UserName = "NonCurrent";
+
+            var statusCurrent = new Status { NameOption = Status.Option.Current };
+            var statusApproved = new Status { NameOption = Status.Option.Approved };
+            var statusDisapproved = new Status { NameOption = Status.Option.Disapproved };
+            var statusPendingReview = new Status { NameOption = Status.Option.PendingReview };
+
+            CostShareRecords = new List<CostShare>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                var record = CreateValidEntities.CostShare(i + 1);
+                record.Month = 12;
+                record.Year = 2009;
+                record.Status = statusCurrent;
+                record.Entries = new List<Entry>();
+                record.User = nonCurrentUser;
+                CostShareRecords.Add(record);
+
+            }
+            CostShareRecords[1].Status = statusApproved;
+            CostShareRecords[2].Status = statusDisapproved;
+            CostShareRecords[3].Status = statusPendingReview;
+
+            var costShareRepository = MockRepository.GenerateStub<IRepository<CostShare>>();
+            _repository.Expect(a => a.OfType<CostShare>()).Return(costShareRepository).Repeat.Any();
+            costShareRepository.Expect(a => a.Queryable).Return(CostShareRecords.AsQueryable()).Repeat.Any();
         }
 
         private void FakeTimeRecordsToCheck()
