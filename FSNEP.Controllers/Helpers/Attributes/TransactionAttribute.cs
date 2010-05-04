@@ -1,6 +1,5 @@
 using System.Web.Mvc;
-using CAESArch.Data.NHibernate;
-using NHibernate;
+using FSNEP.Data;
 using System;
 
 namespace FSNEP.Controllers.Helpers.Attributes
@@ -12,7 +11,7 @@ namespace FSNEP.Controllers.Helpers.Attributes
 
         public TransactionAttribute()
         {
-            _currentTransaction = NHibernateSessionManager.Instance.GetSession().Transaction;
+            _currentTransaction = new Transaction();
         }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)

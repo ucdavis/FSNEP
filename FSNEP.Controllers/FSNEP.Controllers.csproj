@@ -56,10 +56,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\MvcContrib.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\NHibernate.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -101,6 +97,10 @@
     <ProjectReference Include="..\FSNEP.Core\FSNEP.Core.csproj">
       <Project>{E8EF47BB-45DB-480D-94B0-0F5E43E7DFC4}</Project>
       <Name>FSNEP.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FSNEP.Data\FSNEP.Data.csproj">
+      <Project>{95716BED-2153-4838-89D1-83D9CA2D2445}</Project>
+      <Name>FSNEP.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
