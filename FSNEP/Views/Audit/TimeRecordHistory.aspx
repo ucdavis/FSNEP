@@ -21,9 +21,9 @@
         });
     </script>
 
-    <h2>History</h2>
+    <h2>Time Record History</h2>
 
-    <%= this.Select("project")
+    Project: <%= this.Select("project")
             .Options(Model.Projects, x=>x.Id, x=>x.Name)
             .Selected(Model.Project != null ? Model.Project.Id : 0)
             .FirstOption("--Select A Project--")
