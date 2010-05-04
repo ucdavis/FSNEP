@@ -46,7 +46,7 @@
     <Configuration>
       <Name>Test</Name>
       <Options>
-        <TargetServerURL>http://vogel.caesdo.caes.ucdavis.edu/reportserver</TargetServerURL>
+        <TargetServerURL>http://lou.caesdo.caes.ucdavis.edu/reportserver</TargetServerURL>
         <TargetFolder>FSNEP2</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
       </Options>
