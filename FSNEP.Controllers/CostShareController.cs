@@ -134,13 +134,15 @@ namespace FSNEP.Controllers
 
             var entry = entryRepository.GetById(entryId);
 
-            var parentRecordId = entry.Record.Id;
+            var parentRecord = entry.Record;
 
-            entryRepository.Remove(entry);
+            parentRecord.Entries.Remove(entry);
 
+            Repository.OfType<Record>().EnsurePersistent(parentRecord);
+            
             Message = "Cost Share Entry Removed";
 
-            return this.RedirectToAction(x => x.Entry(parentRecordId));
+            return this.RedirectToAction(x => x.Entry(parentRecord.Id));
         }
 
         [AcceptPost]
