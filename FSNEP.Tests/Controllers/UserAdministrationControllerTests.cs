@@ -233,7 +233,6 @@ namespace FSNEP.Tests.Controllers
             userModel.User.FirstName = invalidValueName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());            
-            //TODO: Replace the other unit tests with this logic.
             newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: The value cannot be null.",
                 "FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
         }        
