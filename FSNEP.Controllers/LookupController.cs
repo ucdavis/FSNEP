@@ -35,7 +35,7 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult InactivateActivityType(int id)
         {
-            InactivateEntity<ActivityType>(id, "Activity Type");
+            InactivateEntity<ActivityType, int>(id, "Activity Type");
 
             return this.RedirectToAction(a => a.ActivityTypes());
         }
@@ -82,7 +82,7 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult InactivateActivityCategory(int id)
         {
-            InactivateEntity<ActivityCategory>(id, "Activity Category");
+            InactivateEntity<ActivityCategory, int>(id, "Activity Category");
             
             return this.RedirectToAction(a => a.ActivityCategories());
         }
@@ -128,7 +128,7 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult InactivateExpenseType(int id)
         {
-            InactivateEntity<ExpenseType>(id, "Expense Type");
+            InactivateEntity<ExpenseType, int>(id, "Expense Type");
             
             return this.RedirectToAction(a => a.ExpenseTypes());
         }
@@ -174,7 +174,7 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult InactivateAccount(int id)
         {
-            InactivateEntity<Account>(id, "Account");
+            InactivateEntity<Account, int>(id, "Account");
 
             return this.RedirectToAction(a => a.Accounts());
         }
@@ -223,7 +223,7 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult InactivateProject(int id)
         {
-            InactivateEntity<Project>(id, "Project");
+            InactivateEntity<Project, int>(id, "Project");
 
             return this.RedirectToAction(a => a.Projects());
         }
@@ -251,7 +251,7 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(a => a.Projects());
         }
 
-        private void InactivateEntity<T>(int id, string type) where T : LookupObject<T, int>
+        private void InactivateEntity<T, IdT>(int id, string type) where T : LookupObject<T, IdT>
         {
             var entity = Repository.OfType<T>().GetNullableByID(id);
 
