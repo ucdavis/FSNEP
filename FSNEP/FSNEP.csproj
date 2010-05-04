@@ -291,6 +291,7 @@
     <Content Include="Views\Home\SemiAnnualCertification.ascx" />
     <Content Include="Views\Home\UserPermissions.ascx" />
     <Content Include="Views\Report\TimeRecord.aspx" />
+    <Content Include="Views\Shared\CostShareEntriesDisplay.ascx" />
     <Content Include="Views\Shared\Menu.ascx" />
     <Content Include="Views\Supervisor\AssignDelegate.aspx" />
     <Content Include="Views\Supervisor\RemoveDelegate.aspx" />
