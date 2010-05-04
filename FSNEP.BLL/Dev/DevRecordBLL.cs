@@ -1,12 +1,19 @@
 using System;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Domain;
-using UCDArch.Data.NHibernate;
+using UCDArch.Core.PersistanceSupport;
 
 namespace FSNEP.BLL.Dev
 {
-    public class DevRecordBLL<T> : Repository<T>, IRecordBLL<T> where T : Record
+    public class DevRecordBLL<T> : IRecordBLL<T> where T : Record
     {
+        protected readonly IRepository _repository;
+
+        public DevRecordBLL(IRepository repository)
+        {
+            _repository = repository;
+        }
+
         public bool HasAccess(string userName, T record)
         {
             return true;

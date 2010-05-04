@@ -18,15 +18,17 @@ namespace FSNEP.Controllers
     public class TimeRecordController : SuperController
     {
         private readonly ITimeRecordBLL _timeRecordBLL;
+        private readonly IRepository<TimeRecord> _timeRecordRepository;
         private readonly IUserBLL _userBLL;
         private readonly ITimeRecordCalendarGenerator _timeRecordCalendarGenerator;
 
-        public TimeRecordController(ITimeRecordBLL timeRecordBLL, IUserBLL userBLL, ITimeRecordCalendarGenerator timeRecordCalendarGenerator)
+        public TimeRecordController(ITimeRecordBLL timeRecordBLL, IRepository<TimeRecord> timeRecordRepository, IUserBLL userBLL, ITimeRecordCalendarGenerator timeRecordCalendarGenerator)
         {
             Check.Require(timeRecordBLL != null);
             Check.Require(timeRecordCalendarGenerator != null);
 
             _timeRecordBLL = timeRecordBLL;
+            _timeRecordRepository = timeRecordRepository;
             _userBLL = userBLL;
             _timeRecordCalendarGenerator = timeRecordCalendarGenerator;
         }
@@ -34,7 +36,7 @@ namespace FSNEP.Controllers
         [ActionName("Entry")]
         public ActionResult TimeRecordEntry(int id)
         {
-            var timeRecord = _timeRecordBLL.GetNullableByID(id);
+            var timeRecord = _timeRecordRepository.GetNullableByID(id);
 
             Check.Require(timeRecord != null, "Invalid time record indentifier");
 
@@ -59,7 +61,7 @@ namespace FSNEP.Controllers
         [Transaction]
         public JsonNetResult AddEntry(int recordId, TimeRecordEntry entry)
         {
-            var timeRecord = _timeRecordBLL.GetNullableByID(recordId);
+            var timeRecord = _timeRecordRepository.GetNullableByID(recordId);
 
             Check.Require(timeRecord != null, "Invalid time record indentifier");
 
@@ -72,9 +74,9 @@ namespace FSNEP.Controllers
 
             Check.Require(entry.IsValid(), "Entry is not valid");
 
-            _timeRecordBLL.EnsurePersistent(timeRecord);
-            
-            _timeRecordBLL.DbContext.CommitTransaction();
+            _timeRecordRepository.EnsurePersistent(timeRecord);
+
+            _timeRecordRepository.DbContext.CommitTransaction();
 
             //return the new Id
             return new JsonNetResult(new {id = entry.Id});
