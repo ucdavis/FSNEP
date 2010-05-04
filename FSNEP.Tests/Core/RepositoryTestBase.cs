@@ -48,10 +48,16 @@ namespace FSNEP.Tests.Core
                 CreateFundTypes();
                 CreateUsers();
                 CreateStatus();
+                //CreateActivityCategory(); //TODO: Implement These?
+                //CreateActivityTypes();
 
                 ts.CommitTransaction();
             }
         }
+
+        
+
+        
 
         private void CreateFundTypes()
         {
@@ -73,6 +79,16 @@ namespace FSNEP.Tests.Core
 
                 Repository.OfType<Account>().EnsurePersistent(account);
             }
+        }
+
+        private void CreateActivityCategory()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CreateActivityTypes()
+        {
+            throw new NotImplementedException();
         }
 
         private void CreateStatus()

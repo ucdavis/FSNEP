@@ -74,6 +74,8 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual("{ id = 24 }", result.Data.ToString());
         }
 
+        //TODO: Failure (ie. invalid timerecord.id)
+
         #endregion AddEntry Tests
 
 
@@ -133,15 +135,16 @@ namespace FSNEP.Tests.Controllers
             const double validHours = 6.5;
             //TODO: Verify Record, FundType, Project, and Account values.
             return new TimeRecordEntry
-            {
-                Date = validDate,
-                Hours = validHours,
-                Comment = validComment,
-                Record = new Record(),
-                FundType = new FundType(),
-                Project = new Project(),
-                Account = new Account()
-            };
+                       {
+                           Date = validDate,
+                           Hours = validHours,
+                           Comment = validComment,
+                           Record = new Record(),
+                           FundType = new FundType(),
+                           Project = new Project(),
+                           Account = new Account(),
+                           ActivityType = new ActivityType()
+                       };
         }
 
         #endregion Helper Methods

@@ -18,7 +18,7 @@ namespace FSNEP.Core.Domain
         [JsonProperty]
         public virtual double Hours { get; set; }
 
-        //[NotNull]
+        [NotNull]
         public virtual ActivityType ActivityType { get; set; }
 
         public virtual DateTime? AdjustmentDate { get; set; }

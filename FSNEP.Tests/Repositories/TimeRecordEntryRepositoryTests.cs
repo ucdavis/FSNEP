@@ -344,6 +344,38 @@ namespace FSNEP.Tests.Repositories
         }
         #endregion Comment Tests
 
+        #region ActivityType Tests
+
+        /// <summary>
+        /// Time record entry does not save with null activity.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TimeRecordEntryDoesNotSaveWithNullActivityType()
+        {
+            TimeRecordEntry timerecordEntry = null;
+            try
+            {
+                timerecordEntry = CreateValidTimeRecordEntry();
+                timerecordEntry.ActivityType = null;
+                Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(timerecordEntry);
+                if (timerecordEntry != null)
+                {
+                    var results = timerecordEntry.ValidationResults().AsMessageList();
+                    results.AssertErrorsAre("ActivityType: may not be empty");
+                    Assert.IsTrue(timerecordEntry.IsTransient());
+                    Assert.IsFalse(timerecordEntry.IsValid());
+                }
+
+                throw;
+            }
+        }
+        #endregion ActivityType Tests
+
         #region Helper Methods
         /// <summary>
         /// Creates the valid timerecord entry.
@@ -359,7 +391,8 @@ namespace FSNEP.Tests.Repositories
                            Record = Repository.OfType<TimeRecord>().Queryable.First(),
                            FundType = Repository.OfType<FundType>().Queryable.First(),
                            Project = Repository.OfType<Project>().Queryable.First(),
-                           Account = Repository.OfType<Account>().Queryable.First()
+                           Account = Repository.OfType<Account>().Queryable.First(),
+                           ActivityType = new ActivityType{Name = "Activity",IsActive = true}
                        };
         }
 
