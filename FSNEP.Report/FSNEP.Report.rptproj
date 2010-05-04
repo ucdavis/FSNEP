@@ -9,12 +9,12 @@
   </DataSources>
   <Reports>
     <ProjectItem>
-      <Name>IndividualActivityRecord.rdl</Name>
-      <FullPath>IndividualActivityRecord.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>CostShare.rdl</Name>
       <FullPath>CostShare.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>IndividualActivityRecord.rdl</Name>
+      <FullPath>IndividualActivityRecord.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
@@ -40,6 +40,14 @@
       <Platform>Win32</Platform>
       <Options>
         <TargetFolder>FSNEP.Report</TargetFolder>
+        <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
+      </Options>
+    </Configuration>
+    <Configuration>
+      <Name>Test</Name>
+      <Options>
+        <TargetServerURL>http://vogel.caesdo.caes.ucdavis.edu/reportserver</TargetServerURL>
+        <TargetFolder>FSNEP2</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
       </Options>
     </Configuration>

@@ -33,6 +33,13 @@
     <UseMerge>true</UseMerge>
     <SingleAssemblyName>FSNEP.Deploy</SingleAssemblyName>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Test|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUpdateable>true</EnableUpdateable>
+    <UseMerge>true</UseMerge>
+    <SingleAssemblyName>FSNEP.Deploy</SingleAssemblyName>
+    <OutputPath>.\Test</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WebDeployment\v9.0\Microsoft.WebDeployment.targets" />
