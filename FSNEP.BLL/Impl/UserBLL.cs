@@ -88,7 +88,7 @@ namespace FSNEP.BLL.Impl
 
             var member = UserAuth.GetUser(username);
 
-            return member == null ? null : Repository.GetNullableByID((Guid)member.ProviderUserKey);
+            return Repository.GetByID((Guid)member.ProviderUserKey);
         }
 
         public List<string> GetAllRoles()
