@@ -53,6 +53,22 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(a => a.Entry(costShare.Id));
         }
 
+        public ActionResult Review(int id)
+        {
+            var costShare = _costShareRepository.GetNullableByID(id);
+
+            Check.Require(costShare != null, "Invalid cost share indentifier");
+
+            if (!_costShareBLL.HasAccess(CurrentUser, costShare))
+            {
+                return RedirectToErrorPage(string.Format("{0} does not have access to this cost share", CurrentUser.Identity.Name));
+            }
+
+            var viewModel = CostShareReviewViewModel.Create(costShare, Repository);
+            
+            return View(viewModel);
+        }
+
         public ActionResult Entry(int id)
         {
             var costShare = _costShareRepository.GetNullableByID(id);
@@ -129,6 +145,24 @@ namespace FSNEP.Controllers
         }
     }
 
+    public class CostShareReviewViewModel
+    {
+        public static CostShareReviewViewModel Create(CostShare costShare, IRepository repository)
+        {
+            var costShareEntries = repository.OfType<CostShareEntry>().Queryable.Where(x => x.Record.Id == costShare.Id);
+
+            var viewModel = new CostShareReviewViewModel
+                                {
+                                    CostShare = costShare,
+                                    CostShareEntries = costShareEntries.ToList()
+                                };
+
+            return viewModel;
+        }
+
+        public CostShare CostShare { get; set; }
+        public IEnumerable<CostShareEntry> CostShareEntries { get; set; }
+    }
 
     public class CostShareEntryViewModel
     {
