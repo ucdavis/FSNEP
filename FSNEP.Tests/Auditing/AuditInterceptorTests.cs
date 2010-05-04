@@ -39,7 +39,7 @@ namespace FSNEP.Tests.Auditing
             AuditInterceptor.UserAuth.Expect(a => a.CurrentUserName).Return("currentUser");
 
             AuditRepository
-                .Expect(a => a.EnsurePersistent(Arg<Audit>.Is.Anything))
+                .Expect(a => a.EnsurePersistent(Arg<Audit>.Is.Anything, Arg<bool>.Is.Anything, Arg<bool>.Is.Anything))
                 .WhenCalled(a => audit = (Audit)a.Arguments.First());
 
             AuditInterceptor.AuditObjectModification(new object(), null, AuditActionType.Update);
@@ -55,7 +55,7 @@ namespace FSNEP.Tests.Auditing
             AuditInterceptor.UserAuth.Expect(a => a.CurrentUserName).Return("currentUser");
 
             AuditRepository
-                .Expect(a => a.EnsurePersistent(Arg<Audit>.Is.Anything))
+                .Expect(a => a.EnsurePersistent(Arg<Audit>.Is.Anything, Arg<bool>.Is.Anything, Arg<bool>.Is.Anything))
                 .WhenCalled(a => audit = (Audit)a.Arguments.First());
 
             AuditInterceptor.AuditObjectModification(new object(), null, AuditActionType.Update);
@@ -73,7 +73,7 @@ namespace FSNEP.Tests.Auditing
             AuditInterceptor.UserAuth.Expect(a => a.CurrentUserName).Return("currentUser");
 
             AuditRepository
-                .Expect(a => a.EnsurePersistent(Arg<Audit>.Is.Anything))
+                .Expect(a => a.EnsurePersistent(Arg<Audit>.Is.Anything, Arg<bool>.Is.Anything, Arg<bool>.Is.Anything))
                 .WhenCalled(a => audit = (Audit)a.Arguments.First());
 
             AuditInterceptor.AuditObjectModification(sampleObject, null, AuditActionType.Update);
@@ -86,11 +86,14 @@ namespace FSNEP.Tests.Auditing
         {
             AuditInterceptor.UserAuth.Expect(a => a.CurrentUserName).Return("currentUser");
 
-            AuditRepository.Expect(a => a.EnsurePersistent(Arg<Audit>.Is.Anything));
+            AuditRepository.Expect(
+                a => a.EnsurePersistent(Arg<Audit>.Is.Anything, Arg<bool>.Is.Anything, Arg<bool>.Is.Anything));
 
             AuditInterceptor.AuditObjectModification(new object(), null, AuditActionType.Update);
 
-            AuditRepository.AssertWasCalled(a=>a.EnsurePersistent(Arg<Audit>.Is.Anything));
+            AuditRepository.AssertWasCalled(
+                a => a.EnsurePersistent(Arg<Audit>.Is.Anything, Arg<bool>.Is.Anything, Arg<bool>.Is.Anything));
+
         }
     }
 }
