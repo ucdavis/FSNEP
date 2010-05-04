@@ -25,6 +25,20 @@ namespace FSNEP.Tests.Controllers
         }
 
         [TestMethod]
+        public void ListUsersCallsGetAllUsers()
+        {
+            var fourUsers = new List<User> {new User(), new User(), new User(), new User()};
+
+            UserBLL.Expect(u=>u.GetAllUsers()).Return(fourUsers.AsQueryable());
+
+            var result = Controller.ListUsers()
+                            .AssertViewRendered()
+                            .WithViewData<IQueryable<User>>();
+
+            Assert.AreEqual(4, result.Count());
+        }
+
+        [TestMethod]
         public void CreateUserReturnsCreateUserViewModel()
         {
             UserBLL.Expect(a => a.GetSupervisors()).Return(new List<User>().AsQueryable());
