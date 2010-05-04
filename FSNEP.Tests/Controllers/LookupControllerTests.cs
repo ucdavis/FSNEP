@@ -1171,7 +1171,7 @@ namespace FSNEP.Tests.Controllers
 
             hoursInMonthRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newHoursInMonth));//make sure we didn't call persist
-            Controller.ModelState.AssertErrorsAre("Id: The year and month entered are not valid");
+            Controller.ModelState.AssertErrorsAre("Year: must be greater than or equal to 2000", "Month: must be a valid month");
             Assert.IsFalse(Controller.ModelState.IsValid);
             Assert.IsTrue(Controller.Message.StartsWith("Hours In Month Creation Failed."));
         }
@@ -1193,7 +1193,7 @@ namespace FSNEP.Tests.Controllers
 
             hoursInMonthRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newHoursInMonth));//make sure we didn't call persist
-            Controller.ModelState.AssertErrorsAre("Id: The year and month entered are not valid");
+            Controller.ModelState.AssertErrorsAre("Month: must be a valid month");
             Assert.IsFalse(Controller.ModelState.IsValid);
             Assert.IsTrue(Controller.Message.StartsWith("Hours In Month Creation Failed."));
         }

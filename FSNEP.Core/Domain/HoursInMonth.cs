@@ -15,11 +15,7 @@ namespace FSNEP.Core.Domain
         {
 
         }
-
-        [NotNull (Message = "cannot be greater than 2 years from now or less than 1900")]
-        public virtual string Year { get; set; }
-
-        [NotNull(Message = "The year and month entered are not valid")]
+        [Valid]
         public override YearMonthComposite Id
         {
             get
@@ -29,19 +25,6 @@ namespace FSNEP.Core.Domain
             protected set
             {
                 base.Id = value;
-                try
-                {
-                    Year = Id.Year.ToString();
-                    var date = new DateTime(Id.Year, Id.Month, 1);
-                    if(Id.Year < 1900 || Id.Year > DateTime.Now.Year + 2)
-                    {
-                        Year = null;
-                    }                    
-                }
-                catch (Exception)
-                {
-                    base.Id = null;
-                }                                
             }
         }
 
@@ -75,8 +58,10 @@ namespace FSNEP.Core.Domain
 
     public class YearMonthComposite
     {
+        [Range(1,12,Message = "must be a valid month")]
         public virtual int Month { get; set; }
         
+        [Min(2000)]
         public virtual int Year { get; set; }
 
         public YearMonthComposite(int year, int month)
