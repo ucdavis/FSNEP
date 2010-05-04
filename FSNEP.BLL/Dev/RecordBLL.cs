@@ -18,13 +18,13 @@ namespace FSNEP.BLL.Dev
             _repository = repository;
         }
 
-        public bool HasAccess(IPrincipal user, T record)
+        public virtual bool HasAccess(IPrincipal user, T record)
         {
             Check.Require(record != null);
             return record.User.UserName == user.Identity.Name;
         }
 
-        public bool HasReviewAccess(IPrincipal user, T record)
+        public virtual bool HasReviewAccess(IPrincipal user, T record)
         {
             Check.Require(record != null);
 
@@ -41,7 +41,7 @@ namespace FSNEP.BLL.Dev
             return false; //Default deny
         }
 
-        public bool IsEditable(T record)
+        public virtual bool IsEditable(T record)
         {
             Check.Require(record != null);
 
