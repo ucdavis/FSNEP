@@ -4,7 +4,7 @@ namespace FSNEP.Data
 {
     public class Transaction : ITransaction
     {
-        private readonly NHibernate.ITransaction _transaction;
+        private NHibernate.ITransaction _transaction;
 
         public Transaction()
         {
@@ -13,7 +13,7 @@ namespace FSNEP.Data
 
         public void Begin()
         {
-            _transaction.Begin();
+            _transaction = NHibernateSessionManager.Instance.GetSession().BeginTransaction();
         }
 
         public bool IsActive
