@@ -58,6 +58,44 @@ namespace FSNEP.Tests.Controllers
                 .ShouldMapTo<TimeRecordController>(a => a.TimeRecordEntry(id));
         }
 
+        /// <summary>
+        /// Routing add entry maps to add entry.
+        /// </summary>
+        [TestMethod]
+        public void RoutingAddEntryMapsToAddEntry()
+        {
+            //var timeRecordEntry = CreateValidTimeRecordEntry();
+            //"~/TimeRecord/AddEntry?recordId=2".ShouldMapTo<TimeRecordController>(a => a.AddEntry(2, timeRecordEntry));
+            "~/TimeRecord/AddEntry".ShouldMapToIgnoringParams("TimeRecord", "AddEntry");
+        }
+
+        /// <summary>
+        /// Routing remove entry maps to remove entry.
+        /// </summary>
+        [TestMethod]
+        public void RoutingRemoveEntryMapsToRemoveEntry()
+        {
+            "~/TimeRecord/RemoveEntry/2".ShouldMapToIgnoringParams("TimeRecord", "RemoveEntry");
+        }
+
+        /// <summary>
+        /// Routing edit entry maps to edit entry.
+        /// </summary>
+        [TestMethod]
+        public void RoutingEditEntryMapsToEditEntry()
+        {
+            "~/TimeRecord/EditEntry".ShouldMapToIgnoringParams("TimeRecord", "EditEntry");
+        }
+
+        /// <summary>
+        /// Routing get entry maps to get entry.
+        /// </summary>
+        [TestMethod]
+        public void RoutingGetEntryMapsToGetEntry()
+        {
+            "~/TimeRecord/GetEntry".ShouldMapToIgnoringParams("TimeRecord", "GetEntry");
+        }
+
         #endregion Routing maps
 
         #region AddEntry Tests
