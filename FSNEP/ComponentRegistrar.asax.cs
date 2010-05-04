@@ -28,6 +28,8 @@ namespace FSNEP
 
             container.AddComponent("userAuth", typeof (IUserAuth), typeof (UserAuth));
 
+            container.AddComponent("signatureFactory", typeof (ISignatureFactory), typeof (SignatureFactory));
+
             container.AddComponent("timeRecordCalendar", typeof (ITimeRecordCalendarGenerator),
                                    typeof (TimeRecordCalendarGenerator));
 

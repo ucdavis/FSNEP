@@ -71,6 +71,7 @@
     <Compile Include="Abstractions\Providers.cs" />
     <Compile Include="Abstractions\ReportResult.cs" />
     <Compile Include="Abstractions\RoleNames.cs" />
+    <Compile Include="Abstractions\SignatureFactory.cs" />
     <Compile Include="Abstractions\SystemTime.cs" />
     <Compile Include="Calendar\TimeRecordCalendarDay.cs" />
     <Compile Include="Calendar\TimeRecordCalendarGenerator.cs" />
