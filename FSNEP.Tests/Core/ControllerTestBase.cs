@@ -48,41 +48,5 @@ namespace FSNEP.Tests.Core
         {
             return MockRepository.GenerateStub<IRepository<T>>();
         }
-
-        /// <summary>
-        /// Count All of the error messages to assert that only the messages that we want are happening.
-        /// </summary>
-        /// <param name="modelState"></param>
-        /// <returns>Count All of the error messages</returns>
-        protected int CountErrorMessages(ModelStateDictionary modelState)
-        {
-            var returnValue = 0;
-            foreach (var val in modelState.Values)
-            {
-                returnValue += val.Errors.Count;                
-            }
-            return returnValue;
-        }
-
-        /// <summary>
-        /// Get all the error messages
-        /// </summary>
-        /// <param name="modelState"></param>
-        /// <returns></returns>
-        protected List<string> GetErrorMessages(ModelStateDictionary modelState)
-        {
-            var resultsList = new List<string>();
-
-            foreach (var result in modelState.Values)
-            {
-                foreach (var errs in result.Errors)
-                {
-                    resultsList.Add(errs.ErrorMessage);
-                }
-            }
-
-            return resultsList;
-        }
-
     }
 }
