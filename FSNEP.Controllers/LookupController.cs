@@ -123,6 +123,23 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(a => a.Accounts());
         }
 
+        public ActionResult HoursInMonths()
+        {
+            var hoursInMonths =
+                Repository.OfType<HoursInMonth>().Queryable.OrderBy(a => a.ID.Year).ThenBy(a => a.ID.Month).ToList();
+
+            return View(hoursInMonths);
+        }
+
+        [AcceptPost]
+        public ActionResult CreateHoursInMonth(HoursInMonth newHoursInMonth, YearMonthComposite hoursInMonthId)
+        {
+            var hoursInMonth = new HoursInMonth(hoursInMonthId.Year, hoursInMonthId.Month) { Hours = newHoursInMonth.Hours };
+
+            CreateEntity<HoursInMonth, YearMonthComposite>(hoursInMonth, "Hours In Month");
+
+            return this.RedirectToAction(a => a.HoursInMonths());
+        }
 
         /// <summary>
         /// Return a list of all projects
@@ -151,9 +168,11 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(a => a.Projects());
         }
 
-        private void CreateEntity<T, IdT>(T entity, string type) where T : LookupObject<T, IdT>
+        private void CreateEntity<T, IdT>(T entity, string type) where T : DomainObject<T, IdT>
         {
-            entity.IsActive = true;
+            var lookupEntity = entity as LookupObject<T, IdT>; // If this is a looked entity we want to make sure isActive is true
+
+            if (lookupEntity != null) lookupEntity.IsActive = true;
 
             ValidationHelper<T>.Validate(entity, ModelState);
 

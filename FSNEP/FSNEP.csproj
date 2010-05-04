@@ -155,6 +155,7 @@
     <Content Include="Views\Lookup\ActivityCategories.aspx" />
     <Content Include="Views\Lookup\ActivityTypes.aspx" />
     <Content Include="Views\Lookup\ExpenseTypes.aspx" />
+    <Content Include="Views\Lookup\HoursInMonths.aspx" />
     <Content Include="Views\Lookup\LookupsHeader.ascx" />
     <Content Include="Views\Lookup\Projects.aspx" />
     <Content Include="Views\UserAdministration\Create.aspx" />

@@ -1,9 +1,10 @@
 ﻿using CAESArch.Core.Domain;
 using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
+using System;
 
 namespace FSNEP.Core.Domain
 {
-    public class HoursInMonth : LookupObject<HoursInMonth, YearMonthComposite>
+    public class HoursInMonth : DomainObject<HoursInMonth, YearMonthComposite>
     {
         [RangeValidator(1, RangeBoundaryType.Inclusive, 0, RangeBoundaryType.Ignore)] //greater than 0
         public virtual int Hours{ get; set; }
@@ -16,6 +17,13 @@ namespace FSNEP.Core.Domain
         public HoursInMonth(int year, int month)
         {
             id = new YearMonthComposite(month, year);
+        }
+
+        public override string ToString()
+        {
+            var date = new DateTime(ID.Year, ID.Month, 1);
+
+            return string.Format("{0:MMMM yyyy}: {1} Hrs", date, Hours);
         }
     }
 
@@ -39,18 +47,15 @@ namespace FSNEP.Core.Domain
         {
             if ( obj == null ) return base.Equals(obj);
 
-            YearMonthComposite yearMonth = (YearMonthComposite)obj;
+            var yearMonth = (YearMonthComposite)obj;
 
             //Equal if the year and month are exactly the same
-            if (yearMonth.Year == this.Year && yearMonth.Month == this.Month)
-                return true;
-            else
-                return false;
+            return yearMonth.Year == Year && yearMonth.Month == Month;
         }
 
         public override int GetHashCode()
         {
-            return base.GetHashCode() + this.Year * 27 + this.Month * 7;
+            return base.GetHashCode() + Year * 27 + Month * 7;
         }
     }
 }
