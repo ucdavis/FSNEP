@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSNEP", "FSNEP\FSNEP.csproj", "{C50E9962-0BC1-455F-B41C-6566DFD3389E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSNEP.Tests", "FSNEP.Tests\FSNEP.Tests.csproj", "{DA79885E-502C-412D-A7F2-9F7F2EBACBE6}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://1x:8080/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = FSNEP.Tests\\FSNEP.Tests.csproj
+		SccProjectName1 = FSNEP.Tests
+		SccLocalPath1 = FSNEP.Tests
+		SccProjectUniqueName2 = FSNEP\\FSNEP.csproj
+		SccProjectName2 = FSNEP
+		SccLocalPath2 = FSNEP
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C50E9962-0BC1-455F-B41C-6566DFD3389E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C50E9962-0BC1-455F-B41C-6566DFD3389E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C50E9962-0BC1-455F-B41C-6566DFD3389E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C50E9962-0BC1-455F-B41C-6566DFD3389E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA79885E-502C-412D-A7F2-9F7F2EBACBE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA79885E-502C-412D-A7F2-9F7F2EBACBE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA79885E-502C-412D-A7F2-9F7F2EBACBE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA79885E-502C-412D-A7F2-9F7F2EBACBE6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
