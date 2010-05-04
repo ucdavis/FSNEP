@@ -29,7 +29,7 @@ namespace FSNEP
                 .AddWithName("Lookups", routes);
 
             MvcRoute.MappUrl("Administration/Association/{action}/{id}")
-                .WithDefaults(new { controller = "Association", action = "Projects", id = "" })
+                .WithDefaults(new { controller = "Association", action = "Index", id = "" })
                 .AddWithName("Associations", routes);
             
             MvcRoute.MappUrl("{controller}/{action}/{id}")
