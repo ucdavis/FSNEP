@@ -16,7 +16,7 @@
     <fieldset>
         <legend>New Project:</legend>
         <p>
-            <%= this.TextBox("newProjectName").Label("Project Name: ")%>
+            <%= this.TextBox("name").Label("Project Name: ")%>
         </p>
         <p>
             <input type="submit" value="Add Project" />

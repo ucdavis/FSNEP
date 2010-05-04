@@ -230,25 +230,30 @@ namespace FSNEP.Controllers
 
         [AcceptPost]
         [Transaction]
-        public ActionResult CreateProject(string newProjectName)
+        public ActionResult CreateProject(Project newProject)
         {
-            var newProject = new Project {IsActive = true, Name = newProjectName};
+            CreateEntity<Project, int>(newProject, "Project");
 
-            ValidationHelper<Project>.Validate(newProject, ModelState);
+            return this.RedirectToAction(a => a.Projects());
+        }
+
+        private void CreateEntity<T, IdT>(T entity, string type) where T : LookupObject<T, IdT>
+        {
+            entity.IsActive = true;
+
+            ValidationHelper<T>.Validate(entity, ModelState);
 
             if (!ModelState.IsValid)
             {
-                Message = "Project Creation Failed";
+                Message = type + " Creation Failed";
 
-                return this.RedirectToAction(a => a.Projects());
+                return;
             }
 
-            //Add the new project
-            Repository.OfType<Project>().EnsurePersistent(newProject);
+            //Add the new entity
+            Repository.OfType<T>().EnsurePersistent(entity);
 
-            Message = "Project Created Successfully";
-
-            return this.RedirectToAction(a => a.Projects());
+            Message = type + " Created Successfully";
         }
 
         private void InactivateEntity<T, IdT>(int id, string type) where T : LookupObject<T, IdT>
