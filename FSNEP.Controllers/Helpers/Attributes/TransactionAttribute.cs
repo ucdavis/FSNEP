@@ -1,9 +1,11 @@
 using System.Web.Mvc;
 using CAESArch.Data.NHibernate;
 using NHibernate;
+using System;
 
 namespace FSNEP.Controllers.Helpers.Attributes
 {
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class TransactionAttribute : ActionFilterAttribute
     {
         private readonly ITransaction _currentTransaction;
