@@ -22,6 +22,8 @@
     <% if (Model.Project != null) { %>
     
     <% using(Html.BeginForm("Associate", "Association", new {id = Model.Project.Id})) {%>
+    <%= Html.AntiForgeryToken() %>
+    
     <br /><br />
     <fieldset>
         <legend>Accounts for <%=Html.Encode(Model.Project.Name)%></legend>
