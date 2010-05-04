@@ -63,9 +63,11 @@
     <Compile Include="Dev\DevDelegateBLL.cs" />
     <Compile Include="Dev\DevRecordBLL.cs" />
     <Compile Include="Dev\DevTimeRecordBLL.cs" />
+    <Compile Include="Impl\CostShareBLL.cs" />
     <Compile Include="Impl\DelegateBLL.cs" />
     <Compile Include="Impl\RecordBLL.cs" />
     <Compile Include="Impl\ReportBLL.cs" />
+    <Compile Include="Impl\TimeRecordBLL.cs" />
     <Compile Include="Interfaces\ICostShareBLL.cs" />
     <Compile Include="Impl\GenericBLL.cs" />
     <Compile Include="Impl\UserAuth.cs" />

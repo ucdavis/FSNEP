@@ -66,6 +66,12 @@ namespace FSNEP
             container.AddComponent("devCostShareBLL", typeof(ICostShareBLL), typeof(DevCostShareBLL));
             container.AddComponent("devDelegateBLL", typeof (IDelegateBLL), typeof (DevDelegateBLL));
 
+            #else
+
+            container.AddComponent("TimeRecordBLL", typeof(ITimeRecordBLL), typeof(TimeRecordBLL));
+            container.AddComponent("CostShareBLL", typeof(ICostShareBLL), typeof(CostShareBLL));
+            container.AddComponent("DelegateBLL", typeof (IDelegateBLL), typeof (DelegateBLL));
+
             #endif
 
             /*
