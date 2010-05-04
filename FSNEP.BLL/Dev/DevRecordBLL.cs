@@ -28,24 +28,6 @@ namespace FSNEP.BLL.Dev
             return true;
         }
 
-        public bool IsEditable(T record)
-        {
-            Check.Require(record != null);
-
-            //if (record.Status.Name == Status.Option.Current.ToString() || record.Status.Name == Status.Option.Disapproved.ToString())
-            if (record.Status.NameOption == Status.Option.Current || record.Status.NameOption == Status.Option.Disapproved)
-            {
-                return true; //editable only if the status is current or disapproved
-            }
-
-            return false;
-        }
-
-        public bool CanApproveOrDeny(T record)
-        {
-            return true;
-        }
-
         public T GetCurrent(IPrincipal user)
         {
             return _repository.OfType<T>().Queryable.OrderBy(x=>x.Id).First();

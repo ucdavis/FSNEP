@@ -78,7 +78,7 @@ namespace FSNEP.Controllers
                 return RedirectToErrorPage(string.Format("{0} does not have access to this cost share", CurrentUser.Identity.Name));
             }
 
-            if (!_costShareBLL.IsEditable(costShare))
+            if (!costShare.IsEditable)
             {
                 return RedirectToAction("Review", new { id });
             }

@@ -40,8 +40,7 @@ namespace FSNEP.Tests.Controllers
             var timeRecordCalendarGenerator = new TimeRecordCalendarGenerator();
             _timeRecord.SetIdTo(1);
             _timeRecordBll.Expect(a => a.HasAccess(_principal, _timeRecord)).Return(true).Repeat.Any();
-            _timeRecordBll.Expect(a => a.IsEditable(_timeRecord)).Return(true).Repeat.Any();
-
+            
             var fakeContext =
                 MockRepository.GenerateStub<IDbContext>();
 

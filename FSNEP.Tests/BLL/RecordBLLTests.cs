@@ -47,7 +47,7 @@ namespace FSNEP.Tests.BLL
             var record = CreateValidEntities.Record(null);
             record.Status = status;
 
-            var editable = _recordBLL.IsEditable(record);
+            var editable = record.IsEditable;
 
             Assert.AreEqual(true, editable);
         }
@@ -61,7 +61,7 @@ namespace FSNEP.Tests.BLL
             var record = CreateValidEntities.Record(null);
             record.Status = status;
 
-            var editable = _recordBLL.IsEditable(record);
+            var editable = record.IsEditable;
 
             Assert.AreEqual(true, editable);
         }
@@ -79,7 +79,7 @@ namespace FSNEP.Tests.BLL
             var record = CreateValidEntities.Record(null);
             record.Status = status;
 
-            var editable = _recordBLL.IsEditable(record);
+            var editable = record.IsEditable;
 
             Assert.AreEqual(true, editable);
         }
@@ -93,7 +93,7 @@ namespace FSNEP.Tests.BLL
             var record = CreateValidEntities.Record(null);
             record.Status = status;
 
-            var editable = _recordBLL.IsEditable(record);
+            var editable = record.IsEditable;
 
             Assert.AreEqual(false, editable);
         }
@@ -107,7 +107,7 @@ namespace FSNEP.Tests.BLL
             var record = CreateValidEntities.Record(null);
             record.Status = status;
 
-            var editable = _recordBLL.IsEditable(record);
+            var editable = record.IsEditable;
 
             Assert.AreEqual(false, editable);
         }

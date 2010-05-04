@@ -215,6 +215,7 @@
     <Content Include="Views\Lookup\Projects.aspx" />
     <Content Include="Views\Shared\CostShareEntryList.ascx" />
     <Content Include="Views\Shared\TimeRecordEntryList.ascx" />
+    <Content Include="Views\Supervisor\ApproveOrDeny.ascx" />
     <Content Include="Views\Supervisor\CostShareList.aspx" />
     <Content Include="Views\Supervisor\CostShareReview.aspx" />
     <Content Include="Views\Supervisor\RecordReviewTable.ascx" />

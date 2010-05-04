@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Elmah;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
@@ -96,7 +97,8 @@ namespace FSNEP.Controllers
 
                 return this.RedirectToAction(x => x.TimeRecordList());
             }
-            else
+            
+            if (record is CostShare)
             {
                 var costShare = (CostShare)record;
 
@@ -111,6 +113,9 @@ namespace FSNEP.Controllers
 
                 return this.RedirectToAction(x => x.CostShareList());
             }
+
+            //If we haven't matched time record or cost share
+            throw new ApplicationException("You can only approve or deny 'Time Records' and 'Cost Shares'.");
         }
     }
 
@@ -124,8 +129,7 @@ namespace FSNEP.Controllers
                                     Entries = entryRepository
                                         .Queryable
                                         .Where(x => x.Record.Id == record.Id)
-                                        .ToList(),
-                                    CanBeApprovedOrDenied = recordBLL.CanApproveOrDeny(record)
+                                        .ToList()
                                 };
 
             return viewModel;

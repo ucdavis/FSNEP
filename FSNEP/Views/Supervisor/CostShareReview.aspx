@@ -11,4 +11,10 @@
 
     <% Html.RenderPartial("CostShareEntryList", Model.Entries); %>
     
+    <% Html.RenderPartial("ApproveOrDeny", Model.Record); %>
+    
+    <div>
+        <%= Html.ActionLink<SupervisorController>(x=>x.CostShareList(), "Back to Cost Share Review List") %>
+    </div>
+
 </asp:Content>

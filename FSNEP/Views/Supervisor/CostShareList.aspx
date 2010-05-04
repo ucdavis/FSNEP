@@ -12,7 +12,7 @@
     <% 
         ViewData["ReviewAction"] = "CostShareReview";
         
-        Html.RenderPartial("RecordReviewTable"); 
+        Html.RenderPartial("RecordReviewTable");
     %>
     
 </asp:Content>

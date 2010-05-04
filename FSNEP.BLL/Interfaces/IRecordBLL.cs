@@ -20,17 +20,6 @@ namespace FSNEP.BLL.Interfaces
         bool HasReviewAccess(IPrincipal user, T record);
 
         /// <summary>
-        /// Returns true if the sheet is in an editable state
-        /// </summary>
-        bool IsEditable(T record);
-
-        /// <summary>
-        /// Returns true if the record is in a state that it can be approved or denied.
-        /// Really this is only if the record is pending review
-        /// </summary>
-        bool CanApproveOrDeny(T record);
-
-        /// <summary>
         /// Return the current time record if it has not been submitted.  If there is not current sheet, create one
         /// </summary>
         /// <param name="user">Name of user who's time record should be found</param>

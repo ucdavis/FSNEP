@@ -84,7 +84,7 @@ namespace FSNEP.Controllers
                 return RedirectToErrorPage(string.Format("{0} does not have access to this time record", CurrentUser.Identity.Name));
             }
 
-            if (!_timeRecordBLL.IsEditable(timeRecord))
+            if (!timeRecord.IsEditable)
             {
                 return RedirectToAction("Review", new { id });
             }

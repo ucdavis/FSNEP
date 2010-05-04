@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UCDArch.Core.DomainModel;
 using NHibernate.Validator.Constraints;
 using System;
+using UCDArch.Core.Utils;
 
 namespace FSNEP.Core.Domain
 {
@@ -43,6 +44,34 @@ namespace FSNEP.Core.Domain
 
         [NotNull] //Can be empty
         public virtual IList<Entry> Entries { get; set; }
+
+        /// <summary>
+        /// Returns true if the record is in a state that it can be approved or denied.
+        /// Really this is only if the record is pending review
+        /// </summary>
+        public virtual bool CanBeApprovedOrDenied
+        {
+            get
+            {
+                return Status.NameOption == Status.Option.PendingReview;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the sheet is in an editable state
+        /// </summary>
+        public virtual bool IsEditable
+        {
+            get
+            {
+                if (Status.NameOption == Status.Option.Current || Status.NameOption == Status.Option.Disapproved)
+                {
+                    return true; //editable only if the status is current or disapproved
+                }
+
+                return false;   
+            }
+        }
 
         public Record()
         {
