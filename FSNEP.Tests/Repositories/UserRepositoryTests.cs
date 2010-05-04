@@ -404,6 +404,7 @@ namespace FSNEP.Tests.Repositories
 
         #endregion LastName Tests
 
+        #region Supervisor Test
         [TestMethod] 
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithNullSupervisor()
@@ -433,7 +434,9 @@ namespace FSNEP.Tests.Repositories
                 throw;
             }
         }
+        #endregion Supervisor Test
 
+        #region Salary Tests
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithSalaryZero()
@@ -455,9 +458,11 @@ namespace FSNEP.Tests.Repositories
             {
                 userBLL.EnsurePersistent(user, true);
             }
-            catch (Exception message)
+            catch (Exception)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: Salary, Must be greater than zero\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                Assert.AreEqual(true, results.Contains("Salary: Must be greater than zero"), "Expected the validation result to have \"Salary: Must be greater than zero\"");
                 throw;
             }
         }
@@ -489,6 +494,7 @@ namespace FSNEP.Tests.Repositories
                 throw;
             }
         }
+        #endregion Salary Tests
 
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
