@@ -9,9 +9,8 @@ namespace FSNEP.Controllers.Helpers.Extensions
         {
             Uri requestUrl = url.RequestContext.HttpContext.Request.Url;
 
-            string absoluteAction = string.Format("{0}://{1}{2}",
-                                                  requestUrl.Scheme,
-                                                  requestUrl.Authority,
+            string absoluteAction = string.Format("{0}{1}",
+                                                  requestUrl.GetLeftPart(UriPartial.Authority),
                                                   url.Action(action, controller, routeValues));
 
             return absoluteAction;
