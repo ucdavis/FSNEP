@@ -13,5 +13,13 @@
             
     <% Html.RenderPartial("Calendar"); %>
     
+    <div id="SubmitRecord">
+        <% using (Html.BeginForm("Submit", "TimeRecord", new {id = Model.TimeRecord.Id})) { %>
+            <%= Html.AntiForgeryToken() %>
+        
+            <input type="submit" value="Submit Final" />
+        
+        <% } %>
+    </div>
     
 </asp:Content>

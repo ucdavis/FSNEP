@@ -166,6 +166,27 @@ namespace FSNEP.Controllers
             return new JsonNetResult(result);
         }
 
+        [AcceptPost]
+        [Transaction]
+        [ValidateAntiForgeryToken]
+        public ActionResult Submit(int id)
+        {
+            var timeRecord = _timeRecordRepository.GetNullableByID(id);
+
+            Check.Require(timeRecord != null, "Invalid time record indentifier");
+
+            if (!_timeRecordBLL.HasAccess(CurrentUser, timeRecord))
+            {
+                return RedirectToErrorPage(string.Format("{0} does not have access to submit this time record", CurrentUser.Identity.Name));
+            }
+
+            _timeRecordBLL.Submit(timeRecord, CurrentUser);
+
+            Message = string.Format("Time Record for {0:MMMM yyyy} Submitted Successfully", timeRecord.Date);
+
+            return RedirectToAction("History");
+        }
+
         /// <summary>
         /// Transfer the new values from the given entry to the entry to update.
         /// Currently you can only update the comment and hours
