@@ -94,6 +94,7 @@
     <Compile Include="Auditing\AuditInterceptorTests.cs" />
     <Compile Include="Controllers\LookupControllerTests.cs" />
     <Compile Include="Controllers\UserAdministrationControllerTests.cs" />
+    <Compile Include="Core\ContinuousIntegrationDeploymentHack.cs" />
     <Compile Include="Core\ControllerTestBase.cs" />
     <Compile Include="Core\EntityIdSetter.cs" />
     <Compile Include="Core\Extensions\AssertExtensions.cs" />
