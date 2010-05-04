@@ -18,14 +18,14 @@ using CAESArch.Core.Utils;
 namespace FSNEP.Controllers
 {
     [Authorize]
-    public class AdministrationController : SuperController
+    public class UserAdministrationController : SuperController
     {
         private const string DefaultPassword = "jaskidjflkajsdlf$#12";
 
         public IUserBLL UserBLL;
         public IMessageGateway MessageGateway;
 
-        public AdministrationController(IUserBLL userBLL, IMessageGateway messageGateway)
+        public UserAdministrationController(IUserBLL userBLL, IMessageGateway messageGateway)
         {
             UserBLL = userBLL;
             MessageGateway = messageGateway;
@@ -34,7 +34,7 @@ namespace FSNEP.Controllers
         /// <summary>
         /// Provides a list of all active users in the system
         /// </summary>
-        public ActionResult ListUsers()
+        public ActionResult List()
         {
             var users = UserBLL.GetAllUsers();
 
@@ -63,7 +63,7 @@ namespace FSNEP.Controllers
             return this.RedirectToAction<HomeController>(a => a.Index());
         }
 
-        public ActionResult CreateUser()
+        public ActionResult Create()
         {
             //Create the viewmodel with a blank user
             var viewModel = new CreateUserViewModel { User = new User { FTE = 1, IsActive = true } };
@@ -74,7 +74,7 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult CreateUser(CreateUserViewModel model, Guid? supervisorId, IEnumerable<int> projectList,
+        public ActionResult Create(CreateUserViewModel model, Guid? supervisorId, IEnumerable<int> projectList,
                                        IEnumerable<int> fundTypeList, List<string> roleList)
         {
             var user = model.User;
@@ -90,7 +90,7 @@ namespace FSNEP.Controllers
 
             if (!ModelState.IsValid)
             {
-                return CreateUser();
+                return Create();
             }
 
             PopulateUserProperties(user, supervisorId, projectList, fundTypeList);
@@ -113,7 +113,7 @@ namespace FSNEP.Controllers
             else
             {
                 ModelState.AddModelError("UserName", "Username already exists");
-                return CreateUser();
+                return Create();
             }
 
             user.SetUserID((Guid)membershipUser.ProviderUserKey);
@@ -151,30 +151,30 @@ namespace FSNEP.Controllers
         /// <summary>
         /// Maps the guid user ident to a username ident
         /// </summary>
-        public ActionResult ModifyUserById(Guid? id)
+        public ActionResult ModifyById(Guid? id)
         {
-            if (id== null) return this.RedirectToAction(a => a.CreateUser());
+            if (id== null) return this.RedirectToAction(a => a.Create());
 
             var user = UserBLL.UserAuth.MembershipService.GetUser(id);
 
-            return user == null ? this.RedirectToAction(a => a.CreateUser()) : this.RedirectToAction(a => a.ModifyUser(user.UserName));
+            return user == null ? this.RedirectToAction(a => a.Create()) : this.RedirectToAction(a => a.Modify(user.UserName));
         }
 
         /// <summary>
         /// Returns the user object indentified by the given userid.  If there is no user, return just the other information needed for creating a new user.
         /// </summary>
         /// <param name="id">the userid/username</param>
-        public ActionResult ModifyUser(string id)
+        public ActionResult Modify(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
-                return this.RedirectToAction(a => a.CreateUser());
+                return this.RedirectToAction(a => a.Create());
             }
 
             var viewModel = new UserViewModel { User = UserBLL.GetUser(id) };
 
             //If the user could not be found, redirect to creating a user
-            if (viewModel.User == null) return this.RedirectToAction(a => a.CreateUser());
+            if (viewModel.User == null) return this.RedirectToAction(a => a.Create());
 
             PopulateDefaultUserViewModel(viewModel);
 
@@ -185,7 +185,7 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult ModifyUser(string id, Guid? supervisorId, IEnumerable<int> projectList,
+        public ActionResult Modify(string id, Guid? supervisorId, IEnumerable<int> projectList,
                                        IEnumerable<int> fundTypeList, List<string> roleList)
         {
             var user = UserBLL.GetUser(id);
@@ -200,7 +200,7 @@ namespace FSNEP.Controllers
 
             if (!ModelState.IsValid)
             {
-                return ModifyUser(id);
+                return Modify(id);
             }
 
             PopulateUserProperties(user, supervisorId, projectList, fundTypeList);

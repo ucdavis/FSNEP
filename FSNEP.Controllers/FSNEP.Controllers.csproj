@@ -83,7 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountController.cs" />
-    <Compile Include="AdministrationController.cs" />
+    <Compile Include="UserAdministrationController.cs" />
     <Compile Include="Helpers\Attributes\HandleErrorWithELMAHAttribute.cs" />
     <Compile Include="Helpers\Attributes\TransactionAttribute.cs" />
     <Compile Include="Helpers\Extensions\UrlExtensions.cs" />

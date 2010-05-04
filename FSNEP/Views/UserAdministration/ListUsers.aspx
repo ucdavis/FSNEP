@@ -54,7 +54,7 @@
     
         <tr>
             <td>
-                <%= Html.ActionLink("Edit", "ModifyUserById", new {id = item.ID}) %>
+                <%= Html.ActionLink("Edit", "ModifyById", new {id = item.ID}) %>
             </td>
             <td>
                 <%= Html.Encode(item.FirstName) %>
@@ -96,7 +96,7 @@
     </table>
 
     <p>
-        <%= Html.ActionLink("Create New", "CreateUser") %>
+        <%= Html.ActionLink("Create New", "Create") %>
     </p>
 
 </asp:Content>

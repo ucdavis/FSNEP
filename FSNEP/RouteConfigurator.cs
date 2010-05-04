@@ -20,6 +20,11 @@ namespace FSNEP
                 .AddWithName("Account", routes);
             */
 
+            MvcRoute.MappUrl("Administration/Users/{action}/{id}")
+                .WithDefaults(new {controller = "UserAdministration", action = "List", id = ""})
+                .AddWithName("UserAdministration", routes);
+
+
             MvcRoute.MappUrl("{controller}/{action}/{id}")
                 .WithDefaults(new { controller = "Home", action = "Index", id = "" })
                 .AddWithName("Default", routes);

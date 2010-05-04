@@ -145,10 +145,10 @@
     <Content Include="Views\Account\LogOn.aspx" />
     <Content Include="Views\Account\ResetPassword.aspx" />
     <Content Include="Views\Account\ResetPasswordSuccess.aspx" />
-    <Content Include="Views\Administration\CreateUser.aspx" />
-    <Content Include="Views\Administration\ListUsers.aspx" />
-    <Content Include="Views\Administration\ModifyUser.aspx" />
-    <Content Include="Views\Administration\UserInformation.ascx" />
+    <Content Include="Views\UserAdministration\CreateUser.aspx" />
+    <Content Include="Views\UserAdministration\ListUsers.aspx" />
+    <Content Include="Views\UserAdministration\ModifyUser.aspx" />
+    <Content Include="Views\UserAdministration\UserInformation.ascx" />
     <Content Include="Web.config" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\jquery-1.3.2.js" />

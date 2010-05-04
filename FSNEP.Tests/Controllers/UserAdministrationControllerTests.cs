@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FSNEP.BLL.Impl;
 using FSNEP.Controllers;
@@ -12,7 +13,7 @@ using FSNEP.Core.Abstractions;
 namespace FSNEP.Tests.Controllers
 {
     [TestClass]
-    public class AdministrationControllerTests : ControllerTestBase<AdministrationController>
+    public class UserAdministrationControllerTests : ControllerTestBase<UserAdministrationController>
     {
         public IUserBLL UserBLL { get; set; }
 
@@ -31,7 +32,7 @@ namespace FSNEP.Tests.Controllers
 
             UserBLL.Expect(u=>u.GetAllUsers()).Return(fourUsers.AsQueryable());
 
-            var result = Controller.ListUsers()
+            var result = Controller.List()
                             .AssertViewRendered()
                             .WithViewData<List<User>>();
 
@@ -45,7 +46,7 @@ namespace FSNEP.Tests.Controllers
             UserBLL.Expect(a => a.GetAllProjectsByUser()).Return(new List<Project>().AsQueryable());
             UserBLL.Expect(a => a.GetAvailableFundTypes()).Return(new List<FundType>().AsQueryable());
             
-            Controller.CreateUser()
+            Controller.Create()
                 .AssertViewRendered()
                 .WithViewData<CreateUserViewModel>();
         }
@@ -55,32 +56,49 @@ namespace FSNEP.Tests.Controllers
         {
             UserBLL.Expect(a => a.GetUser("BADUSER")).Return(null);
 
-            Controller.ModifyUser("BADUSER")
+            Controller.Modify("BADUSER")
                 .AssertActionRedirect()
-                .ToAction<AdministrationController>(a => a.CreateUser());
+                .ToAction<UserAdministrationController>(a => a.Create());
         }
 
         [TestMethod]
         public void ModifyUserRedirectsToCreateUserWithEmptyId()
         {
-            Controller.ModifyUser(string.Empty)
+            Controller.Modify(string.Empty)
                 .AssertActionRedirect()
-                .ToAction<AdministrationController>(a => a.CreateUser());
+                .ToAction<UserAdministrationController>(a => a.Create());
         }
 
         [TestMethod]
         public void ModifyUserRedirectsToCreateUserWithNullId()
         {
-            Controller.ModifyUser(null)
+            Controller.Modify(null)
                 .AssertActionRedirect()
-                .ToAction<AdministrationController>(a => a.CreateUser());
+                .ToAction<UserAdministrationController>(a => a.Create());
+        }
+
+        [TestMethod]
+        public void RoutingListUsersMapsToListUser()
+        {
+            "~/Administration/Users/List"
+                .ShouldMapTo<UserAdministrationController>(a => a.List());
         }
 
         [TestMethod]
         public void RoutingCreateUserMapsToCreateUser()
         {
-            "~/Administration/CreateUser"
-                .ShouldMapTo<AdministrationController>(a => a.CreateUser());
+            "~/Administration/Users/Create"
+                .ShouldMapTo<UserAdministrationController>(a => a.Create());
+        }
+
+        [TestMethod]
+        public void RoutingModifyUserByIdWithParamMapsToModifyUserByIdMethod()
+        {
+            Guid? id = Guid.NewGuid();
+            
+            string url = "~/Administration/Users/ModifyById/" + id;
+                
+            url.ShouldMapTo<UserAdministrationController>(a => a.ModifyById(id));
         }
 
         [TestMethod]
@@ -88,15 +106,15 @@ namespace FSNEP.Tests.Controllers
         {
             string username = string.Empty;
 
-            "~/Administration/ModifyUser"
-                .ShouldMapTo<AdministrationController>(a => a.ModifyUser(username));
+            "~/Administration/Users/Modify"
+                .ShouldMapTo<UserAdministrationController>(a => a.Modify(username));
         }
 
         [TestMethod]
         public void RoutingModifyUserWithUsernameMapsToModifyUserMethodWithThatUsername()
         {
-            "~/Administration/ModifyUser/testuser"
-                .ShouldMapTo<AdministrationController>(a => a.ModifyUser("testuser"));
+            "~/Administration/Users/Modify/testuser"
+                .ShouldMapTo<UserAdministrationController>(a => a.Modify("testuser"));
         }
     }
 }
