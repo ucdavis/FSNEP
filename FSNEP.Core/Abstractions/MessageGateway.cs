@@ -16,6 +16,11 @@ namespace FSNEP.Core.Abstractions
         /// Notifies the user of the end review status of their timesheet
         /// </summary>
         void SendReviewMessage(Record record, bool approved);
+
+        /// <summary>
+        /// Notifies the supervisor of a newly submitted timesheet 
+        /// </summary>
+        void SendSupervisorNotificationMessage(Record record);
     }
 
     public class MessageGateway : IMessageGateway
@@ -36,6 +41,26 @@ namespace FSNEP.Core.Abstractions
             var client = new SmtpClient("smtp.ucdavis.edu");
 
             client.Send(message);
+        }
+
+        /// <summary>
+        /// Notifies the supervisor of a newly submitted timesheet 
+        /// </summary>
+        public void SendSupervisorNotificationMessage(Record record)
+        {
+            var body = new StringBuilder();
+
+            body.AppendFormat("This is to let you know that {0} has submitted a time/expense sheet for your approval.  ", record.User.FullName);
+            body.AppendFormat("Please access the FSNEP system to approve this form at {0}", AppPath);
+            body.AppendLine(Environment.NewLine);
+
+            body.Append("Thank you.");
+            body.AppendLine(Environment.NewLine);
+
+            body.AppendLine("FSNEP");
+            body.AppendLine("System Administrator");
+
+            SendMessage(record.User.Supervisor.Email, "FSNEP Time/Expense Sheet", body.ToString());
         }
 
         /// <summary>

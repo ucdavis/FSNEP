@@ -47,12 +47,15 @@ namespace FSNEP.BLL.Dev
 
         public void Submit(T record, IPrincipal user)
         {
-            //Do nothing
+            //don't save
+
+            _messageGateway.SendSupervisorNotificationMessage(record);
         }
 
         public void ApproveOrDeny(T record, IPrincipal user, bool approve)
         {
-            //Do nothing
+            //Don't save
+
             _messageGateway.SendReviewMessage(record, approve);
         }
 

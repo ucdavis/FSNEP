@@ -196,6 +196,8 @@ namespace FSNEP.BLL.Dev
             record.Status = pendingReviewStatus;//Set the status to "Pending Review" (submitted for review)
 
             PersistRecordWithTracking(record, user, _repository);
+
+            _messageGateway.SendSupervisorNotificationMessage(record);
         }
 
         public void ApproveOrDeny(T record, IPrincipal user, bool approve)

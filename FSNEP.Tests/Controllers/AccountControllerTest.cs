@@ -754,6 +754,11 @@ namespace FSNEP.Tests.Controllers
             {
                 
             }
+
+            public void SendSupervisorNotificationMessage(Record record)
+            {
+                
+            }
         }
 
         public class MockFormsAuthenticationService : IFormsAuthentication
