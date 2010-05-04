@@ -7,6 +7,16 @@ namespace FSNEP.Tests.Core.Fakes
     {
         public static Guid UserToken = Guid.Empty;
 
+        public FakeMembershipUser()
+        {
+            
+        }
+
+        public FakeMembershipUser(Guid userToken)
+        {
+            UserToken = userToken;
+        }
+
         public override bool ChangePassword(string oldPassword, string newPassword)
         {
             return newPassword.Equals("newPass");

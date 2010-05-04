@@ -34,8 +34,20 @@ namespace FSNEP.Tests.Core
             {
                 //load base data
                 CreateUsers();
+                CreateProjects();
 
                 ts.CommitTransaction();
+            }
+        }
+
+        private static void CreateProjects()
+        {
+            //Create 3 projects
+            for (int i = 0; i < 3; i++)
+            {
+                var proj = new Project {Name = "Project" + i, IsActive = true};
+
+                new GenericBLL<Project, int>().Repository.EnsurePersistent(proj);
             }
         }
 
