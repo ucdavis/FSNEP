@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountController.cs" />
+    <Compile Include="AssociationController.cs" />
     <Compile Include="LookupController.cs" />
     <Compile Include="UserAdministrationController.cs" />
     <Compile Include="Helpers\Attributes\HandleErrorWithELMAHAttribute.cs" />
