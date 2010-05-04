@@ -23,9 +23,9 @@ namespace FSNEP.Core.Domain
 
         public virtual IList<Project> Projects { get; set; }
 
-        public Account()
+        public override string ToString()
         {
-
+            return string.Format("{0} ({1}%)", Name, IndirectCostPercent);
         }
     }
 }

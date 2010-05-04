@@ -42,11 +42,10 @@
     
         <tr>
             <td>
-                <%= Html.Encode(string.Format("{0} ({1}%)", item.Name, item.IndirectCostPercent)) %>
+                <%= Html.Encode(item) %>
             </td>
             <td>
-                <% using (Html.BeginForm<FSNEP.Controllers.LookupController>(a => a.InactivateAccount(item.ID)))
-                   { %>
+                <% using (Html.BeginForm("InactivateAccount", "Lookup", new { item.ID })) { %>
                 
                     <input type="submit" value="Inactivate" />
                 
