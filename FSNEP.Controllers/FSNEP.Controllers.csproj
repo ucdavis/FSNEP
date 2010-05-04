@@ -89,8 +89,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Constants.resx</DependentUpon>
     </Compile>
+    <Compile Include="CostShareAuditController.cs" />
     <Compile Include="CostShareController.cs" />
     <Compile Include="FileController.cs" />
+    <Compile Include="Helpers\Attributes\AutorizeAdminsOnlyAttribute.cs" />
     <Compile Include="Helpers\Extensions\ActionResultExtensions.cs" />
     <Compile Include="LookupController.cs" />
     <Compile Include="ReportController.cs" />
