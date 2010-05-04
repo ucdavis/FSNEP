@@ -13,4 +13,7 @@ Begin DataProject = "FSNEP.SQL"
          Colorizer = 6
       End
    End
+   Begin Folder = "Scheema"
+      Script = "Scheema.sql"
+   End
 End
