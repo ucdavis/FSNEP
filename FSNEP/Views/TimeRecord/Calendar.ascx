@@ -39,6 +39,10 @@
                                 <%= Html.Encode(string.Format("{0} HRS", entry.Hours)) %>
                             </a>
                         </span>
+                        <span class="deleteEntry">
+                            <a href="javascript:;" id='deleteEntry<%= entry.Id %>' class="DeleteCalendarEntry">X</a>
+                        </span>
+                        <input type="hidden" id="entryHours<%= entry.Id %>" value="<%= entry.Hours %>" />
                     </td>
                 </tr>
                 <%
