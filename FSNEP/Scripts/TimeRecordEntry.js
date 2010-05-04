@@ -176,7 +176,11 @@ function UpdateAddEntryUI(id, date, hours) {
                         .addClass('DeleteCalendarEntry')
                         .attr('href', 'javascript:;')
                         .attr('id', 'deleteEntry' + id)
-                        .html('X')
+                        .append(
+                            $('<img>')
+                            .attr('alt', 'x')
+                            .attr('src', '/Images/x.gif')
+                        )
                     )
                 )
                 .append(
