@@ -1,11 +1,10 @@
 using System.Linq;
-using FSNEP.BLL.Impl;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Abstractions;
 using FSNEP.Core.Domain;
 using UCDArch.Core.Utils;
 
-namespace FSNEP.BLL.Dev
+namespace FSNEP.BLL.Impl
 {
     public class DelegateBLL : IDelegateBLL {
         private readonly IUserAuth _userAuth;

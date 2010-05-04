@@ -59,14 +59,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dev\DelegateBLL.cs" />
     <Compile Include="Dev\DevCostShareBLL.cs" />
     <Compile Include="Dev\DevDelegateBLL.cs" />
     <Compile Include="Dev\DevRecordBLL.cs" />
     <Compile Include="Dev\DevTimeRecordBLL.cs" />
+    <Compile Include="Impl\DelegateBLL.cs" />
+    <Compile Include="Impl\RecordBLL.cs" />
     <Compile Include="Impl\ReportBLL.cs" />
     <Compile Include="Interfaces\ICostShareBLL.cs" />
-    <Compile Include="Dev\RecordBLL.cs" />
     <Compile Include="Impl\GenericBLL.cs" />
     <Compile Include="Impl\UserAuth.cs" />
     <Compile Include="Impl\UserBLL.cs" />

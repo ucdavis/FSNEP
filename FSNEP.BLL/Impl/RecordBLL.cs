@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using FSNEP.BLL.Interfaces;
+using FSNEP.Core.Abstractions;
 using FSNEP.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Core.Utils;
-using FSNEP.Core.Abstractions;
 
-namespace FSNEP.BLL.Dev
+namespace FSNEP.BLL.Impl
 {
     public class RecordBLL<T> : IRecordBLL<T> where T : Record, new()
     {
@@ -117,9 +117,9 @@ namespace FSNEP.BLL.Dev
                                     Year = currentDate.Year,
                                     Month = currentDate.Month,
                                     Status = _repository.OfType<Status>()
-                                                .Queryable.Where(x => x.Name == Status.GetName(Status.Option.Current)).Single(),
+                                        .Queryable.Where(x => x.Name == Status.GetName(Status.Option.Current)).Single(),
                                     User = _repository.OfType<User>()
-                                                .Queryable.Where(x => x.UserName == user.Identity.Name).Single()
+                                        .Queryable.Where(x => x.UserName == user.Identity.Name).Single()
                                 };
 
             if (typeof(T) == typeof(TimeRecord)) (newRecord as TimeRecord).Salary = newRecord.User.Salary;
@@ -136,13 +136,13 @@ namespace FSNEP.BLL.Dev
             var signature = _signatureFactory.CreateSignature(record, repository);
 
             var tracking = new RecordTracking
-            {
-                ActionDate = SystemTime.Now(),
-                Record = record,
-                Status = record.Status,
-                DigitalSignature = signature,
-                UserName = user.Identity.Name
-            };
+                               {
+                                   ActionDate = SystemTime.Now(),
+                                   Record = record,
+                                   Status = record.Status,
+                                   DigitalSignature = signature,
+                                   UserName = user.Identity.Name
+                               };
 
             repository.OfType<T>().EnsurePersistent(record); //persist the record
 
@@ -189,14 +189,14 @@ namespace FSNEP.BLL.Dev
         public virtual IEnumerable<T> GetReviewableAndCurrentRecords(IPrincipal user)
         {
             var reviewableAndCurrentStatuses = new[]
-            {
-                Status.GetName(Status.Option.PendingReview), 
-                Status.GetName(Status.Option.Current)
-            };
+                                                   {
+                                                       Status.GetName(Status.Option.PendingReview), 
+                                                       Status.GetName(Status.Option.Current)
+                                                   };
 
             var records = _repository.OfType<T>().Queryable
                 .Where(x => x.User.Supervisor.UserName == user.Identity.Name
-                        || (x.User.Supervisor.Delegate != null && x.User.Supervisor.Delegate.UserName == user.Identity.Name))
+                            || (x.User.Supervisor.Delegate != null && x.User.Supervisor.Delegate.UserName == user.Identity.Name))
                 .Where(x => reviewableAndCurrentStatuses.Contains(x.Status.Name))
                 .OrderBy(x => x.User.LastName)
                 .ThenBy(x => x.Year)
