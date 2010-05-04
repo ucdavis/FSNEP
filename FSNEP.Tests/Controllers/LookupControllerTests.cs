@@ -729,8 +729,180 @@ namespace FSNEP.Tests.Controllers
         {
             "~/Administration/Lookups/CreateActivityCategory"
                 .ShouldMapTo<LookupController>(a => a.CreateActivityCategory(null, null));
-        }
+        } 
         #endregion ActivityCategory Tests
+
+        #region ExpenseType Tests
+        /// <summary>
+        /// Create ExpenseType Saves New ExpenseType
+        /// </summary>
+        [TestMethod]
+        public void CreateExpenseTypeSavesNewExpenseType()
+        {
+            var newExpenseType = new ExpenseType { Name = "ValidExpenseType" };
+
+            var expenseTypeRepository = FakeRepository<ExpenseType>();
+            expenseTypeRepository
+                .Expect(a => a.EnsurePersistent(Arg<ExpenseType>.Is.Anything))
+                .WhenCalled(a => newExpenseType = (ExpenseType)a.Arguments.First()); //set newExpenseType to the ExpenseType that was saved
+
+            Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository);
+
+            Controller.CreateExpenseType(newExpenseType);
+
+            expenseTypeRepository
+                .AssertWasCalled(a => a.EnsurePersistent(newExpenseType), a => a.Repeat.Once());//make sure we called persist
+
+            Assert.AreEqual(true, newExpenseType.IsActive, "The created ExpenseType should be active");
+            Assert.AreEqual("ValidExpenseType", newExpenseType.Name);
+        }
+
+        /// <summary>
+        /// Create ExpenseType Does Not Save ExpenseType With Long Name
+        /// </summary>
+        [TestMethod]
+        public void CreateExpenseTypeDoesNotSaveExpenseTypeWithLongName()
+        {
+            var newExpenseType = new ExpenseType { Name = InvalidValueName };
+
+            var expenseTypeRepository = FakeRepository<ExpenseType>();
+
+            Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository);
+
+            Controller.CreateExpenseType(newExpenseType);
+
+            expenseTypeRepository
+                .AssertWasNotCalled(a => a.EnsurePersistent(newExpenseType));//make sure we didn't call persist
+        }
+
+        /// <summary>
+        /// Create ExpenseType Redirects To ExpenseTypes
+        /// </summary>
+        [TestMethod]
+        public void CreateExpenseTypeRedirectsToExpenseTypes()
+        {
+            Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(FakeRepository<ExpenseType>());
+
+            Controller.CreateExpenseType(new ExpenseType())
+                .AssertActionRedirect()
+                .ToAction<LookupController>(a => a.ExpenseTypes());
+        }
+
+        /// <summary>
+        /// Inactivate ExpenseType Redirects On Invalid ExpenseType Id
+        /// </summary>
+        [TestMethod]
+        public void InactivateExpenseTypeRedirectsOnInvalidExpenseTypeId()
+        {
+            const int invalidExpenseTypeId = 42;
+
+            var expenseTypeRepository = FakeRepository<ExpenseType>();
+            expenseTypeRepository.Expect(a => a.GetNullableByID(invalidExpenseTypeId)).Return(null);
+
+            Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository);
+
+            Controller.InactivateExpenseType(invalidExpenseTypeId)
+                .AssertActionRedirect()
+                .ToAction<LookupController>(a => a.ExpenseTypes());
+        }
+
+        /// <summary>
+        /// Inactivate ExpenseType Persists Changes On Valid ExpenseType Id
+        /// </summary>
+        [TestMethod]
+        public void InactivateExpenseTypePersistsChangesOnValidExpenseTypeId()
+        {
+            var activeExpenseType = new ExpenseType { IsActive = true };
+
+            var expenseTypeRepository = FakeRepository<ExpenseType>();
+            expenseTypeRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(activeExpenseType);
+
+            Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository).Repeat.Any();
+
+            Controller.InactivateExpenseType(activeExpenseType.ID);
+
+            Assert.AreEqual(false, activeExpenseType.IsActive, "ExpenseType should have been inactivated");
+            expenseTypeRepository.AssertWasCalled(a => a.EnsurePersistent(activeExpenseType), a => a.Repeat.Once()); //Make sure we saved the change
+        }
+
+        /// <summary>
+        /// Inactivate ExpenseType Redirects On Valid ExpenseType Id
+        /// </summary>
+        [TestMethod]
+        public void InactivateExpenseTypeRedirectsOnValidExpenseTypeId()
+        {
+            const int validExpenseTypeId = 1;
+            var validExpenseType = new ExpenseType();
+
+            var expenseTypeRepository = FakeRepository<ExpenseType>();
+            expenseTypeRepository.Expect(a => a.GetNullableByID(validExpenseTypeId)).Return(validExpenseType);
+
+            Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository).Repeat.Any();
+
+            Controller.InactivateExpenseType(validExpenseTypeId)
+                .AssertActionRedirect()
+                .ToAction<LookupController>(a => a.ExpenseTypes());
+        }
+
+        /// <summary>
+        /// ExpenseTypes Gets Only Active ExpenseTypes
+        /// </summary>
+        [TestMethod]
+        public void ExpenseTypesGetsOnlyActiveExpenseTypes()
+        {
+            //5 ExpenseType, 3 are active
+            var expenseTypes =
+                new[]
+                    {
+                        new ExpenseType { IsActive = true }, 
+                        new ExpenseType { IsActive = true }, 
+                        new ExpenseType { IsActive = true }, 
+                        new ExpenseType(),
+                        new ExpenseType()
+                    }.AsQueryable();
+
+            var expenseTypeRepository = FakeRepository<ExpenseType>();
+            expenseTypeRepository.Expect(a => a.Queryable).Return(expenseTypes);
+
+            Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository);
+
+            var result = Controller.ExpenseTypes()
+                .AssertViewRendered()
+                .WithViewData<List<ExpenseType>>();
+
+            Assert.AreEqual(3, result.Count, "Should only get the three active ExpenseTypes");
+        }
+
+        /// <summary>
+        /// Routing ExpenseTypes Gets All ExpenseTypes
+        /// </summary>
+        [TestMethod]
+        public void RoutingExpenseTypesGetsAllExpenseTypes()
+        {
+            "~/Administration/Lookups/ExpenseTypes"
+                .ShouldMapTo<LookupController>(a => a.ExpenseTypes());
+        }
+
+        /// <summary>
+        /// Routing Inactivate ExpenseType Calls Inactivate ExpenseType With Parameter
+        /// </summary>
+        [TestMethod]
+        public void RoutingInactivateExpenseTypeCallsInactivateExpenseTypeWithParameter()
+        {
+            "~/Administration/Lookups/InactivateExpenseType/10"
+                .ShouldMapTo<LookupController>(a => a.InactivateExpenseType(10));
+        }
+
+        /// <summary>
+        /// Routing CreateExpenseType Calls CreateExpenseType
+        /// </summary>
+        [TestMethod]
+        public void RoutingCreateExpenseTypeCallsCreateExpenseType()
+        {
+            "~/Administration/Lookups/CreateExpenseType"
+                .ShouldMapTo<LookupController>(a => a.CreateExpenseType(null));
+        }
+        #endregion ExpenseType Tests
 
         /// <summary>
         /// Fake a Queryable ActivityCategoryRepository.
