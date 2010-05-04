@@ -96,6 +96,26 @@ namespace FSNEP.Tests.Controllers
             projectRepository.AssertWasCalled(a => a.EnsurePersistent(activeProject), a => a.Repeat.Once()); //Make sure we saved the change
         }
 
+        //TODO: Review, do we need this test and is it done correctly? If Yes, add to the other lookup control tests.
+        /// <summary>
+        /// Inactivate Project Does Not Persists Changes On Invalid ProjectId
+        /// </summary>
+        [TestMethod]
+        public void InactivateProjectDoesNotPersistsChangesOnInvalidProjectId()
+        {
+            var activeProject = new Project { IsActive = true };
+
+            var projectRepository = FakeRepository<Project>();
+            projectRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(null);
+
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
+
+            Controller.InactivateProject(42);
+
+            Assert.AreEqual(true, activeProject.IsActive, "Project should have not been inactivated");
+            projectRepository.AssertWasNotCalled(a => a.EnsurePersistent(activeProject), a => a.Repeat.Once()); //Make sure we saved the change
+        }
+
         [TestMethod]
         public void InactivateProjectRedirectsOnValidProjectId()
         {
@@ -440,7 +460,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void InactivateAccountPersistsChangesOnValidAccountId()
         {
-            var activeAccount = new Account() { IsActive = true };
+            var activeAccount = new Account { IsActive = true };
 
             var accountRepository = FakeRepository<Account>();
             accountRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(activeAccount);
@@ -525,6 +545,192 @@ namespace FSNEP.Tests.Controllers
                 .ShouldMapTo<LookupController>(a => a.CreateAccount(null));
         }
         #endregion Account Tests
+
+        #region ActivityCategory Tests       
+        /// <summary>
+        /// Create ActivityCategory Saves New ActivityCategory
+        /// </summary>
+        [TestMethod]
+        public void CreateActivityCategorySavesNewActivityCategory()
+        {
+            var newActivityCategory = new ActivityCategory { Name = "ValidActivityCategory" };
+
+            var activityCategoryRepository = FakeRepository<ActivityCategory>();
+            activityCategoryRepository
+                .Expect(a => a.EnsurePersistent(Arg<ActivityCategory>.Is.Anything))
+                .WhenCalled(a => newActivityCategory = (ActivityCategory)a.Arguments.First()); //set newActivityCategory to the activityCategory that was saved
+
+            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository);
+
+            Controller.CreateActivityCategory(newActivityCategory, null);
+
+            activityCategoryRepository
+                .AssertWasCalled(a => a.EnsurePersistent(newActivityCategory), a => a.Repeat.Once());//make sure we called persist
+
+            Assert.AreEqual(true, newActivityCategory.IsActive, "The created ActivityCategory should be active");
+            Assert.AreEqual("ValidActivityCategory", newActivityCategory.Name);
+        }
+
+        /// <summary>
+        /// Create ActivityCategory Does Not Save ActivityCategory With Long Name
+        /// </summary>
+        [TestMethod]
+        public void CreateActivityCategoryDoesNotSaveActivityCategoryWithLongName()
+        {
+            var newActivityCategory = new ActivityCategory { Name = InvalidValueName };
+
+            var activityCategoryRepository = FakeRepository<ActivityCategory>();
+
+            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository);
+
+            Controller.CreateActivityCategory(newActivityCategory, null);
+
+            activityCategoryRepository
+                .AssertWasNotCalled(a => a.EnsurePersistent(newActivityCategory));//make sure we didn't call persist
+        }
+
+        /// <summary>
+        /// Create ActivityCategory Redirects To ActivityCategories When Called From ActivityCategory
+        /// </summary>
+        [TestMethod]
+        public void CreateActivityCategoryRedirectsToActivityCategoriesWhenCalledFromActivityCategory()
+        {
+            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(FakeRepository<ActivityCategory>());
+
+            Controller.CreateActivityCategory(new ActivityCategory(), null)
+                .AssertActionRedirect()
+                .ToAction<LookupController>(a => a.ActivityCategories(null));
+        }
+
+        /// <summary>
+        /// Create ActivityCategory Redirects To ActivityTypes When Called From ActivityType
+        /// </summary>
+        [TestMethod]
+        public void CreateActivityCategoryRedirectsToActivityTypesWhenCalledFromActivityType()
+        {
+            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(FakeRepository<ActivityCategory>());
+
+            Controller.CreateActivityCategory(new ActivityCategory(), "ActivityType")
+                .AssertActionRedirect()
+                .ToAction<LookupController>(a => a.ActivityTypes());
+        }
+
+        /// <summary>
+        /// Inactivate ActivityCategory Redirects On Invalid ActivityCategory Id
+        /// </summary>
+        [TestMethod]
+        public void InactivateActivityCategoryRedirectsOnInvalidActivityCategoryId()
+        {
+            const int invalidActivityCategoryId = 42;
+
+            var activityCategoryRepository = FakeRepository<ActivityCategory>();
+            activityCategoryRepository.Expect(a => a.GetNullableByID(invalidActivityCategoryId)).Return(null);
+
+            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository);
+
+            Controller.InactivateActivityCategory(invalidActivityCategoryId)
+                .AssertActionRedirect()
+                .ToAction<LookupController>(a => a.ActivityCategories(null));
+        }
+
+        /// <summary>
+        /// Inactivate ActivityCategory Persists Changes On Valid ActivityCategory Id
+        /// </summary>
+        [TestMethod]
+        public void InactivateActivityCategoryPersistsChangesOnValidActivityCategoryId()
+        {
+            var activeActivityCategory = new ActivityCategory { IsActive = true };
+
+            var activityCategoryRepository = FakeRepository<ActivityCategory>();
+            activityCategoryRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(activeActivityCategory);
+
+            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository).Repeat.Any();
+
+            Controller.InactivateActivityCategory(activeActivityCategory.ID);
+
+            Assert.AreEqual(false, activeActivityCategory.IsActive, "ActivityCategory should have been inactivated");
+            activityCategoryRepository.AssertWasCalled(a => a.EnsurePersistent(activeActivityCategory), a => a.Repeat.Once()); //Make sure we saved the change
+        }
+
+        /// <summary>
+        /// Inactivate ActivityCategory Redirects On Valid ActivityCategory Id
+        /// </summary>
+        [TestMethod]
+        public void InactivateActivityCategoryRedirectsOnValidActivityCategoryId()
+        {
+            const int validActivityCategoryId = 1;
+            var validActivityCategory = new ActivityCategory();
+
+            var activityCategoryRepository = FakeRepository<ActivityCategory>();
+            activityCategoryRepository.Expect(a => a.GetNullableByID(validActivityCategoryId)).Return(validActivityCategory);
+
+            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository).Repeat.Any();
+
+            Controller.InactivateActivityCategory(validActivityCategoryId)
+                .AssertActionRedirect()
+                .ToAction<LookupController>(a => a.ActivityCategories(null));
+        }
+
+        /// <summary>
+        /// ActivityCategory Gets Only Active ActivityCategories
+        /// </summary>
+        [TestMethod]
+        public void ActivityCategoryGetsOnlyActiveActivityCategories()
+        {
+            //5 projects, 3 are active
+            var activityCategories =
+                new[]
+                    {
+                        new ActivityCategory { IsActive = true }, 
+                        new ActivityCategory { IsActive = true }, 
+                        new ActivityCategory { IsActive = true }, 
+                        new ActivityCategory(), 
+                        new ActivityCategory()
+                    }.
+                    AsQueryable();
+
+            var activityCategoryRepository = FakeRepository<ActivityCategory>();
+            activityCategoryRepository.Expect(a => a.Queryable).Return(activityCategories);
+
+            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository);
+
+            var result = Controller.ActivityCategories(null)
+                .AssertViewRendered()
+                .WithViewData<List<ActivityCategory>>();
+
+            Assert.AreEqual(3, result.Count, "Should only get the three active ActivityCategories");
+        }
+
+        /// <summary>
+        /// Routing ActivityCategory Gets All ActivityCategories
+        /// </summary>
+        [TestMethod]
+        public void RoutingActivityCategoryGetsAllActivityCategories()
+        {
+            "~/Administration/Lookups/ActivityCategories"
+                .ShouldMapTo<LookupController>(a => a.ActivityCategories(null));
+        }
+
+        /// <summary>
+        /// Routing Inactivate ActivityCategory Calls InactivateActivityCategory With Parameter
+        /// </summary>
+        [TestMethod]
+        public void RoutingInactivateActivityCategoryCallsInactivateActivityCategoryWithParameter()
+        {
+            "~/Administration/Lookups/InactivateActivityCategory/10"
+                .ShouldMapTo<LookupController>(a => a.InactivateActivityCategory(10));
+        }        
+
+        /// <summary>
+        /// Routing CreateActivityCategory Calls CreateActivityCategory When Called From ActivityType
+        /// </summary>
+        [TestMethod]
+        public void RoutingCreateActivityCategoryCallsCreateActivityCategoryWhenCalledFromActivityCategory()
+        {
+            "~/Administration/Lookups/CreateActivityCategory"
+                .ShouldMapTo<LookupController>(a => a.CreateActivityCategory(null, null));
+        }
+        #endregion ActivityCategory Tests
 
         /// <summary>
         /// Fake a Queryable ActivityCategoryRepository.
