@@ -23,6 +23,11 @@
                 <%= Html.ValidationMessage("Password", "*") %>
             </p>
             <p>
+                <label for="ConfirmPassword">Confirm Password:</label>
+                <%= Html.Password("ConfirmPassword", Model.ConfirmPassword)%>
+                <%= Html.ValidationMessage("ConfirmPassword", "*")%>
+            </p>
+            <p>
                 <label for="Question">Question:</label>
                 <%= Html.TextBox("Question", Model.Question) %>
                 <%= Html.ValidationMessage("Question", "*") %>

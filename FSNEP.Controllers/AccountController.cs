@@ -107,9 +107,14 @@ namespace FSNEP.Controllers
 
             if (user == null) return RedirectToAction("Error", "Home");
 
-            var validationResults = Validation.GetValidationResultsFor(viewModel);
+            var validationResults = Validation.GetValidationResultsFor(viewModel);            
 
             MvcValidationAdapter.TransferValidationMessagesTo(ModelState, validationResults);
+
+            if (viewModel.Password != viewModel.ConfirmPassword)
+            {
+                ModelState.AddModelError("ConfirmPassword", "ConfirmPassword does not match Password");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -350,6 +355,9 @@ namespace FSNEP.Controllers
         [Required]
         [Length(128)]
         public string Password { get; set; }
+
+        [Valid]  
+        public string ConfirmPassword { get; set; }
 
         [Required]
         [Length(256)]
