@@ -1,16 +1,10 @@
-using System;
 using System.Collections.Specialized;
+using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Abstractions;
 using FSNEP.Core.Domain;
 
-namespace FSNEP.BLL.Dev
+namespace FSNEP.BLL.Impl
 {
-    public interface IReportBLL
-    {
-        ReportResult GenerateIndividualTimeRecordReport(TimeRecord timeRecord, ReportType reportType);
-        ReportResult GenerateCostShare(Project project, int year, ReportType reportType);
-    }
-
     public class ReportBLL : IReportBLL
     {
         public ReportResult GenerateIndividualTimeRecordReport(TimeRecord timeRecord, ReportType reportType)

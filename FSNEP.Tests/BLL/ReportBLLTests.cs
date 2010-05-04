@@ -1,4 +1,5 @@
-﻿using FSNEP.BLL.Dev;
+﻿using FSNEP.BLL.Impl;
+using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Abstractions;
 using FSNEP.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

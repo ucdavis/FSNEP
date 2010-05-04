@@ -64,7 +64,7 @@
     <Compile Include="Dev\DevDelegateBLL.cs" />
     <Compile Include="Dev\DevRecordBLL.cs" />
     <Compile Include="Dev\DevTimeRecordBLL.cs" />
-    <Compile Include="Dev\ReportBLL.cs" />
+    <Compile Include="Impl\ReportBLL.cs" />
     <Compile Include="Interfaces\ICostShareBLL.cs" />
     <Compile Include="Dev\RecordBLL.cs" />
     <Compile Include="Impl\GenericBLL.cs" />
@@ -72,6 +72,7 @@
     <Compile Include="Impl\UserBLL.cs" />
     <Compile Include="Interfaces\IDelegateBLL.cs" />
     <Compile Include="Interfaces\IRecordBLL.cs" />
+    <Compile Include="Interfaces\IReportBLL.cs" />
     <Compile Include="Interfaces\ITimeRecordBLL.cs" />
     <Compile Include="Interfaces\IUserAuth.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
