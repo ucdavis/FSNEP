@@ -37,5 +37,6 @@ Begin DataProject = "FSNEP.SQL"
       Script = "NotifyCostShareUsers.sql"
       Script = "NotifyTimeRecordUsers.sql"
       Script = "NotifyUsersOfSemiAnnualCertification.sql"
+      Script = "usp_NotifyCertifiers.sql"
    End
 End
