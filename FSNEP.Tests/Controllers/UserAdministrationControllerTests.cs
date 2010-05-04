@@ -29,6 +29,9 @@ namespace FSNEP.Tests.Controllers
             var messageGateway = MockRepository.GenerateStub<IMessageGateway>();
 
             CreateController(UserBll, messageGateway);
+            var fakeContext =
+                MockRepository.GenerateStub<UCDArch.Core.PersistanceSupport.IDbContext>();
+            UserBll.Expect(a => a.DbContext).Return(fakeContext).Repeat.Any();
         }
 
         [TestMethod]
@@ -180,6 +183,8 @@ namespace FSNEP.Tests.Controllers
             
 
             MockMethods(userModel, MembershipCreateStatus.Success);
+
+            
             
             //Call the method that the UI would use to create the new user.
             //Ok, it has been changed so that a successful create will redirect back to the list of users.
@@ -193,21 +198,17 @@ namespace FSNEP.Tests.Controllers
   
 
         /// <summary>
-        /// Creates a user with a valid first name of spaces.
-        /// User is saved.
-        /// Ensures the correct message is displayed.
+        /// Previously, spaces only were allowed. A change to the user.cs not makes this invalid. (2009/10/16)
         /// </summary>
         [TestMethod]
-        public void CreateUserSavesWithSpacesOnlyInFirstName()
+        public void CreateUserDoesNotSaveWithSpacesOnlyInFirstName()
         {
             const string validValueName = "  ";
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.FirstName = validValueName;
 
-            Controller.Create(userModel, CreateListOfRoles())
-                .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
-            Assert.AreEqual("ValidUserName Created Successfully", Controller.Message);
+            var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: may not be null or empty");
         }
         
 
@@ -224,7 +225,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.FirstName = invalidValueName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");            
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: length must be between 0 and 50");            
         }        
 
         /// <summary>
@@ -240,8 +241,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.FirstName = invalidValueName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());            
-            newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: The value cannot be null.",
-                "FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: may not be null or empty");
         }        
         #endregion First Name Validation Tests
 
@@ -259,7 +259,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.LastName = invalidValueName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: length must be between 0 and 50");
         }
 
         /// <summary>
@@ -275,8 +275,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.LastName = invalidValueName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: Required",
-                "LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");            
+            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: may not be null or empty");            
         }
 
         /// <summary>
@@ -292,7 +291,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.LastName = invalidValueName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: Required"); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: may not be null or empty"); 
         }
 
         #endregion Last Name Validation Tests
@@ -311,7 +310,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.Supervisor = null;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("Supervisor: You must select a supervisor"); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Supervisor: may not be empty"); 
         } 
         
         /// <summary>
@@ -327,7 +326,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.Projects = new List<Project>();
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("You must select at least one project"); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Projects: may not be null or empty"); 
         }
 
         /// <summary>
@@ -343,7 +342,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.FundTypes = new List<FundType>();
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("You must select at least one fund type"); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FundTypes: may not be null or empty"); 
         }
 
         /// <summary>
@@ -580,7 +579,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.BenefitRate = invalidValueBenefitRate;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive)."); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: must be between 0 and 2"); 
         }
         /// <summary>
         /// Creates a user with a invalid Benefit Rate .
@@ -595,7 +594,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.BenefitRate = invalidValueBenefitRate;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive)."); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: must be between 0 and 2"); 
         }
 
         /// <summary>
@@ -650,7 +649,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.FTE = invalidValueFte;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive)."); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: must be between 0.01 and 1"); 
         }
         /// <summary>
         /// Creates a user with a invalid FTE.
@@ -665,7 +664,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.FTE = invalidValueFte;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive)."); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: must be between 0.01 and 1"); 
         }
         /// <summary>
         /// Creates a user with a invalid FTE.
@@ -680,7 +679,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.FTE = invalidValueFte;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive)."); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: must be between 0.01 and 1"); 
         }
         #endregion FTE Validation Tests
 
@@ -713,10 +712,8 @@ namespace FSNEP.Tests.Controllers
             userModel.UserName = invalidValueUserName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("UserName: Required",
-                "UserName: Must be between 1 and 50 characters long",
-                "UserName: Username should be set upon creation",
-                "UserName: The length of the value must fall within the range \"1\" (Inclusive) - \"256\" (Inclusive)."); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("UserName: may not be null or empty",
+                "UserName: Username should be set upon creation"); 
         }
         /// <summary>
         /// Creates a user with a invalid user name of Spaces Only.
@@ -731,7 +728,8 @@ namespace FSNEP.Tests.Controllers
             userModel.UserName = invalidValueUserName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("UserName: Required");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("UserName: may not be null or empty",
+                "UserName: Username should be set upon creation"); 
         } 
         #endregion userName Tests
 
@@ -764,8 +762,7 @@ namespace FSNEP.Tests.Controllers
             userModel.Question = invalidValueQuestion;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("Question: Must be between 1 and 50 characters long",
-                "Question: Required"); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Question: may not be null or empty"); 
         }
         /// <summary>
         /// Creates a user with a invalid Question of Spaces Only.
@@ -780,7 +777,7 @@ namespace FSNEP.Tests.Controllers
             userModel.Question = invalidValueQuestion;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("Question: Required");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Question: may not be null or empty");
         }
         #endregion Question Tests
 
@@ -813,8 +810,7 @@ namespace FSNEP.Tests.Controllers
             userModel.Answer = invalidValueAnswer;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("Answer: Required",
-                "Answer: Must be between 1 and 50 characters long");            
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Answer: may not be null or empty");            
         }
         /// <summary>
         /// Creates a user with a invalid Answer of Spaces Only.
@@ -829,7 +825,7 @@ namespace FSNEP.Tests.Controllers
             userModel.Answer = invalidValueAnswer;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("Answer: Required");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Answer: may not be null or empty");
         }
         #endregion Answer Tests
 
@@ -847,9 +843,7 @@ namespace FSNEP.Tests.Controllers
             userModel.Email = invalidValueEmail;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("Email: Required",
-                "Email: Must be between 1 and 50 characters long",
-                "Email: Must be a valid email address");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Email: may not be null or empty");
         }
         /// <summary>
         /// Creates a user with a invalid Email of Spaces Only.
@@ -864,7 +858,7 @@ namespace FSNEP.Tests.Controllers
             userModel.Email = invalidValueEmail;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("Email: Required",
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Email: may not be null or empty",
                 "Email: Must be a valid email address");
         }
         /// <summary>
@@ -1232,7 +1226,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.FirstName, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: length must be between 0 and 50");
         }
 
         /// <summary>
@@ -1256,8 +1250,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.FirstName, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: The value cannot be null.",
-                "FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: may not be null or empty");
         }
 
         /// <summary>
@@ -1281,7 +1274,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.LastName, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: length must be between 0 and 50");
         }
 
         /// <summary>
@@ -1305,8 +1298,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.LastName, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: Required",
-                "LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");            
+            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: may not be null or empty");            
         
         }
 
@@ -1331,7 +1323,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.LastName, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: Required"); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: may not be null or empty"); 
         }
 
         /// <summary>
@@ -1403,7 +1395,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.FTE, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive)."); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: must be between 0.01 and 1"); 
         }
 
         /// <summary>
@@ -1427,7 +1419,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.FTE, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: must be between 0.01 and 1");
 
         }
 
@@ -1452,7 +1444,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.FTE, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: must be between 0.01 and 1");
 
         }
 
@@ -1477,7 +1469,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.BenefitRate, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: must be between 0 and 2");
         }
 
         /// <summary>
@@ -1501,7 +1493,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.BenefitRate, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: must be between 0 and 2");
         }
 
         /// <summary>
@@ -1524,7 +1516,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(null, userModelOriginal.User.Supervisor, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("Supervisor: You must select a supervisor");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Supervisor: may not be empty");
         }
 
 
@@ -1549,7 +1541,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(emptyFundType, userModelOriginal.User.FundTypes, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("You must select at least one fund type");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FundTypes: may not be null or empty");
         }
 
         /// <summary>
@@ -1573,7 +1565,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(emptyProject, userModelOriginal.User.Projects, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("You must select at least one project");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Projects: may not be null or empty");
         }
 
         /// <summary>
