@@ -1,9 +1,11 @@
 ﻿using System.Web.Mvc;
 using Castle.Windsor;
 using FSNEP.Controllers;
+using Microsoft.Practices.ServiceLocation;
 using MvcContrib.Castle;
 using NHibernate;
 using UCDArch.Data.NHibernate;
+using UCDArch.Web.IoC;
 using UCDArch.Web.ModelBinder;
 
 namespace FSNEP
@@ -39,6 +41,8 @@ namespace FSNEP
             container.RegisterControllers(typeof(HomeController).Assembly);
 
             ComponentRegistrar.AddComponentsTo(container);
+
+            ServiceLocator.SetLocatorProvider(() => new WindsorServiceLocator(container));
 
             return container;
         }

@@ -57,7 +57,7 @@
     
         <tr>
             <td>
-                <%= Html.ActionLink("Edit", "ModifyById", new {id = item.ID}) %>
+                <%= Html.ActionLink("Edit", "ModifyById", new {id = item.Id}) %>
             </td>
             <td>
                 <%= Html.Encode(item.UserName) %>
@@ -93,7 +93,7 @@
                 <%= Html.Encode(item.Token) %>
             </td>
             <td>
-                <%= Html.Encode(item.ID) %>
+                <%= Html.Encode(item.Id) %>
             </td>
         </tr>
     

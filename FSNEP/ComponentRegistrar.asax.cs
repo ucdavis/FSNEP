@@ -4,8 +4,10 @@ using FSNEP.BLL.Impl;
 using FSNEP.Core.Abstractions;
 using System.Web.Security;
 using FSNEP.BLL.Interfaces;
+using UCDArch.Core.NHibernateValidator.CommonValidatorAdapter;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
+using UCDArch.Core.CommonValidator;
 
 namespace FSNEP
 {
@@ -29,6 +31,9 @@ namespace FSNEP
             AddRepositoriesTo(container);
 
             AddBLLClassesTo(container);
+
+            container.AddComponent("validator", typeof (IValidator), typeof (Validator));
+            container.AddComponent("dbContext", typeof (IDbContext), typeof (DbContext));
         }
 
         private static void AddRepositoriesTo(IWindsorContainer container)

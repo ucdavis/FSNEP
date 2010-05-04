@@ -1,6 +1,6 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<FSNEP.Controllers.UserViewModel>" %>
 
-<%= Html.HiddenFor(a=>a.User.ID) %>
+<%= Html.HiddenFor(a=>a.User.Id) %>
 <fieldset>
     <legend>User Information</legend>
     <table>
@@ -74,8 +74,8 @@
                 <%= this.Select("User.Supervisor")
                                     .FirstOption("--Select A Supervisor--")
                                     .HideFirstOptionWhen(Model.User.Supervisor != null)
-                                    .Options(Model.Supervisors, s=>s.ID, s=>s.FullNameLastFirst)
-                                    .Selected(Model.User.Supervisor != null ? Model.User.Supervisor.ID : Guid.Empty) %>
+                                    .Options(Model.Supervisors, s=>s.Id, s=>s.FullNameLastFirst)
+                                    .Selected(Model.User.Supervisor != null ? Model.User.Supervisor.Id : Guid.Empty) %>
             </td>
             <td>
                 <%= Html.ValidationMessageFor(a=>a.User.Supervisor) %>
@@ -86,7 +86,7 @@
                 Projects:
             </td>
             <td>
-                <%= this.MultiSelect("User.Projects").Options(Model.Projects, a=>a.ID, a=>a.Name).Selected(Model.User.Projects.Select(a=>a.ID)) %>
+                <%= this.MultiSelect("User.Projects").Options(Model.Projects, a=>a.Id, a=>a.Name).Selected(Model.User.Projects.Select(a=>a.Id)) %>
             </td>
             <td>
                 <%= Html.ValidationMessageFor(a=>a.User.Projects) %>
@@ -97,7 +97,7 @@
                 Fund Types:
             </td>
             <td>
-                <%= this.MultiSelect("User.FundTypes").Options(Model.FundTypes, a=>a.ID, a=>a.Name).Selected(Model.User.FundTypes.Select(a=>a.ID)) %>
+                <%= this.MultiSelect("User.FundTypes").Options(Model.FundTypes, a=>a.Id, a=>a.Name).Selected(Model.User.FundTypes.Select(a=>a.Id)) %>
             </td>
             <td>
                 <%= Html.ValidationMessage("User.FundTypes") %>
