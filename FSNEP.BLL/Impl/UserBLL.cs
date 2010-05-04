@@ -25,6 +25,14 @@ namespace FSNEP.BLL.Impl
         IQueryable<User> GetSubordinates(User user);
         void SetRoles(string username, List<string> roleList);
         IQueryable<User> GetAllUsers();
+
+        /// <summary>
+        /// Returns all users that the current user has the ability to 'see'
+        /// </summary>
+        /// <remarks>
+        /// A user can view any user in the 'all users' category, plus their subordinates
+        /// </remarks>
+        IEnumerable<User> GetAllViewableUsers();
     }
 
     public class UserBLL : RepositoryWithTypedId<User, Guid>, IUserBLL
@@ -140,7 +148,7 @@ namespace FSNEP.BLL.Impl
         public IQueryable<User> GetSubordinates(User user)
         {
             //Get all users who have the current user as a supervisor
-            return Queryable.Where(u => u.Supervisor.Id == user.Id);
+            return Queryable.Where(u => u.IsActive && u.Supervisor.Id == user.Id);
         }
 
         public void SetRoles(string username, List<string> roleList)
@@ -178,6 +186,23 @@ namespace FSNEP.BLL.Impl
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Returns all users that the current user has the ability to 'see'
+        /// </summary>
+        /// <remarks>
+        /// A user can view any user in the 'all users' category, plus their subordinates
+        /// </remarks>
+        public IEnumerable<User> GetAllViewableUsers()
+        {
+            var currentUser = GetUser();
+
+            var adminViewableUsers = GetAllUsers();
+            var subordinates = GetSubordinates(currentUser);
+
+
+            return Enumerable.Union(adminViewableUsers, subordinates);
         }
     }
 }
