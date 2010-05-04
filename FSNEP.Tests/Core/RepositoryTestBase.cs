@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using CAESArch.BLL;
+using CAESArch.BLL.Repositories;
+using CAESArch.Core.DataInterfaces;
 using FSNEP.BLL.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHibernate.Cfg;
@@ -11,10 +13,12 @@ namespace FSNEP.Tests.Core
     public abstract class RepositoryTestBase
     {
         public List<Guid> UserIds { get; set; }
+        public IRepository Repository { get; set; }
 
         protected RepositoryTestBase()
         {
             UserIds = new List<Guid>();
+            Repository = new Repository();
         }
 
         [TestInitialize]
@@ -40,14 +44,14 @@ namespace FSNEP.Tests.Core
             }
         }
 
-        private static void CreateProjects()
+        private void CreateProjects()
         {
             //Create 3 projects
             for (int i = 0; i < 4; i++)
             {
                 var proj = new Project {Name = "Project" + i, IsActive = true};
 
-                new GenericBLL<Project, int>().Repository.EnsurePersistent(proj);
+                Repository.OfType<Project>().EnsurePersistent(proj);
             }
         }
 
