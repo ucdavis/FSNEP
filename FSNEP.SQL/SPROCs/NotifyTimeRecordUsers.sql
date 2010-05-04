@@ -13,6 +13,9 @@ SET @previousYearInt = (SELECT DATEPART(year, @nowMinusOneMonth))
 
 SELECT @previousMonthInt, @previousYearInt
 
+DECLARE @MailList CURSOR
+SET @MailList = CURSOR FOR
+
 --Get all of the FTE TimeSheet Users who should have submitted a time record
 SELECT     aspnet_Membership.Email, Users.FirstName, Users.LastName, sup.Email
 FROM         aspnet_Membership INNER JOIN
@@ -30,8 +33,22 @@ WHERE     (aspnet_Roles.RoleName = N'Timesheet User') AND (Users.IsActive = 1)
 								  aspnet_Membership AS sup ON sup.UserId = Users.SupervisorID INNER JOIN
 								  Status ON Status.ID = Rec.StatusID INNER JOIN
 								  TimeRecords ON Rec.ID = TimeRecords.ID
-			WHERE     (Rec.Month = @previousMonthInt) AND (Rec.Year = @previousYearInt) AND (Status.Name = 'Approved' OR
-							  Status.Name = 'PendingReview')
+			WHERE     (Rec.Month = @previousMonthInt) AND (Rec.Year = @previousYearInt)
 		)
 
---Send Emails on some date (TBD) to those who should have submitted a time record and didn't 
+OPEN @MailList
+
+DECLARE @Email varchar(50), @FirstName varchar(50), @LastName varchar(50), @SupervisorEmail varchar(50)
+FETCH NEXT FROM @MailList INTO @Email, @FirstName, @LastName, @SupervisorEmail
+
+WHILE (@@FETCH_STATUS = 0)
+	BEGIN
+		--Send Emails on some date (TBD) to those who should have submitted a time record and didn't 
+
+		SELECT @Email, @FirstName, @LastNAme
+ 
+		FETCH NEXT FROM @MailList INTO @Email, @FirstName, @LastName, @SupervisorEmail
+	END
+
+CLOSE @MailList
+DEALLOCATE @MailList
