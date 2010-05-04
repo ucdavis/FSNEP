@@ -191,6 +191,7 @@ namespace FSNEP.Tests.Repositories
             var recordTracking = new RecordTracking
                                                 {
                                                     UserName = ValidUserName,
+                                                    DigitalSignature = new byte[1],
                                                     Record = Repository.OfType<TimeRecord>().Queryable.First(),
                                                     Status = Repository.OfType<Status>().Queryable.First()
                                                 };
@@ -272,6 +273,7 @@ namespace FSNEP.Tests.Repositories
             {
                 ActionDate = DateTime.Now,
                 UserName = ValidUserName,
+                DigitalSignature = new byte[2],
                 Record = Repository.OfType<TimeRecord>().Queryable.First(),
                 Status = Repository.OfType<Status>().Queryable.First()
             };

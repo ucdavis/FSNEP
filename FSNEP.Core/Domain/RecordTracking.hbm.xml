@@ -9,6 +9,7 @@
 
     <property name="UserName" />
     <property name="ActionDate" />
+    <property name="DigitalSignature" />
     
     <many-to-one name="Record" class="Record" column="RecordID"></many-to-one>
     <many-to-one name="Status" class="Status" column="StatusID"></many-to-one>
