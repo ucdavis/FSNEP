@@ -134,7 +134,7 @@ namespace FSNEP.Tests.Controllers
                 IPrincipal userPrincipal = new MockPrincipal();
                 Controller.ControllerContext.HttpContext.User = userPrincipal;
                 timeRecord = CreateValidTimeRecord();
-                timeRecord.User = CreateValidUser("WongOne");
+                timeRecord.User = CreateValidUser("WrongOne");
                 timeRecord.SetIdTo(13);
                 _timeRecordBll.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
 
@@ -212,9 +212,7 @@ namespace FSNEP.Tests.Controllers
 
         #endregion AddEntry Tests
 
-        #region TimeRecordEntry Tests
-        //TODO: These tests for TimeRecordEntry Tests
-
+        #region TimeRecordEntry Tests       
         /// <summary>
         /// Get time record entry returns correct view.
         /// </summary>
@@ -265,9 +263,49 @@ namespace FSNEP.Tests.Controllers
             }
         }
 
-        
+        /// <summary>
+        /// Gets the time record entry redirects to home error when user has no access.
+        /// </summary>
+        [TestMethod]
+        public void GetTimeRecordEntryRedirectsToHomeErrorWhenUserHasNoAccess()
+        {
+            IPrincipal userPrincipal = new MockPrincipal();
+            Controller.ControllerContext.HttpContext.User = userPrincipal;
 
-        
+            MockProjectsForUser();
+            _userBll.Expect(a => a.GetUser()).IgnoreArguments().Return(User).Repeat.AtLeastOnce();
+            MockActivityCategories();
+
+            //Specify a timeRecord with a different username that the "Current" faked one.
+            var timeRecord = CreateValidTimeRecord();
+            timeRecord.User = CreateValidUser("WrongOne");
+            timeRecord.SetIdTo(13);
+            _timeRecordBll.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+
+            Controller.TimeRecordEntry(timeRecord.Id)
+                .AssertActionRedirect()
+                .ToAction<HomeController>(a => a.Error(string.Format("{0} does not have access to this time record", timeRecord.User.UserName)));
+        }
+
+        /// <summary>
+        /// Get time record entry with invalid time record throws exception.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void GetTimeRecordEntryWithInvalidTimeRecordThrowsException()
+        {
+            try
+            {
+                Controller.TimeRecordEntry(999);
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Invalid time record indentifier", message.Message);
+                throw;
+            }
+            
+        }
+
         #endregion TimeRecordEntry Tests
 
         #region Helper Methods
@@ -389,7 +427,7 @@ namespace FSNEP.Tests.Controllers
             const int validDate = 25;
             const string validComment = "Comment";
             const double validHours = 6.5;
-            //TODO: Verify Record, FundType, Project, and Account values.
+
             return new TimeRecordEntry
                        {
                            Date = validDate,
