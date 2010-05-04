@@ -331,6 +331,17 @@ namespace FSNEP.Controllers
             }
         }
 
+        public void Emulate(string id)
+        {
+            if (CurrentUser.IsInRole(RoleNames.RoleAdmin))
+            {
+                if (!string.IsNullOrEmpty(id))
+                {
+                    FormsAuthentication.RedirectFromLoginPage(id, false);
+                }
+            }
+        }
+
         private static void TransferValuesTo(User userToUpdate, User user)
         {
             userToUpdate.FirstName = user.FirstName;
