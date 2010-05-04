@@ -50,7 +50,7 @@ $(function() {
                 },
                 'json'
             );
-            
+
             //updated UI
         }
         else {
@@ -65,6 +65,10 @@ $(function() {
             var data = GatherEditEntryData();
             var serviceUrl = Services.EditEntry;
 
+            //update UI
+            $("#editEntry" + data.EntryId).html(data.Hours + " HRS");
+            $("#entryHours" + data.EntryId).val(data.Hours);
+
             $.post(
                 serviceUrl,
                 data,
@@ -74,9 +78,6 @@ $(function() {
                 },
                 'json'
             );
-            
-            //update UI
-            debugger;
         }
         else {
             alert("Entry not valid -- check your values");

@@ -78,19 +78,9 @@
     <div class="TimeRecordAdjustment">
         <a href="javascript:;" id="addAdjustment">Add Adjustment [TODO]</a>
     </div>
-    <div class="TimeRecordSubmit">
-        <%
-               using (Html.BeginForm("Submit"))
-               {
-        %>
-        <input type="submit" id="submitTimeRecord" value="Submit" />
-        <%
-            }
-        %>
-    </div>
 </div>
 
-<div id="dialogTimeRecordEntry" class="TimeRecordEntryDialog" title="Add Entry">
+<div id="dialogTimeRecordEntry" class="TimeRecordEntryDialog" title="Add Entry" style="display:none">
     <%= Html.ClientSideValidation<FSNEP.Core.Domain.TimeRecordEntry>() %>
     <%= Html.ClientSideValidation<FSNEP.Core.Domain.Entry>() %>
     <form id="formAddEntry" method="post" action="<%= Url.Action("AddEntry", "TimeRecord") %>">
@@ -127,7 +117,7 @@
     </form>
 </div>
 
-<div id="dialogTimeRecordEdit" class="TimeRecordEditDialog" title="Edit Entry">
+<div id="dialogTimeRecordEdit" class="TimeRecordEditDialog" title="Edit Entry" style="display:none">
     <span style="display: none;" id="spanLoadingEntryDetails">
         <br/>
         <img alt="" src="../Images/mozilla_blu.gif"/> 
