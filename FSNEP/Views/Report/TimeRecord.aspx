@@ -30,7 +30,7 @@
         <legend>Select A Time Record</legend>
         <p>
             <%= this.Select("userId")
-                .Options(Model, x=>x.Id, x=>x.FullName)
+                .Options(Model, x=>x.Id, x=>x.FullNameLastFirst)
                 .FirstOption("Select A User")
                 .Class("required")
                 .Label("User: ")
