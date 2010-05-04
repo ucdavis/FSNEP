@@ -309,6 +309,12 @@
     <Content Include="ConnectionStrings-Test.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AppSettings-Prod.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ConnectionStrings-Prod.config" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>
