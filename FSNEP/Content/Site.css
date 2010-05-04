@@ -266,7 +266,7 @@ ul#navigation3 {
 
 
 /* ----------------- */
-/* ==calendar        */
+/* ==menu            */
 /* ----------------- */
 
 .menu-section {width: 250px; height: 220px; background: rgb(255,255,255); background: rgba(255,255,255,0.4);
@@ -276,7 +276,7 @@ ul#navigation3 {
 .ie .menu-section {border-right: 5px solid #ccc; border-bottom: 5px solid #ccc;}
 .menu-section:hover {background: rgba(255,255,255,0.8);}
 
-.menu-section h3 
+.menu-section h3, .day-header span 
 {
     font-size: .9em; font-weight: bold; 
     text-transform: uppercase; letter-spacing: 2px; 
@@ -300,6 +300,8 @@ ul#navigation3 {
 	-moz-border-radius: 18px; -webkit-border-radius: 18px;
 	background: #f3f3ef;
 }
+.day-header {width: 100%;}
+.day-header span {font-size: .8em; width: 12%; padding: 4px 8px 6px; margin: 3px; -moz-border-radius: 8px; -webkit-border-radius: 8px; display: block; float: left; text-align: center;}
 .calendarStyle.ActiveDay:hover {-webkit-transition: background 0.5s; background: #f9f9f7;}
 .calendarStyle.InactiveDay {background: #e9e9e0;}
 

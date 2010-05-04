@@ -18,14 +18,15 @@
 </script>
 
 <%= Html.AntiForgeryToken() %>
-<div style="width: 847px; margin: 0 auto;">
-    <img src="../Images/cal_sunday.gif" alt="sunday" style="margin-left: 1px;" /><img
-        src="../Images/cal_monday.gif" alt="monday" style="margin-left: 1px;" /><img src="../Images/cal_tuesday.gif"
-            alt="tuesday" style="margin-left: 1px;" /><img src="../Images/cal_wednesday.gif"
-                alt="wednesday" style="margin-left: 1px;" /><img src="../Images/cal_thursday.gif"
-                    alt="thursday" style="margin-left: 1px;" /><img src="../Images/cal_friday.gif" alt="friday"
-                        style="margin-left: 1px;" /><img src="../Images/cal_saturday.gif" alt="saturday"
-                            style="margin-left: 1px;" /></div>
+<div class="day-header">
+<span>Sunday</span>
+<span>Monday</span>
+<span>Tuesday</span>
+<span>Wednesday</span>
+<span>Thursday</span>
+<span>Friday</span>
+<span>Saturday</span>
+</div>
 
 <div class="calendarDiv">
     <% foreach (var day in Model.CalendarDays)
