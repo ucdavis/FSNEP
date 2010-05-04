@@ -223,6 +223,53 @@ namespace FSNEP.Tests.Core.Helpers
                        };
         }
 
+        public static TimeRecordEntry TimeRecordEntry(int? counter)
+        {
+            var extra = "";
+            if (counter != null)
+            {
+                extra = counter.ToString();
+            }
+            return new TimeRecordEntry
+                              {
+                                  Date = 25,
+                                  Hours = 8,
+                                  Comment = "Comment" + extra,
+                                  Record = new Record(),
+                                  FundType = new FundType(),
+                                  Project = new Project(),
+                                  Account = new Account(),
+                                  ActivityType = new ActivityType()
+                              };
+        }
+
+        public static ActivityType ActivityType(int? counter)
+        {
+            var extra = "";
+            if (counter != null)
+            {
+                extra = counter.ToString();
+            }
+            return new ActivityType
+                              {
+                                  ActivityCategory = new ActivityCategory(),
+                                  Indicator = "12",
+                                  Name = "Name" + extra,
+                                  IsActive = true
+                              };
+        }
+
+        public static ActivityCategory ActivityCategory(int? counter)
+        {
+            var extra = "";
+            if (counter != null)
+            {
+                extra = counter.ToString();
+            }
+            return new ActivityCategory {Name = "Name" + extra, IsActive = true};
+        }
+
+
         public static HoursInMonth HoursInMonth()
         {
             return new HoursInMonth(2009, 01) {Hours = 80};

@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.DomainModel;
-using UCDArch.Core.NHibernateValidator.Extensions;
 
 namespace FSNEP.Core.Domain
 {

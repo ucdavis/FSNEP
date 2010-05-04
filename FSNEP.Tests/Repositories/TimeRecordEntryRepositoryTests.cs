@@ -1,58 +1,78 @@
 using System;
 using System.Linq;
-using FSNEP.Tests.Core;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FSNEP.Core.Domain;
+using FSNEP.Tests.Core.Helpers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UCDArch.Testing.Extensions;
 
 namespace FSNEP.Tests.Repositories
 {
     [TestClass]
-    public class TimeRecordEntryRepositoryTests : RepositoryTestBase
+    public class TimeRecordEntryRepositoryTests : AbstractRepositoryEntryTests<TimeRecordEntry>
     {
-        private const int ValidYear = 2009;
-        private const int ValidMonth = 6;
-        private const int ValidDate = 25;
-        private const string ValidComment = "Comment";
-        private const double ValidHours = 6.5;
-
         #region Init
+        protected override TimeRecordEntry GetValid(int? counter)
+        {
+            var timeRecordEntry = CreateValidEntities.TimeRecordEntry(counter);
+            timeRecordEntry.Record = Repository.OfType<Record>().Queryable.First();
+            timeRecordEntry.Project = Repository.OfType<Project>().Queryable.First();
+            timeRecordEntry.FundType = Repository.OfType<FundType>().Queryable.First();
+            timeRecordEntry.Account = Repository.OfType<Account>().Queryable.First();
+            timeRecordEntry.ActivityType = Repository.OfType<ActivityType>().Queryable.First();
+
+            return timeRecordEntry;
+        }
+
+        /// <summary>
+        /// Loads the data.
+        /// </summary>
         protected override void LoadData()
         {
             base.LoadData();
 
-            LoadTimeRecords();
+            LoadRecordRecords();
+            LoadActivityCategory();
+            LoadActivityType();
+
+            Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
+            LoadRecords();
+            Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
         }
 
-        private void LoadTimeRecords()
+        private void LoadActivityCategory()
         {
-            var record = new TimeRecord
-            {
-                Month = ValidMonth,
-                Year = ValidYear,
-                Salary = 200,
-                Status = Repository.OfType<Status>().Queryable.First(),
-                User = Repository.OfType<User>().Queryable.First()
-            };
+            Repository.OfType<ActivityCategory>().DbContext.BeginTransaction();
+            var activityCategory = CreateValidEntities.ActivityCategory(null);
 
-            Repository.OfType<TimeRecord>().EnsurePersistent(record);
+            Repository.OfType<ActivityCategory>().EnsurePersistent(activityCategory);
+            Repository.OfType<ActivityCategory>().DbContext.CommitTransaction();
         }
+
+        private void LoadActivityType()
+        {
+            Repository.OfType<ActivityType>().DbContext.BeginTransaction();
+            var activityType = CreateValidEntities.ActivityType(null);
+            activityType.ActivityCategory = Repository.OfType<ActivityCategory>().Queryable.First();
+            Repository.OfType<ActivityType>().EnsurePersistent(activityType);
+            Repository.OfType<ActivityType>().DbContext.CommitTransaction();
+        }
+
+        private void LoadRecordRecords()
+        {
+            Repository.OfType<Record>().DbContext.BeginTransaction();
+            var record = CreateValidEntities.Record(null);
+            record.Status = Repository.OfType<Status>().Queryable.First();
+            record.User = Repository.OfType<User>().Queryable.First();
+            Repository.OfType<Record>().EnsurePersistent(record);
+            Repository.OfType<Record>().DbContext.CommitTransaction();
+        }
+
+
         #endregion Init
 
-        #region Valid Time record Entry Tests
-        /// <summary>
-        /// Determines whether this instance [can save valid time record entry].
-        /// </summary>
-        [TestMethod]
-        public void CanSaveValidTimeRecordEntry()
-        {
-            var timerecordEntry = CreateValidTimeRecordEntry();
+        #region Valid Tests
 
-            Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
-
-            Assert.AreEqual(false, timerecordEntry.IsTransient());
-        }
-
+        #region Hours Tests
 
         /// <summary>
         /// Determines whether this instance [can save valid time record entry zero hours].
@@ -60,7 +80,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveValidTimeRecordEntryZeroHours()
         {
-            var timerecordEntry = CreateValidTimeRecordEntry();
+            var timerecordEntry = GetValid(null);
             timerecordEntry.Hours = 0;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
@@ -73,7 +93,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveValidTimeRecordEntry24Hours()
         {
-            var timerecordEntry = CreateValidTimeRecordEntry();
+            var timerecordEntry = GetValid(null);
             timerecordEntry.Hours = 24;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
@@ -86,8 +106,8 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveValidTimeRecordEntryMinus24Hours()
         {
-            //TODO: Update validation to allow test to pass (Task 509)
-            var timerecordEntry = CreateValidTimeRecordEntry();
+            //(Task 509)
+            var timerecordEntry = GetValid(null);
             timerecordEntry.Hours = -24;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
@@ -95,13 +115,17 @@ namespace FSNEP.Tests.Repositories
             Assert.AreEqual(false, timerecordEntry.IsTransient());
         }
 
+        #endregion Hours Tests
+
+        #region Date Tests (Day of Month)
+
         /// <summary>
         /// Determines whether this instance [can save valid time record entry date of 1].
         /// </summary>
         [TestMethod]
         public void CanSaveValidTimeRecordEntryDateOf1()
         {
-            var timerecordEntry = CreateValidTimeRecordEntry();
+            var timerecordEntry = GetValid(null);
             timerecordEntry.Date = 1;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
@@ -114,20 +138,25 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveValidTimeRecordEntryDateOf31()
         {
-            var timerecordEntry = CreateValidTimeRecordEntry();
+            var timerecordEntry = GetValid(null);
             timerecordEntry.Date = 31;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
 
             Assert.AreEqual(false, timerecordEntry.IsTransient());
         }
+
+        #endregion Date Tests (Day of Month)
+
+        #region AdjustmentDate Tests
+
         /// <summary>
         /// Determines whether this instance [can save valid time record entry null adjustment date].
         /// </summary>
         [TestMethod]
         public void CanSaveValidTimeRecordEntryNullAdjustmentDate()
         {
-            var timerecordEntry = CreateValidTimeRecordEntry();
+            var timerecordEntry = GetValid(null);
             timerecordEntry.AdjustmentDate = null;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
@@ -140,7 +169,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveValidTimeRecordEntryValidAdjustmentDate()
         {
-            var timerecordEntry = CreateValidTimeRecordEntry();
+            var timerecordEntry = GetValid(null);
             timerecordEntry.AdjustmentDate = DateTime.Now;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
@@ -148,43 +177,11 @@ namespace FSNEP.Tests.Repositories
             Assert.AreEqual(false, timerecordEntry.IsTransient());
         }
 
-        [TestMethod]
-        public void CanSaveValidTimeRecordEntryWithNullComment()
-        {
-            //TODO: Update validation to allow test to pass (Task 509)
-            var timerecordEntry = CreateValidTimeRecordEntry();
-            timerecordEntry.Comment = null;
+        #endregion AdjustmentDate Tests
 
-            Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
+        #endregion Valid Tests
 
-            Assert.AreEqual(false, timerecordEntry.IsTransient());
-        }
-
-        [TestMethod]
-        public void CanSaveValidTimeRecordEntryWithEmptyComment()
-        {
-            //TODO: Update validation to allow test to pass (Task 509)
-            var timerecordEntry = CreateValidTimeRecordEntry();
-            timerecordEntry.Comment = string.Empty;
-
-            Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
-
-            Assert.AreEqual(false, timerecordEntry.IsTransient());
-        }
-
-        [TestMethod]
-        public void CanSaveValidTimeRecordEntryWithSpacesOnlyComment()
-        {
-            //TODO: Update validation to allow test to pass (Task 509)
-            var timerecordEntry = CreateValidTimeRecordEntry();
-            timerecordEntry.Comment = " ";
-
-            Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
-
-            Assert.AreEqual(false, timerecordEntry.IsTransient());
-        }
-        #endregion Valid Time record Entry Tests
-
+        #region Invalid Tests
 
         #region Date Tests
         /// <summary>
@@ -197,14 +194,14 @@ namespace FSNEP.Tests.Repositories
             TimeRecordEntry timerecordEntry = null;
             try
             {
-                timerecordEntry = CreateValidTimeRecordEntry();
+                timerecordEntry = GetValid(null);
                 timerecordEntry.Date = 0;
                 Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
             }
             catch (Exception)
             {
                 Assert.IsNotNull(timerecordEntry);
-      
+
                 var results = timerecordEntry.ValidationResults().AsMessageList();
                 results.AssertErrorsAre("Date: must be between 1 and 31");
                 Assert.IsTrue(timerecordEntry.IsTransient());
@@ -223,19 +220,19 @@ namespace FSNEP.Tests.Repositories
             TimeRecordEntry timerecordEntry = null;
             try
             {
-                timerecordEntry = CreateValidTimeRecordEntry();
+                timerecordEntry = GetValid(null);
                 timerecordEntry.Date = 32;
                 Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
             }
             catch (Exception)
             {
                 Assert.IsNotNull(timerecordEntry);
-            
+
                 var results = timerecordEntry.ValidationResults().AsMessageList();
                 results.AssertErrorsAre("Date: must be between 1 and 31");
                 Assert.IsTrue(timerecordEntry.IsTransient());
                 Assert.IsFalse(timerecordEntry.IsValid());
-   
+
 
                 throw;
             }
@@ -250,23 +247,23 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void TimeRecordEntryDoesNotSaveWithHoursGreaterThan24()
         {
-            //TODO: Update validation to allow test to pass (Task 509)
+            //(Task 509)
             TimeRecordEntry timerecordEntry = null;
             try
             {
-                timerecordEntry = CreateValidTimeRecordEntry();
+                timerecordEntry = GetValid(null);
                 timerecordEntry.Hours = 24.01;
                 Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
             }
             catch (Exception)
             {
                 Assert.IsNotNull(timerecordEntry);
-          
+
                 var results = timerecordEntry.ValidationResults().AsMessageList();
                 results.AssertErrorsAre("Hours: must be between -24 and 24");
                 Assert.IsTrue(timerecordEntry.IsTransient());
                 Assert.IsFalse(timerecordEntry.IsValid());
-     
+
 
                 throw;
             }
@@ -279,11 +276,11 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void TimeRecordEntryDoesNotSaveWithHoursLessThanMinus24()
         {
-            //TODO: Update validation to allow test to pass (Task 509)
+            //(Task 509)
             TimeRecordEntry timerecordEntry = null;
             try
             {
-                timerecordEntry = CreateValidTimeRecordEntry();
+                timerecordEntry = GetValid(null);
                 timerecordEntry.Hours = -24.01;
                 Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
             }
@@ -295,130 +292,12 @@ namespace FSNEP.Tests.Repositories
                 results.AssertErrorsAre("Hours: must be between -24 and 24");
                 Assert.IsTrue(timerecordEntry.IsTransient());
                 Assert.IsFalse(timerecordEntry.IsValid());
-   
+
 
                 throw;
             }
         }
         #endregion Hour Tests
-
-        #region Record Tests
-        /// <summary>
-        /// Time record entry does not save with null record.
-        /// </summary>
-        [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
-        public void TimeRecordEntryDoesNotSaveWithNullRecord()
-        {
-            TimeRecordEntry timerecordEntry = null;
-            try
-            {
-                timerecordEntry = CreateValidTimeRecordEntry();
-                timerecordEntry.Record = null;
-                Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
-            }
-            catch (Exception)
-            {
-                Assert.IsNotNull(timerecordEntry);
- 
-                var results = timerecordEntry.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("Record: may not be empty");
-                Assert.IsTrue(timerecordEntry.IsTransient());
-                Assert.IsFalse(timerecordEntry.IsValid());
-
-
-                throw;
-            }
-        }
-        #endregion Record Tests
-
-        #region Comment Tests
-        ///// <summary>
-        ///// Time record entry does not save with null comment.
-        ///// </summary>
-        //[TestMethod, Ignore] //Task 509, Test no longer valid
-        //[ExpectedException(typeof(ApplicationException))]
-        //public void TimeRecordEntryDoesNotSaveWithNullComment()
-        //{
-        //    TimeRecordEntry timerecordEntry = null;
-        //    try
-        //    {
-        //        timerecordEntry = CreateValidTimeRecordEntry();
-        //        timerecordEntry.Comment = null;
-        //        Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        Assert.IsNotNull(timerecordEntry);
-        //        if (timerecordEntry != null)
-        //        {
-        //            var results = timerecordEntry.ValidationResults().AsMessageList();
-        //            results.AssertErrorsAre("Comment: may not be null or empty");
-        //            Assert.IsTrue(timerecordEntry.IsTransient());
-        //            Assert.IsFalse(timerecordEntry.IsValid());
-        //        }
-
-        //        throw;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Time record entry does not save with empty comment.
-        ///// </summary>
-        //[TestMethod, Ignore] //Task 509, Test no longer valid
-        //[ExpectedException(typeof(ApplicationException))]
-        //public void TimeRecordEntryDoesNotSaveWithEmptyComment()
-        //{
-        //    TimeRecordEntry timerecordEntry = null;
-        //    try
-        //    {
-        //        timerecordEntry = CreateValidTimeRecordEntry();
-        //        timerecordEntry.Comment = string.Empty;
-        //        Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        Assert.IsNotNull(timerecordEntry);
-        //        if (timerecordEntry != null)
-        //        {
-        //            var results = timerecordEntry.ValidationResults().AsMessageList();
-        //            results.AssertErrorsAre("Comment: may not be null or empty");
-        //            Assert.IsTrue(timerecordEntry.IsTransient());
-        //            Assert.IsFalse(timerecordEntry.IsValid());
-        //        }
-
-        //        throw;
-        //    }
-        //}
-        ///// <summary>
-        ///// Time record entry does not save with spaces only in comment.
-        ///// </summary>
-        //[TestMethod, Ignore] //Task 509, Test no longer valid
-        //[ExpectedException(typeof(ApplicationException))]
-        //public void TimeRecordEntryDoesNotSaveWithSpacesOnlyComment()
-        //{
-        //    TimeRecordEntry timerecordEntry = null;
-        //    try
-        //    {
-        //        timerecordEntry = CreateValidTimeRecordEntry();
-        //        timerecordEntry.Comment = " ";
-        //        Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        Assert.IsNotNull(timerecordEntry);
-        //        if (timerecordEntry != null)
-        //        {
-        //            var results = timerecordEntry.ValidationResults().AsMessageList();
-        //            results.AssertErrorsAre("Comment: may not be null or empty");
-        //            Assert.IsTrue(timerecordEntry.IsTransient());
-        //            Assert.IsFalse(timerecordEntry.IsValid());
-        //        }
-
-        //        throw;
-        //    }
-        //}
-        #endregion Comment Tests
 
         #region ActivityType Tests
 
@@ -432,45 +311,25 @@ namespace FSNEP.Tests.Repositories
             TimeRecordEntry timerecordEntry = null;
             try
             {
-                timerecordEntry = CreateValidTimeRecordEntry();
+                timerecordEntry = GetValid(null);
                 timerecordEntry.ActivityType = null;
                 Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
             }
             catch (Exception)
             {
                 Assert.IsNotNull(timerecordEntry);
- 
+
                 var results = timerecordEntry.ValidationResults().AsMessageList();
                 results.AssertErrorsAre("ActivityType: may not be empty");
                 Assert.IsTrue(timerecordEntry.IsTransient());
                 Assert.IsFalse(timerecordEntry.IsValid());
- 
+
 
                 throw;
             }
         }
         #endregion ActivityType Tests
 
-        #region Helper Methods
-        /// <summary>
-        /// Creates the valid timerecord entry.
-        /// </summary>
-        /// <returns></returns>
-        private TimeRecordEntry CreateValidTimeRecordEntry()
-        {
-            return new TimeRecordEntry
-                       {
-                           Date = ValidDate,
-                           Hours = ValidHours,
-                           Comment = ValidComment,
-                           Record = Repository.OfType<TimeRecord>().Queryable.First(),
-                           FundType = Repository.OfType<FundType>().Queryable.First(),
-                           Project = Repository.OfType<Project>().Queryable.First(),
-                           Account = Repository.OfType<Account>().Queryable.First(),
-                           ActivityType = new ActivityType{Name = "Activity",IsActive = true}
-                       };
-        }
-
-        #endregion Helper Methods
+        #endregion Invalid Tests
     }
 }
