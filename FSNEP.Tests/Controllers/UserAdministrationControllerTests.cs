@@ -1057,11 +1057,21 @@ namespace FSNEP.Tests.Controllers
             return roleList;
         }
 
+        /// <summary>
+        /// Create a valid UserModel
+        /// Default the wanted status to success.
+        /// </summary>
+        /// <returns></returns>
         private CreateUserViewModel CreateValidUserModel()
         {
             return CreateValidUserModel(MembershipCreateStatus.Success);
         }
 
+        /// <summary>
+        /// Create a valid UserModel
+        /// </summary>
+        /// <param name="wantedCreateStatus">Specify the status that should be returned for the out param</param>
+        /// <returns></returns>
         private CreateUserViewModel CreateValidUserModel(MembershipCreateStatus wantedCreateStatus)
         {
             const string validValueName = "ValidName";
@@ -1098,13 +1108,17 @@ namespace FSNEP.Tests.Controllers
             };
 
             MockMethods(userModel, wantedCreateStatus);
-            MocksForFailure(userModel);
+            MocksForUserLists(userModel);
 
             return userModel;
         }
 
-
-        private void MocksForFailure(CreateUserViewModel userModel)
+        /// <summary>
+        /// Create Projects, FundTypes, and a supervisor.
+        /// Mock calls to these.
+        /// </summary>
+        /// <param name="userModel"></param>
+        private void MocksForUserLists(CreateUserViewModel userModel)
         {
             var supervisors = new List<User> {userModel.User.Supervisor};
             var projects = new List<Project>
@@ -1221,6 +1235,9 @@ namespace FSNEP.Tests.Controllers
              */
         }
 
+        /// <summary>
+        /// Generate 3 fake fund types
+        /// </summary>
         private void FakeFundTypes()
         {
             var fundTypes = new List<FundType>
