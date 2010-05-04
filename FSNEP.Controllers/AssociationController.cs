@@ -6,10 +6,11 @@ using UCDArch.Core.PersistanceSupport;
 using UCDArch.Core.Utils;
 using UCDArch.Web.ActionResults;
 using UCDArch.Web.Attributes;
+using FSNEP.Controllers.Helpers.Attributes;
 
 namespace FSNEP.Controllers
 {
-    [Authorize] //TODO: Control access
+    [AdminOnly]
     public class AssociationController : SuperController
     {
         [Transaction]
