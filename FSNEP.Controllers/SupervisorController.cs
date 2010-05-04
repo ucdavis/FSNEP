@@ -1,7 +1,9 @@
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Domain;
+using UCDArch.Core.Utils;
 
 namespace FSNEP.Controllers
 {
@@ -28,6 +30,17 @@ namespace FSNEP.Controllers
             var records = _timeRecordBLL.GetReviewableAndCurrentRecords(CurrentUser);
 
             return View(records.Cast<Record>().ToList());
+        }
+
+        public ActionResult CostShareReview(int id)
+        {
+            var costShare = Repository.OfType<CostShare>().GetNullableByID(id);
+
+            Check.Require(costShare != null);
+
+            _costShareBLL.HasReviewAccess(CurrentUser, costShare);
+
+            throw new NotImplementedException();
         }
     }
 }

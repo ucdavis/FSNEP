@@ -28,15 +28,10 @@ namespace FSNEP.BLL.Dev
         public virtual bool HasReviewAccess(IPrincipal user, T record)
         {
             Check.Require(record != null);
-
-            if (user.IsInRole(RoleNames.RoleAdmin))
-            { //Admins can review any sheet
-                return true;
-            }
-
-            if (record.User.UserName == user.Identity.Name || record.User.Supervisor.UserName == user.Identity.Name)
+            
+            if (record.User.Supervisor.UserName == user.Identity.Name)
             {
-                return true; //Current user can always access her own sheet, as can her supervisor
+                return true; //Supervisor can review the record
             }
 
             return false; //Default deny

@@ -162,17 +162,6 @@ namespace FSNEP.Tests.BLL
         #region HasReviewAccess Tests
 
         /// <summary>
-        /// Determines whether [has review access returns true if current user is in role admin].
-        /// </summary>
-        [TestMethod]
-        public void HasReviewAccessReturnsTrueIfCurrentUserIsInRoleAdmin()
-        {
-            FakeRecordsToCheck(); //None of these have the Current user.
-            _principal.Expect(a => a.IsInRole(RoleNames.RoleAdmin)).Return(true).Repeat.Once();
-            Assert.IsTrue(_recordBLL.HasReviewAccess(_principal, Records[1]));
-        }
-
-        /// <summary>
         /// Determines whether [has review access returns true if current user is in record].
         /// </summary>
         [TestMethod]

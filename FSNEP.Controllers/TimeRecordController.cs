@@ -63,7 +63,7 @@ namespace FSNEP.Controllers
 
             Check.Require(timeRecord != null, "Invalid cost share indentifier");
 
-            if (!_timeRecordBLL.HasReviewAccess(CurrentUser, timeRecord))
+            if (!_timeRecordBLL.HasAccess(CurrentUser, timeRecord))
             {
                 return RedirectToErrorPage(string.Format("{0} does not have access to this cost share", CurrentUser.Identity.Name));
             }

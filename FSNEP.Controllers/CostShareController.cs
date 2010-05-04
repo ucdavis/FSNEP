@@ -57,7 +57,7 @@ namespace FSNEP.Controllers
 
             Check.Require(costShare != null, "Invalid cost share indentifier");
 
-            if (!_costShareBLL.HasReviewAccess(CurrentUser, costShare))
+            if (!_costShareBLL.HasAccess(CurrentUser, costShare))
             {
                 return RedirectToErrorPage(string.Format("{0} does not have access to review this cost share", CurrentUser.Identity.Name));
             }
