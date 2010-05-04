@@ -37,7 +37,14 @@ namespace FSNEP.Tests.Controllers
             var timeRecordCalendarGenerator = new TimeRecordCalendarGenerator();
             FakeTimeRecord(timeRecordBll);
 
+            timeRecordBll.Expect(a => a.HasAccess("UserName", new TimeRecord())).IgnoreArguments().Return(true).Repeat.
+                Any();
+
             CreateController(timeRecordBll, userBll, timeRecordCalendarGenerator);
+
+            var fakeContext =
+                MockRepository.GenerateStub<UCDArch.Core.PersistanceSupport.IDbContext>();
+            timeRecordBll.Expect(a => a.DbContext).Return(fakeContext).Repeat.Any();
         }
 
         #region Routing maps
@@ -58,30 +65,13 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Determines whether this instance [can add valid time record entry].
         /// </summary>
-        [TestMethod, Ignore]
+        [TestMethod]
         public void CanAddValidTimeRecordEntry()
         {
-            var timeRecordEntry = new TimeRecordEntry();
-            /*
-            var mockIdentity = new MockIdentity();
-            var mockUser = _user;
-            //Controller.ControllerContext.HttpContext.Expect(u => u.User.Identity).Return(mockIdentity);
-            Controller.ControllerContext.HttpContext.Expect(u=>u.User).Return()
-            Controller.ControllerContext.HttpContext.User.Expect(a => a.Identity).Return(mockIdentity);
-
-            //Controller.ControllerContext.HttpContext.Expect(a => a.User).Return(mockIdentity);
-            */
-
-            //var mockHttpContext = new MockHttpContext();            
-            //Controller.ControllerContext.Expect(a => a.HttpContext).Return(mockHttpContext).Repeat.Any();
-
-            //IPrincipal userPrincipal = new MockPrincipal();
-            //Controller.ControllerContext.HttpContext.Expect(a => a.User).Return(userPrincipal).Repeat.Any();
-
-            
-            
-
-
+            var timeRecordEntry = new TimeRecordEntry();            
+            IPrincipal userPrincipal = new MockPrincipal();
+            Controller.ControllerContext.HttpContext.User = userPrincipal;
+         
             var result = Controller.AddEntry(1, CreateValidTimeRecordEntry());
         }
 
