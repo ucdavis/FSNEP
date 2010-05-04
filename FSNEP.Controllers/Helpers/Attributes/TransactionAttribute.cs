@@ -6,29 +6,29 @@ namespace FSNEP.Controllers.Helpers.Attributes
 {
     public class TransactionAttribute : ActionFilterAttribute
     {
-        private readonly ITransaction currentTransaction;
+        private readonly ITransaction _currentTransaction;
 
         public TransactionAttribute()
         {
-            currentTransaction = NHibernateSessionManager.Instance.GetSession().Transaction;
+            _currentTransaction = NHibernateSessionManager.Instance.GetSession().Transaction;
         }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            currentTransaction.Begin();
+            _currentTransaction.Begin();
         }
 
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            if (currentTransaction.IsActive)
+            if (_currentTransaction.IsActive)
             {
                 if (filterContext.Exception == null)
                 {
-                    currentTransaction.Commit();
+                    _currentTransaction.Commit();
                 }
                 else
                 {
-                    currentTransaction.Rollback();
+                    _currentTransaction.Rollback();
                 }
             }
         }
