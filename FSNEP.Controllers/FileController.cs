@@ -21,11 +21,11 @@ namespace FSNEP.Controllers
         {
             var entry = Repository.OfType<CostShareEntry>().GetNullableByID(entryId);
 
-            Check.Require(entry != null, "Invalid entry indentifier");
+            Check.Require(entry != null, "Invalid entry identifier");
 
             var costShare = _costShareRepository.GetNullableByID(entry.Record.Id);
 
-            Check.Require(costShare != null, "Invalid cost share indentifier");
+            Check.Require(costShare != null, "Invalid cost share identifier");
 
             if (!_costShareBLL.HasReviewAccess(CurrentUser, costShare))
             {
