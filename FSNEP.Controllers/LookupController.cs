@@ -4,13 +4,12 @@ using FSNEP.Core.Domain;
 using MvcContrib;
 using MvcContrib.Attributes;
 using UCDArch.Core.DomainModel;
-using UCDArch.Web.Attributes;
 using UCDArch.Web.Helpers;
+using FSNEP.Controllers.Helpers.Attributes;
 
 namespace FSNEP.Controllers
 {
-    [Transaction]
-    [Authorize]
+    [AdminOnly]
     public class LookupController : SuperController
     {
         public ActionResult ActivityTypes()
