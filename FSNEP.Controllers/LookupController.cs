@@ -17,13 +17,11 @@ namespace FSNEP.Controllers
 
         public IProjectBLL ProjectBLL;
         public IAccountBLL AccountBLL;
-        public IExpenseTypeBLL ExpenseTypeBLL;
         
-        public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL, IExpenseTypeBLL expenseTypeBLL, IRepository repository)
+        public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL, IRepository repository)
         {
             ProjectBLL = projectBLL;
             AccountBLL = accountBLL;
-            ExpenseTypeBLL = expenseTypeBLL;
             Repository = repository;
         }
 
@@ -163,7 +161,8 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult ExpenseTypes()
         {
-            var activeExpenseTypes = ExpenseTypeBLL.GetActive();
+            var activeExpenseTypes =
+                Repository.OfType<ExpenseType>().Queryable.Where(a => a.IsActive).OrderBy(a => a.Name).ToList();
 
             return View(activeExpenseTypes);
         }
@@ -172,7 +171,7 @@ namespace FSNEP.Controllers
         public ActionResult InactivateExpenseType(int expenseTypeId)
         {
             //get the account
-            var expenseType = ExpenseTypeBLL.Repository.GetNullableByID(expenseTypeId);
+            var expenseType = Repository.OfType<ExpenseType>().GetNullableByID(expenseTypeId);
 
             if (expenseType == null)
             {
@@ -186,7 +185,7 @@ namespace FSNEP.Controllers
             {
                 expenseType.IsActive = false;
 
-                ExpenseTypeBLL.Repository.EnsurePersistent(expenseType);
+                Repository.OfType<ExpenseType>().EnsurePersistent(expenseType);
 
                 ts.CommitTransaction();
             }
@@ -213,7 +212,7 @@ namespace FSNEP.Controllers
             //Add the new project
             using (var ts = new TransactionScope())
             {
-                ExpenseTypeBLL.Repository.EnsurePersistent(newExpenseType);
+                Repository.OfType<ExpenseType>().EnsurePersistent(newExpenseType);
 
                 ts.CommitTransaction();
             }
