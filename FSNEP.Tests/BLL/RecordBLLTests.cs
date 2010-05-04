@@ -1372,6 +1372,342 @@ namespace FSNEP.Tests.BLL
 
         #endregion GetCurrentRecord Tests
 
+        #region GetCurrentSheetDate Tests
+
+        /// <summary>
+        /// Get current sheet date returns expected date for January 2009.
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentSheetDateReturnsExpectedDateForJanuary2009()
+        {
+            var january = new DateTime(2008, 12, 31); //Prime to December 
+
+            for (int i = 0; i < 30; i++)
+            {
+                january = january.AddDays(1);
+                DateTime time = january;
+                SystemTime.Now = () => time;
+
+                DateTime result = _costShareBLL.GetCurrentSheetDate();
+                Assert.IsNotNull(result, "Was null. Position " + i);
+                Assert.AreEqual(2008, result.Year, "Year was not 2008. Position " + i);
+                Assert.AreEqual(12, result.Month, "Month was not 12. Position " + i);
+                Assert.AreEqual(january.Day, result.Day, "Day was not Expected. Position " + i);
+            }
+            Assert.AreEqual(1, january.Month);
+            Assert.AreEqual(30, january.Day);
+
+            january = january.AddDays(1); //January 31
+            SystemTime.Now = () => january;
+            DateTime nextResult = _costShareBLL.GetCurrentSheetDate();
+            Assert.IsNotNull(nextResult);
+            Assert.AreEqual(2009, nextResult.Year);
+            Assert.AreEqual(01, nextResult.Month);
+            Assert.AreEqual(january.Day, nextResult.Day);
+        }
+        
+        /// <summary>
+        /// Get current sheet date returns expected date for February 2009.
+        /// All of Feb returns Jan, March 1 returns Feb
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentSheetDateReturnsExpectedDateForFebruary2009()
+        {
+            var february = new DateTime(2009, 01, 31); //Prime to january 
+
+            for (int i = 0; i < 28; i++) //28 days in Feb 2009
+            {
+                february = february.AddDays(1);
+                DateTime time = february;
+                SystemTime.Now = () => time;
+
+                DateTime result = _costShareBLL.GetCurrentSheetDate();
+                Assert.IsNotNull(result, "Was null. Position " + i);
+                Assert.AreEqual(2009, result.Year, "Year was not 2009. Position " + i);
+                Assert.AreEqual(1, result.Month, "Month was not 1. Position " + i);
+                Assert.AreEqual(february.Day, result.Day, "Day was not Expected. Position " + i);
+            }
+            Assert.AreEqual(2, february.Month);
+            Assert.AreEqual(28, february.Day);
+
+            february = february.AddDays(1); //March 1
+            SystemTime.Now = () => february;
+            DateTime nextResult = _costShareBLL.GetCurrentSheetDate();
+            Assert.IsNotNull(nextResult);
+            Assert.AreEqual(2009, nextResult.Year);
+            Assert.AreEqual(02, nextResult.Month);
+            Assert.AreEqual(1, nextResult.Day); //March 1st
+        }
+        
+        /// <summary>
+        /// Get current sheet date returns expected date for march 2009.
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentSheetDateReturnsExpectedDateForMarch2009()
+        {
+            var march = new DateTime(2009, 02, 28); //Prime to End of Feb 
+
+            for (int i = 0; i < 30; i++)
+            {
+                march = march.AddDays(1);
+                DateTime time = march;
+                SystemTime.Now = () => time;
+
+                DateTime result = _costShareBLL.GetCurrentSheetDate();
+                Assert.IsNotNull(result, "Was null. Position " + i);
+                Assert.AreEqual(2009, result.Year, "Year was not 2009. Position " + i);
+                Assert.AreEqual(2, result.Month, "Month was not 2. Position " + i);
+                if (march.Day > 28)
+                {
+                    Assert.AreEqual(28, result.Day, "Day was not Expected. Position " + i);
+                }
+                else
+                {
+                    Assert.AreEqual(march.Day, result.Day, "Day was not Expected. Position " + i);
+                }
+
+            }
+            Assert.AreEqual(03, march.Month);
+            Assert.AreEqual(30, march.Day);
+
+            march = march.AddDays(1); //March 31
+            SystemTime.Now = () => march;
+            DateTime nextResult = _costShareBLL.GetCurrentSheetDate();
+            Assert.IsNotNull(nextResult);
+            Assert.AreEqual(2009, nextResult.Year);
+            Assert.AreEqual(03, nextResult.Month);
+            Assert.AreEqual(march.Day, nextResult.Day); //March 31st
+        }
+      
+        #endregion GetCurrentSheetDate Tests
+
+        #region GetCurrent Tests
+
+        /// <summary>
+        /// Get current returns the existing record.
+        /// This is because the sheet date will be 2009/11 
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentReturnsTheExistingRecord1()
+        {
+            //This should make the month comparison the same for the 2009/11 date in the record below.
+            var fakeDate = new DateTime(2009, 12, 01);
+            SystemTime.Now = () => fakeDate;
+
+            FakeCostShareRecordsToCheck();
+            var record = CreateValidEntities.CostShare(null);
+            record.Month = 11;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+
+            var currentRecord = _costShareBLL.GetCurrent(_principal);
+            Assert.IsNotNull(currentRecord);
+            Assert.AreEqual("ReturnThisRecord", currentRecord.ReviewComment);
+        }
+        
+        /// <summary>
+        /// Get current returns the existing record.
+        /// This is because the sheet date will be 2009/10 
+        /// (The last day of the month 31, will allow a record to be created for the next month )
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentReturnsTheExistingRecord2()
+        {
+            //This should make the month comparison less than the 2009/11 date in the record below.
+            var fakeDate = new DateTime(2009, 10, 31);
+            SystemTime.Now = () => fakeDate;
+
+            FakeCostShareRecordsToCheck();
+            var record = CreateValidEntities.CostShare(null);
+            record.Month = 11;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.ReviewComment = "ReturnThisRecord";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+
+            var currentRecord = _costShareBLL.GetCurrent(_principal);
+            Assert.IsNotNull(currentRecord);
+            Assert.AreEqual("ReturnThisRecord", currentRecord.ReviewComment);
+        }
+
+
+
+        /// <summary>
+        /// Get current creates and returns A new record.
+        /// Date has current month because "current date" is the 31st
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentCreatesAndReturnsANewRecord1()
+        {
+            var fakeDate = new DateTime(2009, 10, 31);
+            SystemTime.Now = () => fakeDate;
+
+            FakeCostShareRecordsToCheck(); //No records for the current user.
+
+            FakeStatusQuery();
+            FakeUserQuery();
+            var recordTrackingRepository = MockRepository.GenerateStub<IRepository<RecordTracking>>();
+            _repository.Expect(a => a.OfType<RecordTracking>()).Return(recordTrackingRepository).Repeat.Any();
+
+            var currentRecord = _costShareBLL.GetCurrent(_principal);
+            Assert.IsNotNull(currentRecord);
+            recordTrackingRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<RecordTracking>.Is.Anything));
+            _repository.OfType<CostShare>().AssertWasCalled(a => a.EnsurePersistent(Arg<CostShare>.Is.Anything));
+            Assert.AreEqual(CurrentUser, currentRecord.User);
+            Assert.AreEqual(Status.Option.Current, currentRecord.Status.NameOption);
+            Assert.AreEqual(10, currentRecord.Month);
+            Assert.AreEqual(2009, currentRecord.Year);
+        }
+        
+        /// <summary>
+        /// Gets the current creates and returns A new time record.
+        /// New Time Record has salary of current user.
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentCreatesAndReturnsANewTimeRecord()
+        {
+            var fakeDate = new DateTime(2009, 10, 31);
+            SystemTime.Now = () => fakeDate;
+
+            FakeCostShareRecordsToCheck(); //No records for the current user.
+
+            FakeStatusQuery();
+            FakeUserQuery();
+            var recordTrackingRepository = MockRepository.GenerateStub<IRepository<RecordTracking>>();
+            _repository.Expect(a => a.OfType<RecordTracking>()).Return(recordTrackingRepository).Repeat.Any();
+
+            var currentRecord = _costShareBLL.GetCurrent(_principal);
+            Assert.IsNotNull(currentRecord);
+            recordTrackingRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<RecordTracking>.Is.Anything));
+            _repository.OfType<CostShare>().AssertWasCalled(a => a.EnsurePersistent(Arg<CostShare>.Is.Anything));
+            Assert.AreEqual(CurrentUser, currentRecord.User);
+            Assert.AreEqual(Status.Option.Current, currentRecord.Status.NameOption);
+            Assert.AreEqual(10, currentRecord.Month);
+            Assert.AreEqual(2009, currentRecord.Year);
+        }
+
+
+        /// <summary>
+        /// Get current creates and returns A new record.
+        /// Date has previous month because "Current date" is less than the 30th
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentCreatesAndReturnsANewRecord2()
+        {
+            var fakeDate = new DateTime(2009, 10, 25);
+            SystemTime.Now = () => fakeDate;
+
+            FakeCostShareRecordsToCheck(); //No records for the current user.
+
+            FakeStatusQuery();
+            FakeUserQuery();
+            var recordTrackingRepository = MockRepository.GenerateStub<IRepository<RecordTracking>>();
+            _repository.Expect(a => a.OfType<RecordTracking>()).Return(recordTrackingRepository).Repeat.Any();
+
+            var currentRecord = _costShareBLL.GetCurrent(_principal);
+            Assert.IsNotNull(currentRecord);
+            recordTrackingRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<RecordTracking>.Is.Anything));
+            _repository.OfType<CostShare>().AssertWasCalled(a => a.EnsurePersistent(Arg<CostShare>.Is.Anything));
+            Assert.AreEqual(CurrentUser, currentRecord.User);
+            Assert.AreEqual(Status.Option.Current, currentRecord.Status.NameOption);
+            Assert.AreEqual(09, currentRecord.Month);
+            Assert.AreEqual(2009, currentRecord.Year);
+            Assert.IsNull(currentRecord.ReviewComment); //Because it is new
+        }
+
+        /// <summary>
+        /// Get current creates and returns null because a sheet for that already exists (Pending review).
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentCreatesAndReturnsANewRecord3()
+        {
+            var fakeDate = new DateTime(2009, 10, 31);
+            SystemTime.Now = () => fakeDate;
+
+            FakeCostShareRecordsToCheck(); //No records for the current user.
+            var record = CreateValidEntities.CostShare(null);
+            record.Month = 09;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.Approved };
+            record.ReviewComment = "ReturnThisRecord1";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+
+            record = CreateValidEntities.CostShare(null);
+            record.Month = 10;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.PendingReview };
+            record.ReviewComment = "ReturnThisRecord2";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+      
+            FakeStatusQuery();
+            FakeUserQuery();
+            var recordTrackingRepository = MockRepository.GenerateStub<IRepository<RecordTracking>>();
+            _repository.Expect(a => a.OfType<RecordTracking>()).Return(recordTrackingRepository).Repeat.Any();
+
+            var currentRecord = _costShareBLL.GetCurrent(_principal);
+            Assert.IsNull(currentRecord);
+            recordTrackingRepository.AssertWasNotCalled(a => a.EnsurePersistent(Arg<RecordTracking>.Is.Anything));
+            _repository.OfType<CostShare>().AssertWasNotCalled(a => a.EnsurePersistent(Arg<CostShare>.Is.Anything));
+        }
+
+        /// <summary>
+        /// Get current creates and returns a new record because a sheet for that 
+        /// month does not yet exist, but one for the previous month does exist, 
+        /// but it is pending review an not editable.
+        /// </summary>
+        [TestMethod]
+        public void CostShareGetCurrentCreatesAndReturnsANewRecord4()
+        {
+            var fakeDate = new DateTime(2009, 11, 01);
+            SystemTime.Now = () => fakeDate;
+
+            FakeCostShareRecordsToCheck(); //No records for the current user.
+            var record = CreateValidEntities.CostShare(null);
+            record.Month = 09;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.Approved };
+            record.ReviewComment = "ReturnThisRecord1";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+
+            record = CreateValidEntities.CostShare(null);
+            record.Month = 10;
+            record.Year = 2009;
+            record.Status = new Status { NameOption = Status.Option.PendingReview };
+            record.ReviewComment = "ReturnThisRecord2";
+            record.Entries = new List<Entry>();
+            record.User = CurrentUser;
+            CostShareRecords.Add(record);
+
+            FakeStatusQuery();
+            FakeUserQuery();
+            var recordTrackingRepository = MockRepository.GenerateStub<IRepository<RecordTracking>>();
+            _repository.Expect(a => a.OfType<RecordTracking>()).Return(recordTrackingRepository).Repeat.Any();
+
+            var currentRecord = _costShareBLL.GetCurrent(_principal);
+            Assert.IsNotNull(currentRecord);
+            recordTrackingRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<RecordTracking>.Is.Anything));
+            _repository.OfType<CostShare>().AssertWasCalled(a => a.EnsurePersistent(Arg<CostShare>.Is.Anything));
+            Assert.AreEqual(CurrentUser, currentRecord.User);
+            Assert.AreEqual(Status.Option.Current, currentRecord.Status.NameOption);
+            Assert.AreEqual(11, currentRecord.Month);
+            Assert.AreEqual(2009, currentRecord.Year);
+            Assert.IsNull(currentRecord.ReviewComment); //Because it is new
+        }
+  
+        #endregion GetCurrent Tests
+
         #region Submit Tests
 
         /// <summary>
@@ -1480,7 +1816,7 @@ namespace FSNEP.Tests.BLL
 
         #endregion GetReviewableAndCurrentRecords Tests
 
-        //TODO: Other CostShare Tests
+        //WIP: Other CostShare Tests
 
         #endregion CostShare Tests
 
