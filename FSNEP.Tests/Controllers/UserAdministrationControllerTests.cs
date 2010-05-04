@@ -173,10 +173,10 @@ namespace FSNEP.Tests.Controllers
             var roleList = new List<string>();
             #endregion Parameters needed for the Create Method
 
-            projectList.Add(0); //Need to be zero
-            projectList.Add(0);
-            fundTypeList.Add(0);
-            fundTypeList.Add(0);
+            projectList.Add(2); //Need to be zero
+            projectList.Add(3);
+            fundTypeList.Add(4);
+            fundTypeList.Add(5);
             roleList.Add("Supervisor");
             roleList.Add("Timesheet User");
 
@@ -234,8 +234,7 @@ namespace FSNEP.Tests.Controllers
             //If IgnoreArguments is not used, the params don't match and it isn't mocked.
             UserBLL.UserAuth.MembershipService.Expect(a => a.CreateUser(userModel.UserName, "jaskidjflkajsdlf$#12", userModel.Email, userModel.Question, userModel.Answer, true,
                                                                 null, out createStatus)).OutRef(createStatus = MembershipCreateStatus.Success).Return(memberShipUser);
-
-            //Controller.Url.RequestContext.HttpContext.Request.Url.Expect()           
+          
             Controller.MessageGateway.Expect(a => a.SendMessageToNewUser(newUser, "ignore", "ignore", "ignore", "ignore")).IgnoreArguments().Repeat.Any();
 
             Controller.Create(userModel, supervisorId, projectList, fundTypeList, roleList);
@@ -314,16 +313,19 @@ namespace FSNEP.Tests.Controllers
         /// </summary>
         private void FakeProjects()
         {                  
-            //TODO: Assign specific ID's using EntityIdSetter.    
+            var project = new Project {Name = "Name", IsActive = true};
             var projects = new List<Project>
                                {
                                    new Project {Name = "Name", IsActive = true},
                                    new Project{Name = "Name2", IsActive = true}
-                               }.AsQueryable();            
+                               };
+            projects[0].SetIdTo(2);
+            projects[1].SetIdTo(3);  
+            
             var projectRepository = FakeRepository<Project>();
 
             //This ties the "().Queryable" to return "projects"
-            projectRepository.Expect(a => a.Queryable).Return(projects);
+            projectRepository.Expect(a => a.Queryable).Return(projects.AsQueryable());
 
             //This ties the call "Repository.OfType<Project>()" to my repository here "projectRepository"
             Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
@@ -343,9 +345,12 @@ namespace FSNEP.Tests.Controllers
                                     new FundType {Name = "Name1"},
                                     new FundType {Name = "Name2"},
                                     new FundType {Name = "Name3"}
-                                }.AsQueryable();
+                                };
+            fundTypes[0].SetIdTo(4);
+            fundTypes[1].SetIdTo(5);
+            fundTypes[2].SetIdTo(6);
             var fundRepository = FakeRepository<FundType>();
-            fundRepository.Expect(a => a.Queryable).Return(fundTypes);
+            fundRepository.Expect(a => a.Queryable).Return(fundTypes.AsQueryable());
             Controller.Repository.Expect(a => a.OfType<FundType>()).Return(fundRepository);
         }
 
