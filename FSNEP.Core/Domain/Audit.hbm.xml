@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="FSNEP.Core" namespace="FSNEP.Core.Domain">
   <class name="Audit" table="Audits" >
-    <id name="ID" access="nosetter.lowercase" column="ID">
+    <id name="Id" column="ID">
       <generator class="guid.comb" />
     </id>
 

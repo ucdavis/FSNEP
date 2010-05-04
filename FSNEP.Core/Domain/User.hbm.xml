@@ -3,7 +3,7 @@
   <class
     name="FSNEP.Core.Domain.User, FSNEP.Core"
     table="Users" >
-    <id name="ID" access="nosetter.lowercase" column="UserID">
+    <id name="Id" column="UserID">
       <generator class="assigned" />
     </id>
 

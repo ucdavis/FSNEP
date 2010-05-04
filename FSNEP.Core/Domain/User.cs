@@ -71,7 +71,7 @@ namespace FSNEP.Core.Domain
             this.Id = userID;
         }
 
-        public void SetAssignedIdTo(Guid assignedId)
+        public virtual void SetAssignedIdTo(Guid assignedId)
         {
             Id = assignedId;
         }

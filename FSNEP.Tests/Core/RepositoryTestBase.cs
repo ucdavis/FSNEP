@@ -6,6 +6,7 @@ using NHibernate.Cfg;
 using FSNEP.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
+using UCDArch.Testing;
 
 namespace FSNEP.Tests.Core
 {
@@ -29,6 +30,8 @@ namespace FSNEP.Tests.Core
                                                                         Instance.GetSession().Connection, null);
 
             LoadData();
+
+            ServiceLocatorInitializer.Init();
 
             HibernatingRhinos.NHibernate.Profiler.Appender.NHibernateProfiler.Initialize();
         }

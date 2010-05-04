@@ -44,10 +44,8 @@ namespace FSNEP.Core.Domain
 
     public class YearMonthComposite
     {
-        [DomainSignature]
         public virtual int Month { get; set; }
         
-        [DomainSignature]
         public virtual int Year { get; set; }
 
         public YearMonthComposite(int year, int month)
@@ -59,6 +57,21 @@ namespace FSNEP.Core.Domain
         public YearMonthComposite()
         {
 
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return base.Equals(obj);
+
+            var yearMonth = (YearMonthComposite)obj;
+
+            //Equal if the year and month are exactly the same
+            return yearMonth.Year == Year && yearMonth.Month == Month;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode() + Year * 27 + Month * 7;
         }
     }
 }

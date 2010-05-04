@@ -3,7 +3,7 @@
   <class
     name="FSNEP.Core.Domain.ActivityType, FSNEP.Core"
     table="ActivityTypes" >
-    <id name="ID" access="nosetter.lowercase" column="ID">
+    <id name="Id" column="ID">
       <generator class="identity" />
     </id>
 

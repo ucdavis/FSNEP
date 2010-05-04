@@ -4,7 +4,7 @@
     name="FSNEP.Core.Domain.HoursInMonth, FSNEP.Core"
     table="HoursInMonths" >
 
-    <composite-id name="ID" access="nosetter.lowercase" class="FSNEP.Core.Domain.YearMonthComposite, FSNEP.Core" unsaved-value="any">
+    <composite-id name="Id" class="FSNEP.Core.Domain.YearMonthComposite, FSNEP.Core" unsaved-value="any">
       <key-property name="Month" column="Month"/>
       <key-property name="Year" column="Year"/>
     </composite-id>

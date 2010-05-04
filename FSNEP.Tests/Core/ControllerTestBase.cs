@@ -4,6 +4,7 @@ using Rhino.Mocks;
 using FSNEP.Controllers;
 using UCDArch.Core.DomainModel;
 using UCDArch.Core.PersistanceSupport;
+using UCDArch.Testing;
 
 namespace FSNEP.Tests.Core
 {
@@ -20,6 +21,8 @@ namespace FSNEP.Tests.Core
             Builder = new TestControllerBuilder();
 
             SetupController();
+
+            ServiceLocatorInitializer.Init();
 
             Controller.Repository = MockRepository.GenerateStub<IRepository>();
         }
