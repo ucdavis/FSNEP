@@ -283,6 +283,41 @@ namespace FSNEP.Tests.Controllers
         }
 
         /// <summary>
+        /// Creates the activity type does not save activity type with invalid category id.
+        /// </summary>
+        [TestMethod]
+        public void CreateActivityTypeDoesNotSaveActivityTypeWithInvalidCategoryId()
+        {
+            const string validIndicator = "12";
+            const int validCategoryId = 1;
+            const int invalidCategoryId = 2; 
+
+            FakeActivityCategory(validCategoryId); //Prime the Mock so it returns not null for the valid one only.
+
+            var newActivityType = new ActivityType
+            {
+                Name = "Valid",
+                Indicator = validIndicator
+            };
+
+            var activityTypeRepository = FakeRepository<ActivityType>();
+            activityTypeRepository
+                .Expect(a => a.EnsurePersistent(Arg<ActivityType>.Is.Anything))
+                .WhenCalled(a => newActivityType = (ActivityType)a.Arguments.First()); //set newActivityType to the activityType that was saved
+
+            Controller.Repository.Expect(a => a.OfType<ActivityType>()).Return(activityTypeRepository);
+
+            Controller.CreateActivityType(newActivityType, invalidCategoryId);
+
+            activityTypeRepository
+                .AssertWasNotCalled(a => a.EnsurePersistent(newActivityType));//make sure we didn't call persist
+
+            Controller.ModelState.AssertErrorsAre("ActivityCategory: The value cannot be null.");
+            Assert.IsFalse(Controller.ModelState.IsValid);
+            Assert.IsTrue(Controller.Message.StartsWith("Activity Type Creation Failed."));
+        }
+
+        /// <summary>
         /// Create activity type redirects to activityType.
         /// </summary>
         [TestMethod]
