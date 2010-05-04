@@ -89,8 +89,12 @@ $(function() {
 });
 
 function RemoveEntry(entryId) {
-    
+
     var data = { entryId: entryId, __RequestVerificationToken: __RequestVerificationToken };
+
+    var entryRow = $("#Entry" + entryId);
+
+    entryRow.fadeOut();
 
     $.post(
         Services.RemoveEntry,
