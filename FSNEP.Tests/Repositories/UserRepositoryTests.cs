@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using CAESArch.BLL;
 using CAESArch.BLL.Repositories;
@@ -202,6 +203,33 @@ namespace FSNEP.Tests.Repositories
             var usersWithoutInactiveUser = UserBLL.GetAllUsers();
 
             Assert.AreEqual(UserIds.Count - 1, usersWithoutInactiveUser.Count(), "Should return all users except for the inactivated user");
+        }
+
+        [TestMethod] //TODO:Review
+        public void UserDoesNotSaveWithOnlySpacesInLastName()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = " ",
+                Salary = 1,
+                FTE = 1,
+                IsActive = true,                
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            try
+            {
+                userBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception message)
+            {
+                if (message.Message != "Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: LastName, Required\r\n")
+                    throw;
+            }
         }
     }
 }
