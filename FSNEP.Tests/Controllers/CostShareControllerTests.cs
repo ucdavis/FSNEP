@@ -522,7 +522,7 @@ namespace FSNEP.Tests.Controllers
             var entryId = costShare.Entries[2].Id;
 
             Controller.Repository.OfType<CostShareEntry>()
-                .Expect(a => a.GetById(entryId))
+                .Expect(a => a.GetByID(entryId))
                 .Return((CostShareEntry)costShare.Entries[2])
                 .Repeat.Once();
 

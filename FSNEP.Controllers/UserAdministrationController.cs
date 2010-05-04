@@ -386,7 +386,7 @@ namespace FSNEP.Controllers
         {
             var users = filterProjectId == null
                             ? userBLL.GetAllUsers()
-                            : userBLL.GetAllUsers().Where(x => x.Projects.Contains(projectRepository.GetById(filterProjectId.Value)));
+                            : userBLL.GetAllUsers().Where(x => x.Projects.Contains(projectRepository.GetByID(filterProjectId.Value)));
 
             var viewModel = new UserListViewModel
                                 {

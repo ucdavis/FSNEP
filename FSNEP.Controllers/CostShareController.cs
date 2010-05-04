@@ -149,7 +149,7 @@ namespace FSNEP.Controllers
         {
             var entryRepository = Repository.OfType<CostShareEntry>();
 
-            var entry = entryRepository.GetById(entryId);
+            var entry = entryRepository.GetByID(entryId);
 
             var parentRecord = entry.Record;
 

@@ -44,7 +44,7 @@ namespace FSNEP.Controllers
             {
                 foreach (var accountId in accountIds)
                 {
-                    project.Accounts.Add(Repository.OfType<Account>().GetById(accountId));
+                    project.Accounts.Add(Repository.OfType<Account>().GetByID(accountId));
                 }
             }
 

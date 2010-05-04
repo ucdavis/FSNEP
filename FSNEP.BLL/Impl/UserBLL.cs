@@ -114,7 +114,7 @@ namespace FSNEP.BLL.Impl
 
             var member = UserAuth.GetUser(username);
 
-            return GetById((Guid)member.ProviderUserKey);
+            return GetByID((Guid)member.ProviderUserKey);
         }
 
         public List<string> GetVisibleRoles()

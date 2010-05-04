@@ -1815,7 +1815,7 @@ namespace FSNEP.Tests.Controllers
             UserBll.UserAuth.MembershipService.Expect(a => a.GetUser(userModel.User.Supervisor.Id)).Return(memberShipUser).Repeat.Any();
             memberShipUser.Email = "test@test.edu"; //Email for the Supervisor. If we need a different email for a user, this would need to be changed.
 
-            UserBll.Expect(a => a.GetById(userModel.User.Supervisor.Id)).Return(userModel.User.Supervisor).Repeat.Any();
+            UserBll.Expect(a => a.GetByID(userModel.User.Supervisor.Id)).Return(userModel.User.Supervisor).Repeat.Any();
             #endregion Mocks for the supervisor
 
             #region Mocks for the Create method

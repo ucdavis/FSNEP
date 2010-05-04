@@ -124,7 +124,7 @@ namespace FSNEP.Controllers
         {
             var entryRepository = Repository.OfType<TimeRecordEntry>();
 
-            var entry = entryRepository.GetById(entryId);
+            var entry = entryRepository.GetByID(entryId);
 
             entryRepository.Remove(entry);
 

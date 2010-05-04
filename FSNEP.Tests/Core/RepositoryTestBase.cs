@@ -135,7 +135,7 @@ namespace FSNEP.Tests.Core
 
             #region test
             
-            supervisor.Projects.Add(Repository.OfType<Project>().GetById(1));
+            supervisor.Projects.Add(Repository.OfType<Project>().GetByID(1));
 
             var fundTypes = Repository.OfType<FundType>().GetAll();
 
@@ -161,7 +161,7 @@ namespace FSNEP.Tests.Core
                                    UserName = "UserName" + i,
                                    Email = "username" + i + "@testucdavis.edu"
                                };
-                user.Projects.Add(Repository.OfType<Project>().GetById(5));
+                user.Projects.Add(Repository.OfType<Project>().GetByID(5));
                 user.FundTypes = fundTypes;
                 userId = Guid.NewGuid();
 

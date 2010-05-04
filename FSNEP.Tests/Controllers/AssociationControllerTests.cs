@@ -138,7 +138,7 @@ namespace FSNEP.Tests.Controllers
             var projectRepository = FakeRepository<Project>();
             projectRepository.Expect(a => a.Queryable).Return(projects).Repeat.Any();
             projectRepository.Expect(a => a.GetNullableByID(1)).Return(project).Repeat.Any();
-            projectRepository.Expect(a => a.GetById(1)).Return(project).Repeat.Any();
+            projectRepository.Expect(a => a.GetByID(1)).Return(project).Repeat.Any();
             Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
         }
         /// <summary>
@@ -168,7 +168,7 @@ namespace FSNEP.Tests.Controllers
             for (int i = 0; i < 5; i++)
             {
                 int localId = i + 1;
-                accountRepository.Expect(a => a.GetById(localId)).Return(accountList[i]).Repeat.Any();
+                accountRepository.Expect(a => a.GetByID(localId)).Return(accountList[i]).Repeat.Any();
             }
 
 
