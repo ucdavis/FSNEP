@@ -279,9 +279,13 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult Modify(User user, List<string> roleList, string id)
         {
-            ValidationHelper<User>.Validate(user, ModelState);
+            var userToUpdate = UserBLL.GetUser(id);
 
-            CheckUserAssociations(user);
+            TransferValuesTo(userToUpdate, user);
+
+            ValidationHelper<User>.Validate(userToUpdate, ModelState);
+
+            CheckUserAssociations(userToUpdate);
 
             if (roleList == null || roleList.Count == 0)
                 ModelState.AddModelError("RoleList", "User must have at least one role");
@@ -289,7 +293,7 @@ namespace FSNEP.Controllers
             if (ModelState.IsValid)
             {
                 //Do the save
-                EnsureProperRoles(roleList, user);
+                EnsureProperRoles(roleList, userToUpdate);
 
                 //Now reconcile the user's roles
                 UserBLL.SetRoles(id, roleList);
@@ -297,7 +301,7 @@ namespace FSNEP.Controllers
                 //We have a valid viewstate, so save the changes
                 using (var ts = new TransactionScope())
                 {
-                    UserBLL.EnsurePersistent(user);
+                    UserBLL.EnsurePersistent(userToUpdate);
 
                     ts.CommitTransaction();
                 }
@@ -310,10 +314,23 @@ namespace FSNEP.Controllers
             else //Not valid -- repopulate the viewmodel and send the user back to make the corrections
             {
                 var viewModel = UserViewModel.Create(UserBLL);
-                viewModel.User = user;
+                viewModel.User = userToUpdate;
 
                 return View(viewModel);
             }
+        }
+
+        private static void TransferValuesTo(User userToUpdate, User user)
+        {
+            userToUpdate.FirstName = user.FirstName;
+            userToUpdate.LastName = user.LastName;
+            userToUpdate.Salary = user.Salary;
+            userToUpdate.FTE = user.FTE;
+            userToUpdate.BenefitRate = user.BenefitRate;
+            userToUpdate.IsActive = user.IsActive;
+            userToUpdate.Supervisor = user.Supervisor;
+            userToUpdate.FundTypes = user.FundTypes;
+            userToUpdate.Projects = user.Projects;
         }
 
         /// <summary>
