@@ -119,7 +119,8 @@ namespace FSNEP.Controllers
                              {
                                  entry.Hours, 
                                  entry.Id, 
-                                 entry.Comment, 
+                                 entry.Comment,
+                                 ActivityType = entry.ActivityType.Name,
                                  Project = entry.Project.Name,
                                  Account = entry.Account.Name,
                                  FundType = entry.FundType.Name

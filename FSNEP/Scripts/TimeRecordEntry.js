@@ -150,6 +150,17 @@ function EditEntry(entryId) {
 
 function EditEntryLoaded(result) {
     LogMessage("Edit Entry Loaded", result);
+    
+    
+    $("#Edit_ActivityType").html(result.ActivityType);
+    $("#Edit_FundType").html(result.FundType);
+    $("#Edit_Project").html(result.Project);
+    $("#Edit_Account").html(result.Account);
+    
+    $("#Edit_Hours").val(result.Hours);
+    $("#Edit_Comment").val(result.Comment);
+
+    DisplayMessage("Edit Entry Loaded");
 }
 
 function OpenDialog(dialog /*The dialog DIV JQuery object*/, buttons /*Button collection */, title, onClose) {
