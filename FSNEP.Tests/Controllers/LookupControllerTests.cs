@@ -912,7 +912,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void CreateHoursInMonthSavesNewHoursInMonth()
         {
-            var newYearMonthComposite = new YearMonthComposite(01, 2009);
+            var newYearMonthComposite = new YearMonthComposite(2009, 01);
             var newHoursInMonth = new HoursInMonth(newYearMonthComposite.Year, newYearMonthComposite.Month) { Hours = 999 };
 
 
@@ -939,7 +939,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void CreateHoursInMonthDoesNotSaveHoursInMonthWithZeroHours()
         {
-            var newYearMonthComposite = new YearMonthComposite(01, 2009);
+            var newYearMonthComposite = new YearMonthComposite(2009, 01);
             var newHoursInMonth = new HoursInMonth(newYearMonthComposite.Year, newYearMonthComposite.Month) { Hours = 0 };
 
             var hoursInMonthRepository = FakeRepository<HoursInMonth>();
@@ -956,10 +956,10 @@ namespace FSNEP.Tests.Controllers
         /// CreateHoursInMonth Does Not Save HoursInMonth With Years And Months of Zero
         /// Unless HoursInMonth is changed, this test will not pass.
         /// </summary>
-        [TestMethod, Ignore]
+        [TestMethod]
         public void CreateHoursInMonthDoesNotSaveHoursInMonthWithYearsAndMonthsOfZero()
         {
-            var newYearMonthComposite = new YearMonthComposite(00, 0000);
+            var newYearMonthComposite = new YearMonthComposite(0000, 00);
             var newHoursInMonth = new HoursInMonth(newYearMonthComposite.Year, newYearMonthComposite.Month) { Hours = 100 };
 
             var hoursInMonthRepository = FakeRepository<HoursInMonth>();

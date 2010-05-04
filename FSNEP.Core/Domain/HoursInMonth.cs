@@ -18,11 +18,11 @@ namespace FSNEP.Core.Domain
 
         public HoursInMonth(int year, int month)
         {
-            id = new YearMonthComposite(month, year);
+            id = new YearMonthComposite(year, month);
         }
 
         [SelfValidation]
-        public void Validate(ValidationResults results)
+        public virtual void Validate(ValidationResults results)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace FSNEP.Core.Domain
         public virtual int Month { get; set; }
         public virtual int Year { get; set; }
 
-        public YearMonthComposite(int month, int year)
+        public YearMonthComposite(int year, int month)
         {
             Month = month;
             Year = year;
