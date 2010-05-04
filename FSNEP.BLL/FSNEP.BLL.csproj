@@ -59,13 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Impl\AccountBLL.cs" />
-    <Compile Include="Impl\ActivityTypeBLL.cs" />
-    <Compile Include="Impl\ExpenseTypeBLL.cs" />
     <Compile Include="Impl\GenericBLL.cs" />
-    <Compile Include="Impl\HoursInMonthBLL.cs" />
-    <Compile Include="Impl\LookupBLL.cs" />
-    <Compile Include="Impl\ProjectBLL.cs" />
     <Compile Include="Impl\UserAuth.cs" />
     <Compile Include="Impl\UserBLL.cs" />
     <Compile Include="Interfaces\ILookupBLL.cs" />

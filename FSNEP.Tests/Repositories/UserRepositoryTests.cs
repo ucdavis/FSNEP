@@ -202,18 +202,5 @@ namespace FSNEP.Tests.Repositories
 
             Assert.AreEqual(UserIds.Count - 1, usersWithoutInactiveUser.Count(), "Should return all users except for the inactivated user");
         }
-
-        [TestMethod]
-        public void Test()
-        {
-            var activityType = new ActivityType {Name = "Test", Indicator = "IN"};
-            
-            using (var ts = new TransactionScope())
-            {
-                new GenericBLL<ActivityType,int>().Repository.EnsurePersistent(activityType);
-                
-                ts.CommitTransaction();
-            }
-        }
     }
 }

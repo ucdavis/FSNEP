@@ -1,4 +1,4 @@
-using FSNEP.BLL.Impl;
+using CAESArch.Core.DataInterfaces;
 using FSNEP.Controllers;
 using FSNEP.Tests.Core;
 using MvcContrib.TestHelper;
@@ -12,9 +12,9 @@ namespace FSNEP.Tests.Controllers
     {
         protected override void SetupController()
         {
-            var projectsBLL = MockRepository.GenerateStub<IProjectBLL>();
+            var repository = MockRepository.GenerateStub<IRepository>();
 
-            CreateController(projectsBLL);
+            CreateController(repository);
         }
 
         [TestMethod]
