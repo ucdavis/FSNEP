@@ -32,7 +32,7 @@ namespace FSNEP.Controllers
 
             Check.Require(project != null);
 
-            return new JsonNetResult(project.Accounts);
+            return new JsonNetResult(project.Accounts.ToList());
         }
 
         /// <summary>

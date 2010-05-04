@@ -15,10 +15,10 @@
                                         <%
                                     });
                         col.Add(x => x.Amount);
-                        col.Add(x => x.ExpenseType.Name);
-                        col.Add(x => x.Project.Name);
-                        col.Add(x => x.FundType.Name);
-                        col.Add(x => x.Account.Name);
+                        col.Add(x => x.ExpenseType.Name).Title("Expense Type");
+                        col.Add(x => x.Project.Name).Title("Project");
+                        col.Add(x => x.FundType.Name).Title("Fund Type");
+                        col.Add(x => x.Account.Name).Title("Account");
                         col.Add(x => x.Description);
                         col.Add(x => x.Comment);
                     })
