@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="FSNEP.Core" namespace="FSNEP.Core.Domain">
+  <class
+    name="Record"
+    table="Records" >
+    <id name="Id" column="ID">
+      <generator class="identity" />
+    </id>
+
+    <property name="Month" />
+    <property name="Year" />
+    <property name="ReviewComment" />
+
+    <many-to-one name="User" class="User"></many-to-one>
+    <many-to-one name="Status" class="Status"></many-to-one>
+    
+  </class>
+</hibernate-mapping>
