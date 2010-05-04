@@ -16,14 +16,14 @@ namespace FSNEP.Controllers
             _timeRecordBLL = timeRecordBLL;
         }
 
-        public ActionResult CostShareReview()
+        public ActionResult CostShareList()
         {
             var records = _costShareBLL.GetReviewableAndCurrentRecords(CurrentUser);
             
             return View(records.Cast<Record>().ToList());
         }
 
-        public ActionResult TimeRecordReview()
+        public ActionResult TimeRecordList()
         {
             var records = _timeRecordBLL.GetReviewableAndCurrentRecords(CurrentUser);
 

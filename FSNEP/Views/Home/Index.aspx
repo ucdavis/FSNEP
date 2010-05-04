@@ -24,6 +24,11 @@
             <%=Html.ActionLink<CostShareController>(x => x.Current(), "Current Cost Share")%></li>
         <li><%=Html.ActionLink<CostShareController>(x => x.History(), "Cost Share History")%></li>
     </ul>
+    <h3>Supervisor</h3>
+    <ul>
+        <li><%= Html.ActionLink<SupervisorController>(x=>x.TimeRecordList(), "Time Record Review") %></li>
+        <li><%= Html.ActionLink<SupervisorController>(x=>x.CostShareList(), "Cost Share Review") %></li>
+    </ul>
     <h3>
         Administration</h3>
     <ul>

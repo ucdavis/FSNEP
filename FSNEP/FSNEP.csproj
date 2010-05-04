@@ -213,9 +213,9 @@
     <Content Include="Views\Lookup\HoursInMonths.aspx" />
     <Content Include="Views\Lookup\LookupsHeader.ascx" />
     <Content Include="Views\Lookup\Projects.aspx" />
-    <Content Include="Views\Supervisor\CostShareReview.aspx" />
+    <Content Include="Views\Supervisor\CostShareList.aspx" />
     <Content Include="Views\Supervisor\RecordReviewTable.ascx" />
-    <Content Include="Views\Supervisor\TimeRecordReview.aspx" />
+    <Content Include="Views\Supervisor\TimeRecordList.aspx" />
     <Content Include="Views\TimeRecord\ActivityTypeSelect.ascx" />
     <Content Include="Views\TimeRecord\Calendar.ascx" />
     <Content Include="Views\TimeRecord\Entry.aspx" />
