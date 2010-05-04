@@ -189,7 +189,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a valid first name of spaces.
         /// User is saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserSavesWithSpacesOnlyInFirstName()
@@ -206,7 +206,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a invalid first name of 51 characters.
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithTooLongFirstName()
@@ -223,7 +223,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a invalid first name of null.
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithNullFirstName()
@@ -243,7 +243,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a invalid last name of 51 characters.
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithTooLongLastName()
@@ -260,7 +260,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a invalid last name of null.
         /// User is not saved.
-        /// Ensures the corerct message is displayed. The required validation is hit before the length validation.
+        /// Ensures the correct message is displayed. The required validation is hit before the length validation.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithNullLastName()
@@ -278,7 +278,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a invalid last name spaces only.
         /// User is not saved.
-        /// Ensures the corerct message is displayed. The Required Validator checks for null and spaces only.
+        /// Ensures the correct message is displayed. The Required Validator checks for null and spaces only.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithSpacesOnlyInLastName()
@@ -298,7 +298,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a null supervisorId.
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithNullSupervisorId()
@@ -314,7 +314,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a null Project List (The User didn't select one from the list).
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithNullProjectList()
@@ -330,7 +330,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a null Fund Type List (The User didn't select one from the list).
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithNullFundTypeList()
@@ -346,7 +346,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a null Role List (The User didn't select one from the list).
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithNullRoleList()
@@ -362,7 +362,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a duplicate user name.
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithDuplicateUser()
@@ -380,7 +380,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
         /// User is not saved.
-        /// Ensures the corerct message is displayed. (Note, we would expect this to fail when the code is updated)
+        /// Ensures the correct message is displayed. (Note, we would expect this to fail when the code is updated)
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithCreateStatusErrorDuplicateEmail()
@@ -396,7 +396,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
         /// User is not saved.
-        /// Ensures the corerct message is displayed. (Note, we would expect this to fail when the code is updated)
+        /// Ensures the correct message is displayed. (Note, we would expect this to fail when the code is updated)
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithCreateStatusErrorDuplicateProviderUserKey()
@@ -412,7 +412,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
         /// User is not saved.
-        /// Ensures the corerct message is displayed. (Note, we would expect this to fail when the code is updated)
+        /// Ensures the correct message is displayed. (Note, we would expect this to fail when the code is updated)
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithCreateStatusErrorInvalidAnswer()
@@ -428,7 +428,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
         /// User is not saved.
-        /// Ensures the corerct message is displayed. (Note, we would expect this to fail when the code is updated)
+        /// Ensures the correct message is displayed. (Note, we would expect this to fail when the code is updated)
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithCreateStatusErrorInvalidEmail()
@@ -444,7 +444,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
         /// User is not saved.
-        /// Ensures the corerct message is displayed. (Note, we would expect this to fail when the code is updated)
+        /// Ensures the correct message is displayed. (Note, we would expect this to fail when the code is updated)
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithCreateStatusErrorInvalidPassword()
@@ -460,7 +460,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
         /// User is not saved.
-        /// Ensures the corerct message is displayed. (Note, we would expect this to fail when the code is updated)
+        /// Ensures the correct message is displayed. (Note, we would expect this to fail when the code is updated)
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithCreateStatusErrorInvalidProviderUserKey()
@@ -476,7 +476,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
         /// User is not saved.
-        /// Ensures the corerct message is displayed. (Note, we would expect this to fail when the code is updated)
+        /// Ensures the correct message is displayed. (Note, we would expect this to fail when the code is updated)
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithCreateStatusErrorInvalidQuestion()
@@ -492,7 +492,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
         /// User is not saved.
-        /// Ensures the corerct message is displayed. (Note, we would expect this to fail when the code is updated)
+        /// Ensures the correct message is displayed. (Note, we would expect this to fail when the code is updated)
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithCreateStatusErrorInvalidUserName()
@@ -508,7 +508,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
         /// User is not saved.
-        /// Ensures the corerct message is displayed. (Note, we would expect this to fail when the code is updated)
+        /// Ensures the correct message is displayed. (Note, we would expect this to fail when the code is updated)
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithCreateStatusErrorProviderError()
@@ -524,7 +524,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
         /// User is not saved.
-        /// Ensures the corerct message is displayed. (Note, we would expect this to fail when the code is updated)
+        /// Ensures the correct message is displayed. (Note, we would expect this to fail when the code is updated)
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithCreateStatusErrorUserRejected()
@@ -543,7 +543,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a invalid salary .
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithSalaryLessThanZero()
@@ -560,7 +560,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a invalid salary .
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithSalaryOfZero()
@@ -579,7 +579,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a invalid Benefit Rate .
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithBenefitRateLessThanZero()
@@ -595,7 +595,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a invalid Benefit Rate .
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithBenefitRateGreaterThanTwo()
@@ -612,7 +612,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a valid Benefit Rate of zero.
         /// User is saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserSavesWithBenefitRateOfZero()
@@ -629,7 +629,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a valid Benefit Rate of two.
         /// User is saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserSavesWithBenefitRateOfTwo()
@@ -648,7 +648,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a invalid FTE.
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithFteLessThanZero()
@@ -664,7 +664,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a invalid FTE.
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithFteOfZero()
@@ -680,7 +680,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// Creates a user with a invalid FTE.
         /// User is not saved.
-        /// Ensures the corerct message is displayed.
+        /// Ensures the correct message is displayed.
         /// </summary>
         [TestMethod]
         public void CreateUserDoesNotSaveWithFteGreaterThanOne()
@@ -694,6 +694,275 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         #endregion FTE Validation Tests
+
+        #region userName Tests
+        /// <summary>
+        /// Creates a user with a invalid user name of 51 characters.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithUserNameMoreThan50Characters()
+        {
+            const string invalidValueUserName = "123456789 123456789 123456789 123456789 12345678901";
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.UserName = invalidValueUserName;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("UserName: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["UserName"].Errors[0].ErrorMessage);            
+            Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        }
+        /// <summary>
+        /// Creates a user with a invalid user name of null.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithNullUserName()
+        {
+            const string invalidValueUserName = null;
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.UserName = invalidValueUserName;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("UserName: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["UserName"].Errors[0].ErrorMessage);
+            Assert.AreEqual("UserName: Required", newUserModel.ViewData.ModelState["UserName"].Errors[1].ErrorMessage);
+            Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        }
+        /// <summary>
+        /// Creates a user with a invalid user name of Spaces Only.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithSpacesOnlyInUserName()
+        {
+            const string invalidValueUserName = "   ";
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.UserName = invalidValueUserName;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("UserName: Required", newUserModel.ViewData.ModelState["UserName"].Errors[0].ErrorMessage);            
+            Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        } 
+        #endregion userName Tests
+
+        #region Question Tests
+        /// <summary>
+        /// Creates a user with a invalid Question of 51 characters.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithQuestionMoreThan50Characters()
+        {
+            const string invalidValueQuestion = "123456789 123456789 123456789 123456789 12345678901";
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.Question = invalidValueQuestion;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("Question: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Question"].Errors[0].ErrorMessage);            
+            Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        }
+        /// <summary>
+        /// Creates a user with a invalid Question of null.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithNullQuestion()
+        {
+            const string invalidValueQuestion = null;
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.Question = invalidValueQuestion;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("Question: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Question"].Errors[0].ErrorMessage);
+            Assert.AreEqual("Question: Required", newUserModel.ViewData.ModelState["Question"].Errors[1].ErrorMessage);
+            Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        }
+        /// <summary>
+        /// Creates a user with a invalid Question of Spaces Only.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithSpacesOnlyInQuestion()
+        {
+            const string invalidValueQuestion = "   ";
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.Question = invalidValueQuestion;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("Question: Required", newUserModel.ViewData.ModelState["Question"].Errors[0].ErrorMessage);            
+            Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        }
+        #endregion Question Tests
+
+        #region Answer Tests
+        /// <summary>
+        /// Creates a user with a invalid Question of 51 characters.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithAnswerMoreThan50Characters()
+        {
+            const string invalidValueAnswer = "123456789 123456789 123456789 123456789 12345678901";
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.Answer = invalidValueAnswer;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("Answer: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Answer"].Errors[0].ErrorMessage);
+            Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        }
+        /// <summary>
+        /// Creates a user with a invalid Answer of null.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithNullAnswer()
+        {
+            const string invalidValueAnswer = null;
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.Answer = invalidValueAnswer;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("Answer: Required", newUserModel.ViewData.ModelState["Answer"].Errors[0].ErrorMessage);
+            Assert.AreEqual("Answer: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Answer"].Errors[1].ErrorMessage);            
+            Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        }
+        /// <summary>
+        /// Creates a user with a invalid Answer of Spaces Only.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithSpacesOnlyInAnswer()
+        {
+            const string invalidValueAnswer = "   ";
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.Answer = invalidValueAnswer;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("Answer: Required", newUserModel.ViewData.ModelState["Answer"].Errors[0].ErrorMessage);
+            Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        }
+        #endregion Answer Tests
+
+        #region Email Tests
+        /// <summary>
+        /// Creates a user with a invalid Email of null.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithNullEmail()
+        {
+            const string invalidValueEmail = null;
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.Email = invalidValueEmail;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("Email: Required", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            Assert.AreEqual("Email: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Email"].Errors[1].ErrorMessage);
+            Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[2].ErrorMessage);
+            Assert.AreEqual(3, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        }
+        /// <summary>
+        /// Creates a user with a invalid Email of Spaces Only.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithSpacesOnlyEmail()
+        {
+            const string invalidValueEmail = " ";
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.Email = invalidValueEmail;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("Email: Required", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[1].ErrorMessage);
+            Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        }
+        /// <summary>
+        /// Creates a user with a invalid Email that is too long and invalid.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithTooLongEmailAndInvalid()
+        {
+            const string invalidValueEmail = "123456789 123456789 123456789 123456789 12345678901";
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.Email = invalidValueEmail;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            //Assert.AreEqual("Email: Required", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            Assert.AreEqual("Email: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[1].ErrorMessage);
+            Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        }
+
+        /// <summary>
+        /// Creates a user with a invalid Email that is too long.
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithTooLongEmail()
+        {
+            const string invalidValueEmail = "123456789@12345678901234567890123456789.12345678901";
+            CreateUserViewModel userModel = CreateValidUserModel();
+            userModel.Email = invalidValueEmail;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            //Assert.AreEqual("Email: Required", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            Assert.AreEqual("Email: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[1].ErrorMessage);
+            Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+        }
+        /// <summary>
+        /// Creates a user with a invalid Email Regex check.
+        /// RegexValidator(@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$", RegexOptions.IgnoreCase
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithInvalidEmail1()
+        {
+            const string invalidEmail = " 123@123.123";
+
+            CreateUserViewModel userModel = CreateValidUserModel();
+
+            userModel.Email = invalidEmail;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");          
+        }
+        /// <summary>
+        /// Creates a user with a invalid Email Regex check.
+        /// RegexValidator(@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$", RegexOptions.IgnoreCase
+        /// User is not saved.
+        /// Ensures the correct message is displayed.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithInvalidEmail2()
+        {
+            const string invalidEmail = "123.1*23@123.COM";
+
+            CreateUserViewModel userModel = CreateValidUserModel();
+
+            userModel.Email = invalidEmail;
+
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");          
+        }
+        #endregion Email Tests
 
         #region Tests to ensure Mocking is working as expected. These could be removed.
         /// <summary>
@@ -891,7 +1160,6 @@ namespace FSNEP.Tests.Controllers
             //If Repeat.any() isn't used, it will return the Guid only once, which means if you debug and inspect the value, it will be null the next time it is looked at.
             memberShipUser.Expect(a => a.ProviderUserKey).IgnoreArguments().Return(mockGuid).Repeat.Any();
 
-            Controller.MessageGateway.Expect(a => a.SendMessageToNewUser(userModel.User, "ignore", "ignore", "ignore", "ignore")).IgnoreArguments().Repeat.Any();
             #endregion Mocks for the Create method
             
             #region Mocks for the URL methods (In Create)
