@@ -24,6 +24,8 @@
 
     <many-to-one name="Supervisor" column="SupervisorID" class="FSNEP.Core.Domain.User, FSNEP.Core" />
 
+    <many-to-one name="Delegate" column="DelegateID" class="FSNEP.Core.Domain.User, FSNEP.Core" />
+
 	  <bag name="FundTypes" table="FundTypeXUsers">
 		  <key column="UserID" />
 		  <many-to-many column="FundTypeID" class="FSNEP.Core.Domain.FundType, FSNEP.Core" />

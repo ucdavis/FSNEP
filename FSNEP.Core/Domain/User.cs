@@ -29,6 +29,8 @@ namespace FSNEP.Core.Domain
         [NotNull]
         public virtual User Supervisor { get; set; }
 
+        public virtual User Delegate { get; set; }
+
         [NotNullNotEmpty]
         public virtual IList<FundType> FundTypes { get; set; }
 
