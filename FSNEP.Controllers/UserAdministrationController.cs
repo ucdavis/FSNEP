@@ -14,6 +14,7 @@ using System;
 using System.Web.Security;
 using FSNEP.Core.Abstractions;
 using CAESArch.Core.Utils;
+using CAESArch.Core.Validators;
 
 namespace FSNEP.Controllers
 {
@@ -351,21 +352,21 @@ namespace FSNEP.Controllers
 
     public class CreateUserViewModel : UserViewModel
     {
-        [NotNullValidator]
+        [RequiredValidator]
         [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
         public string UserName { get; set; }
 
-        [NotNullValidator]
+        [RequiredValidator]
         [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
-        [RegexValidator(@"\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b", RegexOptions.IgnoreCase,
+        [RegexValidator(@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$", RegexOptions.IgnoreCase,
             MessageTemplate = "Must be a valid email address")]
         public string Email { get; set; }
 
-        [NotNullValidator]
+        [RequiredValidator]
         [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
         public string Question { get; set; }
 
-        [NotNullValidator]
+        [RequiredValidator]
         [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
         public string Answer { get; set; }
     }
