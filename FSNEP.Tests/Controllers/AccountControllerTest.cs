@@ -8,6 +8,7 @@ using System.Web.Security;
 using FSNEP.Core.Abstractions;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core;
+using FSNEP.Tests.Core.Extensions;
 using FSNEP.Tests.Core.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FSNEP.Controllers;
@@ -367,10 +368,11 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
 
-        #region NewUser Tests
-        //NewUser Success routes to logon
-        //NewUser Failure (for each reason) routes to the viewModel
-        //New GUID routes to the New User.
+        #region New User Tests
+
+        /// <summary>
+        /// A new user returns view.
+        /// </summary>
         [TestMethod]
         public void NewUserGetReturnsView()
         {
@@ -378,6 +380,56 @@ namespace FSNEP.Tests.Controllers
             FakeUserForNewUserTests(token);           
 
             Controller.NewUser(token).AssertViewRendered();
+        }
+
+        [TestMethod]
+        public void NewUserGetReturnsViewAndNullsOutToken()
+        {
+            #region create a valid user
+            var token = Guid.NewGuid();
+            var user = new User
+                {
+                    FirstName = "FName",
+                    LastName = "LName",
+                    Salary = 1,
+                    BenefitRate = 2,
+                    FTE = 1,
+                    IsActive = true,
+                    UserName = "UserName"
+                };
+            user.Supervisor = user; //I'm my own supervisor
+            user.Projects = new List<Project>
+                           {
+                               new Project {Name = "Name", IsActive = true},
+                               new Project{Name = "Name2", IsActive = true}
+                           };
+            user.FundTypes = new List<FundType>
+                            {
+                                new FundType {Name = "Name1"},
+                                new FundType {Name = "Name2"}
+                            };
+
+            var userId = Guid.NewGuid();
+
+            user.Token = Guid.NewGuid();
+            user.SetUserID(userId);
+      
+            user.Token = token; //Set 1 to the passed value.
+            #endregion create a valid user
+
+            Assert.IsNotNull(user.Token);
+
+            IQueryable<User> userList = new[]{user}.AsQueryable();
+            var fakeUserRepository = FakeRepository<User>();
+            fakeUserRepository.Expect(a => a.Queryable).Return(userList);
+            Controller.Repository.Expect(a => a.OfType<User>()).Return(fakeUserRepository).Repeat.Any();
+
+            Controller.NewUser(token, CreateValidUserViewModel())
+                .AssertActionRedirect()
+                .ToAction<AccountController>(a => a.LogOn());
+
+            Assert.AreEqual(userId, user.Id);
+            Assert.IsNull(user.Token);
         }
 
         /// <summary>
@@ -395,6 +447,241 @@ namespace FSNEP.Tests.Controllers
             // Assert
             Assert.AreEqual("Home", result.RouteValues["controller"]);
             Assert.AreEqual("Error", result.RouteValues["action"]);
+        }
+
+        /// <summary>
+        /// New User saves valid new user.
+        /// </summary>
+        [TestMethod]
+        public void NewUserSavesValidNewUser()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);
+
+            NewUserViewModel newUserViewModel = CreateValidUserViewModel();
+
+            
+
+            Controller.NewUser(token, newUserViewModel)
+                .AssertActionRedirect()
+                .ToAction<AccountController>(a => a.LogOn());
+            
+            //TODO: In the repository test base, ensure that this nulls out the token.
+        }
+
+        #region Password Validation Tests
+        /// <summary>
+        /// New user does not save with null password.
+        /// </summary>
+        [TestMethod]
+        public void NewUserDoesNotSaveWithNullPassword()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);
+
+            NewUserViewModel newUserViewModel = CreateValidUserViewModel();
+            newUserViewModel.Password = null;
+
+            var result = (ViewResult)Controller.NewUser(token, newUserViewModel);
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+            result.ViewData.ModelState.AssertErrorsAre("Password: may not be null or empty",
+                "ConfirmPassword does not match Password");            
+        }
+
+        /// <summary>
+        /// New user does not save with Empty password.
+        /// </summary>
+        [TestMethod]
+        public void NewUserDoesNotSaveWithEmptyPassword()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);
+
+            NewUserViewModel newUserViewModel = CreateValidUserViewModel();
+            newUserViewModel.Password = "";
+            newUserViewModel.ConfirmPassword = "";
+
+            var result = (ViewResult)Controller.NewUser(token, newUserViewModel);
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+            result.ViewData.ModelState.AssertErrorsAre("Password: may not be null or empty");
+        }
+
+        /// <summary>
+        /// New user does not save with only spaces in password.
+        /// </summary>
+        [TestMethod]
+        public void NewUserDoesNotSaveWithOnlySpacesInPassword()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);
+
+            NewUserViewModel newUserViewModel = CreateValidUserViewModel();
+            newUserViewModel.Password = " ";
+            newUserViewModel.ConfirmPassword = " ";
+
+            var result = (ViewResult)Controller.NewUser(token, newUserViewModel);
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+            result.ViewData.ModelState.AssertErrorsAre("Password: may not be null or empty");
+        }
+
+        /// <summary>
+        /// New user does not save with password more than 128 characters long.
+        /// </summary>
+        [TestMethod]
+        public void NewUserDoesNotSaveWithOnlyTooLongPassword()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);
+
+            NewUserViewModel newUserViewModel = CreateValidUserViewModel();
+            newUserViewModel.Password = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789"; //129 characters long
+            newUserViewModel.ConfirmPassword = newUserViewModel.Password;
+
+            var result = (ViewResult)Controller.NewUser(token, newUserViewModel);
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+            result.ViewData.ModelState.AssertErrorsAre("Password: length must be between 0 and 128");
+        }
+
+        /// <summary>
+        /// New user does not save with confirm password different from password.
+        /// </summary>
+        [TestMethod]
+        public void NewUserDoesNotSaveWithConfirmPasswordDifferentFromPassword()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);
+
+            NewUserViewModel newUserViewModel = CreateValidUserViewModel();
+            newUserViewModel.Password = "ABC";
+            newUserViewModel.ConfirmPassword = "abc";
+
+            var result = (ViewResult)Controller.NewUser(token, newUserViewModel);
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+            result.ViewData.ModelState.AssertErrorsAre("ConfirmPassword does not match Password");
+        }
+        #endregion Password Validation Tests
+
+        #region Question Validation Tests
+        /// <summary>
+        /// New user does not save with null question.
+        /// </summary>
+        [TestMethod]
+        public void NewUserDoesNotSaveWithNullQuestion()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);
+
+            NewUserViewModel newUserViewModel = CreateValidUserViewModel();
+            newUserViewModel.Question = null;
+
+            var result = (ViewResult)Controller.NewUser(token, newUserViewModel);
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+            result.ViewData.ModelState.AssertErrorsAre("Question: may not be null or empty");
+        }
+
+        /// <summary>
+        /// New user does not save with empty question.
+        /// </summary>
+        [TestMethod]
+        public void NewUserDoesNotSaveWithEmptyQuestion()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);
+
+            NewUserViewModel newUserViewModel = CreateValidUserViewModel();
+            newUserViewModel.Question = "";
+
+            var result = (ViewResult)Controller.NewUser(token, newUserViewModel);
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+            result.ViewData.ModelState.AssertErrorsAre("Question: may not be null or empty");
+        }
+
+        /// <summary>
+        /// New user does not save with spaces only in question.
+        /// </summary>
+        [TestMethod]
+        public void NewUserDoesNotSaveWithSpacesOnlyInQuestion()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);
+
+            NewUserViewModel newUserViewModel = CreateValidUserViewModel();
+            newUserViewModel.Question = " ";
+
+            var result = (ViewResult)Controller.NewUser(token, newUserViewModel);
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+            result.ViewData.ModelState.AssertErrorsAre("Question: may not be null or empty");
+        }
+        #endregion Question Validation Tests
+
+        #region Answer Validation Tests
+        /// <summary>
+        /// New user does not save with null Answer.
+        /// </summary>
+        [TestMethod]
+        public void NewUserDoesNotSaveWithNullAnswer()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);
+
+            NewUserViewModel newUserViewModel = CreateValidUserViewModel();
+            newUserViewModel.Answer = null;
+
+            var result = (ViewResult)Controller.NewUser(token, newUserViewModel);
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+            result.ViewData.ModelState.AssertErrorsAre("Answer: may not be null or empty");
+        }
+
+        /// <summary>
+        /// New user does not save with empty Answer.
+        /// </summary>
+        [TestMethod]
+        public void NewUserDoesNotSaveWithEmptyAnswer()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);
+
+            NewUserViewModel newUserViewModel = CreateValidUserViewModel();
+            newUserViewModel.Answer = string.Empty;
+
+            var result = (ViewResult)Controller.NewUser(token, newUserViewModel);
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+            result.ViewData.ModelState.AssertErrorsAre("Answer: may not be null or empty");
+        }
+
+        /// <summary>
+        /// New user does not save with spaces only in question.
+        /// </summary>
+        [TestMethod]
+        public void NewUserDoesNotSaveWithSpacesOnlyInAnswer()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);
+
+            NewUserViewModel newUserViewModel = CreateValidUserViewModel();
+            newUserViewModel.Answer = " ";
+
+            var result = (ViewResult)Controller.NewUser(token, newUserViewModel);
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+            result.ViewData.ModelState.AssertErrorsAre("Answer: may not be null or empty");
+        }
+        #endregion Answer Validation Tests
+
+
+        #region Helper Methods
+        /// <summary>
+        /// Creates the valid user view model.
+        /// </summary>
+        /// <returns></returns>
+        private static NewUserViewModel CreateValidUserViewModel()
+        {
+            return new NewUserViewModel
+            {
+                Password = "123",
+                ConfirmPassword = "123",
+                Question = "Q",
+                Answer = "A"
+            };
         }
 
         /// <summary>
@@ -449,36 +736,7 @@ namespace FSNEP.Tests.Controllers
             Controller.Repository.Expect(a => a.OfType<User>()).Return(fakeUserRepository).Repeat.Any();
 
         }
-
-        //TODO: Something like this for NewUser
-        /*
-         [TestMethod]
-        public void ActivityCategoryGetsOnlyActiveActivityCategories()
-        {
-            //5 projects, 3 are active
-            var activityCategories =
-                new[]
-                    {
-                        new ActivityCategory { IsActive = true }, 
-                        new ActivityCategory { IsActive = true }, 
-                        new ActivityCategory { IsActive = true }, 
-                        new ActivityCategory(), 
-                        new ActivityCategory()
-                    }.
-                    AsQueryable();
-
-            var activityCategoryRepository = FakeRepository<ActivityCategory>();
-            activityCategoryRepository.Expect(a => a.Queryable).Return(activityCategories);
-
-            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository);
-
-            var result = Controller.ActivityCategories(null)
-                .AssertViewRendered()
-                .WithViewData<List<ActivityCategory>>();
-
-            Assert.AreEqual(3, result.Count, "Should only get the three active ActivityCategories");
-        }
-         */
+        #endregion Helper Methods
 
         #endregion NewUser Tests
 
@@ -668,12 +926,12 @@ namespace FSNEP.Tests.Controllers
 
             public override bool ChangePassword(string username, string oldPassword, string newPassword)
             {
-                throw new NotImplementedException();
+                return true; //Need for NewUser
             }
 
             public override bool ChangePasswordQuestionAndAnswer(string username, string password, string newPasswordQuestion, string newPasswordAnswer)
             {
-                throw new NotImplementedException();
+                return true; //Need for NewUser
             }
 
             public override MembershipUser CreateUser(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, Object providerUserKey, out MembershipCreateStatus status)
