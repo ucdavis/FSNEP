@@ -12,7 +12,7 @@
             $('form').validate();
 
             $('#recordId').cascade('#userId', {
-                ajax: { url: '/Report/GetRecordForUser/' },
+                ajax: { url: '<%= Url.Action("GetRecordForUser", "Report") %>' },
                 template: function(item) {
                     return "<option value='" + item.value + "'>" + item.text + "</option>";
                 }
