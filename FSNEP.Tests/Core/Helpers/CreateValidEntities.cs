@@ -49,7 +49,7 @@ namespace FSNEP.Tests.Core.Helpers
                            Year = 2009, 
                            Status = new Status(), 
                            User = new User(), 
-                           ReviewComment = "ReviewComent" + extra
+                           ReviewComment = "ReviewComment" + extra
                        };
         }
 
