@@ -1,5 +1,6 @@
 using System.Security.Principal;
 using System.Web.Security;
+using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Abstractions;
 
 namespace FSNEP.BLL.Impl

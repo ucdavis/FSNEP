@@ -1,11 +1,19 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using FSNEP.BLL.Impl;
 using FSNEP.Core.Domain;
 
 namespace FSNEP.Controllers
 {
     public class AdministrationController : SuperController
     {
+        public IUserBLL UserBLL;
+        
+        public AdministrationController(IUserBLL userBLL)
+        {
+            UserBLL = userBLL;
+        }
+
         /// <summary>
         /// Returns the user object indentified by the given userid.  If there is no user, return just the other information needed for creating a new user.
         /// </summary>
@@ -15,7 +23,7 @@ namespace FSNEP.Controllers
             var viewModel = new ModifyUserViewModel();
 
             //First get the lookups, like projects, fundtypes, and supervisors
-
+            var current = UserBLL.UserAuth.UserContext.Identity.Name;
 
             return View();
         }
