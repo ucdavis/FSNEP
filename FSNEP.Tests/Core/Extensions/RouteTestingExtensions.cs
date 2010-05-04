@@ -19,11 +19,11 @@ namespace FSNEP.Tests.Core.Extensions
                                                           expectedController));
             }
 
-            if (actualController != expectedController)
+            if (actualAction != expectedAction)
             {
                 throw new ArgumentException(string.Format("Action was {0}, expected {1}", actualAction,
                                                           expectedAction));
-            }
+            }            
         }
     }
 }
