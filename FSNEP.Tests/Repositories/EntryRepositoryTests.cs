@@ -52,7 +52,14 @@ namespace FSNEP.Tests.Repositories
 
         private Entry CreateValidEntry()
         {
-            var entry = new Entry {Comment = "Valid", Record = Repository.OfType<Record>().Queryable.First()};
+            var entry = new Entry
+                            {
+                                Comment = "Valid",
+                                Record = Repository.OfType<Record>().Queryable.First(),
+                                FundType = Repository.OfType<FundType>().Queryable.First(),
+                                Project = Repository.OfType<Project>().Queryable.First(),
+                                Account = Repository.OfType<Account>().Queryable.First()
+                            };
 
             return entry;
         }

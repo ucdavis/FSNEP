@@ -44,10 +44,34 @@ namespace FSNEP.Tests.Core
             {
                 //load base data
                 CreateProjects();
+                CreateAccounts();
+                CreateFundTypes();
                 CreateUsers();
                 CreateStatus();
 
                 ts.CommitTransaction();
+            }
+        }
+
+        private void CreateFundTypes()
+        {
+            //Create 3 
+            for (int i = 0; i < 6; i++)
+            {
+                var fundType = new FundType() { Name = "FundType" + i };
+
+                Repository.OfType<FundType>().EnsurePersistent(fundType);
+            }
+        }
+
+        private void CreateAccounts()
+        {
+            //Create 3
+            for (int i = 0; i < 6; i++)
+            {
+                var account = new Account() { Name = "Account" + i, IsActive = true };
+
+                Repository.OfType<Account>().EnsurePersistent(account);
             }
         }
 
@@ -93,26 +117,10 @@ namespace FSNEP.Tests.Core
             supervisor.SetUserID(userId);
 
             #region test
-            //var projects = new List<Project>
-            //                   {
-            //                       new Project {Name = "Name", IsActive = true},
-            //                       new Project{Name = "Name2", IsActive = true}
-            //                   };
-            //projects[0].SetIdTo(7);
-            //projects[1].SetIdTo(8);
-            //supervisor.Projects = projects;
+            
             supervisor.Projects.Add(Repository.OfType<Project>().GetById(1));
 
-            var fundTypes = new List<FundType>();
-            
-                fundTypes.Add(new FundType { Name = "Name1" });
-                fundTypes.Add(new FundType { Name = "Name2" });
-                fundTypes.Add(new FundType { Name = "Name3" });
-
-                fundTypes[0].SetIdTo(4);
-                fundTypes[1].SetIdTo(5);
-                fundTypes[2].SetIdTo(6);
-            
+            var fundTypes = Repository.OfType<FundType>().GetAll();
 
             supervisor.FundTypes = fundTypes;
 

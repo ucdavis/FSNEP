@@ -352,12 +352,15 @@ namespace FSNEP.Tests.Repositories
         private TimeRecordEntry CreateValidTimerecordEntry()
         {
             return new TimeRecordEntry
-            {
-                Date = ValidDate,
-                Hours = ValidHours,
-                Comment = ValidComment,
-                Record = Repository.OfType<TimeRecord>().Queryable.First()
-            };
+                       {
+                           Date = ValidDate,
+                           Hours = ValidHours,
+                           Comment = ValidComment,
+                           Record = Repository.OfType<TimeRecord>().Queryable.First(),
+                           FundType = Repository.OfType<FundType>().Queryable.First(),
+                           Project = Repository.OfType<Project>().Queryable.First(),
+                           Account = Repository.OfType<Account>().Queryable.First()
+                       };
         }
 
         #endregion Helper Methods

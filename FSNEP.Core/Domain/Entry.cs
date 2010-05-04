@@ -16,6 +16,13 @@ namespace FSNEP.Core.Domain
         [Length(256)]
         public virtual string Comment { get; set; }
 
-        //Project/FundType/FinanceAccount?
+        [NotNull]
+        public virtual Project Project { get; set; }
+
+        [NotNull]
+        public virtual FundType FundType { get; set; }
+
+        [NotNull]
+        public virtual Account Account { get; set; }
     }
 }
