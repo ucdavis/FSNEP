@@ -1,5 +1,5 @@
 ﻿using System.Web.Mvc;
-using CAESArch.IoC;
+using Castle.Windsor;
 using FSNEP.Controllers;
 using MvcContrib.Castle;
 
@@ -24,7 +24,7 @@ namespace FSNEP
 
         private static void InitializeServiceLocator()
         {
-            var container = ServiceLocator.Container;
+            var container = new WindsorContainer();
 
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container));
 
