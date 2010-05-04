@@ -19,7 +19,7 @@ namespace FSNEP.Tests.Controllers
         public AccountControllerTest()
         {
             //Register routes
-            //new RouteConfigurator().RegisterRoutes();
+            new RouteConfigurator().RegisterRoutes();
         }
 
         [TestMethod]
