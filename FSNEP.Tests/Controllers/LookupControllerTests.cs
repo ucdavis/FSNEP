@@ -121,10 +121,24 @@ namespace FSNEP.Tests.Controllers
         }
 
         [TestMethod]
-        public void RoutingProjectListGetsAllProjects()
+        public void RoutingProjectsGetsAllProjects()
         {
             "~/Administration/Lookups/Projects"
                 .ShouldMapTo<LookupController>(a => a.Projects());
+        }
+
+        [TestMethod]
+        public void RoutingInactivateProjectCallsInactivateProjectWithParameter()
+        {
+            "~/Administration/Lookups/InactivateProject/10"
+                .ShouldMapTo<LookupController>(a => a.InactivateProject(10));
+        }
+
+        [TestMethod]
+        public void RoutingCreateProjectCallsCreateProject()
+        {
+            "~/Administration/Lookups/CreateProject"
+                .ShouldMapTo<LookupController>(a => a.CreateProject(null));
         }
     }
 }

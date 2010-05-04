@@ -31,10 +31,10 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult InactivateActivityType(int activityTypeId)
+        public ActionResult InactivateActivityType(int id)
         {
             //get the account
-            var activityType = Repository.OfType<ActivityType>().GetNullableByID(activityTypeId);
+            var activityType = Repository.OfType<ActivityType>().GetNullableByID(id);
 
             if (activityType == null)
             {
@@ -97,10 +97,10 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult InactivateActivityCategory(int activityCategoryId)
+        public ActionResult InactivateActivityCategory(int id)
         {
             //get the account
-            var activityCategory = Repository.OfType<ActivityCategory>().GetNullableByID(activityCategoryId);
+            var activityCategory = Repository.OfType<ActivityCategory>().GetNullableByID(id);
 
             if (activityCategory == null)
             {
@@ -162,10 +162,10 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult InactivateExpenseType(int expenseTypeId)
+        public ActionResult InactivateExpenseType(int id)
         {
             //get the account
-            var expenseType = Repository.OfType<ExpenseType>().GetNullableByID(expenseTypeId);
+            var expenseType = Repository.OfType<ExpenseType>().GetNullableByID(id);
 
             if (expenseType == null)
             {
@@ -227,10 +227,10 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult InactivateAccount(int accountId)
+        public ActionResult InactivateAccount(int id)
         {
             //get the account
-            var account = Repository.OfType<Account>().GetNullableByID(accountId);
+            var account = Repository.OfType<Account>().GetNullableByID(id);
 
             if (account == null)
             {
@@ -296,10 +296,10 @@ namespace FSNEP.Controllers
 
         [AcceptPost]
         [Transaction]
-        public ActionResult InactivateProject(int projectId)
+        public ActionResult InactivateProject(int id)
         {
             //get the project
-            var project = Repository.OfType<Project>().GetNullableByID(projectId);
+            var project = Repository.OfType<Project>().GetNullableByID(id);
 
             if (project == null)
             {

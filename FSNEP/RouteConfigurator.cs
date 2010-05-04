@@ -24,8 +24,8 @@ namespace FSNEP
                 .WithDefaults(new {controller = "UserAdministration", action = "List", id = ""})
                 .AddWithName("UserAdministration", routes);
 
-            MvcRoute.MappUrl("Administration/Lookups/{action}")
-                .WithDefaults(new {controller = "Lookup", action = "Index"})
+            MvcRoute.MappUrl("Administration/Lookups/{action}/{id}")
+                .WithDefaults(new {controller = "Lookup", action = "Index", id=""})
                 .AddWithName("Lookups", routes);
             
             MvcRoute.MappUrl("{controller}/{action}/{id}")
