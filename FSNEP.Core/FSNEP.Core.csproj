@@ -78,6 +78,8 @@
     <Compile Include="Domain\ActivityCategory.cs" />
     <Compile Include="Domain\ActivityType.cs" />
     <Compile Include="Domain\Audit.cs" />
+    <Compile Include="Domain\CostShare.cs" />
+    <Compile Include="Domain\CostShareEntry.cs" />
     <Compile Include="Domain\Entry.cs" />
     <Compile Include="Domain\ExpenseType.cs" />
     <Compile Include="Domain\FundType.cs" />

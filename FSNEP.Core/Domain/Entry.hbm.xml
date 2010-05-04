@@ -22,6 +22,13 @@
       <property name="AdjustmentDate"></property>
       <many-to-one name="ActivityType" class="ActivityType" column="ActivityTypeID"></many-to-one>
     </joined-subclass>
+
+    <joined-subclass name="CostShareEntry" table="CostShareRecordEntry">
+      <key column="ID"></key>
+      <property name="Amount" column="ExpenseAmount"></property>
+      <property name="Description"></property>
+      <many-to-one name="ExpenseType" class="ExpenseType" column="ExpenseTypeID"></many-to-one>
+    </joined-subclass>
     
   </class>
 </hibernate-mapping>

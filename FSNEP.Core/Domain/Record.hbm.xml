@@ -23,6 +23,10 @@
       <key column="ID"></key>
       <property name="Salary"></property>
     </joined-subclass>
+
+    <joined-subclass name="CostShare" table="CostShareRecords">
+      <key column="ID"></key>
+    </joined-subclass>
     
   </class>
 </hibernate-mapping>
