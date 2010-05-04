@@ -110,39 +110,17 @@ ul#navigation3 {
    margin:-5px 0 0 70px;
 }
 
-#navigation3 li a.homebutton
-{
-    /*
-   height:0px; 
-   padding-top:31px;
-   width:85px;
-   overflow:hidden;
-   background:url(../Images/but_home.gif) no-repeat; */
-}
-
-#navigation3 li a.homebutton:hover
-{
-    /*
-   height:0px; 
-   padding-top:31px;
-   width:85px;
-   overflow:hidden;
-   background:url(../Images/but_home2.gif) no-repeat; */
-}
-
 #menu {margin: -5px 0 0 25px; min-width: 960px;}
 #menu li {margin: 0; padding: 0; float: left; display: block; width: 14em; 
-          font-size: .7em; text-align: center;
-          background: url(../Images/menu-bg.gif) left top; 
-          height: 22px; padding: 9px 5px 0; 
-          border-left: 1px solid #b9b9af; border-right: 1px solid #ebebe8;}
+          font-size: .7em; text-align: center; height: 31px;}
 #menu li.home {width: 6em;}
-#menu li a {width: 14em; height: 31px; display: block;}
+#menu li a {width: 13em; height: 22px; padding: 9px 5px 0;  display: block;
+          background: url(../Images/menu-bg.gif) left top; border-left: 1px solid #b9b9af; border-right: 1px solid #ebebe8;}
+          #menu li a:hover {background-position: left bottom;}
 #menu li.home a {width: 6em;}
-#menu li:hover {background-position: left bottom;}
 #menu li a {text-decoration: none;}
 
-#menu li ul {position: absolute; left: -9999px; margin: 5px 0 0 -4em;}
+#menu li ul {position: absolute; left: -9999px; margin: 0px 0 0 -3.5em;}
 #menu li li {clear: left; font-size: 1em; margin-left: -2px;}
 #menu li:hover ul {left: auto; z-index: 3;}
 
@@ -265,6 +243,8 @@ select#Adjust_Account, select#Adjust_ActivityType, select#ActivityType, select#A
 
 #ApproveOrDeny {margin: 2em 0;}
 
+#RoleList {margin: 0px; padding: 0px;}
+#RoleList li {list-style: none;}
 #RoleList label {width: auto; display: inline-block;}
 #RoleList input {display: inline-block; width: 20px;}
 

@@ -1,6 +1,9 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<UserPermissionsViewModel>" %>
 
-    <li class="time">Time Records
+<ul id="menu">
+    <li class="home"><%=Html.ActionLink<HomeController>(x=>x.Index(), "Home")%></li>
+            
+    <li class="time"><%=Html.ActionLink<TimeRecordController>(x => x.Current(), "Time Records")%>
     <% if (Model.IsTimeRecordUser || true) { %>
     <ul id="TimeRecordMenu">
         <li>
@@ -9,7 +12,7 @@
             <%=Html.ActionLink<TimeRecordController>(x => x.History(), "Time Record History")%></li>
     </ul>
     <% } %></li>
-    <li class="cost">Cost Share
+    <li class="cost"><%=Html.ActionLink<CostShareController>(x => x.Current(), "Cost Share")%>
     <% if (Model.IsTimeRecordUser || true)
        { %>    
     <ul id="CostShareMenu">
@@ -19,7 +22,7 @@
             <%=Html.ActionLink<CostShareController>(x => x.History(), "Cost Share History")%></li>
     </ul>
     <% } %></li>
-    <li class="super">Supervisor
+    <li class="super"><%=Html.ActionLink<SupervisorController>(x => x.TimeRecordList(), "Supervisor")%>
     <% if (Model.IsTimeRecordUser || true)
        { %>    
     <ul id="SupervisorMenu">
@@ -31,7 +34,7 @@
             <%= Html.ActionLink<SupervisorController>(x=>x.Delegate(), "Assign/Remove Delegates") %></li>
     </ul>
     <% } %></li>
-    <li class="admin">Administration
+    <li class="admin"><%=Html.ActionLink<UserAdministrationController>(x => x.List(null), "Administration")%>
     <% if (Model.IsTimeRecordUser || true)
        { %>    
     <ul id="AdministrationMenu">
@@ -49,7 +52,7 @@
         </li>
     </ul>
     <% } %></li>
-    <li class="reports">Reports
+    <li class="reports"><%=Html.ActionLink<ReportController>(x => x.TimeRecord(), "Reports")%>
     <% if (false || true)
        { //Figure out who can see which reports %>
     <ul id="ReportsMenu">
@@ -61,3 +64,4 @@
         </li>
     </ul>
     <% } %></li>
+    </ul>
