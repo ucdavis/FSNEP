@@ -97,6 +97,6 @@
     <%
        }%>
 
-    <%--//TODO--%> List of existing cost shares 
+    <% Html.RenderPartial("ExistingCostShareEntries", Model.CostShareEntries); %>
     
 </asp:Content>

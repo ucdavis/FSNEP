@@ -134,10 +134,11 @@ namespace FSNEP.Controllers
                                 {
                                     CostShare = costShare,
                                     Projects = userBLL.GetAllProjectsByUser(repository.OfType<Project>()).ToList(),
-                                    FundTypes = userBLL.GetUser().FundTypes,
+                                    FundTypes = userBLL.GetUser().FundTypes.ToList(),
                                     ExpenseTypes =
                                         repository.OfType<ExpenseType>().Queryable.Where(x => x.IsActive).OrderBy(
-                                        x => x.Name).ToList()
+                                        x => x.Name).ToList(),
+                                    CostShareEntries = repository.OfType<CostShareEntry>().Queryable.Where(x=>x.Record.Id == costShare.Id).ToList()
                                 };
 
             return viewModel;
@@ -145,6 +146,7 @@ namespace FSNEP.Controllers
 
         public CostShare CostShare { get; set; }
         public CostShareEntry Entry { get; set; }
+        public IEnumerable<CostShareEntry> CostShareEntries { get; set; }
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<FundType> FundTypes { get; set; }
         public IEnumerable<ExpenseType> ExpenseTypes { get; set; }
