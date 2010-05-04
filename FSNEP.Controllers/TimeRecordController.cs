@@ -113,19 +113,24 @@ namespace FSNEP.Controllers
 
             _timeRecordRepository.DbContext.CommitTransaction();
 
-            //return the new Id
-            return new JsonNetResult(new {id = entry.Id});
+            var modificationResult = new TimeRecordEntryModificationDto(entry.Id, entry.Hours);
+
+            return new JsonNetResult(modificationResult);
         }
 
         [AcceptPost]
         [Transaction]
-        public void RemoveEntry(int entryId)
+        public JsonNetResult RemoveEntry(int entryId)
         {
             var entryRepository = Repository.OfType<TimeRecordEntry>();
 
             var entry = entryRepository.GetById(entryId);
 
             entryRepository.Remove(entry);
+
+            var modificationResult = new TimeRecordEntryModificationDto(entry.Id, -entry.Hours);
+
+            return new JsonNetResult(modificationResult);
         }
 
         [AcceptPost]
@@ -138,14 +143,17 @@ namespace FSNEP.Controllers
 
             Check.Require(entryToUpdate != null, "Entry not found");
 
+            var originalHours = entryToUpdate.Hours;
+
             TransferValuesTo(entryToUpdate, entry);
 
             Check.Require(entryToUpdate.IsValid(), "Entry is not valid");
 
             entryRepository.EnsurePersistent(entryToUpdate);
 
-            //return the Id
-            return new JsonNetResult(new { id = entryToUpdate.Id });
+            var modificationResult = new TimeRecordEntryModificationDto(entryToUpdate.Id, entryToUpdate.Hours - originalHours);
+
+            return new JsonNetResult(modificationResult);
         }
 
         [Transaction]
@@ -200,6 +208,18 @@ namespace FSNEP.Controllers
             entryToUpdate.Hours = entry.Hours;
             entryToUpdate.ActivityType = entry.ActivityType;
         }
+    }
+
+    public class TimeRecordEntryModificationDto
+    {
+        public TimeRecordEntryModificationDto(int entryId, double hoursDelta)
+        {
+            Id = entryId;
+            HoursDelta = hoursDelta;
+        }
+
+        public int Id { get; set; }
+        public double HoursDelta { get; set; }
     }
 
     public class TimeRecordReviewViewModel

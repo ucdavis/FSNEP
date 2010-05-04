@@ -56,11 +56,11 @@ $(function() {
                 data,
                 function(result) {
                     LogMessage("Add Entry Result", result);
-                    DisplayMessage("New Entry Added with id = " + result.id);
+                    DisplayMessage("New Entry Added with id = " + result.Id);
 
                     $("#dialogTimeRecordEntry").dialog("close");
 
-                    UpdateAddEntryUI(result.id, $("#addRecordDay").val(), data.Hours);
+                    UpdateAddEntryUI(result.Id, $("#addRecordDay").val(), data.Hours);
                 },
                 'json'
             );
@@ -86,7 +86,7 @@ $(function() {
                 data,
                 function(result) {
                     LogMessage("Edit Entry Result", result);
-                    DisplayMessage("Entry Edited with id = " + result.id);
+                    DisplayMessage("Entry Edited with id = " + result.Id);
 
                     $("#dialogTimeRecordEdit").dialog("close");
                 },
