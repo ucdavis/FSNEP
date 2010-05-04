@@ -122,11 +122,11 @@ namespace FSNEP.Tests.Controllers
 
         /// <summary>
         /// Create User Saves New user
+        /// Redirects to Home Controller Index
         /// </summary>
         [TestMethod]
         public void CreateUserSavesNewUser()
         {            
-            //TODO: Clean up code.
             const string validValueName = "ValidName";
             const int validValueSalary = 1;
             const int validValueFte = 1;
@@ -176,8 +176,94 @@ namespace FSNEP.Tests.Controllers
             MockMethods(userModel);
             
             //Call the method that the UI would use to create the new user.
-            Controller.Create(userModel, supervisor.ID, projectList, fundTypeList, roleList);
+            Controller.Create(userModel, supervisor.ID, projectList, fundTypeList, roleList)
+                .AssertActionRedirect()
+                .ToAction<HomeController>(a => a.Index());
+        }
 
+        [TestMethod]
+        public void CreateUserDoesNotSaveWithTooLongFirstName()
+        {
+            const string validValueName = "ValidName";
+            const string invalidValueName = "123456789 123456789 123456789 123456789 12345678901";
+            const int validValueSalary = 1;
+            const int validValueFte = 1;
+
+            FakeProjects();
+            FakeFundTypes();
+
+            var supervisor = FakeSupervisor();
+
+            #region newUser
+            var newUser = new User
+            {
+                FirstName = invalidValueName,
+                LastName = validValueName,
+                Salary = validValueSalary,
+                FTE = validValueFte,
+                IsActive = true,
+                Supervisor = supervisor,
+            };
+
+            var userId = Guid.NewGuid();
+            newUser.SetUserID(userId);
+            #endregion newUser
+
+            #region Parameters needed for the Create Method
+            var projectList = new List<int>();
+            var fundTypeList = new List<int>();
+            var roleList = new List<string>();
+
+            projectList.Add(2); //Need to match at least 1 value from FakeProjects
+            projectList.Add(3);
+            fundTypeList.Add(4);
+            fundTypeList.Add(5);
+            roleList.Add("Supervisor");
+            roleList.Add("Timesheet User");
+            #endregion Parameters needed for the Create Method
+
+            var userModel = new CreateUserViewModel
+            {
+                Question = "Q",
+                Answer = "A",
+                User = newUser,
+                UserName = "ValidUserName",
+                Email = "test@test.edu"
+            };
+
+            MockMethods(userModel);
+            MocksForFailure(userModel);
+
+            //Call the method that the UI would use to create the new user.
+            var newUserModel = (ViewResult)Controller.Create(userModel, supervisor.ID, projectList, fundTypeList, roleList);
+            //TODO: ? .AssertActionRedirect().ToAction<UserAdministrationController>(a => a.Create())
+            Assert.AreEqual("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).", newUserModel.ViewData.ModelState["User.FirstName"].Errors[0].ErrorMessage);
+        }
+
+        private void MocksForFailure(CreateUserViewModel userModel)
+        {
+            var supervisors = new List<User> {userModel.User.Supervisor};
+            var projects = new List<Project>
+                               {
+                                   new Project {Name = "Name", IsActive = true},
+                                   new Project{Name = "Name2", IsActive = true}
+                               };
+            projects[0].SetIdTo(2);
+            projects[1].SetIdTo(3);
+
+            var fundTypes = new List<FundType>
+                                {
+                                    new FundType {Name = "Name1"},
+                                    new FundType {Name = "Name2"},
+                                    new FundType {Name = "Name3"}
+                                };
+            fundTypes[0].SetIdTo(4);
+            fundTypes[1].SetIdTo(5);
+            fundTypes[2].SetIdTo(6);
+
+            UserBLL.Expect(a => a.GetSupervisors()).Return(supervisors.AsQueryable());
+            UserBLL.Expect(a => a.GetAllProjectsByUser()).Return(projects.AsQueryable());
+            UserBLL.Expect(a => a.GetAvailableFundTypes()).Return(fundTypes.AsQueryable());
         }
        
         /// <summary>
@@ -356,15 +442,5 @@ namespace FSNEP.Tests.Controllers
             Controller.Repository.Expect(a => a.OfType<FundType>()).Return(fundRepository);
         }
 
-        public class MockMessageGateway : IMessageGateway
-        {
-            public void SendMessage(string to, string subject, string body)
-            {
-            }
-
-            public void SendMessageToNewUser(User user, string username, string userEmail, string supervisorEmail, string newUserTokenPath)
-            {
-            }
-        }
     }
 }
