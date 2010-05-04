@@ -1,9 +1,9 @@
 using System.Linq;
-using CAESArch.Core.DataInterfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Domain;
+using UCDArch.Core.PersistanceSupport;
 
 namespace FSNEP.Tests.Auditing
 {

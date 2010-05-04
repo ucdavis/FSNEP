@@ -1,9 +1,9 @@
 using System.Reflection;
-using CAESArch.Core.Domain;
-using CAESArch.Core.Utils;
+using UCDArch.Core.Utils;
 
 namespace FSNEP.Tests.Core
 {
+    /*
     /// <summary>
     /// For better data integrity, it is imperitive that the DomainObject<T,IdT>.id
     /// property is read-only and set only by the ORM.  With that said, some unit tests need 
@@ -34,4 +34,5 @@ namespace FSNEP.Tests.Core
             return entity;
         }
     }
+     */
 }

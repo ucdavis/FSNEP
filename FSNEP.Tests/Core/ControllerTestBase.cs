@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-using System.Web.Mvc;
-using CAESArch.BLL;
 using MvcContrib.TestHelper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
-using CAESArch.Core.DataInterfaces;
 using FSNEP.Controllers;
+using UCDArch.Core.DomainModel;
+using UCDArch.Core.PersistanceSupport;
 
 namespace FSNEP.Tests.Core
 {
@@ -39,12 +37,7 @@ namespace FSNEP.Tests.Core
             Controller = Builder.CreateController<CT>(constructorArgs);
         }
 
-        protected static INonStaticGenericBLLBase<T, IdT> GetStubRepository<T, IdT>()
-        {
-            return MockRepository.GenerateStub<INonStaticGenericBLLBase<T, IdT>>();
-        }
-
-        protected IRepository<T> FakeRepository<T>()
+        protected IRepository<T> FakeRepository<T>() where T : ValidatableObject
         {
             return MockRepository.GenerateStub<IRepository<T>>();
         }

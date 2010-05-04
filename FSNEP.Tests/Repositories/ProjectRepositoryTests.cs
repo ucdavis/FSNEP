@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using CAESArch.BLL;
-using CAESArch.BLL.Repositories;
-using CAESArch.Core.DataInterfaces;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Data.NHibernate;
 
 namespace FSNEP.Tests.Repositories
 {
@@ -61,8 +60,8 @@ namespace FSNEP.Tests.Repositories
         public void CanSaveCompleteAndValidProject()
         {
 
-            List<Account> allAccounts = AccountRepository.GetAll();
-            List<Account> activeAccounts = new List<Account>();
+            var allAccounts = AccountRepository.GetAll();
+            var activeAccounts = new List<Account>();
             foreach (Account account in allAccounts)
             {
                 if (account.IsActive)

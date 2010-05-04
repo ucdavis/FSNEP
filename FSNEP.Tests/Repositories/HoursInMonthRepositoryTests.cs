@@ -1,12 +1,10 @@
 ﻿using System;
-using CAESArch.BLL;
-using CAESArch.BLL.Repositories;
-using CAESArch.Core.DataInterfaces;
-using CAESArch.Core.Utils;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FSNEP.Tests.Core.Extensions;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Data.NHibernate;
+using UCDArch.Testing.Extensions;
 
 namespace FSNEP.Tests.Repositories
 {
@@ -59,7 +57,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch(Exception)
             {
-                var results = ValidateBusinessObject<HoursInMonth>.GetValidationResults(hoursInMonth).AsMessageList();
+                var results = hoursInMonth.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
                 results.AssertContains("Hours: The value must fall within the range \"1\" (Inclusive) - \"0\" (Ignore).");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.HoursInMonth could not be persisted\n\n\r\nValidation Errors: Hours, The value must fall within the range \"1\" (Inclusive) - \"0\" (Ignore).\r\n", message.Message, "Expected Exception Not encountered");

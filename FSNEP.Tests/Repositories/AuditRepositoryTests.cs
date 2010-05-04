@@ -1,11 +1,9 @@
 using System;
-using CAESArch.BLL;
-using CAESArch.Core.Utils;
 using FSNEP.Tests.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FSNEP.Core.Domain;
-using CAESArch.Core.DataInterfaces;
-using CAESArch.BLL.Repositories;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Data.NHibernate;
 
 namespace FSNEP.Tests.Repositories
 {
@@ -86,7 +84,7 @@ namespace FSNEP.Tests.Repositories
         {
             var audit = new Audit();
 
-            var isValid = ValidateBusinessObject<Audit>.IsValid(audit);
+            var isValid = audit.IsValid();
 
             Assert.AreEqual(false, isValid);
         }

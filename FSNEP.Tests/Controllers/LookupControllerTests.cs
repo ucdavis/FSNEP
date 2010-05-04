@@ -117,7 +117,7 @@ namespace FSNEP.Tests.Controllers
             
             Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
 
-            Controller.InactivateProject(activeProject.ID);
+            Controller.InactivateProject(activeProject.Id);
             
             Assert.AreEqual(false, activeProject.IsActive, "Project should have been inactivated");
             projectRepository.AssertWasCalled(a => a.EnsurePersistent(activeProject), a => a.Repeat.Once()); //Make sure we saved the change
@@ -368,7 +368,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Repository.Expect(a => a.OfType<ActivityType>()).Return(activityTypeRepository).Repeat.Any();
 
-            Controller.InactivateActivityType(activeActivityType.ID);
+            Controller.InactivateActivityType(activeActivityType.Id);
 
             Assert.AreEqual(false, activeActivityType.IsActive, "ActivityType should have been inactivated");
             activityTypeRepository.AssertWasCalled(a => a.EnsurePersistent(activeActivityType), a => a.Repeat.Once()); //Make sure we saved the change
@@ -588,7 +588,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository).Repeat.Any();
 
-            Controller.InactivateAccount(activeAccount.ID);
+            Controller.InactivateAccount(activeAccount.Id);
 
             Assert.AreEqual(false, activeAccount.IsActive, "Account should have been inactivated");
             accountRepository.AssertWasCalled(a => a.EnsurePersistent(activeAccount), a => a.Repeat.Once()); //Make sure we saved the change
@@ -794,7 +794,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository).Repeat.Any();
 
-            Controller.InactivateActivityCategory(activeActivityCategory.ID);
+            Controller.InactivateActivityCategory(activeActivityCategory.Id);
 
             Assert.AreEqual(false, activeActivityCategory.IsActive, "ActivityCategory should have been inactivated");
             activityCategoryRepository.AssertWasCalled(a => a.EnsurePersistent(activeActivityCategory), a => a.Repeat.Once()); //Make sure we saved the change
@@ -995,7 +995,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository).Repeat.Any();
 
-            Controller.InactivateExpenseType(activeExpenseType.ID);
+            Controller.InactivateExpenseType(activeExpenseType.Id);
 
             Assert.AreEqual(false, activeExpenseType.IsActive, "ExpenseType should have been inactivated");
             expenseTypeRepository.AssertWasCalled(a => a.EnsurePersistent(activeExpenseType), a => a.Repeat.Once()); //Make sure we saved the change
@@ -1127,7 +1127,7 @@ namespace FSNEP.Tests.Controllers
                 .AssertWasCalled(a => a.EnsurePersistent(newHoursInMonth), a => a.Repeat.Once());//make sure we called persist
 
             Assert.AreEqual(999, newHoursInMonth.Hours, "The newHoursInMonth should have 999 hours.");
-            Assert.AreEqual(newYearMonthComposite, newHoursInMonth.ID, "YearMonthComposite should be the same.");            
+            Assert.AreEqual(newYearMonthComposite, newHoursInMonth.Id, "YearMonthComposite should be the same.");            
             Assert.AreEqual(string.Format("{0:MMMM yyyy}: {1} Hrs", new DateTime(2009, 01, 1), 999), newHoursInMonth.ToString());
             Assert.AreEqual("Hours In Month Created Successfully", Controller.Message);
         }

@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using CAESArch.BLL;
-using CAESArch.BLL.Repositories;
-using CAESArch.Core.DataInterfaces;
 using FSNEP.BLL.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHibernate.Cfg;
 using FSNEP.Core.Domain;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Data.NHibernate;
 
 namespace FSNEP.Tests.Core
 {
@@ -26,7 +25,7 @@ namespace FSNEP.Tests.Core
         {
             Configuration config = new Configuration().Configure();
             new NHibernate.Tool.hbm2ddl.SchemaExport(config).Execute(false, true, false,
-                                                                    CAESArch.Data.NHibernate.NHibernateSessionManager.
+                                                                    NHibernateSessionManager.
                                                                         Instance.GetSession().Connection, null);
 
             LoadData();

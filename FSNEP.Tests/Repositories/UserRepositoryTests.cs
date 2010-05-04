@@ -1,8 +1,5 @@
 using System;
 using System.Linq;
-using CAESArch.BLL;
-using CAESArch.BLL.Repositories;
-using CAESArch.Core.Utils;
 using FSNEP.Tests.Core;
 using FSNEP.Tests.Core.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,7 +8,9 @@ using FSNEP.BLL.Impl;
 using Rhino.Mocks;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Abstractions;
-using FSNEP.Tests.Core.Extensions;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Data.NHibernate;
+using UCDArch.Testing.Extensions;
 
 
 namespace FSNEP.Tests.Repositories
@@ -55,12 +54,12 @@ namespace FSNEP.Tests.Repositories
             UserBLL.UserAuth.Expect(a => a.CurrentUserName).Return("currentuser");
             UserBLL.UserAuth.Expect(a => a.GetUser("currentuser")).Return(new FakeMembershipUser(UserIds[0])); //Current user is the first user
 
-            var project1 = projectRepository.GetByID(1);
-            var project2 = projectRepository.GetByID(2);
-            var project3 = projectRepository.GetByID(3);
-            var project4 = projectRepository.GetByID(4);
+            var project1 = projectRepository.GetById(1);
+            var project2 = projectRepository.GetById(2);
+            var project3 = projectRepository.GetById(3);
+            var project4 = projectRepository.GetById(4);
 
-            var currentUser = UserBLL.GetByID(UserIds[0]);
+            var currentUser = UserBLL.GetById(UserIds[0]);
 
             //The current user gets projects 1 and 3
             currentUser.Projects.Add(project1);
@@ -74,7 +73,7 @@ namespace FSNEP.Tests.Repositories
 
                 for (int i = 1; i < UserIds.Count; i++)
                 {
-                    var user = UserBLL.GetByID(UserIds[i]);
+                    var user = UserBLL.GetById(UserIds[i]);
 
                     if (i == 1) user.Projects.Add(project1); //selected
                     if (i == 2) user.Projects.Add(project2); //not selected
@@ -111,16 +110,18 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void GetAllUsersReturnsOnlyUsersWithSameProjectForProjectAdmin()
         {
+            var projectRepository = new Repository<Project>();
+
             UserBLL.UserAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleProjectAdmin)).Return(true);
 
             UserBLL.UserAuth.Expect(a => a.CurrentUserName).Return("currentuser");
             UserBLL.UserAuth.Expect(a => a.GetUser("currentuser")).Return(new FakeMembershipUser(UserIds[0])); //Current user is the first user
 
             //Give all users project1
-            var project1 = UserBLL.EntitySet<Project>().Where(p => p.ID == 1).Single();
-            var project2 = UserBLL.EntitySet<Project>().Where(p => p.ID == 2).Single();
+            var project1 = projectRepository.Queryable.Where(p => p.Id == 1).Single();
+            var project2 = projectRepository.Queryable.Where(p => p.Id == 2).Single();
 
-            var currentUser = UserBLL.GetByID(UserIds[0]);
+            var currentUser = UserBLL.GetById(UserIds[0]);
             currentUser.Projects.Add(project1);
 
             using (var ts = new TransactionScope())
@@ -129,7 +130,7 @@ namespace FSNEP.Tests.Repositories
 
                 for (int i = 1; i < UserIds.Count; i++)
                 {
-                    var user = UserBLL.GetByID(UserIds[i]);
+                    var user = UserBLL.GetById(UserIds[i]);
 
                     if (i%2 == 0)
                     {
@@ -154,19 +155,21 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void GetAllUsersReturnsAllUsersWithSameProjectForProjectAdmin()
         {
+            var projectRepository = new Repository<Project>();
+
             UserBLL.UserAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleProjectAdmin)).Return(true);
 
             UserBLL.UserAuth.Expect(a => a.CurrentUserName).Return("currentuser");
             UserBLL.UserAuth.Expect(a => a.GetUser("currentuser")).Return(new FakeMembershipUser(UserIds[0])); //Current user is the first user
 
             //Give all users project1
-            var project1 = UserBLL.EntitySet<Project>().First();
+            var project1 = projectRepository.Queryable.First();
 
             using (var ts = new TransactionScope())
             {
                 foreach (var userID in UserIds)
                 {
-                    var currentUser = UserBLL.GetByID(userID);
+                    var currentUser = UserBLL.GetById(userID);
 
                     currentUser.Projects.Add(project1);
 
@@ -191,7 +194,7 @@ namespace FSNEP.Tests.Repositories
 
             var user = UserBLL.GetUser();
 
-            Assert.AreEqual(UserIds[0], user.ID);
+            Assert.AreEqual(UserIds[0], user.Id);
         }
 
         [TestMethod]
@@ -212,7 +215,7 @@ namespace FSNEP.Tests.Repositories
             //Make one user inactive
             using (var ts = new TransactionScope())
             {
-                var user = UserBLL.GetByID(UserIds[0]);
+                var user = UserBLL.GetById(UserIds[0]);
                 user.IsActive = false;
 
                 UserBLL.EnsurePersistent(user);
@@ -251,7 +254,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(2, results.Count);
                 results.AssertContains("FirstName: The value cannot be null.");
                 results.AssertContains("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
@@ -286,7 +289,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count); 
                 results.AssertContains("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
                 throw;
@@ -319,7 +322,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
                 results.AssertContains("LastName: Required");
                 //Assert.AreEqual(true, results.Contains("LastName: Required"), "Expected the validation result to have \"LastName: Required\"");    
@@ -352,7 +355,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(2, results.Count);
                 results.AssertContains("LastName: Required");
                 results.AssertContains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
@@ -386,7 +389,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
                 results.AssertContains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
                 //Assert.AreEqual(true, results.Contains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive)."), "Expected the validation result to have \"LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).\"");
@@ -441,7 +444,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
                 results.AssertContains("Supervisor: You must select a supervisor");
                 //Assert.AreEqual(true, results.Contains("Supervisor: The value cannot be null."), "Expected the validation result to have \"Supervisor: The value cannot be null.\"");
@@ -475,7 +478,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
                 results.AssertContains("Salary: Must be greater than zero");
                 //Assert.AreEqual(true, results.Contains("Salary: Must be greater than zero"), "Expected the validation result to have \"Salary: Must be greater than zero\"");
@@ -507,7 +510,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
                 results.AssertContains("Salary: Must be greater than zero");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: Salary, Must be greater than zero\r\n", message.Message, "Expected Exception Not encountered");
@@ -541,7 +544,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
                 results.AssertContains("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
@@ -574,7 +577,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
                 results.AssertContains("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
@@ -648,7 +651,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
                 results.AssertContains("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
@@ -680,7 +683,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
                 results.AssertContains("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
@@ -713,7 +716,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception)
             {
-                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
                 results.AssertContains("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");

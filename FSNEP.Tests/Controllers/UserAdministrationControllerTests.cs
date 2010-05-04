@@ -13,15 +13,15 @@ using FSNEP.Core.Domain;
 using FSNEP.Core.Abstractions;
 using System.Web.Security;
 using FSNEP.Tests.Core.Extensions;
+using UCDArch.Testing;
 using Rhino.Mocks.Interfaces;
 
 namespace FSNEP.Tests.Controllers
 {
     [TestClass]
-    public class UserAdministrationControllerTests : ControllerTestBase<UserAdministrationController>
+    public class UserAdministrationControllerTests : Core.ControllerTestBase<UserAdministrationController>
     {
         public IUserBLL UserBll { get; set; }
-
 
         protected override void SetupController()
         {
@@ -49,8 +49,8 @@ namespace FSNEP.Tests.Controllers
         public void CreateUserReturnsCreateUserViewModel()
         {
             UserBll.Expect(a => a.GetSupervisors()).Return(new List<User>().AsQueryable());
-            UserBll.Expect(a => a.GetAllProjectsByUser()).Return(new List<Project>().AsQueryable());
-            UserBll.Expect(a => a.GetAvailableFundTypes()).Return(new List<FundType>().AsQueryable());
+            UserBll.Expect(a => a.GetAllProjectsByUser(null)).IgnoreArguments().Return(new List<Project>().AsQueryable());
+            UserBll.Expect(a => a.GetAvailableFundTypes(null)).IgnoreArguments().Return(new List<FundType>().AsQueryable());
             
             Controller.Create()
                 .AssertViewRendered()
@@ -1151,7 +1151,6 @@ namespace FSNEP.Tests.Controllers
                                 };
             fundTypes[0].SetIdTo(5);
 
-
             CreateUserViewModel userModelOriginal = CreateValidUserModel();
             CreateAndAttachProjectsToUser(userModelOriginal);
             CreateAndAttachFundTypesToUser(userModelOriginal, false);
@@ -1795,8 +1794,8 @@ namespace FSNEP.Tests.Controllers
             fundTypes[2].SetIdTo(6);
 
             UserBll.Expect(a => a.GetSupervisors()).Return(supervisors.AsQueryable());
-            UserBll.Expect(a => a.GetAllProjectsByUser()).Return(projects.AsQueryable());
-            UserBll.Expect(a => a.GetAvailableFundTypes()).Return(fundTypes.AsQueryable());
+            UserBll.Expect(a => a.GetAllProjectsByUser(null)).IgnoreArguments().Return(projects.AsQueryable());
+            UserBll.Expect(a => a.GetAvailableFundTypes(null)).IgnoreArguments().Return(fundTypes.AsQueryable());
         }
        
         /// <summary>
@@ -1816,10 +1815,10 @@ namespace FSNEP.Tests.Controllers
 
             #region Mocks for the supervisor            
             //We don't need to ignore arguments for this one because we are only doing it for a specific Supervior ID.
-            UserBll.UserAuth.MembershipService.Expect(a => a.GetUser(userModel.User.Supervisor.ID)).Return(memberShipUser).Repeat.Any();
+            UserBll.UserAuth.MembershipService.Expect(a => a.GetUser(userModel.User.Supervisor.Id)).Return(memberShipUser).Repeat.Any();
             memberShipUser.Email = "test@test.edu"; //Email for the Supervisor. If we need a different email for a user, this would need to be changed.
 
-            UserBll.Expect(a => a.GetByID(userModel.User.Supervisor.ID)).Return(userModel.User.Supervisor).Repeat.Any();
+            UserBll.Expect(a => a.GetById(userModel.User.Supervisor.Id)).Return(userModel.User.Supervisor).Repeat.Any();
             #endregion Mocks for the supervisor
 
             #region Mocks for the Create method
