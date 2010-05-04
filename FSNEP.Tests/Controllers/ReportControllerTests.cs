@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
@@ -155,6 +156,82 @@ namespace FSNEP.Tests.Controllers
         }
 
         #endregion PrintOwnTimeRecord Tests
+
+        #region PrintViewableTimeRecord Tests
+
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void PrintViewableTimeRecordThrowsExceptionWhenIdNotFound()
+        {
+            try
+            {
+                Controller.PrintViewableTimeRecord(5);
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Record not found", ex.Message);
+                throw;
+            }
+        }
+
+        [TestMethod]
+        public void PrintViewableTimeRecordWhenNoViewableUsersFoundReturnsHttpUnauthorizedResult()
+        {
+            //TODO: Fix in Controller, and/or change test. (Maybe Have it do a Check.Require on the GetAllViewableUsers())
+            var timeRecord = CreateValidEntities.TimeRecord(null);
+            timeRecord.User = _currentUser;
+            timeRecord.SetIdTo(5);
+            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+
+            _userBLL.Expect(a => a.GetAllViewableUsers()).Return(null).Repeat.Once();
+
+            Controller.PrintViewableTimeRecord(timeRecord.Id).AssertResultIs<HttpUnauthorizedResult>();
+        }
+
+
+        [TestMethod]
+        public void PrintViewableTimeRecordWhenViewableUsersDoesNotHaveCurrentUserReturnsHttpUnauthorizedResult()
+        {            
+            var timeRecord = CreateValidEntities.TimeRecord(null);
+            timeRecord.User = _currentUser;
+            timeRecord.SetIdTo(5);
+            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+
+            var users = new List<User>();
+            for (int i = 0; i < 5; i++)
+            {
+                users.Add(CreateValidEntities.User(i+1));
+            }
+
+            _userBLL.Expect(a => a.GetAllViewableUsers()).Return(users).Repeat.Once();
+
+            Controller.PrintViewableTimeRecord(timeRecord.Id).AssertResultIs<HttpUnauthorizedResult>();
+        }
+
+        [TestMethod]
+        public void PrintViewableTimeRecordWhenViewableUsersDoesHaveCurrentUserReturnsFileContentResult()
+        {
+            var timeRecord = CreateValidEntities.TimeRecord(null);
+            timeRecord.User = _currentUser;
+            timeRecord.SetIdTo(5);
+            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+
+            var users = new List<User>();
+            for (int i = 0; i < 5; i++)
+            {
+                users.Add(CreateValidEntities.User(i + 1));
+            }
+
+            users.Add(_currentUser); //So it finds it.
+
+            _userBLL.Expect(a => a.GetAllViewableUsers()).Return(users).Repeat.Once();
+            _reportBLL.Expect(a => a.GenerateIndividualTimeRecordReport(timeRecord, ReportType.PDF)).Return(
+                new ReportResult(new byte[1], "contentType")).Repeat.Once();
+
+            Controller.PrintViewableTimeRecord(timeRecord.Id).AssertResultIs<FileContentResult>();
+        }
+
+        #endregion PrintViewableTimeRecord Tests
 
         #region mocks
         /// <summary>
