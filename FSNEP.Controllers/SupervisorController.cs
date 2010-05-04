@@ -74,6 +74,44 @@ namespace FSNEP.Controllers
 
             return View(viewModel);
         }
+
+        public ActionResult ApproveOrDenyRecord(int id, string reviewComment, bool approved)
+        {
+            var record = Repository.OfType<Record>().GetNullableByID(id);
+            
+            Check.Require(record != null, "Invalid record indentifier");
+
+            if (record is TimeRecord)
+            {
+                var timeRecord = (TimeRecord) record;
+
+                if (!_timeRecordBLL.HasReviewAccess(CurrentUser, timeRecord))
+                {
+                    return RedirectToErrorPage(string.Format("{0} does not have access to approve or deny this time record", CurrentUser.Identity.Name));
+                }
+
+                _timeRecordBLL.ApproveOrDeny(timeRecord, CurrentUser, approved);
+
+                Message = string.Format("Time Record {0} Successfully", approved ? "Approved" : "Disapproved");
+
+                return this.RedirectToAction(x => x.TimeRecordList());
+            }
+            else
+            {
+                var costShare = (CostShare)record;
+
+                if (!_costShareBLL.HasReviewAccess(CurrentUser, costShare))
+                {
+                    return RedirectToErrorPage(string.Format("{0} does not have access to approve or deny this cost share", CurrentUser.Identity.Name));
+                }
+
+                _costShareBLL.ApproveOrDeny(costShare, CurrentUser, approved);
+
+                Message = string.Format("Cost Record {0} Successfully", approved ? "Approved" : "Disapproved");
+
+                return this.RedirectToAction(x => x.CostShareList());
+            }
+        }
     }
 
     public class ReviewViewModel<T,TEnT> where TEnT : Entry where T : Record

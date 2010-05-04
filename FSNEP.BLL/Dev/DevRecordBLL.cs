@@ -66,6 +66,11 @@ namespace FSNEP.BLL.Dev
             //Do nothing
         }
 
+        public void ApproveOrDeny(T record, IPrincipal user, bool approve)
+        {
+            //Do nothing
+        }
+
         /// <summary>
         /// Just return everything and order it correctly
         /// </summary>

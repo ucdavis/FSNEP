@@ -46,7 +46,15 @@ namespace FSNEP.BLL.Interfaces
 
         DateTime GetCurrentSheetDate();
         
+        /// <summary>
+        /// Submit the record 
+        /// </summary>
         void Submit(T record, IPrincipal user);
+
+        /// <summary>
+        /// Approve or deny the record
+        /// </summary>
+        void ApproveOrDeny(T record, IPrincipal user, bool approve);
 
         /// <summary>
         /// Returns all of the reviewable & current records for the given supervisor's reviewees.
@@ -58,5 +66,6 @@ namespace FSNEP.BLL.Interfaces
         /// </remarks>
         /// <param name="user">The user who will review the record</param>
         IEnumerable<T> GetReviewableAndCurrentRecords(IPrincipal user);
+
     }
 }

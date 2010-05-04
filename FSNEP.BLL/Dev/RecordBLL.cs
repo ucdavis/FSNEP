@@ -220,5 +220,21 @@ namespace FSNEP.BLL.Dev
 
             PersistRecordWithTracking(record, user, _repository);
         }
+
+        public void ApproveOrDeny(T record, IPrincipal user, bool approve)
+        {
+            var recordStatusOption = record.Status.NameOption;
+            var newStatusName = approve ? Status.GetName(Status.Option.Approved) : Status.GetName(Status.Option.Disapproved);
+            
+            Check.Require(recordStatusOption == Status.Option.PendingReview,
+                          "Record must be have the pending review status in order to be approved or denied");
+
+            Status approveOrDenyStatus = _repository.OfType<Status>()
+                .Queryable.Where(x => x.Name == newStatusName).Single();
+
+            record.Status = approveOrDenyStatus;//Set the status to approved or denied
+
+            PersistRecordWithTracking(record, user, _repository);
+        }
     }
 }
