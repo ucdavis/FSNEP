@@ -145,7 +145,11 @@ namespace FSNEP.Tests.Controllers
 
             _timeRecordRepository.AssertWasCalled(a => a.EnsurePersistent(timeRecord));
             Assert.IsNotNull(result);
-            Assert.AreEqual("{ id = 24 }", result.Data.ToString());
+            Assert.IsTrue(result.Data.GetType() == typeof(TimeRecordEntryModificationDto));
+
+            var timeRecordEntryModificationDto = (TimeRecordEntryModificationDto)result.Data;
+            Assert.AreEqual(6.5, timeRecordEntryModificationDto.HoursDelta);
+            Assert.AreEqual(24, timeRecordEntryModificationDto.Id);
         }
 
         /// <summary>
