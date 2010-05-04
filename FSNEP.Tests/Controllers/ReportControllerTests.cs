@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
@@ -16,6 +17,7 @@ using MvcContrib.TestHelper;
 using Rhino.Mocks;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Testing;
+using UCDArch.Web.ActionResults;
 
 namespace FSNEP.Tests.Controllers
 {
@@ -27,6 +29,7 @@ namespace FSNEP.Tests.Controllers
         private readonly IUserBLL _userBLL = MockRepository.GenerateStub<IUserBLL>();
 
         private readonly IRepository<TimeRecord> _timeRecordRepository;
+        private readonly IRepository<Project> _projectRepository;
 
         private readonly User _currentUser = CreateValidEntities.User(null);
         private readonly IPrincipal _principal = new MockPrincipal();
@@ -37,6 +40,7 @@ namespace FSNEP.Tests.Controllers
         {
             Controller.ControllerContext.HttpContext.User = _principal;
             _timeRecordRepository = FakeRepository<TimeRecord>();
+            _projectRepository = FakeRepository<Project>();
             Controller.Repository.Expect(a => a.OfType<TimeRecord>()).Return(_timeRecordRepository);
         }
 
@@ -176,14 +180,15 @@ namespace FSNEP.Tests.Controllers
 
         [TestMethod]
         public void PrintViewableTimeRecordWhenNoViewableUsersFoundReturnsHttpUnauthorizedResult()
-        {
-            //TODO: Fix in Controller, and/or change test. (Maybe Have it do a Check.Require on the GetAllViewableUsers())
+        {            
             var timeRecord = CreateValidEntities.TimeRecord(null);
             timeRecord.User = _currentUser;
             timeRecord.SetIdTo(5);
             _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
 
-            _userBLL.Expect(a => a.GetAllViewableUsers()).Return(new List<User>()).Repeat.Once();
+            var emptyUsers = new List<User>();
+
+            _userBLL.Expect(a => a.GetAllViewableUsers()).Return(emptyUsers).Repeat.Once();
 
             Controller.PrintViewableTimeRecord(timeRecord.Id).AssertResultIs<HttpUnauthorizedResult>();
         }
@@ -226,12 +231,165 @@ namespace FSNEP.Tests.Controllers
 
             _userBLL.Expect(a => a.GetAllViewableUsers()).Return(users).Repeat.Once();
             _reportBLL.Expect(a => a.GenerateIndividualTimeRecordReport(timeRecord, ReportType.PDF)).Return(
-                new ReportResult(new byte[1], "contentType")).Repeat.Once();
+                new ReportResult(new byte[1], "contentType")).Repeat.Once();            
 
             Controller.PrintViewableTimeRecord(timeRecord.Id).AssertResultIs<FileContentResult>();
         }
 
         #endregion PrintViewableTimeRecord Tests
+
+        #region TimeRecord Tests
+
+        [TestMethod]
+        public void TimeRecordWithoutParametersReturnsListOfAllViewableUsers()
+        {
+            var users = new List<User>();
+            for (int i = 0; i < 5; i++)
+            {
+                users.Add(CreateValidEntities.User(i + 1));
+            }
+            _userBLL.Expect(a => a.GetAllViewableUsers()).Return(users).Repeat.Once();
+
+            var result = Controller.TimeRecord()
+                .AssertViewRendered()
+                .WithViewData<List<User>>();
+            Assert.AreEqual(5, result.Count);
+        }
+
+        [TestMethod]
+        public void TimeRecordWithParameterCallsPrintViewableTimeRecord()
+        {
+            var timeRecord = CreateValidEntities.TimeRecord(null);
+            timeRecord.User = _currentUser;
+            timeRecord.SetIdTo(5);
+            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+
+            var users = new List<User>();
+            for (int i = 0; i < 5; i++)
+            {
+                users.Add(CreateValidEntities.User(i + 1));
+            }
+
+            users.Add(_currentUser); //So it finds it.
+
+            _userBLL.Expect(a => a.GetAllViewableUsers()).Return(users).Repeat.Once();
+            _reportBLL.Expect(a => a.GenerateIndividualTimeRecordReport(timeRecord, ReportType.PDF)).Return(
+                new ReportResult(new byte[1], "contentType")).Repeat.Once();
+            
+            Controller.TimeRecord(timeRecord.Id).AssertResultIs<FileContentResult>();
+        }
+
+        #endregion TimeRecord Tests
+
+        #region GetRecordForUser Tests
+
+        [TestMethod]
+        public void GetRecordForUserWithNullParameterReturnsJsonWithNull()
+        {
+            var result = Controller.GetRecordForUser(null);
+            Assert.IsInstanceOfType(result, typeof(JsonNetResult));
+            var jsonNetResult = (JsonNetResult) result;
+            Assert.AreEqual("[Data was Null]", jsonNetResult.JsonResultString);
+        }
+
+
+        [TestMethod]
+        public void GetRecordForUserWithNotFoundGuidReturnsEmptyJsonResult()
+        {
+
+            var users = new List<User>();
+            for (int i = 0; i < 3; i++)
+            {
+                users.Add(CreateValidEntities.User(i + 2));
+            }
+            var timeRecords = new List<TimeRecord>();
+            for (int i = 0; i < 5; i++)
+            {
+                timeRecords.Add(CreateValidEntities.TimeRecord(i + 1));
+                timeRecords[i].SetIdTo(i + 1);
+            }
+            timeRecords[0].User = users[0];
+            timeRecords[1].User = users[0];
+            timeRecords[2].User = users[2];
+            timeRecords[3].User = users[2];
+            timeRecords[4].User = users[2];
+
+            _timeRecordRepository.Expect(a => a.Queryable).Return(timeRecords.AsQueryable()).Repeat.Once();
+            var result = (JsonNetResult)Controller.GetRecordForUser(users[1].Id);
+            Assert.IsNotNull(result);
+            Assert.AreEqual("[]", result.JsonResultString);
+        }
+        
+        [TestMethod]
+        public void GetRecordForUserWithFoundGuidReturnsJsonResult()
+        {
+            
+            var users = new List<User>();
+            for (int i = 0; i < 3; i++)
+            {
+                users.Add(CreateValidEntities.User(i + 2));                
+            }
+            var timeRecords = new List<TimeRecord>();
+            for (int i = 0; i < 5; i++)
+            {
+                timeRecords.Add(CreateValidEntities.TimeRecord(i+1));
+                timeRecords[i].SetIdTo(i + 1);
+            }
+            timeRecords[0].User = users[0];
+            timeRecords[1].User = users[0];
+            timeRecords[2].User = users[2];
+            timeRecords[3].User = users[2];
+            timeRecords[4].User = users[2];
+
+            _timeRecordRepository.Expect(a => a.Queryable).Return(timeRecords.AsQueryable()).Repeat.Once();
+            var result = (JsonNetResult)Controller.GetRecordForUser(users[2].Id);
+            Assert.IsNotNull(result);
+            Assert.AreEqual("[{\"value\":3,\"text\":\"October 2009\"},{\"value\":4,\"text\":\"October 2009\"},{\"value\":5,\"text\":\"October 2009\"}]", result.JsonResultString); 
+        }
+
+        #endregion GetRecordForUser Tests
+
+        #region CostShare Tests
+
+        [TestMethod]
+        public void CostShareWithoutParametersReturnsListOfProjects()
+        {
+            var projects = new List<Project>();
+            for (int i = 0; i < 5; i++)
+            {
+                projects.Add(CreateValidEntities.Project(i + 1));
+                projects[i].SetIdTo(i + 1); 
+            }
+
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(_projectRepository).Repeat.Once();
+            _userBLL.Expect(a => a.GetAllProjectsByUser(_projectRepository)).Return(projects.AsQueryable()).Repeat.Once();
+
+            var result = Controller.CostShare()
+                .AssertViewRendered()
+                .WithViewData<List<Project>>();
+            Assert.IsNotNull(result);
+            Assert.AreEqual(5, result.Count);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void CostShareWithParametersThrowsExceptionIfProjectIdNotFound()
+        {
+            try
+            {
+                Controller.Repository.Expect(a => a.OfType<Project>()).Return(_projectRepository).Repeat.Once();
+                _projectRepository.Expect(a => a.GetNullableByID(5)).Return(null).Repeat.Once();
+                Controller.CostShare(5, 2009);
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Precondition failed.", ex.Message);
+                throw;
+            }  
+        }
+        
+        
+        #endregion CostShare Tests
 
         #region mocks
         /// <summary>
