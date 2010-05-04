@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<FSNEP.Controllers.UserViewModel>" %>
+<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<UserViewModel>" %>
 <%@ Import Namespace="FSNEP.Core.Domain"%>
     
 <%= Html.ClientSideValidation<User>("User") %>
@@ -130,9 +130,17 @@
 <div>
     Subordinates:
     
+    <% if (Model.Subordinates.Count() == 0)
+       { %>
+        None
+    <% }
+       else
+       { %>
     <ul>
-    <% foreach (var sub in Model.Subordinates) { %>
-        <li><%= Html.Encode(sub.FullName) %></li>
+    <% foreach (var sub in Model.Subordinates)
+       { %>
+        <li><%= Html.Encode(sub.FullName)%></li>
     <% } %>
     </ul>
+    <% } %>
 </div>

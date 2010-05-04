@@ -430,7 +430,8 @@ namespace FSNEP.Controllers
                                     Supervisors = baseViewModel.Supervisors,
                                     Projects = baseViewModel.Projects,
                                     FundTypes = baseViewModel.FundTypes,
-                                    AvailableRoles = baseViewModel.AvailableRoles
+                                    AvailableRoles = baseViewModel.AvailableRoles,
+                                    Subordinates = baseViewModel.Subordinates
                                 };
 
             return viewModel;
