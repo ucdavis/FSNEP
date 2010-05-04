@@ -206,6 +206,7 @@ namespace FSNEP.Tests.Repositories
         }
 
         [TestMethod] //TODO:Review
+        [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithOnlySpacesInLastName()
         {
             var userBLL = new UserBLL(null);
@@ -227,9 +228,373 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception message)
             {
-                if (message.Message != "Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: LastName, Required\r\n")
-                    throw;
+                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: LastName, Required\r\n", message.Message, "Expected Exception Not encountered");
+                throw;
             }
+        }
+
+        [TestMethod] //TODO:Review
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithNullLastName()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = null,
+                Salary = 1,
+                FTE = 1,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            try
+            {
+                userBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: LastName, The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).\r\nLastName, Required\r\n", message.Message, "Expected Exception Not encountered");
+                throw;
+            }
+        }
+
+        [TestMethod] //TODO:Review
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithLastNameLongerThan50Characters()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = "123456789 123456789 123456789 123456789 123456789 1",
+                Salary = 1,
+                FTE = 1,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            try
+            {
+                userBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: LastName, The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                throw;
+            }
+        }
+
+        [TestMethod] //TODO:Review
+        public void UserSavesWithLastName1CharacterLong()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = "1",
+                Salary = 1,
+                FTE = 1,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            userBLL.EnsurePersistent(user, true);            
+        }
+
+        [TestMethod] //TODO:Review
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithNullSupervisor()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+               {
+                   FirstName = "FName",
+                   LastName = "LName",
+                   Salary = 1,
+                   FTE = 1,
+                   IsActive = true,
+                   Supervisor = null,
+               };
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            try
+            {
+                userBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: Supervisor, The value cannot be null.\r\n", message.Message, "Expected Exception Not encountered");
+                throw;
+            }
+        }
+
+        [TestMethod] //TODO:Review
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithSalaryZero()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = "LName",
+                Salary = 0,
+                FTE = 1,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            try
+            {
+                userBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: Salary, Must be greater than zero\r\n", message.Message, "Expected Exception Not encountered");
+                throw;
+            }
+        }
+
+        [TestMethod] //TODO:Review
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithSalaryLessThanZero()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = "LName",
+                Salary = -1,
+                FTE = 1,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            try
+            {
+                userBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: Salary, Must be greater than zero\r\n", message.Message, "Expected Exception Not encountered");
+                throw;
+            }
+        }
+
+        [TestMethod] //TODO:Review
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithBenifitRateLessThanZero()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = "LName", 
+                Salary = 1,
+                BenefitRate = -1,
+                FTE = 1,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            try
+            {
+                userBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                throw;
+            }
+        }
+
+        [TestMethod] //TODO:Review
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithBenifitRateGreaterThan2()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = "LName",
+                Salary = 1,
+                BenefitRate = 2.00001,
+                FTE = 1,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            try
+            {
+                userBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                throw;
+            }
+        }
+
+        [TestMethod] //TODO:Review
+        public void UserSavesWithBenifitRateOfZero()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = "LName",
+                Salary = 1,
+                BenefitRate = 0,
+                FTE = 1,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            userBLL.EnsurePersistent(user, true);            
+        }
+
+        [TestMethod] //TODO:Review
+        public void UserSavesWithBenifitRateOf2()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = "LName",
+                Salary = 1,
+                BenefitRate = 2,
+                FTE = 1,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            userBLL.EnsurePersistent(user, true);
+        }
+
+        [TestMethod] //TODO:Review
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithFteLessThanZero()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = "LName",
+                Salary = 1,
+                BenefitRate = 1,
+                FTE = -1,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            try
+            {
+                userBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                throw;
+            }
+        }
+
+        [TestMethod] //TODO:Review
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithFteGreaterThan1()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = "LName",
+                Salary = 1,
+                BenefitRate = 1,
+                FTE = 1.0009,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            try
+            {
+                userBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                throw;
+            }
+        }
+
+        [TestMethod] //TODO:Review
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithFteOfZero()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = "LName",
+                Salary = 1,
+                BenefitRate = 1,
+                FTE = 0,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            try
+            {
+                userBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                throw;
+            }          
+        }
+
+        [TestMethod] //TODO:Review
+        public void UserSavesWithFteBetweenzeroAnd1()
+        {
+            var userBLL = new UserBLL(null);
+            var user = new User
+            {
+                FirstName = "FName",
+                LastName = "LName",
+                Salary = 1,
+                BenefitRate = 1,
+                FTE = 0.00001,
+                IsActive = true,
+            };
+            user.Supervisor = user; //I'm my own supervisor
+
+            var userId = Guid.NewGuid();
+            user.SetUserID(userId);
+            userBLL.EnsurePersistent(user, true);            
         }
     }
 }
