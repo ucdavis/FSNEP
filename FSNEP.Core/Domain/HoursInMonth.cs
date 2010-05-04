@@ -3,20 +3,19 @@ using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
 
 namespace FSNEP.Core.Domain
 {
-    public class HoursInMonth : DomainObject<HoursInMonth, YearMonthComposite>
+    public class HoursInMonth : LookupObject<HoursInMonth, YearMonthComposite>
     {
         [RangeValidator(1, RangeBoundaryType.Inclusive, 0, RangeBoundaryType.Ignore)] //greater than 0
-            public virtual int Hours{ get; set; }
+        public virtual int Hours{ get; set; }
 
         public HoursInMonth()
         {
 
         }
 
-        public HoursInMonth(int year, int month, int hours)
+        public HoursInMonth(int year, int month)
         {
-            this.Hours = hours;
-            this.id = new YearMonthComposite(month, year);
+            id = new YearMonthComposite(month, year);
         }
     }
 
