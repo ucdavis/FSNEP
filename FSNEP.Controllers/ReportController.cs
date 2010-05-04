@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using FSNEP.BLL.Dev;
@@ -27,7 +28,9 @@ namespace FSNEP.Controllers
         /// <summary>
         /// Print out the time record for the given time record id
         /// </summary>
-        public ActionResult PrintTimeRecord(int id)
+        /// <remarks>
+        /// </remarks>
+        public ActionResult PrintOwnTimeRecord(int id)
         {
             var record = Repository.OfType<TimeRecord>().GetNullableByID(id);
 
@@ -39,6 +42,56 @@ namespace FSNEP.Controllers
             }
 
             return _reportBLL.GenerateIndividualTimeRecordReport(record, ReportType.PDF).ToFileResult("TimeRecord.pdf");
+        }
+
+        /// <summary>
+        /// Print out the time record for the given time record id
+        /// </summary>
+        public ActionResult PrintViewableTimeRecord(int id)
+        {
+            var record = Repository.OfType<TimeRecord>().GetNullableByID(id);
+
+            Check.Require(record != null, "Record not found");
+
+            var viewableUsers = _userBLL.GetAllViewableUsers();
+
+            var canView = viewableUsers.Contains(record.User);
+
+            if (!canView)
+            {
+                return new HttpUnauthorizedResult();
+            }
+            
+            return _reportBLL.GenerateIndividualTimeRecordReport(record, ReportType.PDF).ToFileResult("TimeRecord.pdf");
+        }
+
+        /// <summary>
+        /// Chose a time record to print
+        /// </summary>
+        public ActionResult TimeRecord()
+        {
+            var users = _userBLL.GetAllViewableUsers().ToList();
+
+            return View(users);
+        }
+
+        [AcceptPost]
+        public ActionResult TimeRecord(int recordId)
+        {
+            return PrintViewableTimeRecord(recordId);
+        }
+
+        public ActionResult GetRecordForUser(Guid? val)
+        {
+            if (val.HasValue == false) return Json(null);
+
+            var userId = val.Value;
+
+            var records = Repository.OfType<TimeRecord>().Queryable.Where(x => x.User.Id == userId).ToList();
+
+            var keyValuePair = records.Select(x => new {value = x.Id, text = x.Date.ToString("MMMM yyyy")});
+
+            return Json(keyValuePair);
         }
 
         /// <summary>
