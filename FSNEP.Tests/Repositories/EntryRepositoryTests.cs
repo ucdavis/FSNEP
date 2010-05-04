@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using FSNEP.Tests.Core;
+using FSNEP.Tests.Core.Helpers;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -52,17 +53,24 @@ namespace FSNEP.Tests.Repositories
 
         private Entry CreateValidEntry()
         {
-            var entry = new Entry
-                            {
-                                Comment = "Valid",
-                                Record = Repository.OfType<Record>().Queryable.First(),
-                                FundType = Repository.OfType<FundType>().Queryable.First(),
-                                Project = Repository.OfType<Project>().Queryable.First(),
-                                Account = Repository.OfType<Account>().Queryable.First()
-                            };
+            var entry = CreateValidEntities.Entry(null);
+            entry.Record = Repository.OfType<Record>().Queryable.First();
+            entry.FundType = Repository.OfType<FundType>().Queryable.First();
+            entry.Project = Repository.OfType<Project>().Queryable.First();
+            entry.Account = Repository.OfType<Account>().Queryable.First();
+            //var entry = new Entry
+            //                {
+            //                    Comment = "Valid",
+            //                    Record = Repository.OfType<Record>().Queryable.First(),
+            //                    FundType = Repository.OfType<FundType>().Queryable.First(),
+            //                    Project = Repository.OfType<Project>().Queryable.First(),
+            //                    Account = Repository.OfType<Account>().Queryable.First()
+            //                };
 
             return entry;
         }
+
+        #region Init
 
         protected override void LoadData()
         {
@@ -86,6 +94,7 @@ namespace FSNEP.Tests.Repositories
             Repository.OfType<Record>().EnsurePersistent(record);
         }
 
+        #endregion Init
         private Record CreateValidRecord()
         {
             var record = new Record
