@@ -1,5 +1,6 @@
 using System.Web.Mvc;
 using FSNEP.Controllers.Helpers.Attributes;
+using MvcContrib;
 
 namespace FSNEP.Controllers
 {
@@ -9,8 +10,8 @@ namespace FSNEP.Controllers
         protected RedirectToRouteResult RedirectToErrorPage(string message)
         {
             Message = message;
-
-            return RedirectToAction("Error", "Home");
+            //return RedirectToAction("Error", "Home");
+            return this.RedirectToAction<HomeController>(a => a.Error(message));
         }
     }
 }
