@@ -147,7 +147,40 @@ namespace FSNEP.Tests.Controllers
         }
 
         /// <summary>
-        /// Based on InactivateProjectRedirectsOnValidProjectId test
+        /// Create ActivityType Saves New ActivityType
+        /// </summary>
+        [TestMethod]
+        public void CreateActivityTypeSavesNewActivityType()
+        {
+            const string validIndicator = "12";
+            const int validCategoryId = 1;
+
+            //CreateActivityType calls GetNullableById for ActivityCategory
+            var validActivityCategory = new ActivityCategory();
+            var validActivityCategoryRepository = FakeRepository<ActivityCategory>();
+            validActivityCategoryRepository.Expect(a => a.GetNullableByID(validCategoryId)).Return(validActivityCategory);
+            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(validActivityCategoryRepository).Repeat.Any();
+
+            var newActivityType = new ActivityType() { Name = "ValidActivityType", Indicator = validIndicator};
+
+            var activityTypeRepository = FakeRepository<ActivityType>();
+            activityTypeRepository
+                .Expect(a => a.EnsurePersistent(Arg<ActivityType>.Is.Anything))
+                .WhenCalled(a => newActivityType = (ActivityType)a.Arguments.First()); //set newActivityType to the activityType that was saved
+
+            Controller.Repository.Expect(a => a.OfType<ActivityType>()).Return(activityTypeRepository);
+
+            Controller.CreateActivityType(newActivityType, validCategoryId);
+
+            activityTypeRepository
+                .AssertWasCalled(a => a.EnsurePersistent(newActivityType), a => a.Repeat.Once());//make sure we called persist
+
+            Assert.AreEqual(true, newActivityType.IsActive, "The created activityType should be active");
+            Assert.AreEqual("ValidActivityType", newActivityType.Name);
+        }
+
+        /// <summary>
+        /// Inactivate ActivityType Redirects On Valid ActivityTypeId
         /// </summary>
         [TestMethod]
         public void InactivateActivityTypeRedirectsOnValidActivityTypeId()
