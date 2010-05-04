@@ -1,7 +1,7 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<UserListViewModel>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
-	ListUsers
+	User Admin: User List
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -27,9 +27,13 @@
         });
     </script>
 
-    <h2>ListUsers</h2>
+    <h2>User Admin: User List</h2>
 
     <h3><%= Html.Encode(TempData["Message"]) %></h3>
+    
+    <p>
+        <%= Html.ActionLink("Create New", "Create") %>
+    </p>
 
     <p>
             <%= this.Select("dlUserJump").Options(Model.Users, a=>a.Id, a=>a.FullNameLastFirst).FirstOption("--Search--").Label("Jump to User: ") %>
@@ -64,9 +68,7 @@
            
             %>
 
-    <p>
-        <%= Html.ActionLink("Create New", "Create") %>
-    </p>
+    
 
 </asp:Content>
 

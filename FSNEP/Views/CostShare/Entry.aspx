@@ -96,7 +96,7 @@
                 <%= this.TextArea("Entry.Comment").Label("Comment:")%>
             </p></span>
             <p>
-                <input type="submit" value="Add Expense" />
+                <input type="submit" value="SAVE COST SHARE ENTRY" />
             </p>
         </fieldset>
     
