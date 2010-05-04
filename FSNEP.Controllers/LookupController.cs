@@ -14,13 +14,79 @@ namespace FSNEP.Controllers
         public IProjectBLL ProjectBLL;
         public IAccountBLL AccountBLL;
         public IExpenseTypeBLL ExpenseTypeBLL;
+        public IActivityTypeBLL ActivityTypeBLL;
 
-        public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL, IExpenseTypeBLL expenseTypeBLL)
+        public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL, IExpenseTypeBLL expenseTypeBLL, IActivityTypeBLL activityTypeBLL)
         {
             ProjectBLL = projectBLL;
             AccountBLL = accountBLL;
             ExpenseTypeBLL = expenseTypeBLL;
+            ActivityTypeBLL = activityTypeBLL;
         }
+
+        [Transaction]
+        public ActionResult ActivityCategories()
+        {
+            var activeActivityCategories = ActivityTypeBLL.GetActiveActivityCategories();
+            
+            return View(activeActivityCategories);
+        }
+
+        [AcceptPost]
+        public ActionResult InactivateActivityCategories(int activityCategoryId)
+        {
+            //get the account
+            var activityCategory = ActivityTypeBLL.GetActivityCategoryRepository().GetNullableByID(activityCategoryId);
+
+            if (activityCategory == null)
+            {
+                Message = "Activity Category Not Found";
+
+                return this.RedirectToAction(a => a.ActivityCategories());
+            }
+
+            //inactivate the project
+            using (var ts = new TransactionScope())
+            {
+                activityCategory.IsActive = false;
+
+                ActivityTypeBLL.GetActivityCategoryRepository().EnsurePersistent(activityCategory);
+
+                ts.CommitTransaction();
+            }
+
+            Message = "Activity Category Removed Successfully";
+
+            return this.RedirectToAction(a => a.ActivityCategories());
+        }
+
+        [AcceptPost]
+        public ActionResult CreateActivityCategory(ActivityCategory newActivityCategory)
+        {
+            newActivityCategory.IsActive = true;
+
+            ValidationHelper<ActivityCategory>.Validate(newActivityCategory, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                Message = "Activity Category Creation Failed";
+
+                return this.RedirectToAction(a => a.ActivityCategories());
+            }
+
+            //Add the new project
+            using (var ts = new TransactionScope())
+            {
+                ActivityTypeBLL.GetActivityCategoryRepository().EnsurePersistent(newActivityCategory);
+
+                ts.CommitTransaction();
+            }
+
+            Message = "Activity Category Created Successfully";
+
+            return this.RedirectToAction(a => a.ActivityCategories());
+        }
+
 
         [Transaction]
         public ActionResult ExpenseTypes()

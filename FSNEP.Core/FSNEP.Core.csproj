@@ -62,6 +62,7 @@
     <Compile Include="Abstractions\Providers.cs" />
     <Compile Include="Abstractions\RoleNames.cs" />
     <Compile Include="Domain\Account.cs" />
+    <Compile Include="Domain\ActivityCategory.cs" />
     <Compile Include="Domain\ActivityType.cs" />
     <Compile Include="Domain\ExpenseSheet.cs" />
     <Compile Include="Domain\ExpenseSheetEntry.cs" />
@@ -99,6 +100,9 @@
     <EmbeddedResource Include="Domain\TimeSheetEntry.hbm.xml" />
     <EmbeddedResource Include="Domain\User.hbm.xml" />
     <EmbeddedResource Include="Domain\UserToken.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\ActivityCategoryType.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
