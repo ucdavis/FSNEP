@@ -486,7 +486,7 @@ namespace FSNEP.Tests.Controllers
         private void MockModifySetRoles(string userName, List<string> newRoles)
         {
             //TODO: Figure out how to get this to work.
-            UserBll.Expect(a => a.SetRoles(userName, newRoles)).CallOriginalMethod();
+            UserBll.Expect(a => a.SetRoles(userName, newRoles)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
 
         }
