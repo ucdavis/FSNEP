@@ -39,6 +39,18 @@ namespace FSNEP.Core.Domain
         [NotNull]
         public virtual Status Status { get; set; }
 
+        protected virtual HoursInMonth HoursInMonth { get; set; }
+
+        public virtual double TargetHours
+        {
+            get
+            {
+                if (HoursInMonth == null) return 0;
+
+                return User.FTE * HoursInMonth.Hours;
+            }
+        }
+
         [Length(512)]
         public virtual string ReviewComment { get; set; }
 

@@ -13,6 +13,11 @@
 
     <many-to-one name="User" class="User" column="UserId" outer-join="true"></many-to-one>
     <many-to-one name="Status" class="Status" column="StatusID" outer-join="true"></many-to-one>
+    
+    <many-to-one name="HoursInMonth" class="HoursInMonth" outer-join="true" update="false" insert="false" not-found="ignore">
+        <column name="Month"></column>
+        <column name="Year"></column>
+    </many-to-one>
 
     <bag name="Entries" table="Entries" inverse="true" cascade="all-delete-orphan">
       <key column="RecordID" />
