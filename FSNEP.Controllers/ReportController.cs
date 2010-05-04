@@ -8,6 +8,7 @@ using FSNEP.Controllers.Helpers.Extensions;
 using FSNEP.Core.Domain;
 using UCDArch.Core.Utils;
 using MvcContrib.Attributes;
+using UCDArch.Web.ActionResults;
 
 namespace FSNEP.Controllers
 {
@@ -83,7 +84,7 @@ namespace FSNEP.Controllers
 
         public ActionResult GetRecordForUser(Guid? val)
         {
-            if (val.HasValue == false) return Json(null);
+            if (val.HasValue == false) return new JsonNetResult(null);
 
             var userId = val.Value;
 
@@ -91,8 +92,8 @@ namespace FSNEP.Controllers
 
             var keyValuePair = records.Select(x => new {value = x.Id, text = x.Date.ToString("MMMM yyyy")});
 
-            return Json(keyValuePair);
-        }
+            return new JsonNetResult(keyValuePair);
+        } 
 
         /// <summary>
         /// Display the cost share report form
