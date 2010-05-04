@@ -5,9 +5,13 @@ using System.Web.Mvc;
 using FSNEP.BLL.Impl;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Calendar;
+using MvcContrib.Attributes;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Core.Utils;
 using FSNEP.Core.Domain;
+using UCDArch.Web.ActionResults;
+using UCDArch.Web.Attributes;
+
 namespace FSNEP.Controllers
 {
     [Authorize] //TODO: Authorize for only time record users
@@ -49,6 +53,31 @@ namespace FSNEP.Controllers
             var viewModel = TimeRecordEntryViewModel.Create(Repository, _userBLL, _timeRecordBLL, timeRecord, _timeRecordCalendarGenerator);
 
             return View(viewModel);
+        }
+
+        [AcceptPost]
+        [Transaction]
+        public JsonNetResult AddEntry(int recordId, TimeRecordEntry entry)
+        {
+            var timeRecord = _timeRecordBLL.GetNullableByID(recordId);
+
+            Check.Require(timeRecord != null, "Invalid time record indentifier");
+
+            var currentUser = ControllerContext.HttpContext.User.Identity.Name;
+
+            Check.Require(_timeRecordBLL.HasAccess(currentUser, timeRecord),
+                          "Current user does not have access to this record");
+
+            timeRecord.AddEntry(entry);//Add the entry to the time record
+
+            Check.Require(entry.IsValid(), "Entry is not valid");
+
+            _timeRecordBLL.EnsurePersistent(timeRecord);
+            
+            _timeRecordBLL.DbContext.CommitTransaction();
+
+            //return the new Id
+            return new JsonNetResult(new {id = entry.Id});
         }
 
         private RedirectToRouteResult RedirectToErrorPage(string message)

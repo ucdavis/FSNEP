@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
     var Services = {
-        Add: "/Add",
+        AddEntry: '<%= Url.Action("AddEntry", "TimeRecord", new {recordId=Model.TimeRecord.Id}) %>',
         Edit: "/Edit",
         Delete: "/Delete",
         GetAccountsForProject: '<%= Url.Action("GetAccountsForProject", "Association") %>'
@@ -85,6 +85,7 @@
 
 <div id="dialogTimeRecordEntry" class="TimeRecordEntryDialog" title="Add Entry">
     <%= Html.ClientSideValidation<FSNEP.Core.Domain.TimeRecordEntry>() %>
+    <%= Html.ClientSideValidation<FSNEP.Core.Domain.Entry>() %>
     <form id="formAddEntry" method="post" action="<%= Url.Action("AddEntry", "TimeRecord") %>">
     <input id="addRecordDay" type="hidden" />
     <fieldset>
@@ -109,7 +110,7 @@
             </select>
         </p>
         <p>
-            <%= this.TextArea("comments").Columns(25).Label("Comments:")%>
+            <%= this.TextArea("Comment").Columns(25).Class("required").Label("Comments:")%>
         </p>
         <p>
             <input type="submit" value="Save!" />

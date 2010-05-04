@@ -28,11 +28,44 @@ $(function() {
 
     $("#formAddEntry").submit(function() {
         //hijax the form post and do it ajax style
+        var valid = $(this).valid();
+
+        if ($(this).valid()) {  //validate the form
+
+            var data = GatherAddEntryData();
+            var serviceUrl = Services.AddEntry;
+
+            $.post(
+                Services.AddEntry,
+                data,
+                function(result) {
+                    LogMessage("Add Entry Result", result);
+                },
+                'json'
+            );
+        }
+        
         return false;
     });
 
     $("#Project").change(function() { PopulateAccounts(this); });
 });
+
+function GatherAddEntryData() {
+    var date = $("#addRecordDay").val();
+    
+    var hours = $("#Hours").val();
+    var activityType = $("#ActivityType").val();
+
+    var fundType = $("#FundType").val();
+    var project = $("#Project").val();
+    var account = $("#Account").val();
+    var comment = $("#Comment").val();
+
+    var data = { Date : date, Hours: hours, ActivityType: activityType, FundType: fundType, Project: project, Account: account, Comment: comment };
+
+    return data;
+}
 
 function PopulateAccounts(el) {
     var projectId = $(el).val();
