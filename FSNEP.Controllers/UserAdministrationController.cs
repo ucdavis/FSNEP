@@ -234,6 +234,7 @@ namespace FSNEP.Controllers
         /// </summary>
         private void CheckUserProperties(Guid? supervisorId, IEnumerable<int> projectList, IEnumerable<int> fundTypeList)
         {
+            //TODO: Review. With Unit tests, it is possible to supply these values and have them cleared out when the method "PopulateUserProperties" is encountered. Probably can't happen through the UI, but maybe we want to test later as well?
             //Make sure we get a supervisor, some projects and some fundtypes
             if (!supervisorId.HasValue) ModelState.AddModelError("SupervisorID", "You must select a supervisor");
 
