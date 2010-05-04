@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<FSNEP.Controllers.TimeRecordEntryViewModel>" %>
+<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<TimeRecordEntryViewModel>" %>
 
 <script type="text/javascript">
     var Services = {
@@ -74,6 +74,9 @@
 <div class="TimeRecordOptionsBox">
     <div class="TimeRecordTotals">
         TimeRecord Totals: <span id="timeSheetHours">0</span> Hour(s)
+    </div>
+    <div class="TimeRecordTarget">
+        Target Hours For Month: <%= Html.Encode(Model.TimeRecord.TargetHours) %> Hour(s)
     </div>
     <div class="TimeRecordAdjustment">
         <a href="javascript:;" id="addAdjustment">Add Adjustment [TODO]</a>
