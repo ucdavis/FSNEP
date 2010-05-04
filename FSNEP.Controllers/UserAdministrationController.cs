@@ -68,10 +68,8 @@ namespace FSNEP.Controllers
 
         public ActionResult Create()
         {
-            //Create the viewmodel with a blank user
-            var viewModel = new CreateUserViewModel { User = new User { FTE = 1, IsActive = true } };
-
-            PopulateDefaultUserViewModel(viewModel);
+            var viewModel = CreateUserViewModel.Create(UserBLL);
+            viewModel.User = new User();
 
             return View(viewModel);
         }
@@ -80,7 +78,9 @@ namespace FSNEP.Controllers
         public ActionResult Create(CreateUserViewModel model, Guid? supervisorId, IEnumerable<int> projectList,
                                        IEnumerable<int> fundTypeList, List<string> roleList)
         {
+            throw new NotImplementedException();
 
+            /*
             var user = model.User;
             user.Supervisor = new User();
 
@@ -197,6 +197,7 @@ namespace FSNEP.Controllers
             }
 
             return this.RedirectToAction<HomeController>(a => a.Index());
+             */
         }
 
         /// <summary>
@@ -347,60 +348,6 @@ namespace FSNEP.Controllers
         }
 
         /// <summary>
-        /// Check the associated user properties for validity
-        /// </summary>
-        private void CheckUserProperties(Guid? supervisorId, IEnumerable<int> projectList, IEnumerable<int> fundTypeList)
-        {
-            //TODO: Review. With Unit tests, it is possible to supply these values and have them cleared out when the method "PopulateUserProperties" is encountered. Probably can't happen through the UI, but maybe we want to test later as well?
-            //Make sure we get a supervisor, some projects and some fundtypes
-            if (!supervisorId.HasValue) ModelState.AddModelError("SupervisorID", "You must select a supervisor");
-
-            if (projectList == null) ModelState.AddModelError("ProjectList", "You must select at least one project");
-
-            if (fundTypeList == null)
-                ModelState.AddModelError("FundTypeList", "You must select at least one fund type");
-        }
-
-        /// <summary>
-        /// Populate the given user with the proper associated properties
-        /// </summary>
-        private void PopulateUserProperties(User user, Guid? supervisorId, IEnumerable<int> projectList,
-                                            IEnumerable<int> fundTypeList)
-        {
-            user.Supervisor = UserBLL.GetByID(supervisorId.Value);
-
-            var projects = from proj in Repository.OfType<Project>().Queryable
-                           where projectList.Contains(proj.ID)
-                           select proj;
-
-            var fundtypes = from ft in Repository.OfType<FundType>().Queryable
-                            where fundTypeList.Contains(ft.ID)
-                            select ft;
-
-            user.Projects = projects.ToList();
-            user.FundTypes = fundtypes.ToList();
-        }
-
-        private void PopulateDefaultUserViewModel(UserViewModel viewModel)
-        {
-            throw new NotImplementedException();
-            /*
-            viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
-                                                   viewModel.User.Supervisor != null
-                                                       ? viewModel.User.Supervisor.ID
-                                                       : Guid.Empty);
-
-            viewModel.Projects = new MultiSelectList(UserBLL.GetAllProjectsByUser().ToList(), "ID", "Name",
-                                                     viewModel.User.Projects.Select(p => p.ID));
-
-            viewModel.FundTypes = new MultiSelectList(UserBLL.GetAvailableFundTypes().ToList(), "ID", "Name",
-                                                      viewModel.User.FundTypes.Select(p => p.ID));
-
-            viewModel.AvailableRoles = UserBLL.GetAllRoles();
-             */
-        }
-
-        /// <summary>
         /// Bus. rules:  
         /// If the fundtype starts with State, the user much have the timesheet role.
         /// If the user has subordinates, they must be a supervisor
@@ -438,6 +385,24 @@ namespace FSNEP.Controllers
 
     public class CreateUserViewModel : UserViewModel
     {
+        /// <summary>
+        /// Creates the user view model, including populating the lookups
+        /// </summary>
+        public new static CreateUserViewModel Create(IUserBLL userBLL)
+        {
+            var baseViewModel = UserViewModel.Create(userBLL);
+
+            var viewModel = new CreateUserViewModel
+                                {
+                                    Supervisors = baseViewModel.Supervisors,
+                                    Projects = baseViewModel.Projects,
+                                    FundTypes = baseViewModel.FundTypes,
+                                    AvailableRoles = baseViewModel.AvailableRoles
+                                };
+
+            return viewModel;
+        }
+
         [RequiredValidator]
         [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
         public string UserName { get; set; }
