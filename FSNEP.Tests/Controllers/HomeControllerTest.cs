@@ -44,11 +44,8 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void Index()
         {
-            // Arrange
-            var controller = new HomeController();
-
             // Act
-            var result = controller.Index() as ViewResult;
+            var result = Controller.Index() as ViewResult;
 
             Assert.IsNotNull(result);
             var viewData = result.ViewData;
