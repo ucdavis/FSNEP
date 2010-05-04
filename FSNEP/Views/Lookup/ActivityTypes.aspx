@@ -35,7 +35,7 @@
         <p>
             <label id="activityCategoryId_Label" for="activityCategoryId">Category: </label>
             <%= Html.DropDownList("activityCategoryId", new SelectList((IEnumerable)ViewData["ActivityCategories"], "ID", "Name"), "Select A Category", new {@class="required"})%>
-            <%= Html.ActionLink<FSNEP.Controllers.LookupController>(a=>a.ActivityCategories(), "Create New Activity Category") %>
+            <%= Html.ActionLink<FSNEP.Controllers.LookupController>(a=>a.ActivityCategories("ActivityType"), "Create New Activity Category") %>
         </p>
         <p>
             <input type="submit" value="Add Activity Type" />

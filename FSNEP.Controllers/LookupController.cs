@@ -42,7 +42,7 @@ namespace FSNEP.Controllers
         }
 
 
-        public ActionResult ActivityCategories()
+        public ActionResult ActivityCategories(string returnTo)
         {
             var activeActivityCategories =
                 Repository.OfType<ActivityCategory>().Queryable.Where(a => a.IsActive).OrderBy(a => a.Name).ToList();
@@ -55,15 +55,15 @@ namespace FSNEP.Controllers
         {
             InactivateEntity<ActivityCategory, int>(id, "Activity Category");
             
-            return this.RedirectToAction(a => a.ActivityCategories());
+            return this.RedirectToAction(a => a.ActivityCategories(null));
         }
 
         [AcceptPost]
-        public ActionResult CreateActivityCategory(ActivityCategory newActivityCategory)
+        public ActionResult CreateActivityCategory(ActivityCategory newActivityCategory, string returnTo)
         {
             CreateEntity<ActivityCategory, int>(newActivityCategory, "Activity Category");
 
-            return this.RedirectToAction(a => a.ActivityCategories());
+            return returnTo == "ActivityType" ? this.RedirectToAction(a => a.ActivityTypes()) : this.RedirectToAction(a => a.ActivityCategories(null));
         }
 
 

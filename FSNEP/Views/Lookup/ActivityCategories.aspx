@@ -17,7 +17,7 @@
     <h3><%= Html.Encode(TempData["Message"]) %></h3>
     <h2>Activity Categories</h2>
 
-    <%using (Html.BeginForm("CreateActivityCategory", "Lookup", FormMethod.Post, new { id = "CreateActivityCategoryForm" }))
+    <%using (Html.BeginForm("CreateActivityCategory", "Lookup", new { returnTo = Request.QueryString["returnTo"] }, FormMethod.Post, new { id = "CreateActivityCategoryForm" }))
       { %>
     
     <fieldset>
