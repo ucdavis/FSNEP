@@ -49,7 +49,7 @@
                 <%= Html.Encode(item) %>
             </td>
             <td>
-                <% using (Html.BeginForm("InactivateActivityCategory", "Lookup", new { item.ID })) { %>
+                <% using (Html.BeginForm("InactivateActivityCategory", "Lookup", new { item.Id })) { %>
                 
                     <input type="submit" value="Inactivate" />
                 

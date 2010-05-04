@@ -48,7 +48,7 @@
                 <%= Html.Encode(item) %>
             </td>
             <td>
-                <form method="post" action="<%= Url.Action("InactivateProject", new { item.ID }) %>">
+                <form method="post" action="<%= Url.Action("InactivateProject", new { item.Id }) %>">
                     <input type="submit" value="Inactivate" />
                 </form>
             </td>

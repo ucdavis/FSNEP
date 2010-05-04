@@ -8,6 +8,7 @@ namespace FSNEP.Core.Domain
         [RangeDouble(0,0.3)]
         public virtual double IndirectCost { get; set; }
 
+        [RangeDouble(0, 30)]
         public virtual double IndirectCostPercent
         {
             get
