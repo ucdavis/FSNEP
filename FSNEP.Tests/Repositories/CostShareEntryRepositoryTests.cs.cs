@@ -1,11 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using FSNEP.Core.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UCDArch.Core.PersistanceSupport;
-using UCDArch.Data.NHibernate;
-using UCDArch.Testing.Extensions;
 using RepositoryTestBase = FSNEP.Tests.Core.RepositoryTestBase;
 
 namespace FSNEP.Tests.Repositories
@@ -22,42 +18,48 @@ namespace FSNEP.Tests.Repositories
             using (var ts = new TransactionScope())
             {
                 LoadRecords();
+                LoadExpenses();
+                LoadCostShareEntryRecords();
                 ts.CommitTransaction();
             }
-
-            LoadCostShareEntryRecords();
-
         }
 
+        /// <summary>
+        /// Loads the expenses.
+        /// </summary>
+        private void LoadExpenses()
+        {
+            var expense = new ExpenseType {IsActive = true, Name = "name"};
+            Repository.OfType<ExpenseType>().EnsurePersistent(expense);
+        }
+
+        /// <summary>
+        /// Loads the cost share entry records.
+        /// </summary>
         private void LoadCostShareEntryRecords()
         {
             for (int i = 0; i < 5; i++)
-            {
-                //var costShareEntry = new CostShareEntry();                
-                //costShareEntry.Amount = 100;
-                //costShareEntry.Comment = "Comment" + (i + 1);
-                //costShareEntry.Description = "Description" + (i + 1);
-                //costShareEntry.ExpenseType = new ExpenseType();
-                //costShareEntry.Account = Repository.OfType<Account>().Queryable.First();
-                //costShareEntry.FundType = Repository.OfType<FundType>().Queryable.First();
-                //costShareEntry.Project = Repository.OfType<Project>().Queryable.First();
-                //costShareEntry.Record = Repository.OfType<Record>().Queryable.First();
-
+            { 
                 var costShareEntry = CreateValidCostShareEntry(i);
                 
                 Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
             }
         }
 
+        /// <summary>
+        /// Loads the record entry.
+        /// </summary>
         private void LoadRecords()
         {
-            var record = new Record();
-            record.Month = 12;
-            record.ReviewComment = "reviewComment";
-            record.Status = Repository.OfType<Status>().Queryable.First();
-            record.User = Repository.OfType<User>().Queryable.First();
-            record.Year = 2009;
-            
+            var record = new Record
+                             {
+                                 Month = 12,
+                                 ReviewComment = "reviewComment",
+                                 Status = Repository.OfType<Status>().Queryable.First(),
+                                 User = Repository.OfType<User>().Queryable.First(),
+                                 Year = 2009
+                             };
+
             Repository.OfType<Record>().EnsurePersistent(record);
         }
         #endregion Init
@@ -128,7 +130,7 @@ namespace FSNEP.Tests.Repositories
         /// <summary>
         /// Determines whether this instance [can delete cost share entry record].
         /// </summary>
-        [TestMethod, Ignore]
+        [TestMethod]
         public void CanDeleteCostShareEntryRecord()
         {
             var costShareEntryRecord =
@@ -165,7 +167,8 @@ namespace FSNEP.Tests.Repositories
             var costShareEntry = new CostShareEntry
                                      {
                                          Amount = 100,
-                                         ExpenseType = new ExpenseType(),
+                                         //ExpenseType = new ExpenseType(),
+                                         ExpenseType = Repository.OfType<ExpenseType>().Queryable.First(),
                                          Account = Repository.OfType<Account>().Queryable.First(),
                                          FundType = Repository.OfType<FundType>().Queryable.First(),
                                          Project = Repository.OfType<Project>().Queryable.First(),
