@@ -106,6 +106,7 @@
     <Compile Include="Auditing\AuditInterceptorTests.cs" />
     <Compile Include="BLL\RecordBLLTests.cs" />
     <Compile Include="Controllers\AssociationControllerTests.cs" />
+    <Compile Include="Controllers\CostShareControllerTests.cs" />
     <Compile Include="Controllers\LookupControllerTests.cs" />
     <Compile Include="Controllers\TimeRecordControllerTests.cs" />
     <Compile Include="Controllers\UserAdministrationControllerTests.cs" />
