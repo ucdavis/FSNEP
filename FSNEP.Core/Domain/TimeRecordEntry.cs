@@ -1,3 +1,4 @@
+using System;
 using NHibernate.Validator.Constraints;
 using UCDArch.Core.NHibernateValidator.Extensions;
 
@@ -13,5 +14,7 @@ namespace FSNEP.Core.Domain
 
         [RangeDouble(0,24)]
         public virtual double Hours { get; set; }
+
+        public virtual DateTime? AdjustmentDate { get; set; }
     }
 }

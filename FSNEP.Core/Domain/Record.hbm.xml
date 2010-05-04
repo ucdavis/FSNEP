@@ -14,6 +14,11 @@
     <many-to-one name="User" class="User" column="UserId"></many-to-one>
     <many-to-one name="Status" class="Status" column="StatusID"></many-to-one>
 
+    <bag name="Entries" table="Entries" inverse="true" cascade="all-delete-orphan">
+      <key column="RecordID" />
+      <one-to-many class="Entry" />
+    </bag>
+    
     <joined-subclass name="TimeRecord" table="TimeRecords">
       <key column="ID"></key>
       <property name="Salary"></property>

@@ -24,6 +24,32 @@ namespace FSNEP.Tests.Repositories
             Assert.AreEqual(false, entry.IsTransient());
         }
 
+        [TestMethod]
+        public void CanSaveValidEntryThenRetrieveInParentRecord()
+        {
+            var recordRepository = Repository.OfType<Record>();
+
+            const int recordId = 1;
+            const string entryComment = "CanSaveValidEntryThenRetrieveInParentRecord test";
+
+            var record = recordRepository.GetById(recordId);
+            
+            var entry = CreateValidEntry();
+            entry.Comment = entryComment;
+
+            record.AddEntry(entry);
+
+            recordRepository.EnsurePersistent(record); //save the record and cascade save the entry
+
+            NHibernateSessionManager.Instance.GetSession().Flush();
+
+            //We saved an entry to the record id=recordId
+            var newRecord = recordRepository.GetById(recordId);
+
+            Assert.AreEqual(1, newRecord.Entries.Count);
+            Assert.AreEqual(entryComment, newRecord.Entries[0].Comment);
+        }
+
         private Entry CreateValidEntry()
         {
             var entry = new Entry {Comment = "Valid", Record = Repository.OfType<Record>().Queryable.First()};

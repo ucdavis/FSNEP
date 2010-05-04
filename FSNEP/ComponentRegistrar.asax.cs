@@ -9,6 +9,7 @@ using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
 using UCDArch.Core.CommonValidator;
 using FSNEP.BLL.Dev;
+using FSNEP.Core.Calendar;
 
 namespace FSNEP
 {
@@ -26,7 +27,10 @@ namespace FSNEP
             container.AddComponent("roleProvider", typeof (RoleProvider), typeof (RoleProviderService));
 
             container.AddComponent("userAuth", typeof (IUserAuth), typeof (UserAuth));
-            
+
+            container.AddComponent("timeRecordCalendar", typeof (ITimeRecordCalendarGenerator),
+                                   typeof (TimeRecordCalendarGenerator));
+
             container.AddComponent("auditInterceptor", typeof (NHibernate.IInterceptor), typeof (AuditInterceptor));
             
             AddRepositoriesTo(container);

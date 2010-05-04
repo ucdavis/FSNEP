@@ -15,6 +15,7 @@
       <key column="ID"></key>
       <property name="Date"></property>
       <property name="Hours"></property>
+      <property name="AdjustmentDate"></property>
     </joined-subclass>
     
   </class>
