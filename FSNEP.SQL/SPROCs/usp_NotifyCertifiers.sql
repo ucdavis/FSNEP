@@ -54,7 +54,7 @@ https://secure.caes.ucdavis.edu/FSNEPRecords
 
 		EXEC msdb.dbo.sp_send_dbmail
 			@recipients=@Email,
-			@subject='FSNEP Time Record Submit Reminder',
+			@subject='UC-FSNEP Time Record Certifier reminder',
 			@body=@bodyText
  
 		FETCH NEXT FROM @MailList INTO @Email
