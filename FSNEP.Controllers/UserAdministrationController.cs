@@ -2,11 +2,9 @@
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using FSNEP.BLL.Impl;
-using FSNEP.Controllers.Helpers;
 using FSNEP.Controllers.Helpers.Extensions;
 using FSNEP.Core.Domain;
 using System.Linq;
-using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
 using MvcContrib.Attributes;
 using MvcContrib;
 using System;
@@ -24,7 +22,7 @@ namespace FSNEP.Controllers
     [Authorize]
     public class UserAdministrationController : SuperController
     {
-        private const string DefaultPassword = "jaskidjflkajsdlf$#12";
+        private static readonly string DefaultPassword = Constants.STR_Default_Pass;
 
         public IUserBLL UserBLL;
         public IMessageGateway MessageGateway;

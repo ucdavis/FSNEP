@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Security;
 using FSNEP.Core.Abstractions;
+using FSNEP.Core.Domain;
 using MvcContrib.Attributes;
 using MvcContrib;
 using UCDArch.Core.Utils;
+using NHibernate.Validator.Constraints;
+using UCDArch.Core.NHibernateValidator.Extensions;
+using UCDArch.Web.Validator;
+using FSNEP.Controllers.Helpers;
+using UCDArch.Web.Attributes;
 
 namespace FSNEP.Controllers
 {
@@ -72,6 +79,77 @@ namespace FSNEP.Controllers
             FormsAuth.SignOut();
 
             return RedirectToAction("Index", "Home");
+        }
+
+        /// <summary>
+        /// Allows a new user to change their password and question/answer given a valid token
+        /// </summary>
+        public ActionResult NewUser(Guid? id)
+        {
+            var user = Repository.OfType<User>().Queryable.Where(u => u.Token == id).SingleOrDefault();
+
+            if (user == null) return RedirectToAction("Error", "Home");
+
+            var viewModel = NewUserViewModel.Create();
+            viewModel.User = user;
+
+            return View(viewModel);
+        }
+
+        /// <summary>
+        /// Allows a new user to change their password and question/answer given a valid token
+        /// </summary>
+        [AcceptPost]
+        [Transaction]
+        public ActionResult NewUser(Guid? id, NewUserViewModel viewModel)
+        {
+            var user = Repository.OfType<User>().Queryable.Where(u => u.Token == id).SingleOrDefault();
+
+            if (user == null) return RedirectToAction("Error", "Home");
+
+            var validationResults = Validation.GetValidationResultsFor(viewModel);
+
+            MvcValidationAdapter.TransferValidationMessagesTo(ModelState, validationResults);
+
+            if (!ModelState.IsValid)
+            {
+                viewModel.User = user;
+
+                return View(viewModel);
+            }
+            else
+            {
+                //Set the user's attributes
+                bool success;
+
+                try
+                {
+                    success = MembershipService.ChangePassword(user.UserName, Constants.STR_Default_Pass, viewModel.Password);
+                    success |= MembershipService.ChangePasswordQuestionAndAnswer(user.UserName, viewModel.Password, viewModel.Question, viewModel.Answer);
+                
+                }
+                catch (Exception exception)
+                {
+                    success = false;
+
+                    ModelState.AddModelError("__FORM", exception.Message);
+                }
+                
+                if (!success){
+                   ModelState.AddModelError("__FORM", "Account Information Could Not Be Saved.  Please check your password");
+
+                    viewModel.User = user;
+
+                    return View(viewModel);
+                }
+
+                //Remove the token
+                user.Token = null;
+
+                Repository.OfType<User>().EnsurePersistent(user);  //remove the token
+            }
+
+            return RedirectToAction("LogOn", "Account");
         }
 
         /// <summary>
@@ -260,5 +338,27 @@ namespace FSNEP.Controllers
         }
 
         #endregion
+    }
+
+    public class NewUserViewModel
+    {
+        public static NewUserViewModel Create()
+        {
+            return new NewUserViewModel();
+        }
+
+        [Required]
+        [Length(128)]
+        public string Password { get; set; }
+
+        [Required]
+        [Length(256)]
+        public string Question { get; set; }
+
+        [Required]
+        [Length(128)]
+        public string Answer { get; set; }
+
+        public User User { get; set; }
     }
 }

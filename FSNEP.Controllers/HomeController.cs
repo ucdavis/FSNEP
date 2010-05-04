@@ -11,6 +11,11 @@ namespace FSNEP.Controllers
             return View();
         }
 
+        public ActionResult Error(string errorMessage)
+        {
+            return View("Error", errorMessage);
+        }
+
         public ActionResult About()
         {
             return View();

@@ -50,7 +50,7 @@ namespace FSNEP
                 AuditDate = DateTime.Now,
                 ObjectName = entity.GetType().Name,
                 ObjectId = id == null ? null : id.ToString(),
-                Username = UserAuth.CurrentUserName
+                Username = string.IsNullOrEmpty(UserAuth.CurrentUserName) ? "NoUser" : UserAuth.CurrentUserName
             };
 
             audit.SetActionCode(auditActionType);

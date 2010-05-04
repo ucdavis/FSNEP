@@ -150,6 +150,7 @@
     <Content Include="Views\Account\ChangePasswordSuccess.aspx" />
     <Content Include="Views\Account\ForgotPassword.aspx" />
     <Content Include="Views\Account\LogOn.aspx" />
+    <Content Include="Views\Account\NewUser.aspx" />
     <Content Include="Views\Account\ResetPassword.aspx" />
     <Content Include="Views\Account\ResetPasswordSuccess.aspx" />
     <Content Include="Views\Association\Projects.aspx" />

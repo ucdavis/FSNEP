@@ -1,7 +1,21 @@
-using System.Web.Mvc;
+using System.Collections.Generic;
+using UCDArch.Core;
+using UCDArch.Core.CommonValidator;
 
 namespace FSNEP.Controllers.Helpers
 {
+    public class Validation
+    {
+        public static ICollection<IValidationResult> GetValidationResultsFor(object objToValidate)
+        {
+            return GetValidator().ValidationResultsFor(objToValidate);
+        }
+
+        private static IValidator GetValidator()
+        {
+            return SmartServiceLocator<IValidator>.GetService();
+        }
+    }
     /*
     public static class ValidationHelper<T>
     {

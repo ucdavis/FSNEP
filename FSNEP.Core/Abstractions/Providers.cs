@@ -98,6 +98,7 @@ namespace FSNEP.Core.Abstractions
         MembershipUser CreateUser(string userName, string password, string email, string question, string answer, bool isApproved, object providerUserKey, out MembershipCreateStatus status);
         void DeleteUser(string username);
         MembershipUser GetUser(object providerUserKey);
+        bool ChangePasswordQuestionAndAnswer(string username, string password, string question, string answer);
     }
 
     public class WebPrincipal : IPrincipal
@@ -171,6 +172,11 @@ namespace FSNEP.Core.Abstractions
         public MembershipUser GetUser(object providerUserKey)
         {
             return _provider.GetUser(providerUserKey, false);
+        }
+
+        public bool ChangePasswordQuestionAndAnswer(string username, string password, string question, string answer)
+        {
+            return _provider.ChangePasswordQuestionAndAnswer(username, password, question, answer);
         }
     }
 }
