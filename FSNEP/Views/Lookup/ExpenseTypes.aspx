@@ -40,11 +40,10 @@
     
         <tr>
             <td>
-                <%= Html.Encode(item.Name) %>
+                <%= Html.Encode(item) %>
             </td>
             <td>
-                <% using (Html.BeginForm<FSNEP.Controllers.LookupController>(a => a.InactivateExpenseType(item.ID)))
-                   { %>
+                <% using (Html.BeginForm("InactivateExpenseType", "Lookup", new { item.ID })) { %>
                 
                     <input type="submit" value="Inactivate" />
                 
