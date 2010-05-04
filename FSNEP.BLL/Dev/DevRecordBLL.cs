@@ -30,7 +30,12 @@ namespace FSNEP.BLL.Dev
             return true;
         }
 
-        public T GetCurrent(string userName)
+        public T GetCurrent(IPrincipal user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DateTime GetCurrentSheetDate()
         {
             throw new NotImplementedException();
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Security.Principal;
 using FSNEP.Core.Domain;
 
@@ -24,8 +25,10 @@ namespace FSNEP.BLL.Interfaces
         /// <summary>
         /// Return the current time record if it has not been submitted.  If there is not current sheet, create one
         /// </summary>
-        /// <param name="userName">Name of user who's time record should be found</param>
+        /// <param name="user">Name of user who's time record should be found</param>
         /// <returns></returns>
-        T GetCurrent(string userName);
+        T GetCurrent(IPrincipal user);
+
+        DateTime GetCurrentSheetDate();
     }
 }
