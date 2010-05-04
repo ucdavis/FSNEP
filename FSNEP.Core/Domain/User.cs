@@ -41,7 +41,8 @@ namespace FSNEP.Core.Domain
 
         public User()
         {
-
+            Projects = new List<Project>();
+            FundTypes = new List<FundType>();
         }
 
         public virtual string FullName

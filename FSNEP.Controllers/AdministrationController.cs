@@ -9,6 +9,7 @@ using System;
 
 namespace FSNEP.Controllers
 {
+    [Authorize]
     public class AdministrationController : SuperController
     {
         public IUserBLL UserBLL;
@@ -24,20 +25,21 @@ namespace FSNEP.Controllers
         /// <param name="id">the userid/username</param>
         public ActionResult ModifyUser(string id)
         {
-            User user = string.IsNullOrEmpty(id) ? new User() : UserBLL.GetUser(id);
-            
+            var viewModel = new ModifyUserViewModel
+                                {
+                                    User = string.IsNullOrEmpty(id) ? new User() : UserBLL.GetUser(id)
+                                };
 
-            //Populate the supervisor with the correct supervisor chosen
-            ViewData["Supervisors"] = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
-                                                   user.Supervisor != null ? user.Supervisor.ID : Guid.Empty);
+            viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
+                                                   viewModel.User.Supervisor != null ? viewModel.User.Supervisor.ID : Guid.Empty);
 
-            ViewData["Projects"] = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
-                                                     user.Projects.Select(p => p.ID));
+            viewModel.Projects = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
+                                                     viewModel.User.Projects.Select(p => p.ID));
 
-            ViewData["FundTypes"] = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
-                                                     user.FundTypes.Select(p => p.ID));
+            viewModel.FundTypes = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
+                                                     viewModel.User.FundTypes.Select(p => p.ID));
 
-            return View(user);
+            return View(viewModel);
         }
 
         [AcceptPost]
@@ -55,5 +57,18 @@ namespace FSNEP.Controllers
             return ModifyUser(id);
         }
 
+    }
+
+    public class ModifyUserViewModel
+    {
+        public User User { get; set; }
+        public SelectList Supervisors { get; set; }
+        public MultiSelectList Projects { get; set; }
+        public MultiSelectList FundTypes { get; set; }
+
+        public ModifyUserViewModel()
+        {
+            
+        }
     }
 }
