@@ -64,6 +64,7 @@
     <Compile Include="Domain\Account.cs" />
     <Compile Include="Domain\ActivityCategory.cs" />
     <Compile Include="Domain\ActivityType.cs" />
+    <Compile Include="Domain\Audit.cs" />
     <Compile Include="Domain\ExpenseType.cs" />
     <Compile Include="Domain\FundType.cs" />
     <Compile Include="Domain\HoursInMonth.cs" />
@@ -82,6 +83,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Domain\ActivityCategoryType.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Audit.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

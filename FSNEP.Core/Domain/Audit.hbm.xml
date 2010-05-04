@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="FSNEP.Core" namespace="FSNEP.Core.Domain">
+  <class name="Audit" table="Audits" >
+    <id name="ID" access="nosetter.lowercase" column="ID">
+      <generator class="guid.comb" />
+    </id>
+
+    <property name="ObjectName" />
+    <property name="ObjectId" />
+    <property name="ActionCodeId" />
+    <property name="Username" />
+    <property name="AuditDate" />
+
+  </class>
+</hibernate-mapping>
