@@ -315,7 +315,8 @@ namespace FSNEP.Tests.Repositories
                 IsActive = true,
                 UserName = "UserName" + i,
                 Projects = new List<Project>(),
-                FundTypes = Repository.OfType<FundType>().GetAll()
+                FundTypes = Repository.OfType<FundType>().GetAll(),
+                Email = "username" + i + "@testucdavis.edu"
             };
 
             var userId = Guid.NewGuid();

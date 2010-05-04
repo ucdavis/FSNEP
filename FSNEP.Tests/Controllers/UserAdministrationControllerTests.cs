@@ -843,7 +843,8 @@ namespace FSNEP.Tests.Controllers
             userModel.Email = invalidValueEmail;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("Email: may not be null or empty");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Email: may not be null or empty",
+                "Email: Email should be set upon creation");
         }
         /// <summary>
         /// Creates a user with a invalid Email of Spaces Only.
@@ -858,7 +859,9 @@ namespace FSNEP.Tests.Controllers
             userModel.Email = invalidValueEmail;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("Email: may not be null or empty",
+            newUserModel.ViewData.ModelState.AssertErrorsAre(
+                "Email: may not be null or empty",
+                "Email: may not be null or empty",
                 "Email: Must be a valid email address");
         }
         /// <summary>
@@ -1734,7 +1737,8 @@ namespace FSNEP.Tests.Controllers
                 FTE = validValueFte,
                 IsActive = true,
                 Supervisor = supervisor,
-                UserName = "UserName"
+                UserName = "UserName",
+                Email = "test@test.edu"
             };
 
             var userId = Guid.NewGuid();

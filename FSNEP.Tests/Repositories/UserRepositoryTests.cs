@@ -635,7 +635,8 @@ namespace FSNEP.Tests.Repositories
                 BenefitRate = 2,
                 FTE = ValidValueFte,
                 IsActive = true,
-                UserName = "UserName"
+                UserName = "UserName",
+                Email = "username@testucdavis.edu"
             };
             user.Supervisor = user; //I'm my own supervisor
             user.Projects = FakeProjects();

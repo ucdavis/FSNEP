@@ -126,7 +126,8 @@ namespace FSNEP.Tests.Core
                                      Salary = 10,
                                      FTE = 1,
                                      IsActive = true,
-                                     UserName = "Supervisor"
+                                     UserName = "Supervisor",
+                                     Email = "supervisor@testucdavis.edu"
                                  };
 
             supervisor.Supervisor = supervisor; //i'm my own boss
@@ -157,7 +158,8 @@ namespace FSNEP.Tests.Core
                                    FTE = 1,
                                    IsActive = true,
                                    Supervisor = supervisor,
-                                   UserName = "UserName" + i
+                                   UserName = "UserName" + i,
+                                   Email = "username" + i + "@testucdavis.edu"
                                };
                 user.Projects.Add(Repository.OfType<Project>().GetById(5));
                 user.FundTypes = fundTypes;
