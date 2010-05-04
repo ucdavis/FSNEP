@@ -7,7 +7,7 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2>Cost Share Review</h2>
+    <h2><%= Html.Encode(string.Format("Reviewing {0} for {1:MMMM yyyy}", Model.Record.User.FullName, Model.Record.Date)) %></h2>
 
     <% Html.RenderPartial("CostShareEntryList", Model.Entries); %>
     
