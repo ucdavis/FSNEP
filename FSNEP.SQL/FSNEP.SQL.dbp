@@ -13,6 +13,9 @@ Begin DataProject = "FSNEP.SQL"
          Colorizer = 6
       End
    End
+   Begin Folder = "Helpers"
+      Script = "UpdateEmailAndUserNames.sql"
+   End
    Begin Folder = "Reporting"
       Script = "udf_QuarterTotalHours.sql"
       Script = "udf_SumOfExpensesByMonth.sql"
