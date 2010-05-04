@@ -6,7 +6,7 @@ CREATE FUNCTION [dbo].[udf_SumOfHoursByMonth]
 (	
 	@year int,
 	@month int,		-- the number of the month
-	@projectid int,	-- the project id requested
+	@projectid varchar(20),	-- the project id requested
 	@fundtype varchar(50) -- the fundType to return
 )
 RETURNS TABLE 
@@ -30,7 +30,7 @@ RETURN
 				inner join fundtypes ft on ft.id = ent.fundtypeid
 			where 
 				ft.name = @fundtype
-				and ent.ProjectID = @projectid
+				and ent.ProjectID LIKE @projectid
 			group by ent.RecordID, ent.fundtypeid, ent.projectid, ent.financeAccountID
 		) TotalHours on TotalHours.RecordID = rec.id
 		left outer join hoursinmonths him on cast(him.month as varchar(2)) + cast(him.year as varchar(4)) = cast(rec.month as varchar(2)) + cast(rec.year as varchar(4))

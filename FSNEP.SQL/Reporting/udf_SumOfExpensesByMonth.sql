@@ -29,7 +29,7 @@ RETURN
 				select ent.RecordID, sum(cse.ExpenseAmount) Amount, ent.ProjectID, cse.ExpenseTypeID, ent.FinanceAccountID
 				from CostShareRecordEntries cse
 					inner join Entries ent on cse.ID = ent.ID
-				where ent.ProjectID = @projectid
+				where ent.ProjectID LIKE @projectid
 				group by ent.RecordID, cse.ExpenseTypeID, ent.ProjectID, ent.FinanceAccountID
 			) TotalAmount on TotalAmount.RecordID= rec.ID
 			inner join Users on Users.UserId = rec.UserId
