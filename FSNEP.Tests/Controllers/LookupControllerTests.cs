@@ -25,20 +25,22 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void CreateProjectSavesNewProject()
         {
-            Project exampleNewProject = null;
+            Project newProject = null;
             
             var projectRepository = FakeRepository<Project>();
-            projectRepository.Expect(a => a.EnsurePersistent(null)).IgnoreArguments().WhenCalled(
-                a => exampleNewProject = (Project) a.Arguments.First());
+            projectRepository
+                .Expect(a => a.EnsurePersistent(Arg<Project>.Is.Anything))
+                .WhenCalled(a => newProject = (Project) a.Arguments.First()); //set newproject to the project that was saved
 
             _repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
 
             Controller.CreateProject("NewProjectName");
 
-            projectRepository.AssertWasCalled(a => a.EnsurePersistent(null), a => a.IgnoreArguments().Repeat.Once());//make sure we called persist
+            projectRepository
+                .AssertWasCalled(a => a.EnsurePersistent(newProject), a => a.Repeat.Once());//make sure we called persist
 
-            Assert.AreEqual(true, exampleNewProject.IsActive, "The created project should be active");
-            Assert.AreEqual("NewProjectName", exampleNewProject.Name);
+            Assert.AreEqual(true, newProject.IsActive, "The created project should be active");
+            Assert.AreEqual("NewProjectName", newProject.Name);
         }
 
         [TestMethod]
