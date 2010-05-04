@@ -108,6 +108,7 @@
     <Compile Include="Controllers\AssociationControllerTests.cs" />
     <Compile Include="Controllers\CostShareControllerTests.cs" />
     <Compile Include="Controllers\LookupControllerTests.cs" />
+    <Compile Include="Controllers\ReportControllerTests.cs" />
     <Compile Include="Controllers\TimeRecordControllerTests.cs" />
     <Compile Include="Controllers\UserAdministrationControllerTests.cs" />
     <Compile Include="Core\ContinuousIntegrationDeploymentHack.cs" />
