@@ -129,6 +129,7 @@
     <Compile Include="Repositories\ActivityCategoryRepositoryTests.cs" />
     <Compile Include="Repositories\ActivityTypeRepositiryTests.cs" />
     <Compile Include="Repositories\AuditRepositoryTests.cs" />
+    <Compile Include="Repositories\CostShareEntryRepositoryTests.cs.cs" />
     <Compile Include="Repositories\CostShareRepositoryTests.cs" />
     <Compile Include="Repositories\EntryRepositoryTests.cs" />
     <Compile Include="Repositories\ExpenseTypeRepositoryTests.cs" />
