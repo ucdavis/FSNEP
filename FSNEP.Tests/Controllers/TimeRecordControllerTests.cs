@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Principal;
 using System.Web;
+using System.Web.Mvc;
 using FSNEP.BLL.Impl;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Controllers;
 using FSNEP.Core.Calendar;
 using FSNEP.Core.Domain;
+using FSNEP.Tests.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
@@ -22,19 +25,21 @@ namespace FSNEP.Tests.Controllers
         private static readonly User User = CreateValidUser();
         private readonly ITimeRecordBLL _timeRecordBll = MockRepository.GenerateStub<ITimeRecordBLL>();
         private readonly TimeRecord _timeRecord = CreateValidTimeRecord();
+        private readonly IUserBLL _userBll = MockRepository.GenerateStub<IUserBLL>();
 
         /// <summary>
         /// Override this method to setup a controller that doesn't have an empty ctor
         /// </summary>
         protected override void SetupController()
         {
-            var userBll = MockRepository.GenerateStub<IUserBLL>();
+            
             var timeRecordCalendarGenerator = new TimeRecordCalendarGenerator();
             _timeRecord.SetIdTo(1);
             _timeRecordBll.Expect(a => a.GetNullableByID(_timeRecord.Id)).Return(_timeRecord).Repeat.Any();
             _timeRecordBll.Expect(a => a.HasAccess("UserName", _timeRecord)).Return(true).Repeat.Any();
+            _timeRecordBll.Expect(a => a.IsEditable(_timeRecord)).Return(true).Repeat.Any();
 
-            CreateController(_timeRecordBll, userBll, timeRecordCalendarGenerator);
+            CreateController(_timeRecordBll, _userBll, timeRecordCalendarGenerator);
 
             var fakeContext =
                 MockRepository.GenerateStub<UCDArch.Core.PersistanceSupport.IDbContext>();
@@ -210,9 +215,115 @@ namespace FSNEP.Tests.Controllers
         #region TimeRecordEntry Tests
         //TODO: These tests for TimeRecordEntry Tests
 
+        /// <summary>
+        /// Get time record entry returns correct view.
+        /// </summary>
+        [TestMethod]
+        public void GetTimeRecordEntryReturnsCorrectView()
+        {
+            IPrincipal userPrincipal = new MockPrincipal();
+            Controller.ControllerContext.HttpContext.User = userPrincipal;
+
+            var projects = MockProjectsForUser();
+            _userBll.Expect(a => a.GetUser()).IgnoreArguments().Return(User).Repeat.AtLeastOnce();
+            var activityCategories = MockActivityCategories();
+
+            var timeRecord = _timeRecordBll.GetNullableByID(1);
+            var result = (ViewResult) Controller.TimeRecordEntry(timeRecord.Id);
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.ViewData.ModelState.IsValid);
+            result.ViewData.ModelState.AssertErrorsAre(); //No errors  
+
+            var specialResult = (TimeRecordEntryViewModel)result.ViewData.Model;
+            Assert.AreEqual(timeRecord, specialResult.TimeRecord);
+            Assert.AreEqual(3, specialResult.ActivityCategories.Count);
+            Assert.AreEqual(35, specialResult.CalendarDays.Count);
+            Assert.AreEqual(1, specialResult.FundTypes.Count);
+            Assert.AreEqual(2, specialResult.Projects.Count);
+            Assert.IsFalse(specialResult.IsSubmittable, "If this one fails it is probably the test data.");
+            foreach (var project in projects)
+            {
+                if (project.IsActive)
+                {
+                    Assert.IsTrue(specialResult.Projects.Contains(project));
+                }
+                else
+                {
+                    Assert.IsFalse(specialResult.Projects.Contains(project));
+                }
+            }
+            foreach (var activityCategory in activityCategories)
+            {
+                if (activityCategory.IsActive)
+                {
+                    Assert.IsTrue(specialResult.ActivityCategories.Contains(activityCategory));
+                }
+                else
+                {
+                    Assert.IsFalse(specialResult.ActivityCategories.Contains(activityCategory));
+                }
+            }
+        }
+
+        
+
+        
         #endregion TimeRecordEntry Tests
 
         #region Helper Methods
+
+
+        /// <summary>
+        /// Mocks the projects for user.
+        /// </summary>
+        /// <returns>List of Projects</returns>
+        private List<Project> MockProjectsForUser()
+        {
+            var projects = new List<Project>
+                               {
+                                   new Project {Name = "Name", IsActive = true},
+                                   new Project {Name = "NameInactive", IsActive = false},
+                                   new Project {Name = "Name2", IsActive = true}
+                               };
+            projects[0].SetIdTo(2);
+            projects[1].SetIdTo(3);
+            projects[2].SetIdTo(4);
+            _userBll.Expect(a => a.GetAllProjectsByUser(null)).IgnoreArguments().Return(projects.AsQueryable().Where(a =>a.IsActive)).Repeat.
+                Once();
+            return projects;
+        }
+
+        /// <summary>
+        /// Mocks the activity categories.
+        /// </summary>
+        /// <returns>List of categories</returns>
+        private List<ActivityCategory> MockActivityCategories()
+        {
+            var activityTypes = new List<ActivityType>
+                                    {
+                                        new ActivityType {Name = "ActivityType1", IsActive = true},
+                                        new ActivityType {Name = "ActivityType2", IsActive = true}
+                                    };
+
+            var activityCategories = new List<ActivityCategory>
+                                  {
+                                      new ActivityCategory {Name = "ActivityCategory1", ActivityTypes = activityTypes, IsActive = true},
+                                      new ActivityCategory {Name = "ActivityCategory2", ActivityTypes = activityTypes, IsActive = true},
+                                      new ActivityCategory {Name = "ActivityCategoryInActive", ActivityTypes = activityTypes, IsActive = false},
+                                      new ActivityCategory {Name = "ActivityCategory3", ActivityTypes = activityTypes, IsActive = true},
+                                      
+                                  };
+            activityCategories[0].SetIdTo(1);
+            activityCategories[1].SetIdTo(2);
+            activityCategories[2].SetIdTo(3);
+            activityCategories[3].SetIdTo(4);
+            var activityCategoryRepository = FakeRepository<ActivityCategory>();
+            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository).Repeat.
+                Any();
+            Controller.Repository.OfType<ActivityCategory>().Expect(a => a.Queryable).Return(activityCategories.AsQueryable()).Repeat.Any();
+            return activityCategories;
+        }
+
 
         /// <summary>
         /// Creates the valid time record.
@@ -222,8 +333,8 @@ namespace FSNEP.Tests.Controllers
         {
             return new TimeRecord
                        {
-                           Month = DateTime.Now.Month,
-                           Year = DateTime.Now.Year,
+                           Month = 10,
+                           Year = 2009,
                            Salary = 200,
                            Status = new Status { Name = "S1" },
                            User = User,
