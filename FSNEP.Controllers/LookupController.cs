@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using CAESArch.Core.Domain;
 using FSNEP.Controllers.Helpers;
@@ -171,7 +172,7 @@ namespace FSNEP.Controllers
 
             if (!ModelState.IsValid)
             {
-                Message = type + " Creation Failed";
+                Message = type + " Creation Failed. " + ValidationHelper<T>.GetErrorMessages(entity, ModelState);
 
                 return;
             }
