@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using CAESArch.BLL;
 using FSNEP.BLL.Impl;
 using FSNEP.Controllers.Helpers;
 using FSNEP.Core.Domain;
@@ -66,8 +67,7 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult ModifyUser(string id, Guid? supervisorId, int[] projectList, int[] fundTypeList)
         {
-            var user = string.IsNullOrEmpty(id) ? new User() : UserBLL.GetUser(id);
-
+            var user = UserBLL.GetUser(id);
             UpdateModel(user, "User"); //Update the user from the data entered in the form
             
             ValidationHelper<User>.Validate(user, ModelState, "User");
@@ -79,9 +79,20 @@ namespace FSNEP.Controllers
 
             if (fundTypeList == null) ModelState.AddModelError("FundTypeList", "You must select at least one fund type");
 
-            Response.Write("Model Is Valid? " + ModelState.IsValid);
+            if (!ModelState.IsValid)
+            {
+                return ModifyUser(id);
+            }
 
-            return ModifyUser(id);
+            //We have a valid viewstate, so save the changes
+            using (var ts = new TransactionScope())
+            {
+                UserBLL.Repository.EnsurePersistent(user);
+
+                ts.CommitTransaction();
+            }
+
+            return this.RedirectToAction<HomeController>(a => a.Index());
         }
     }
 
