@@ -80,7 +80,8 @@ namespace FSNEP.Controllers
 
             if (!costShare.IsEditable)
             {
-                return RedirectToAction("Review", new { id });
+                //return RedirectToAction("Review", new { id });
+                return this.RedirectToAction(a => a.Review(id));
             }
 
             var viewModel = CostShareEntryViewModel.Create(Repository, _userBLL, _costShareBLL, costShare);
