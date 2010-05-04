@@ -23,6 +23,16 @@ namespace FSNEP.Controllers
             return View(viewModel);
         }
 
+        [Transaction]
+        public ActionResult GetAccountsForProject(int id)
+        {
+            var project = Repository.OfType<Project>().GetNullableByID(id);
+
+            Check.Require(project != null);
+
+            return Json(project.Accounts);
+        }
+
         /// <summary>
         /// Associate the project identified by id with the accounts given 
         /// </summary>

@@ -91,7 +91,7 @@
             <%= this.Select("FundType").Options(Model.FundTypes, f=>f.Id, f=>f.Name).Label("Fund Type:").Class("required").Disabled(Model.FundTypes.Count() == 1) %>
         </p>
         <p>
-            <%= this.Select("Aroject").Options(Model.Projects, p=>p.Id, p=>p.Name).Label("Project:").Class("required").Disabled(Model.Projects.Count() == 1) %>
+            <%= this.Select("Project").Options(Model.Projects, p=>p.Id, p=>p.Name).Label("Project:").Class("required").Disabled(Model.Projects.Count() == 1) %>
         </p>
         <p>
             <label for="Account" id="Account_Label">Account:</label>

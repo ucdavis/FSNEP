@@ -29,7 +29,16 @@ $(function() {
         //hijax the form post and do it ajax style
         return false;
     });
+
+    $("#Project").change(PopulateAccounts);
 });
+
+function PopulateAccounts() {
+    var proj = $(this).val();
+
+    //Get the new accounts for this project
+    
+}
 
 function AddEntry(id) {
     var addEntryDiv = $("#dialogTimeRecordEntry");
