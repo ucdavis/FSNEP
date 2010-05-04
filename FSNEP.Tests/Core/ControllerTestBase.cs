@@ -1,3 +1,4 @@
+using System.Web.Mvc;
 using CAESArch.BLL;
 using MvcContrib.TestHelper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -45,6 +46,21 @@ namespace FSNEP.Tests.Core
         protected IRepository<T> FakeRepository<T>()
         {
             return MockRepository.GenerateStub<IRepository<T>>();
+        }
+
+        /// <summary>
+        /// Count All of the error messages to assert that only the messages that we want are happening.
+        /// </summary>
+        /// <param name="modelState"></param>
+        /// <returns>Count All of the error messages</returns>
+        protected int CountErrorMessages(ModelStateDictionary modelState)
+        {
+            var returnValue = 0;
+            foreach (var val in modelState.Values)
+            {
+                returnValue += val.Errors.Count;                
+            }
+            return returnValue;
         }
     }
 }
