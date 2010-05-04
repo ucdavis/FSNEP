@@ -56,6 +56,7 @@ namespace FSNEP
         private static void AddBLLClassesTo(IWindsorContainer container)
         {
             container.AddComponent("userBLL", typeof (IUserBLL), typeof (UserBLL));
+            container.AddComponent("reportBLL", typeof (IReportBLL), typeof (ReportBLL));
 
             #if DEBUG
 
