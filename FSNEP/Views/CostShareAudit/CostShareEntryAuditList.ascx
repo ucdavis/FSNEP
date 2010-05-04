@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
     $(function() {
-        $('.Exclude').click(function(event) {
+        $('.exclude').click(function(event) {
             var dialog = $('#dialogExcludeEntry');
 
             //Set the Id of the entry to be modified
