@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using FSNEP.BLL.Impl;
 using FSNEP.Controllers.Helpers;
 using FSNEP.Core.Domain;
@@ -33,30 +32,35 @@ namespace FSNEP.Controllers
             viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
                                                    viewModel.User.Supervisor != null ? viewModel.User.Supervisor.ID : Guid.Empty);
 
-            viewModel.Projects = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
+            viewModel.Projects = new MultiSelectList(UserBLL.GetAllProjectsByUser().ToList(), "ID", "Name",
                                                      viewModel.User.Projects.Select(p => p.ID));
 
-            viewModel.FundTypes = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
+            viewModel.FundTypes = new MultiSelectList(UserBLL.GetAvailableFundTypes().ToList(), "ID", "Name",
                                                      viewModel.User.FundTypes.Select(p => p.ID));
 
             return View(viewModel);
         }
 
         [AcceptPost]
-        public ActionResult ModifyUser(string id, User user, Guid? supervisorId, List<Project> projects)
+        public ActionResult ModifyUser(string id, Guid? supervisorId, int[] projectList, int[] fundTypeList)
         {
-            user = new User();
+            var user = string.IsNullOrEmpty(id) ? new User() : UserBLL.GetUser(id);
 
-            ValidationHelper<User>.Validate(user, ModelState, "User");
-
+            UpdateModel(user, "User"); //Update the user from the data entered in the form
             
-            //Look for errors
-            if (!supervisorId.HasValue)
-                ModelState.AddModelError("SupervisorID", "You must select a supervisor");
+            ValidationHelper<User>.Validate(user, ModelState, "User");
+            
+            //Make sure we get a supervisor, some projects and some fundtypes
+            if (!supervisorId.HasValue) ModelState.AddModelError("SupervisorID", "You must select a supervisor");
+
+            if (projectList == null) ModelState.AddModelError("ProjectList", "You must select at least one project");
+
+            if (fundTypeList == null) ModelState.AddModelError("FundTypeList", "You must select at least one fund type");
+
+            Response.Write("Model Is Valid? " + ModelState.IsValid);
 
             return ModifyUser(id);
         }
-
     }
 
     public class ModifyUserViewModel
@@ -65,10 +69,5 @@ namespace FSNEP.Controllers
         public SelectList Supervisors { get; set; }
         public MultiSelectList Projects { get; set; }
         public MultiSelectList FundTypes { get; set; }
-
-        public ModifyUserViewModel()
-        {
-            
-        }
     }
 }
