@@ -35,12 +35,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Bin\MvcContrib.FluentHtml.dll = Bin\MvcContrib.FluentHtml.dll
 		Bin\MvcContrib.TestHelper.dll = Bin\MvcContrib.TestHelper.dll
 		Bin\NHibernate.ByteCode.Castle.dll = Bin\NHibernate.ByteCode.Castle.dll
-		Bin\NHibernate.ByteCode.Spring.dll = Bin\NHibernate.ByteCode.Spring.dll
 		Bin\NHibernate.dll = Bin\NHibernate.dll
 		Bin\NHibernate.Linq.dll = Bin\NHibernate.Linq.dll
 		Bin\Rhino.Mocks.dll = Bin\Rhino.Mocks.dll
-		Bin\Spring.Aop.dll = Bin\Spring.Aop.dll
-		Bin\Spring.Core.dll = Bin\Spring.Core.dll
 		Bin\System.Data.SQLite.DLL = Bin\System.Data.SQLite.DLL
 	EndProjectSection
 EndProject
