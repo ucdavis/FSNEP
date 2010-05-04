@@ -19,13 +19,21 @@ namespace FSNEP.Controllers
         /// <param name="id">the userid/username</param>
         public ActionResult ModifyUser(string id)
         {
-            var viewModel = new ModifyUserViewModel();
-
             //First get the lookups, like projects, fundtypes, and supervisors  
-            viewModel.Projects = new SelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name");
-            viewModel.FundTypes = new SelectList(UserBLL.GetAvailableFundTypes(), "Name", "ID");
+            var viewModel = new ModifyUserViewModel
+                                {
+                                    Projects = new SelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name"),
+                                    FundTypes = new SelectList(UserBLL.GetAvailableFundTypes(), "Name", "ID"),
+                                    Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName")
+                                };
 
+            if (string.IsNullOrEmpty(id))
+            {
+                return View(viewModel);
+            }
 
+            viewModel.User = UserBLL.GetUser(id);
+            
             return View(viewModel);
         }
 

@@ -3,6 +3,7 @@ using System.Security.Principal;
 using Castle.Windsor;
 using FSNEP.BLL.Impl;
 using FSNEP.Core.Abstractions;
+using System.Web.Security;
 
 namespace FSNEP
 {
@@ -16,6 +17,8 @@ namespace FSNEP
             container.AddComponent("formsAuth", typeof(IFormsAuthentication), typeof(FormsAuthenticationService));
 
             container.AddComponent("principal", typeof (IPrincipal), typeof (WebPrincipal));
+
+            container.AddComponent("roleProvider", typeof (RoleProvider), typeof (RoleProviderService));
 
             AddBLLClassesTo(container);
         }

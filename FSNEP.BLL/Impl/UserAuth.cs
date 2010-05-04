@@ -10,13 +10,15 @@ namespace FSNEP.BLL.Impl
     {
         public IPrincipal UserContext { get; set; }
         public IMembershipService MembershipService { get; set; }
+        public RoleProvider RoleProvider { get; set; }
 
         public string CurrentUserName { get { return UserContext.Identity.Name; } }
 
-        public UserAuth(IPrincipal userContext, IMembershipService membershipService)
+        public UserAuth(IPrincipal userContext, IMembershipService membershipService, RoleProvider roleProvider)
         {
             UserContext = userContext;
             MembershipService = membershipService;
+            RoleProvider = roleProvider;
         }
 
         public MembershipUser GetUser(string userName)

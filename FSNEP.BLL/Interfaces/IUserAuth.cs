@@ -9,6 +9,7 @@ namespace FSNEP.BLL.Interfaces
         IPrincipal UserContext { get; set; }
         IMembershipService MembershipService { get; set; }
         string CurrentUserName { get; }
+        RoleProvider RoleProvider { get; set; }
         MembershipUser GetUser(string userName);
         MembershipUser GetUser();
         bool IsCurrentUserInRole(string roleName);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CAESArch.BLL;
 using CAESArch.Core.Utils;
@@ -14,6 +15,7 @@ namespace FSNEP.BLL.Impl
         INonStaticGenericBLLBase<User, Guid> Repository { get; set; }
         IQueryable<FundType> GetAvailableFundTypes();
         IQueryable<Project> GetAllProjectsByUser();
+        IQueryable<User> GetSupervisors();
         User GetUser();
         User GetUser(string username);
     }
@@ -50,6 +52,22 @@ namespace FSNEP.BLL.Impl
             }
 
             return null;
+        }
+
+        public IQueryable<User> GetSupervisors()
+        {
+            var userKeys = new HashSet<Guid>();
+
+            foreach (var userName in UserAuth.RoleProvider.GetUsersInRole(RoleNames.RoleSupervisor))
+            {
+                userKeys.Add((Guid)UserAuth.GetUser(userName).ProviderUserKey);
+            }
+
+            var users = from usr in Repository.Queryable
+                        where userKeys.ToList().Contains(usr.ID)
+                        select usr;
+
+            return users;
         }
 
         public User GetUser()
