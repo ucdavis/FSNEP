@@ -3,12 +3,13 @@
     public static class RoleNames
     {
         #region Roles
-        public static readonly string RoleTimeSheet = "Timesheet User";
-        public static readonly string RoleSupervisor = "Supervisor";
-        public static readonly string RoleAdmin = "State Office";
-        public static readonly string RoleNonSalary = "NonPayrollCostShareExpenses";
-        public static readonly string RoleProjectAdmin = "ProjectAdmin";
-        public static readonly string RoleDelegateSupervisor = "DelegateSupervisor";
+
+        public const string RoleTimeSheet = "Timesheet User";
+        public const string RoleSupervisor = "Supervisor";
+        public const string RoleAdmin = "State Office";
+        public const string RoleNonSalary = "NonPayrollCostShareExpenses";
+        public const string RoleProjectAdmin = "ProjectAdmin";
+        public const string RoleDelegateSupervisor = "DelegateSupervisor";
 
         #endregion
     }
