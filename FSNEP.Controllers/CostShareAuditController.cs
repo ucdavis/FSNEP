@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using FSNEP.Controllers.Helpers.Attributes;
 using FSNEP.Core.Domain;
+using UCDArch.Core.PersistanceSupport;
 
 namespace FSNEP.Controllers
 {
@@ -11,26 +13,30 @@ namespace FSNEP.Controllers
     [AdminOnly]
     public class CostShareAuditController : SuperController
     {
-        public ActionResult ChooseProject()
-        {
-            var projects = Repository.OfType<Project>().Queryable.OrderBy(x => x.Name);
-
-            return View(projects.ToList());
-        }
-
         public ActionResult History(int? projectId)
         {
-            if (projectId.HasValue == false)
-            {
-                return RedirectToAction("ChooseProject");
-            }
+            var viewModel = CostShareAuditHistoryViewModel.Create(Repository.OfType<Project>(),
+                                                                  Repository.OfType<CostShare>(), projectId);
 
-            var chosenProject = Repository.OfType<Project>().GetById(projectId.Value);
+            return View(viewModel);
+        }
+    }
+
+    public class CostShareAuditHistoryViewModel
+    {
+        public static CostShareAuditHistoryViewModel Create(IRepository<Project> projectRepository, IRepository<CostShare> costShareRepository, int? projectId)
+        {
+            var chosenProject = projectId.HasValue ? projectRepository.GetNullableByID(projectId.Value) : null;
 
             var costSharesInProject =
-                Repository.OfType<CostShare>().Queryable.Where(x => x.User.Projects.Contains(chosenProject));
-
-            return View(costSharesInProject.OrderByDescending(x => x.Year).ThenByDescending(x => x.Month));
+                costShareRepository.Queryable.Where(x => x.User.Projects.Contains(chosenProject)).OrderByDescending(
+                    x => x.Year).ThenByDescending(x => x.Month);
+           
+            return new CostShareAuditHistoryViewModel {CostShares = costSharesInProject, Project = chosenProject};
         }
+
+        public IEnumerable<CostShare> CostShares { get; set; }
+
+        public Project Project { get; set; }
     }
 }
