@@ -91,6 +91,7 @@
     </Compile>
     <Compile Include="CostShareController.cs" />
     <Compile Include="LookupController.cs" />
+    <Compile Include="SupervisorController.cs" />
     <Compile Include="TimeRecordController.cs" />
     <Compile Include="UserAdministrationController.cs" />
     <Compile Include="Helpers\Attributes\HandleErrorWithELMAHAttribute.cs" />

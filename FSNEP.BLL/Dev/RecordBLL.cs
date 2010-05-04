@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using FSNEP.BLL.Interfaces;
@@ -173,6 +174,29 @@ namespace FSNEP.BLL.Dev
             }
 
             return currentDate;
+        }
+
+        /// <summary>
+        /// Returns all of the reviewable & current records for the given supervisor's reviewees.
+        /// </summary>
+        /// <remarks>
+        /// Criteria for a record being visible
+        /// 1) Current user is the supervisor of the record's owner
+        /// TODO: 2) Current user is a delegate for a supervisor who supervises the record's owner
+        /// </remarks>
+        /// <param name="user">The user who will review the record</param>
+        public virtual IEnumerable<T> GetReviewableAndCurrentRecords(IPrincipal user)
+        {
+            var reviewableAndCurrentStatuses = new[] {"PendingReview", "Current"};
+
+            var records = _repository.OfType<T>().Queryable
+                .Where(x => x.User.Supervisor.UserName == user.Identity.Name)
+                .Where(x => reviewableAndCurrentStatuses.Contains(x.Status.Name))
+                .OrderBy(x => x.User.LastName)
+                .ThenBy(x => x.Year)
+                .ThenBy(x => x.Month);
+
+            return records;
         }
 
         /// <summary>

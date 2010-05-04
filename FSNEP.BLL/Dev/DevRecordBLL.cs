@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using FSNEP.BLL.Interfaces;
@@ -58,6 +59,21 @@ namespace FSNEP.BLL.Dev
         public void Submit(T record, IPrincipal user)
         {
             //Do nothing
+        }
+
+        /// <summary>
+        /// Just return everything and order it correctly
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public IEnumerable<T> GetReviewableAndCurrentRecords(IPrincipal user)
+        {
+            var records = _repository.OfType<T>().Queryable
+                .OrderBy(x => x.User.LastName)
+                .ThenBy(x => x.Year)
+                .ThenBy(x => x.Month);
+
+            return records;
         }
     }
 }
