@@ -9,10 +9,11 @@ using UCDArch.Core.PersistanceSupport;
 using UCDArch.Core.Utils;
 using MvcContrib;
 using MvcContrib.Attributes;
-using ApplicationException=Elmah.ApplicationException;
+using FSNEP.Controllers.Helpers.Attributes;
 
 namespace FSNEP.Controllers
 {
+    [AllSupervisors]
     public class SupervisorController : SuperController
     {
         private readonly ICostShareBLL _costShareBLL;
@@ -129,7 +130,7 @@ namespace FSNEP.Controllers
 
         #region Delegates
 
-        [Authorize(Roles="Supervisor")]
+        [DirectSupervisorsOnly]
         public RedirectToRouteResult Delegate()
         {
             return CurrentUserHasDelegate() ? RedirectToAction("RemoveDelegate") : RedirectToAction("AssignDelegate");
@@ -138,7 +139,7 @@ namespace FSNEP.Controllers
         /// <summary>
         /// Return a list of all active users (except the current one), any one of which can be assigned as a delegate for this supervisor
         /// </summary>
-        [Authorize(Roles = "Supervisor")]
+        [DirectSupervisorsOnly]
         public ActionResult AssignDelegate()
         {
             if (CurrentUserHasDelegate()) return this.RedirectToAction(x => x.RemoveDelegate());
@@ -149,6 +150,7 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [DirectSupervisorsOnly]
         public ActionResult AssignDelegate(Guid userId)
         {
             var userToAssign = _userBLL.GetNullableByID(userId);
@@ -162,7 +164,7 @@ namespace FSNEP.Controllers
             return this.RedirectToAction<HomeController>(x => x.Index());
         }
 
-        [Authorize(Roles="Supervisor")]
+        [DirectSupervisorsOnly]
         public ActionResult RemoveDelegate()
         {
             if (!CurrentUserHasDelegate()) return this.RedirectToAction(x => x.AssignDelegate());
@@ -177,6 +179,7 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [DirectSupervisorsOnly]
         public ActionResult RemoveDelegate(Guid userId)
         {
             var userToRemove = _userBLL.GetNullableByID(userId);
@@ -190,7 +193,7 @@ namespace FSNEP.Controllers
             return this.RedirectToAction<HomeController>(x => x.Index());
         }
 
-        public bool CurrentUserHasDelegate()
+        private bool CurrentUserHasDelegate()
         {
             var currentUserHasDelegate = Repository.OfType<User>()
                                             .Queryable

@@ -102,7 +102,7 @@
     </Compile>
     <Compile Include="CostShareController.cs" />
     <Compile Include="FileController.cs" />
-    <Compile Include="Helpers\Attributes\AdminOnlyAttribute.cs" />
+    <Compile Include="Helpers\Attributes\AuthorizationAttributes.cs" />
     <Compile Include="Helpers\Extensions\ActionResultExtensions.cs" />
     <Compile Include="LookupController.cs" />
     <Compile Include="ReportController.cs" />
