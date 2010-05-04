@@ -95,6 +95,7 @@
     <Compile Include="Controllers\LookupControllerTests.cs" />
     <Compile Include="Controllers\UserAdministrationControllerTests.cs" />
     <Compile Include="Core\ControllerTestBase.cs" />
+    <Compile Include="Core\EntityIdSetter.cs" />
     <Compile Include="Core\Extensions\RouteTestingExtensions.cs" />
     <Compile Include="Core\Fakes\FakeMembershipUser.cs" />
     <Compile Include="Core\RepositoryTestBase.cs" />
