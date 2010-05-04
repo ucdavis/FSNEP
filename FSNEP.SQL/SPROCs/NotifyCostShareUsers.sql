@@ -1,4 +1,6 @@
-﻿USE [FSNEPv2]
+﻿--Note: Not required in current version
+/*
+USE [FSNEPv2]
 
 DECLARE @dayInt int
 DECLARE @nowMinusOneMonth datetime
@@ -34,3 +36,4 @@ FROM         aspnet_Membership INNER JOIN
 WHERE     (aspnet_Roles.RoleName = N'NonPayrollCostShareExpenses') AND (Users.IsActive = 1)
 
 --Send Emails on some date (TBD) to those who should have submitted a time record and didn't 
+*/
