@@ -281,7 +281,6 @@ namespace FSNEP.Tests.Controllers
         [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
         public void TestCostShareAuditExcludeThrowsExceptionWhenExcludeReasonIsSpacesOnly()
         {
-            //TODO: Fix in Controller or Change test so this is valid.
             try
             {
                 FakeProjects();
@@ -311,28 +310,34 @@ namespace FSNEP.Tests.Controllers
         /// Tests the cost share audit exclude does not save when exclude reason is too long.
         /// </summary>
         [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
         public void TestCostShareAuditExcludeDoesNotSaveWhenExcludeReasonIsTooLong()
         {
-            //TODO: Fix in controller or remove test.
-            FakeProjects();
-            FakeUsers();
-            FakeCostShareRecords();
-            FakeCostShareEntryRecords();
-
-            var sb = new StringBuilder();
-            for (int i = 0; i < 25; i++)
+            try
             {
-                sb.Append("1234567890");
+                FakeProjects();
+                FakeUsers();
+                FakeCostShareRecords();
+                FakeCostShareEntryRecords();
+
+                var sb = new StringBuilder();
+                for (int i = 0; i < 25; i++)
+                {
+                    sb.Append("1234567890");
+                }
+                sb.Append("1234567");
+                Assert.AreEqual(257, sb.ToString().Length);
+
+                Assert.IsFalse(CostShareEntryRecords[2].Exclude);
+                Assert.AreNotEqual(sb.ToString(), CostShareEntryRecords[2].ExcludeReason);
+
+                Controller.Exclude(3, sb.ToString());
             }
-            sb.Append("1234567");
-            Assert.AreEqual(257, sb.ToString().Length);
-
-            Assert.IsFalse(CostShareEntryRecords[2].Exclude);
-            Assert.AreNotEqual(sb.ToString(), CostShareEntryRecords[2].ExcludeReason);
-
-            var result = Controller.Exclude(3, sb.ToString());
-            CostShareEntryRepository.AssertWasNotCalled(a => a.EnsurePersistent(CostShareEntryRecords[2]));
-            Assert.Inconclusive("If this test passes to here, extra validation must be done to make sure errors are generated.");
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Exclude Reason Is Not Valid", ex.Message);
+                throw;
+            }
         }
 
         #endregion Exclude Tests
