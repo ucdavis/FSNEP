@@ -55,8 +55,6 @@ namespace FSNEP.Tests.Repositories
             UserBLL.UserAuth.Expect(a => a.CurrentUserName).Return("currentuser");
             UserBLL.UserAuth.Expect(a => a.GetUser("currentuser")).Return(new FakeMembershipUser(UserIds[0])); //Current user is the first user
 
-            var allProjects = projectRepository.GetAll();
-
             var project1 = projectRepository.GetById(1);
             var project2 = projectRepository.GetById(2);
             var project3 = projectRepository.GetById(3);
@@ -236,35 +234,23 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithNullFirstName()
         {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = null,
-                LastName = ValidValueName,
-                Salary = ValidValueSalary,
-                FTE = ValidValueFte,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
-            
+            User user = null;
             try
             {
-                userBLL.EnsurePersistent(user, true);
+                user = CreateValidUser();
+                user.FirstName = null;           
+            
+                UserBLL.EnsurePersistent(user, true);
             }
             catch (Exception)
             {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count);
-                results.AssertContains("FirstName: may not be null or empty");
-                //results.AssertContains("FirstName: length must be between 0 and 50");
-                //Assert.IsTrue(results.Contains("FirstName: The value cannot be null."), "Expected the validation result to have \"FirstName: The value cannot be null.\"");
-                //Assert.IsTrue(results.Contains("FirstName: length must be between 0 and 50"), "Expected the validation result to have \"FirstName: length must be between 0 and 50\"");
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("FirstName: may not be null or empty");
+                }
                 throw;
             }
         }
@@ -273,33 +259,23 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithTooLongFirstName()
         {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = InvalidValueName,
-                LastName = ValidValueName,
-                Salary = ValidValueSalary,
-                FTE = ValidValueFte,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-            //may not be null or empty
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
-
+            User user = null;
             try
             {
-                userBLL.EnsurePersistent(user, true);
+                user = CreateValidUser();
+                user.FirstName = InvalidValueName;
+
+                UserBLL.EnsurePersistent(user, true);
             }
             catch (Exception)
             {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count); 
-                results.AssertContains("FirstName: length must be between 0 and 50");
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("FirstName: length must be between 0 and 50");
+                }
                 throw;
             }
         }
@@ -310,34 +286,23 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithOnlySpacesInLastName()
         {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = " ",
-                Salary = ValidValueSalary,
-                FTE = ValidValueFte,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-            //may not be null or empty
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
+            User user = null;
             try
             {
-                userBLL.EnsurePersistent(user, true);
+                user = CreateValidUser();
+                user.LastName = " ";
+
+                UserBLL.EnsurePersistent(user, true);
             }
             catch (Exception)
             {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count);
-                results.AssertContains("LastName: may not be null or empty");
-                //Assert.AreEqual(true, results.Contains("LastName: Required"), "Expected the validation result to have \"LastName: Required\"");    
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("LastName: may not be null or empty");
+                }
                 throw;
             }
         }
@@ -346,36 +311,23 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithNullLastName()
         {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = null,
-                Salary = ValidValueSalary,
-                FTE = ValidValueFte,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-            //may not be null or empty
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
-            
+            User user = null;
             try
-            {                
-                userBLL.EnsurePersistent(user, true);
+            {
+                user = CreateValidUser();
+                user.LastName = null;
+
+                UserBLL.EnsurePersistent(user, true);
             }
             catch (Exception)
             {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count);
-                results.AssertContains("LastName: may not be null or empty");
-                //results.AssertContains("LastName: length must be between 1 and 50");
-                //Assert.AreEqual(true, results.Contains("LastName: Required"), "Expected the validation result to have \"LastName: Required\"");
-                //Assert.AreEqual(true, results.Contains("LastName: length must be between 1 and 50"), "Expected the validation result to have \"LastName: length must be between 1 and 50\"");
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("LastName: may not be null or empty");
+                }
                 throw;
             }
         }
@@ -384,33 +336,23 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithLastNameLongerThan50Characters()
         {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = InvalidValueName,
-                Salary = ValidValueSalary,
-                FTE = ValidValueFte,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-            //may not be null or empty
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
+            User user = null;
             try
             {
-                userBLL.EnsurePersistent(user, true);
+                user = CreateValidUser();
+                user.LastName = InvalidValueName;
+
+                UserBLL.EnsurePersistent(user, true);
             }
             catch (Exception)
             {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count);
-                results.AssertContains("LastName: length must be between 0 and 50");
-                //Assert.AreEqual(true, results.Contains("LastName: length must be between 1 and 50"), "Expected the validation result to have \"LastName: length must be between 1 and 50\"");
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("LastName: length must be between 0 and 50");
+                }
                 throw;
             }
         }
@@ -418,24 +360,9 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void UserSavesWithLastName1CharacterLong()
         {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = "1",
-                Salary = ValidValueSalary,
-                FTE = ValidValueFte,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
-            userBLL.EnsurePersistent(user, true);
+            var user = CreateValidUser();
+            user.LastName = "x";
+            UserBLL.EnsurePersistent(user, true);
         }
 
         #endregion LastName Tests
@@ -445,33 +372,23 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithNullSupervisor()
         {
-            var userBLL = new UserBLL(null);
-            var user = new User
-               {
-                   FirstName = ValidValueName,
-                   LastName = ValidValueName,
-                   Salary = ValidValueSalary,
-                   FTE = ValidValueFte,
-                   IsActive = true,
-                   Supervisor = null,
-                   UserName = "UserName"
-               };
-
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
+            User user = null;
             try
             {
-                userBLL.EnsurePersistent(user, true);
+                user = CreateValidUser();
+                user.Supervisor = null;
+
+                UserBLL.EnsurePersistent(user, true);
             }
             catch (Exception)
             {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count);
-                results.AssertContains("Supervisor: may not be empty");
-                //Assert.AreEqual(true, results.Contains("Supervisor: The value cannot be null."), "Expected the validation result to have \"Supervisor: The value cannot be null.\"");
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("Supervisor: may not be empty");
+                }
                 throw;
             }
         }
@@ -484,33 +401,23 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithSalaryZero()
         {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = ValidValueName,
-                Salary = 0,
-                FTE = ValidValueFte,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-         
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
+            User user = null;
             try
             {
-                userBLL.EnsurePersistent(user, true);
+                user = CreateValidUser();
+                user.Salary = 0;
+
+                UserBLL.EnsurePersistent(user, true);
             }
             catch (Exception)
             {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count);
-                results.AssertContains("Salary: Must be greater than zero");
-                //Assert.AreEqual(true, results.Contains("Salary: Must be greater than zero"), "Expected the validation result to have \"Salary: Must be greater than zero\"");
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("Salary: Must be greater than zero");
+                }
                 throw;
             }
         }
@@ -519,32 +426,23 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithSalaryLessThanZero()
         {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = ValidValueName,
-                Salary = -1,
-                FTE = ValidValueFte,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
+            User user = null;
             try
             {
-                userBLL.EnsurePersistent(user, true);
+                user = CreateValidUser();
+                user.Salary = -1;
+
+                UserBLL.EnsurePersistent(user, true);
             }
             catch (Exception)
             {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count);
-                results.AssertContains("Salary: Must be greater than zero");
-                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: Salary, Must be greater than zero\r\n", message.Message, "Expected Exception Not encountered");
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("Salary: Must be greater than zero");
+                }
                 throw;
             }
         }
@@ -554,33 +452,23 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithBenifitRateLessThanZero()
         {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = ValidValueName, 
-                Salary = ValidValueSalary,
-                BenefitRate = -1,
-                FTE = ValidValueFte,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
+            User user = null;
             try
             {
-                userBLL.EnsurePersistent(user, true);
+                user = CreateValidUser();
+                user.BenefitRate = -1;
+
+                UserBLL.EnsurePersistent(user, true);
             }
             catch (Exception)
             {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count);
-                results.AssertContains("BenefitRate: must be between 0 and 2");
-                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, must be between 0 and 2\r\n", message.Message, "Expected Exception Not encountered");
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("BenefitRate: must be between 0 and 2");
+                }
                 throw;
             }
         }
@@ -589,33 +477,23 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithBenifitRateGreaterThan2()
         {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = ValidValueName,
-                Salary = ValidValueSalary,
-                BenefitRate = 2.00001,
-                FTE = ValidValueFte,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
+            User user = null;
             try
             {
-                userBLL.EnsurePersistent(user, true);
+                user = CreateValidUser();
+                user.BenefitRate = 2.00001;
+
+                UserBLL.EnsurePersistent(user, true);
             }
             catch (Exception)
             {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count);
-                results.AssertContains("BenefitRate: must be between 0 and 2");
-                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, must be between 0 and 2\r\n", message.Message, "Expected Exception Not encountered");
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("BenefitRate: must be between 0 and 2");
+                }
                 throw;
             }
         }
@@ -623,30 +501,132 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void UserSavesWithBenifitRateOfZero()
         {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = ValidValueName,
-                Salary = ValidValueSalary,
-                BenefitRate = 0,
-                FTE = ValidValueFte,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
-            userBLL.EnsurePersistent(user, true);            
+            var user = CreateValidUser();
+            user.BenefitRate = 0;
+            UserBLL.EnsurePersistent(user, true);            
         }
 
         [TestMethod]
         public void UserSavesWithBenifitRateOf2()
         {
-            var userBLL = new UserBLL(null);
+            var user = CreateValidUser();
+            user.BenefitRate = 2;
+            UserBLL.EnsurePersistent(user, true);   
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithFteLessThanZero()
+        {
+            User user = null;
+            try
+            {
+                user = CreateValidUser();
+                user.FTE = -1;
+
+                UserBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("FTE: must be between 0.01 and 1");
+                }
+                throw;
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithFteGreaterThan1()
+        {
+            User user = null;
+            try
+            {
+                user = CreateValidUser();
+                user.FTE = 1.0001;
+
+                UserBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("FTE: must be between 0.01 and 1");
+                }
+                throw;
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void UserDoesNotSaveWithFteOfZero()
+        {
+            User user = null;
+            try
+            {
+                user = CreateValidUser();
+                user.FTE = 0;
+
+                UserBLL.EnsurePersistent(user, true);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(user);
+                if (user != null)
+                {
+                    var results = user.ValidationResults().AsMessageList();
+                    Assert.AreEqual(1, results.Count);
+                    results.AssertContains("FTE: must be between 0.01 and 1");
+                }
+                throw;
+            }          
+        }
+
+        [TestMethod]
+        public void UserSavesWithFteBetweenzeroAnd1()
+        {
+            var user = CreateValidUser();
+            user.FTE = 0.01;
+            UserBLL.EnsurePersistent(user, true);
+        }
+
+        #region Helper Methods
+        private static IList<FundType> FakeFundTypes()
+        {
+            var fundTypes = new List<FundType>
+                                {
+                                    new FundType {Name = "Name1"},
+                                    new FundType {Name = "Name2"},
+                                    new FundType {Name = "Name3"}
+                                };
+
+            return fundTypes;
+        }
+
+        private static IList<Project> FakeProjects()
+        {
+            var projects = new List<Project>
+                               {
+                                   new Project {Name = "Name", IsActive = true},
+                                   new Project{Name = "Name2", IsActive = true}
+                               };
+            return projects;
+            
+        }
+
+        /// <summary>
+        /// Create and return a valid user.
+        /// </summary>
+        /// <returns></returns>
+        private static User CreateValidUser()
+        {
             var user = new User
             {
                 FirstName = ValidValueName,
@@ -663,153 +643,9 @@ namespace FSNEP.Tests.Repositories
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
-            userBLL.EnsurePersistent(user, true);
+
+            return user;
         }
-
-        [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
-        public void UserDoesNotSaveWithFteLessThanZero()
-        {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = ValidValueName,
-                Salary = ValidValueSalary,
-                FTE = -1,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
-            try
-            {
-                userBLL.EnsurePersistent(user, true);
-            }
-            catch (Exception)
-            {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count);
-                results.AssertContains("FTE: must be between 0.01 and 1");
-                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
-                throw;
-            }
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
-        public void UserDoesNotSaveWithFteGreaterThan1()
-        {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = ValidValueName,
-                Salary = ValidValueSalary,
-                FTE = 1.0009,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
-            try
-            {
-                userBLL.EnsurePersistent(user, true);
-            }
-            catch (Exception)
-            {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count);
-                results.AssertContains("FTE: must be between 0.01 and 1");
-                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
-                throw;
-            }
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
-        public void UserDoesNotSaveWithFteOfZero()
-        {
-            //TODO: For this test and others expecing an application exception, wrap the whole thing in the try catch block.
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = ValidValueName,
-                Salary = ValidValueSalary,
-                FTE = 0,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
-            try
-            {
-                userBLL.EnsurePersistent(user, true);
-            }
-            catch (Exception)
-            {
-                var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(1, results.Count);
-                results.AssertContains("FTE: must be between 0.01 and 1");
-                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
-                throw;
-            }          
-        }
-
-        [TestMethod]
-        public void UserSavesWithFteBetweenzeroAnd1()
-        {
-            var userBLL = new UserBLL(null);
-            var user = new User
-            {
-                FirstName = ValidValueName,
-                LastName = ValidValueName,
-                Salary = ValidValueSalary,
-                FTE = 0.01,
-                IsActive = true,
-                UserName = "UserName"
-            };
-            user.Supervisor = user; //I'm my own supervisor
-            user.Projects = FakeProjects();
-            user.FundTypes = FakeFundTypes();
-
-            var userId = Guid.NewGuid();
-            user.SetUserID(userId);
-            userBLL.EnsurePersistent(user, true);            
-        }
-
-        private static IList<FundType> FakeFundTypes()
-        {
-            var fundTypes = new List<FundType>();
-
-            fundTypes.Add(new FundType { Name = "Name1" });
-            fundTypes.Add(new FundType { Name = "Name2" });
-            fundTypes.Add(new FundType { Name = "Name3" });
-            return fundTypes;
-        }
-
-        private static IList<Project> FakeProjects()
-        {
-            var projects = new List<Project>
-                               {
-                                   new Project {Name = "Name", IsActive = true},
-                                   new Project{Name = "Name2", IsActive = true}
-                               };
-            return projects;
-            
-        }
+        #endregion Helper Methods
     }
 }
