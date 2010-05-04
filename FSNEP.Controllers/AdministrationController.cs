@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using CAESArch.BLL;
 using FSNEP.BLL.Impl;
 using FSNEP.Controllers.Helpers;
 using FSNEP.Core.Domain;
 using System.Linq;
+using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
 using MvcContrib.Attributes;
 using MvcContrib;
 using System;
@@ -15,7 +17,7 @@ namespace FSNEP.Controllers
     public class AdministrationController : SuperController
     {
         public IUserBLL UserBLL;
-        
+
         public AdministrationController(IUserBLL userBLL)
         {
             UserBLL = userBLL;
@@ -24,11 +26,28 @@ namespace FSNEP.Controllers
         public ActionResult CreateUser()
         {
             //Create the viewmodel with a blank user
-            var viewModel = new CreateUserViewModel { User = new User() };
+            var viewModel = new CreateUserViewModel {User = new User()};
 
             PopulateDefaultUserViewModel(viewModel);
 
             return View(viewModel);
+        }
+
+        [AcceptPost]
+        public ActionResult CreateUser(CreateUserViewModel model, Guid? supervisorId, IEnumerable<int> projectList, IEnumerable<int> fundTypeList)
+        {
+            ValidationHelper<CreateUserViewModel>.Validate(model, ModelState); //Validate the create user properties
+            
+            ValidationHelper<User>.Validate(model.User, ModelState, "User"); //validate the user properties
+
+            CheckUserProperties(supervisorId, projectList, fundTypeList);
+
+            if (!ModelState.IsValid)
+            {
+                return CreateUser();
+            }
+            
+            return CreateUser();
         }
 
         /// <summary>
@@ -42,7 +61,7 @@ namespace FSNEP.Controllers
                 return this.RedirectToAction(a => a.CreateUser());
             }
 
-            var viewModel = new UserViewModel { User = UserBLL.GetUser(id) };
+            var viewModel = new UserViewModel {User = UserBLL.GetUser(id)};
 
             //If the user could not be found, redirect to creating a user
             if (viewModel.User == null) return this.RedirectToAction(a => a.CreateUser());
@@ -53,13 +72,14 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult ModifyUser(string id, Guid? supervisorId, IEnumerable<int> projectList, IEnumerable<int> fundTypeList)
+        public ActionResult ModifyUser(string id, Guid? supervisorId, IEnumerable<int> projectList,
+                                       IEnumerable<int> fundTypeList)
         {
             var user = UserBLL.GetUser(id);
             UpdateModel(user, "User"); //Update the user from the data entered in the form
-            
+
             ValidationHelper<User>.Validate(user, ModelState, "User");
-            
+
             CheckUserProperties(supervisorId, projectList, fundTypeList);
 
             if (!ModelState.IsValid)
@@ -90,13 +110,15 @@ namespace FSNEP.Controllers
 
             if (projectList == null) ModelState.AddModelError("ProjectList", "You must select at least one project");
 
-            if (fundTypeList == null) ModelState.AddModelError("FundTypeList", "You must select at least one fund type");
+            if (fundTypeList == null)
+                ModelState.AddModelError("FundTypeList", "You must select at least one fund type");
         }
 
         /// <summary>
         /// Populate the given user with the proper associated properties
         /// </summary>
-        private void PopulateUserProperties(User user, Guid? supervisorId, IEnumerable<int> projectList, IEnumerable<int> fundTypeList)
+        private void PopulateUserProperties(User user, Guid? supervisorId, IEnumerable<int> projectList,
+                                            IEnumerable<int> fundTypeList)
         {
             user.Supervisor = UserBLL.Repository.GetByID(supervisorId.Value);
 
@@ -115,22 +137,35 @@ namespace FSNEP.Controllers
         private void PopulateDefaultUserViewModel(UserViewModel viewModel)
         {
             viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
-                                                  viewModel.User.Supervisor != null ? viewModel.User.Supervisor.ID : Guid.Empty);
+                                                   viewModel.User.Supervisor != null
+                                                       ? viewModel.User.Supervisor.ID
+                                                       : Guid.Empty);
 
             viewModel.Projects = new MultiSelectList(UserBLL.GetAllProjectsByUser().ToList(), "ID", "Name",
                                                      viewModel.User.Projects.Select(p => p.ID));
 
             viewModel.FundTypes = new MultiSelectList(UserBLL.GetAvailableFundTypes().ToList(), "ID", "Name",
-                                                     viewModel.User.FundTypes.Select(p => p.ID));
-
+                                                      viewModel.User.FundTypes.Select(p => p.ID));
         }
     }
 
     public class CreateUserViewModel : UserViewModel
     {
+        [NotNullValidator]
+        [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
         public string UserName { get; set; }
+        
+        [NotNullValidator]
+        [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
+        [RegexValidator(@"\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b", RegexOptions.IgnoreCase, MessageTemplate= "Must be a valid email address")]
         public string Email { get; set; }
+        
+        [NotNullValidator]
+        [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
         public string Question { get; set; }
+
+        [NotNullValidator]
+        [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
         public string Answer { get; set; }
     }
 
