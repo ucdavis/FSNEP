@@ -169,10 +169,11 @@ namespace FSNEP.Tests.Repositories
         /// <summary>
         /// Determines whether this instance [can save cost share entry with valid amount values].
         /// </summary>
-        [TestMethod]
+        [TestMethod] //Task 509, Ammount can now have negative values.
         public void CanSaveCostShareEntryWithValidAmountValues()
         {
-            double[] validAmounts = {0, 0.01, 0.0001, 1, 2, 10000000};
+            //TODO: Update validation to allow test to pass (Task 509)
+            double[] validAmounts = {-100000, -2, -1, -0.0001, -0.01, 0, 0.01, 0.0001, 1, 2, 10000000};
             foreach (var validAmount in validAmounts)
             {
                 Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
@@ -295,13 +296,12 @@ namespace FSNEP.Tests.Repositories
             {
 
                 Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("ExpenseType: may not be empty");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
+              
+                var results = costShareEntry.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("ExpenseType: may not be empty");
+                Assert.IsTrue(costShareEntry.IsTransient());
+                Assert.IsFalse(costShareEntry.IsValid());
+
                 throw;
             }
         }
@@ -340,32 +340,32 @@ namespace FSNEP.Tests.Repositories
         /// <summary>
         /// Amount does not save with amount less than zero.
         /// </summary>
-        [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
-        public void CostShareEntryDoesNotSaveWithAmountLessThanZero()
-        {
-            CostShareEntry costShareEntry = null;
+        //[TestMethod, Ignore]
+        //[ExpectedException(typeof(ApplicationException))]
+        //public void CostShareEntryDoesNotSaveWithAmountLessThanZero()
+        //{
+        //    CostShareEntry costShareEntry = null;
 
-            try
-            {
-                costShareEntry = CreateValidCostShareEntry(null);
-                costShareEntry.Amount = -1;
-                Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
-            }
-            catch (Exception)
-            {
+        //    try
+        //    {
+        //        costShareEntry = CreateValidCostShareEntry(null);
+        //        costShareEntry.Amount = -1;
+        //        Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
+        //    }
+        //    catch (Exception)
+        //    {
 
-                Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Amount: must be greater than or equal to 0");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
-                throw;
-            }
-        }
+        //        Assert.IsNotNull(costShareEntry);
+        //        if (costShareEntry != null)
+        //        {
+        //            var results = costShareEntry.ValidationResults().AsMessageList();
+        //            results.AssertErrorsAre("Amount: must be greater than or equal to 0");
+        //            Assert.IsTrue(costShareEntry.IsTransient());
+        //            Assert.IsFalse(costShareEntry.IsValid());
+        //        }
+        //        throw;
+        //    }
+        //}
 
         #endregion Amount Tests
 
@@ -390,13 +390,12 @@ namespace FSNEP.Tests.Repositories
             {
 
                 Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Description: may not be null or empty");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
+       
+                var results = costShareEntry.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Description: may not be null or empty");
+                Assert.IsTrue(costShareEntry.IsTransient());
+                Assert.IsFalse(costShareEntry.IsValid());
+             
                 throw;
             }
         }
@@ -420,13 +419,12 @@ namespace FSNEP.Tests.Repositories
             {
 
                 Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Description: may not be null or empty");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
+         
+                var results = costShareEntry.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Description: may not be null or empty");
+                Assert.IsTrue(costShareEntry.IsTransient());
+                Assert.IsFalse(costShareEntry.IsValid());
+            
                 throw;
             }
         }
@@ -450,13 +448,12 @@ namespace FSNEP.Tests.Repositories
             {
 
                 Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Description: may not be null or empty");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
+      
+                var results = costShareEntry.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Description: may not be null or empty");
+                Assert.IsTrue(costShareEntry.IsTransient());
+                Assert.IsFalse(costShareEntry.IsValid());
+          
                 throw;
             }
         }
@@ -480,13 +477,12 @@ namespace FSNEP.Tests.Repositories
             {
 
                 Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Description: length must be between 0 and 128");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
+           
+                var results = costShareEntry.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Description: length must be between 0 and 128");
+                Assert.IsTrue(costShareEntry.IsTransient());
+                Assert.IsFalse(costShareEntry.IsValid());
+            
                 throw;
             }
         }
@@ -516,13 +512,12 @@ namespace FSNEP.Tests.Repositories
             {
 
                 Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Record: may not be empty");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
+                
+                var results = costShareEntry.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Record: may not be empty");
+                Assert.IsTrue(costShareEntry.IsTransient());
+                Assert.IsFalse(costShareEntry.IsValid());
+            
                 throw;
             }
         }
@@ -558,95 +553,95 @@ namespace FSNEP.Tests.Repositories
 
         #region Comment Tests
 
-        /// <summary>
-        /// Cost share entry with null comment does not save.
-        /// </summary>
-        [TestMethod, Ignore] //Task 509, Test no longer valid
-        [ExpectedException(typeof(ApplicationException))]
-        public void CostShareEntryWithNullCommentDoesNotSave()
-        {
-            CostShareEntry costShareEntry = null;
+        ///// <summary>
+        ///// Cost share entry with null comment does not save.
+        ///// </summary>
+        //[TestMethod, Ignore] //Task 509, Test no longer valid
+        //[ExpectedException(typeof(ApplicationException))]
+        //public void CostShareEntryWithNullCommentDoesNotSave()
+        //{
+        //    CostShareEntry costShareEntry = null;
 
-            try
-            {
-                costShareEntry = CreateValidCostShareEntry(null);
-                costShareEntry.Comment = null;
-                Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
-            }
-            catch (Exception)
-            {
+        //    try
+        //    {
+        //        costShareEntry = CreateValidCostShareEntry(null);
+        //        costShareEntry.Comment = null;
+        //        Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
+        //    }
+        //    catch (Exception)
+        //    {
 
-                Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Comment: may not be null or empty");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
-                throw;
-            }
-        }
+        //        Assert.IsNotNull(costShareEntry);
+        //        if (costShareEntry != null)
+        //        {
+        //            var results = costShareEntry.ValidationResults().AsMessageList();
+        //            results.AssertErrorsAre("Comment: may not be null or empty");
+        //            Assert.IsTrue(costShareEntry.IsTransient());
+        //            Assert.IsFalse(costShareEntry.IsValid());
+        //        }
+        //        throw;
+        //    }
+        //}
 
-        /// <summary>
-        /// Cost share entry with empty comment does not save.
-        /// </summary>
-        [TestMethod, Ignore] //Task 509, Test no longer valid
-        [ExpectedException(typeof(ApplicationException))]
-        public void CostShareEntryWithEmptyCommentDoesNotSave()
-        {
-            CostShareEntry costShareEntry = null;
+        ///// <summary>
+        ///// Cost share entry with empty comment does not save.
+        ///// </summary>
+        //[TestMethod, Ignore] //Task 509, Test no longer valid
+        //[ExpectedException(typeof(ApplicationException))]
+        //public void CostShareEntryWithEmptyCommentDoesNotSave()
+        //{
+        //    CostShareEntry costShareEntry = null;
 
-            try
-            {
-                costShareEntry = CreateValidCostShareEntry(null);
-                costShareEntry.Comment = string.Empty;
-                Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
-            }
-            catch (Exception)
-            {
+        //    try
+        //    {
+        //        costShareEntry = CreateValidCostShareEntry(null);
+        //        costShareEntry.Comment = string.Empty;
+        //        Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
+        //    }
+        //    catch (Exception)
+        //    {
 
-                Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Comment: may not be null or empty");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
-                throw;
-            }
-        }
+        //        Assert.IsNotNull(costShareEntry);
+        //        if (costShareEntry != null)
+        //        {
+        //            var results = costShareEntry.ValidationResults().AsMessageList();
+        //            results.AssertErrorsAre("Comment: may not be null or empty");
+        //            Assert.IsTrue(costShareEntry.IsTransient());
+        //            Assert.IsFalse(costShareEntry.IsValid());
+        //        }
+        //        throw;
+        //    }
+        //}
 
-        /// <summary>
-        /// Cost share entry with spaces only in coment does not save.
-        /// </summary>
-        [TestMethod, Ignore] //Task 509, Test no longer valid
-        [ExpectedException(typeof(ApplicationException))]
-        public void CostShareEntryWithSpacesOnlyCommentDoesNotSave()
-        {
-            CostShareEntry costShareEntry = null;
+        ///// <summary>
+        ///// Cost share entry with spaces only in coment does not save.
+        ///// </summary>
+        //[TestMethod, Ignore] //Task 509, Test no longer valid
+        //[ExpectedException(typeof(ApplicationException))]
+        //public void CostShareEntryWithSpacesOnlyCommentDoesNotSave()
+        //{
+        //    CostShareEntry costShareEntry = null;
 
-            try
-            {
-                costShareEntry = CreateValidCostShareEntry(null);
-                costShareEntry.Comment = "   ";
-                Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
-            }
-            catch (Exception)
-            {
+        //    try
+        //    {
+        //        costShareEntry = CreateValidCostShareEntry(null);
+        //        costShareEntry.Comment = "   ";
+        //        Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
+        //    }
+        //    catch (Exception)
+        //    {
 
-                Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Comment: may not be null or empty");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
-                throw;
-            }
-        }
+        //        Assert.IsNotNull(costShareEntry);
+        //        if (costShareEntry != null)
+        //        {
+        //            var results = costShareEntry.ValidationResults().AsMessageList();
+        //            results.AssertErrorsAre("Comment: may not be null or empty");
+        //            Assert.IsTrue(costShareEntry.IsTransient());
+        //            Assert.IsFalse(costShareEntry.IsValid());
+        //        }
+        //        throw;
+        //    }
+        //}
 
         /// <summary>
         /// Cost share entry with coment of 257 characters does not save.
@@ -674,13 +669,12 @@ namespace FSNEP.Tests.Repositories
             {
 
                 Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Comment: length must be between 0 and 256");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
+                
+                var results = costShareEntry.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Comment: length must be between 0 and 256");
+                Assert.IsTrue(costShareEntry.IsTransient());
+                Assert.IsFalse(costShareEntry.IsValid());
+              
                 throw;
             }
         }
@@ -708,13 +702,12 @@ namespace FSNEP.Tests.Repositories
             {
 
                 Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Project: may not be empty");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
+            
+                var results = costShareEntry.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Project: may not be empty");
+                Assert.IsTrue(costShareEntry.IsTransient());
+                Assert.IsFalse(costShareEntry.IsValid());
+           
                 throw;
             }
         }
@@ -770,13 +763,12 @@ namespace FSNEP.Tests.Repositories
             {
 
                 Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("FundType: may not be empty");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
+               
+                var results = costShareEntry.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("FundType: may not be empty");
+                Assert.IsTrue(costShareEntry.IsTransient());
+                Assert.IsFalse(costShareEntry.IsValid());
+             
                 throw;
             }
         }
@@ -832,13 +824,12 @@ namespace FSNEP.Tests.Repositories
             {
 
                 Assert.IsNotNull(costShareEntry);
-                if (costShareEntry != null)
-                {
-                    var results = costShareEntry.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Account: may not be empty");
-                    Assert.IsTrue(costShareEntry.IsTransient());
-                    Assert.IsFalse(costShareEntry.IsValid());
-                }
+               
+                var results = costShareEntry.ValidationResults().AsMessageList();
+                results.AssertErrorsAre("Account: may not be empty");
+                Assert.IsTrue(costShareEntry.IsTransient());
+                Assert.IsFalse(costShareEntry.IsValid());
+            
                 throw;
             }
         }
