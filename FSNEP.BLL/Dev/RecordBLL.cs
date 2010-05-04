@@ -20,6 +20,7 @@ namespace FSNEP.BLL.Dev
 
         public bool HasAccess(IPrincipal user, T record)
         {
+            Check.Require(record != null);
             return record.User.UserName == user.Identity.Name;
         }
 
