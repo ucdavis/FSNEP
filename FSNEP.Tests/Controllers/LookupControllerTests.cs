@@ -474,8 +474,9 @@ namespace FSNEP.Tests.Controllers
         public void RoutingCreateActivityTypeCallsCreateActivityType()
         {
             //TODO: When we get the next version of MvcContrib, check if .ShouldMapTo works for this test
-            "~/Administration/Lookups/CreateActivityType".ShouldMapToIgnoringParams("Lookup", "CreateActivityType");
-
+            //"~/Administration/Lookups/CreateActivityType".ShouldMapToIgnoringParams("Lookup", "CreateActivityType");
+            "~/Administration/Lookups/CreateActivityType".Route().ShouldMapTo<LookupController>(
+                a => a.CreateActivityType(null,1), true);
             /*
             var routeData = "~/Administration/Lookups/CreateActivityType".Route();
 
