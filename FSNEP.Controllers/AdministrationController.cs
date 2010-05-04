@@ -66,7 +66,7 @@ namespace FSNEP.Controllers
         public ActionResult CreateUser()
         {
             //Create the viewmodel with a blank user
-            var viewModel = new CreateUserViewModel { User = new User { FTE = 1 } };
+            var viewModel = new CreateUserViewModel { User = new User { FTE = 1, IsActive = true } };
 
             PopulateDefaultUserViewModel(viewModel);
 

@@ -58,6 +58,13 @@
             </td>
         </tr>
         <tr>
+            <td>Active User?</td>
+            <td>
+                <%= Html.CheckBox("User.IsActive") %>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
             <td>
                 Supervisor:
             </td>
