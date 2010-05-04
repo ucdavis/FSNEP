@@ -2,7 +2,6 @@ using System.Linq;
 using System.Web.Mvc;
 using CAESArch.BLL;
 using CAESArch.Core.DataInterfaces;
-using FSNEP.BLL.Impl;
 using FSNEP.Controllers.Helpers;
 using FSNEP.Controllers.Helpers.Attributes;
 using FSNEP.Core.Domain;
@@ -15,13 +14,8 @@ namespace FSNEP.Controllers
     {
         public IRepository Repository;
 
-        public IProjectBLL ProjectBLL;
-        public IAccountBLL AccountBLL;
-        
-        public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL, IRepository repository)
+        public LookupController(IRepository repository)
         {
-            ProjectBLL = projectBLL;
-            AccountBLL = accountBLL;
             Repository = repository;
         }
 
@@ -226,7 +220,8 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult Accounts()
         {
-            var activeAccounts = AccountBLL.GetActive();
+            var activeAccounts =
+                Repository.OfType<Account>().Queryable.Where(a => a.IsActive).OrderBy(a => a.Name).ToList();
             
             return View(activeAccounts);
         }
@@ -235,7 +230,7 @@ namespace FSNEP.Controllers
         public ActionResult InactivateAccount(int accountId)
         {
             //get the account
-            var account = AccountBLL.Repository.GetNullableByID(accountId);
+            var account = Repository.OfType<Account>().GetNullableByID(accountId);
 
             if (account == null)
             {
@@ -249,7 +244,7 @@ namespace FSNEP.Controllers
             {
                 account.IsActive = false;
 
-                AccountBLL.Repository.EnsurePersistent(account);
+                Repository.OfType<Account>().EnsurePersistent(account);
 
                 ts.CommitTransaction();
             }
@@ -276,7 +271,7 @@ namespace FSNEP.Controllers
             //Add the new project
             using (var ts = new TransactionScope())
             {
-                AccountBLL.Repository.EnsurePersistent(newAccount);
+                Repository.OfType<Account>().EnsurePersistent(newAccount);
 
                 ts.CommitTransaction();
             }
@@ -286,13 +281,15 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(a => a.Accounts());
         }
 
+
         /// <summary>
         /// Return a list of all projects
         /// </summary>
         [Transaction]
         public ActionResult Projects()
         {
-            var activeProjects = ProjectBLL.GetActive();
+            var activeProjects =
+                Repository.OfType<Project>().Queryable.Where(a => a.IsActive).OrderBy(a => a.Name).ToList();
             
             return View(activeProjects);
         }
@@ -301,7 +298,7 @@ namespace FSNEP.Controllers
         public ActionResult InactivateProject(int projectId)
         {
             //get the project
-            var project = ProjectBLL.Repository.GetNullableByID(projectId);
+            var project = Repository.OfType<Project>().GetNullableByID(projectId);
 
             if (project == null)
             {
@@ -315,7 +312,7 @@ namespace FSNEP.Controllers
             {
                 project.IsActive = false;
 
-                ProjectBLL.Repository.EnsurePersistent(project);
+                Repository.OfType<Project>().EnsurePersistent(project);
 
                 ts.CommitTransaction();
             }
@@ -342,7 +339,7 @@ namespace FSNEP.Controllers
             //Add the new project
             using (var ts = new TransactionScope())
             {
-                ProjectBLL.Repository.EnsurePersistent(newProject);
+                Repository.OfType<Project>().EnsurePersistent(newProject);
 
                 ts.CommitTransaction();
             }
