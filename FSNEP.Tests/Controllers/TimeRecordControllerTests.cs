@@ -52,6 +52,7 @@ namespace FSNEP.Tests.Controllers
             "~/TimeRecord/TimeRecordEntry/5"
                 .ShouldMapTo<TimeRecordController>(a => a.TimeRecordEntry(id));
         }
+
         #endregion Routing maps
 
         #region AddEntry Tests
@@ -77,7 +78,6 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual("{ id = 24 }", result.Data.ToString());
         }
 
-        //TODO: Failure (ie. invalid timerecord.id)
         /// <summary>
         /// Invalid time record id causes time record entry to fail.
         /// </summary>
@@ -176,11 +176,44 @@ namespace FSNEP.Tests.Controllers
             }
         }
 
+        /// <summary>
+        /// Invalid time record entry hours out of range causes time record entry to fail.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void InvalidTimeRecordEntryHoursOutOfRangeCausesTimeRecordEntryToFail()
+        {
+            JsonNetResult result = null;
+            try
+            {
+                var timeRecordEntry = CreateValidTimeRecordEntry();
+                timeRecordEntry.Hours = 25; //makes this invalid
+                timeRecordEntry.SetIdTo(24);
+                IPrincipal userPrincipal = new MockPrincipal();
+                Controller.ControllerContext.HttpContext.User = userPrincipal;
+
+                _timeRecordBll.AssertWasNotCalled(a => a.EnsurePersistent(_timeRecord));
+                result = Controller.AddEntry(_timeRecord.Id, timeRecordEntry);
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(_timeRecord);
+                Assert.IsNull(result);
+                Assert.AreEqual("Entry is not valid", message.Message);
+                _timeRecordBll.AssertWasNotCalled(a => a.EnsurePersistent(_timeRecord));
+                throw;
+            }
+        } 
+
         #endregion AddEntry Tests
 
+        #region TimeRecordEntry Tests
+        //TODO: These tests for TimeRecordEntry Tests
+
+        #endregion TimeRecordEntry Tests
 
         #region Helper Methods
-      
+
         /// <summary>
         /// Creates the valid time record.
         /// </summary>
