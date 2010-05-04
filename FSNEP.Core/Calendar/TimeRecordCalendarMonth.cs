@@ -26,7 +26,8 @@ namespace FSNEP.Core.Calendar
             // Puts in the days for the first week when the month starts in the middle of the week
 
             // Calculate the first day of the calendar view (the sunday before the month starts)
-            DateTime preceedingDays = _firstDay.AddDays(-ConvertDayOfWeek(_firstDay.DayOfWeek.ToString()));
+            //DateTime preceedingDays = _firstDay.AddDays(-ConvertDayOfWeek(_firstDay.DayOfWeek.ToString()));
+            DateTime preceedingDays = _firstDay.AddDays(-(int)_firstDay.DayOfWeek);
 
             // iterate through until we reach the first of the month
             while (DateTime.Compare(_firstDay, preceedingDays) != 0)
@@ -46,7 +47,8 @@ namespace FSNEP.Core.Calendar
 
             // Populate the lead out days of the month (to get to the saturday on the last week)
             // Calculates the remaining days of the final lead out week and adds those appropriately
-            for (int i = 1; i < 7 - ConvertDayOfWeek(_lastDay.DayOfWeek.ToString()); i++)
+            //for (int i = 1; i < 7 - ConvertDayOfWeek(_lastDay.DayOfWeek.ToString()); i++)
+            for (int i = 1; i < 7 - (int)_lastDay.DayOfWeek; i++)
             {
                 _days.Add(new TimeRecordCalendarDay(_lastDay.AddDays(i), false));
             }
@@ -70,29 +72,31 @@ namespace FSNEP.Core.Calendar
             set { _lastDay = value; }
         }
 
-        private static int ConvertDayOfWeek(string day)
-        {
-            //TODO: this could be replaced with (int)date.DayOfWeek
-            switch (day)
-            {
-                case "Sunday":
-                    return 0;
-                case "Monday":
-                    return 1;
-                case "Tuesday":
-                    return 2;
-                case "Wednesday":
-                    return 3;
-                case "Thursday":
-                    return 4;
-                case "Friday":
-                    return 5;
-                case "Saturday":
-                    return 6;
-                default:
-                    return 0;
-            }
-        }
+        
+        //[Obsolete("This can be replaced by casting the DayOfWeek enum as an int")]
+        //private static int ConvertDayOfWeek(string day)
+        //{
+        //    switch (day)
+        //    {
+        //        case "Sunday":
+        //            return 0;
+        //        case "Monday":
+        //            return 1;
+        //        case "Tuesday":
+        //            return 2;
+        //        case "Wednesday":
+        //            return 3;
+        //        case "Thursday":
+        //            return 4;
+        //        case "Friday":
+        //            return 5;
+        //        case "Saturday":
+        //            return 6;
+        //        default:
+        //            return 0;
+        //    }
+        //}
+         
 
         /// <summary>
         /// Given a time sheet, it populates the day with the proper entries
