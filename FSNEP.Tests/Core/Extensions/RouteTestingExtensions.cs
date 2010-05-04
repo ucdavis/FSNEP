@@ -30,16 +30,18 @@ namespace FSNEP.Tests.Core.Extensions
             }            
         }
 
+
         /// <summary>
         /// Validates that the route should map to a particular controller and action.
         /// </summary>
         /// <typeparam name="TController">The type of the controller.</typeparam>
-        /// <param name="routeData">The route data.</param>
+        /// <param name="strRoute">The STR route.</param>
         /// <param name="action">The action.</param>
         /// <param name="ignoreParameters">if set to <c>true</c> [ignore parameters].</param>
         /// <returns></returns>
-        public static RouteData ShouldMapTo<TController>(this RouteData routeData, Expression<Func<TController, ActionResult>> action, bool ignoreParameters) where TController : Controller
+        public static RouteData ShouldMapTo<TController>(this string strRoute, Expression<Func<TController, ActionResult>> action, bool ignoreParameters) where TController : Controller
         {
+            var routeData = strRoute.Route(); 
             Assert.IsNotNull(routeData, "The URL did not match any route");
 
             //check controller
@@ -72,12 +74,13 @@ namespace FSNEP.Tests.Core.Extensions
         /// This one uses actions without a return value.
         /// </summary>
         /// <typeparam name="TController">The type of the controller.</typeparam>
-        /// <param name="routeData">The route data.</param>
+        /// <param name="strRoute">The STR route.</param>
         /// <param name="action">The action.</param>
         /// <param name="ignoreParameters">if set to <c>true</c> [ignore parameters].</param>
         /// <returns></returns>
-        public static RouteData ShouldMapTo<TController>(this RouteData routeData, Expression<Action<TController>> action, bool ignoreParameters) where TController : Controller
+        public static RouteData ShouldMapTo<TController>(this string strRoute, Expression<Action<TController>> action, bool ignoreParameters) where TController : Controller
         {
+            var routeData = strRoute.Route(); 
             Assert.IsNotNull(routeData, "The URL did not match any route");
 
             //check controller

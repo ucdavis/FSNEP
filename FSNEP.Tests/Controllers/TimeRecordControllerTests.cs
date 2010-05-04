@@ -67,7 +67,7 @@ namespace FSNEP.Tests.Controllers
             var timeRecordEntry = CreateValidTimeRecordEntry();
             //"~/TimeRecord/AddEntry?recordId=2".ShouldMapTo<TimeRecordController>(a => a.AddEntry(2, timeRecordEntry));
             //"~/TimeRecord/AddEntry".ShouldMapToIgnoringParams("TimeRecord", "AddEntry");
-            "~/TimeRecord/AddEntry".Route().ShouldMapTo<TimeRecordController>(a => a.AddEntry(2, timeRecordEntry), true);
+            "~/TimeRecord/AddEntry".ShouldMapTo<TimeRecordController>(a => a.AddEntry(2, timeRecordEntry), true);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace FSNEP.Tests.Controllers
         public void RoutingRemoveEntryMapsToRemoveEntry()
         {
 //            "~/TimeRecord/RemoveEntry/2".ShouldMapToIgnoringParams("TimeRecord", "RemoveEntry");
-            "~/TimeRecord/RemoveEntry".Route().ShouldMapTo<TimeRecordController>(a => a.RemoveEntry(2), true);
+            "~/TimeRecord/RemoveEntry".ShouldMapTo<TimeRecordController>(a => a.RemoveEntry(2), true);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace FSNEP.Tests.Controllers
         public void RoutingEditEntryMapsToEditEntry()
         {
             //"~/TimeRecord/EditEntry".ShouldMapToIgnoringParams("TimeRecord", "EditEntry");
-            "~/TimeRecord/EditEntry".Route().ShouldMapTo<TimeRecordController>(a => a.EditEntry(1, null), true);
+            "~/TimeRecord/EditEntry".ShouldMapTo<TimeRecordController>(a => a.EditEntry(1, null), true);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace FSNEP.Tests.Controllers
         public void RoutingGetEntryMapsToGetEntry()
         {
             //"~/TimeRecord/GetEntry".ShouldMapToIgnoringParams("TimeRecord", "GetEntry");
-            "~/TimeRecord/GetEntry".Route().ShouldMapTo<TimeRecordController>(a => a.GetEntry(1), true);
+            "~/TimeRecord/GetEntry".ShouldMapTo<TimeRecordController>(a => a.GetEntry(1), true);
         }
 
         #endregion Routing maps
