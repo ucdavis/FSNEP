@@ -39,6 +39,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\CAESArch.BLL.dll</HintPath>
     </Reference>
+    <Reference Include="CAESArch.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=667f3cb07abadf4b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\CAESArch.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="MvcContrib, Version=1.0.0.916, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -78,6 +82,10 @@
     <Content Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FSNEP.BLL\FSNEP.BLL.csproj">
+      <Project>{C99762B2-05D5-4DD8-8F98-E0B5244EB402}</Project>
+      <Name>FSNEP.BLL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FSNEP.Controllers\FSNEP.Controllers.csproj">
       <Project>{C7B24D27-6F72-43BA-A3E9-21C10F869FEA}</Project>
       <Name>FSNEP.Controllers</Name>

@@ -4,6 +4,7 @@ using FSNEP.Controllers.Helpers;
 using FSNEP.Core.Domain;
 using System.Linq;
 using MvcContrib.Attributes;
+using MvcContrib;
 using System;
 
 namespace FSNEP.Controllers
@@ -18,19 +19,35 @@ namespace FSNEP.Controllers
             UserBLL = userBLL;
         }
 
+        public ActionResult CreateUser()
+        {
+            //Create the viewmodel with a blank user
+            var viewModel = new CreateUserViewModel { User = new User() };
+            
+            viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName");
+
+            viewModel.Projects = new MultiSelectList(UserBLL.GetAllProjectsByUser().ToList(), "ID", "Name");
+
+            viewModel.FundTypes = new MultiSelectList(UserBLL.GetAvailableFundTypes().ToList(), "ID", "Name");
+
+            return View(viewModel);
+        }
+
         /// <summary>
         /// Returns the user object indentified by the given userid.  If there is no user, return just the other information needed for creating a new user.
         /// </summary>
         /// <param name="id">the userid/username</param>
         public ActionResult ModifyUser(string id)
         {
-            var viewModel = new ModifyUserViewModel
-                                {
-                                    User = string.IsNullOrEmpty(id) ? new User() : UserBLL.GetUser(id)
-                                };
+            if (string.IsNullOrEmpty(id))
+            {
+                return this.RedirectToAction(a => a.CreateUser());
+            }
+
+            var viewModel = new ModifyUserViewModel { User = UserBLL.GetUser(id) };
 
             viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
-                                                   viewModel.User.Supervisor != null ? viewModel.User.Supervisor.ID : Guid.Empty);
+                                                   viewModel.User.Supervisor.ID);
 
             viewModel.Projects = new MultiSelectList(UserBLL.GetAllProjectsByUser().ToList(), "ID", "Name",
                                                      viewModel.User.Projects.Select(p => p.ID));
@@ -61,6 +78,14 @@ namespace FSNEP.Controllers
 
             return ModifyUser(id);
         }
+    }
+
+    public class CreateUserViewModel
+    {
+        public User User { get; set; }
+        public SelectList Supervisors { get; set; }
+        public MultiSelectList Projects { get; set; }
+        public MultiSelectList FundTypes { get; set; }        
     }
 
     public class ModifyUserViewModel
