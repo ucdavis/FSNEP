@@ -60,8 +60,8 @@ namespace FSNEP.BLL.Dev
                 .Queryable
                 .Where(x => x.User.UserName == user.Identity.Name)
                 .Where(x => x.Status.Name == "Current")
-                .OrderBy(x => x.Year)
-                .ThenBy(x => x.Month)
+                .OrderByDescending(x => x.Year)
+                .ThenByDescending(x => x.Month)
                 .FirstOrDefault();
 
             //Create a new timesheet if there is no current,
@@ -104,6 +104,9 @@ namespace FSNEP.BLL.Dev
                                     User = _repository.OfType<User>()
                                                 .Queryable.Where(x => x.UserName == user.Identity.Name).Single()
                                 };
+
+            if (typeof(T) == typeof(TimeRecord)) (newRecord as TimeRecord).Salary = 1.2;
+
 
             //Create the record and track the creation
             PersistRecordWithTracking(newRecord, user, _repository);
