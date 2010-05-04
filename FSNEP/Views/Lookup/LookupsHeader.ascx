@@ -6,3 +6,4 @@
 <%= Html.ActionLink<LookupController>(a=>a.ExpenseTypes(), "Expense Types") %>
 <%= Html.ActionLink<LookupController>(a=>a.ActivityCategories(), "Activity Categories") %>
 <%= Html.ActionLink<LookupController>(a=>a.ActivityTypes(), "Activity Types") %>
+<%= Html.ActionLink<LookupController>(a=>a.HoursInMonths(), "Hours In Months") %>
