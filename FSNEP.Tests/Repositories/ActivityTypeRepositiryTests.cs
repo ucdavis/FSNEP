@@ -1,10 +1,11 @@
 ﻿using System;
 using FSNEP.Core.Domain;
-using FSNEP.Tests.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
+using UCDArch.Testing;
 using UCDArch.Testing.Extensions;
+using RepositoryTestBase=FSNEP.Tests.Core.RepositoryTestBase;
 
 namespace FSNEP.Tests.Repositories
 {
@@ -65,9 +66,9 @@ namespace FSNEP.Tests.Repositories
         }
 
         [TestMethod]
-        public void CanSaveWithSpacesOnlyInIndicator()
-        {
-            //TODO: Review. The indicator here allows 2 spaces, but the UI doesn't appear to allow it. Do we want to add the Required Validator?
+        [ExpectedException(typeof(ApplicationException))]
+        public void CanNotSaveWithSpacesOnlyInIndicator()
+        {            
             var activityType = new ActivityType
             {
                 ActivityCategory = ActivityCategory,
@@ -75,20 +76,30 @@ namespace FSNEP.Tests.Repositories
                 Name = ValidValueName
             };
 
-            using (var ts = new TransactionScope())
+            try
             {
-                _activityTypeRepository.EnsurePersistent(activityType);
+                using (var ts = new TransactionScope())
+                {
+                    _activityTypeRepository.EnsurePersistent(activityType);
 
-                ts.CommitTransaction();
+                    ts.CommitTransaction();
+                }
+
             }
-
-            Assert.AreEqual(false, activityType.IsTransient());
+            catch (Exception)
+            {
+                var results = activityType.ValidationResults().AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("Indicator: may not be null or empty");                
+                throw;
+            }
         }
 
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void ActivityTypeDoesNotSaveWithNullName()
         {
+            //ServiceLocatorInitializer.Init();
             var activityType = new ActivityType
             {
                 ActivityCategory = ActivityCategory,
@@ -108,9 +119,9 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 var results = activityType.ValidationResults().AsMessageList();
-                Assert.AreEqual(2, results.Count);
-                results.AssertContains("Name: The value cannot be null.");
-                results.AssertContains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("Name: may not be null or empty");
+                //results.AssertContains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.ActivityType could not be persisted\n\n\r\nValidation Errors: Name, The value cannot be null.\r\nName, The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }

@@ -29,9 +29,11 @@ namespace FSNEP.Tests.Core
                                                                     NHibernateSessionManager.
                                                                         Instance.GetSession().Connection, null);
 
+            
+            ServiceLocatorInitializer.Init();
             LoadData();
 
-            ServiceLocatorInitializer.Init();
+            
 
             HibernatingRhinos.NHibernate.Profiler.Appender.NHibernateProfiler.Initialize();
         }
