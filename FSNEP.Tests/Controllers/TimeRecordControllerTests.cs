@@ -286,9 +286,12 @@ namespace FSNEP.Tests.Controllers
         {
             Controller.ControllerContext.HttpContext.User = _principal;
 
+            Controller.Repository.Expect(x => x.OfType<TimeRecordEntry>()).Return(FakeRepository<TimeRecordEntry>());
+            
             var projects = MockProjectsForUser();
             _userBll.Expect(a => a.GetUser()).IgnoreArguments().Return(User).Repeat.AtLeastOnce();
             var activityCategories = MockActivityCategories();
+            MockAdjustmentEntries();
 
             var timeRecord = _timeRecordRepository.GetNullableByID(1);
             var result = (ViewResult) Controller.Entry(timeRecord.Id);
@@ -674,6 +677,20 @@ namespace FSNEP.Tests.Controllers
             return activityCategories;
         }
 
+        /// <summary>
+        /// Mocks the activity categories.
+        /// </summary>
+        /// <returns>List of categories</returns>
+        private void MockAdjustmentEntries()
+        {
+            var adjustmentEntries = new List<TimeRecordEntry>();
+
+            var adjustmentEntriesRepository = FakeRepository<TimeRecordEntry>();
+            
+            Controller.Repository.Expect(a => a.OfType<TimeRecordEntry>()).Return(adjustmentEntriesRepository).Repeat.
+                Any();
+            Controller.Repository.OfType<TimeRecordEntry>().Expect(a => a.Queryable).Return(adjustmentEntries.AsQueryable()).Repeat.Any();
+        }
 
         /// <summary>
         /// Creates the valid time record.
