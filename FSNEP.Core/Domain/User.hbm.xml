@@ -26,12 +26,12 @@
 
     <many-to-one name="Delegate" column="DelegateID" class="FSNEP.Core.Domain.User, FSNEP.Core" />
 
-	  <bag name="FundTypes" table="FundTypeXUsers">
+	  <bag name="FundTypes" table="FundTypeXUsers" cascade="all">
 		  <key column="UserID" />
 		  <many-to-many column="FundTypeID" class="FSNEP.Core.Domain.FundType, FSNEP.Core" />
 	  </bag>
 	  
-    <bag name="Projects" table="ProjectXUsers">
+    <bag name="Projects" table="ProjectXUsers" cascade="all">
       <key column="UserId" />
       <many-to-many column="ProjectID" class="FSNEP.Core.Domain.Project, FSNEP.Core" where="IsActive = 1" />
     </bag>
