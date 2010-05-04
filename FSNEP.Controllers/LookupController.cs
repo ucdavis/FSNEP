@@ -2,6 +2,7 @@ using System.Linq;
 using System.Web.Mvc;
 using CAESArch.BLL;
 using CAESArch.Core.DataInterfaces;
+using CAESArch.Core.Domain;
 using FSNEP.Controllers.Helpers;
 using FSNEP.Controllers.Helpers.Attributes;
 using FSNEP.Core.Domain;
@@ -31,29 +32,10 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [Transaction]
         public ActionResult InactivateActivityType(int id)
         {
-            //get the account
-            var activityType = Repository.OfType<ActivityType>().GetNullableByID(id);
-
-            if (activityType == null)
-            {
-                Message = "Activity Type Not Found";
-
-                return this.RedirectToAction(a => a.ActivityTypes());
-            }
-
-            //inactivate the project
-            using (var ts = new TransactionScope())
-            {
-                activityType.IsActive = false;
-
-                Repository.OfType<ActivityType>().EnsurePersistent(activityType);
-
-                ts.CommitTransaction();
-            }
-
-            Message = "Activity Type Removed Successfully";
+            InactivateEntity<ActivityType>(id, "Activity Type");
 
             return this.RedirectToAction(a => a.ActivityTypes());
         }
@@ -97,30 +79,11 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [Transaction]
         public ActionResult InactivateActivityCategory(int id)
         {
-            //get the account
-            var activityCategory = Repository.OfType<ActivityCategory>().GetNullableByID(id);
-
-            if (activityCategory == null)
-            {
-                Message = "Activity Category Not Found";
-
-                return this.RedirectToAction(a => a.ActivityCategories());
-            }
-
-            //inactivate the project
-            using (var ts = new TransactionScope())
-            {
-                activityCategory.IsActive = false;
-
-                Repository.OfType<ActivityCategory>().EnsurePersistent(activityCategory);
-
-                ts.CommitTransaction();
-            }
-
-            Message = "Activity Category Removed Successfully";
-
+            InactivateEntity<ActivityCategory>(id, "Activity Category");
+            
             return this.RedirectToAction(a => a.ActivityCategories());
         }
 
@@ -162,30 +125,11 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [Transaction]
         public ActionResult InactivateExpenseType(int id)
         {
-            //get the account
-            var expenseType = Repository.OfType<ExpenseType>().GetNullableByID(id);
-
-            if (expenseType == null)
-            {
-                Message = "Expense Type Not Found";
-
-                return this.RedirectToAction(a => a.ExpenseTypes());
-            }
-
-            //inactivate the project
-            using (var ts = new TransactionScope())
-            {
-                expenseType.IsActive = false;
-
-                Repository.OfType<ExpenseType>().EnsurePersistent(expenseType);
-
-                ts.CommitTransaction();
-            }
-
-            Message = "Expense Type Removed Successfully";
-
+            InactivateEntity<ExpenseType>(id, "Expense Type");
+            
             return this.RedirectToAction(a => a.ExpenseTypes());
         }
 
@@ -227,29 +171,10 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [Transaction]
         public ActionResult InactivateAccount(int id)
         {
-            //get the account
-            var account = Repository.OfType<Account>().GetNullableByID(id);
-
-            if (account == null)
-            {
-                Message = "Account Not Found";
-
-                return this.RedirectToAction(a => a.Accounts());
-            }
-
-            //inactivate the project
-            using (var ts = new TransactionScope())
-            {
-                account.IsActive = false;
-
-                Repository.OfType<Account>().EnsurePersistent(account);
-
-                ts.CommitTransaction();
-            }
-
-            Message = "Account Removed Successfully";
+            InactivateEntity<Account>(id, "Account");
 
             return this.RedirectToAction(a => a.Accounts());
         }
@@ -298,21 +223,7 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult InactivateProject(int id)
         {
-            //get the project
-            var project = Repository.OfType<Project>().GetNullableByID(id);
-
-            if (project == null)
-            {
-                Message = "Project Not Found";
-
-                return this.RedirectToAction(a => a.Projects());
-            }
-
-            //inactivate and save the project
-            project.IsActive = false;
-            Repository.OfType<Project>().EnsurePersistent(project);
-
-            Message = "Project Removed Successfully";
+            InactivateEntity<Project>(id, "Project");
 
             return this.RedirectToAction(a => a.Projects());
         }
@@ -338,6 +249,24 @@ namespace FSNEP.Controllers
             Message = "Project Created Successfully";
 
             return this.RedirectToAction(a => a.Projects());
+        }
+
+        private void InactivateEntity<T>(int id, string type) where T : LookupObject<T, int>
+        {
+            var entity = Repository.OfType<T>().GetNullableByID(id);
+
+            if (Equals(entity, default(T)))
+            {
+                Message = type + " Not Found";
+
+                return;
+            }
+
+            entity.IsActive = false;
+
+            Repository.OfType<T>().EnsurePersistent(entity);
+
+            Message = type + " Removed Successfully";
         }
     }
 }
