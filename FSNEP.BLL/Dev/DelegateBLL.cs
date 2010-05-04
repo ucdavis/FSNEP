@@ -47,7 +47,7 @@ namespace FSNEP.BLL.Dev
 
             //Remove the delegate user from the delegate role if they aren't anyone else's delegate
             var isDelegateOfOtherUser =
-                _userBLL.Queryable.Where(user => user.Delegate.Id == userToRemove.Id && user.Id != currentUser.Id).Any();
+                _userBLL.Queryable.Where(user => user.Delegate != null && user.Delegate.Id == userToRemove.Id && user.Id != currentUser.Id).Any();
 
             if (isDelegateOfOtherUser == false)
             {
