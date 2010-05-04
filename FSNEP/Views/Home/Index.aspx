@@ -39,4 +39,10 @@
         <li>
             <%=Html.ActionLink("User Admin", "List", "UserAdministration")%></li>
     </ul>
+        <h3>Reports</h3>
+    <ul>
+        <li>
+            <%= Html.ActionLink("Cost Share", "CostShare", "Report") %>
+        </li>
+    </ul>
 </asp:Content>
