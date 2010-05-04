@@ -53,18 +53,18 @@ from (
 	  , sum(IsNull(July.AmountIndr, 0)) + sum(IsNull(August.AmountIndr, 0)) + sum(IsNull(September.AmountIndr, 0)) as Q4AmountIndr
 	  
 	  from ExpenseTypes
-		left outer join fsnep.dbo.udf_sumofexpensesbymonth(@q1year, 10, @projectid) October on ExpenseTypes.ID = October.ExpenseTypeID
-		left outer join fsnep.dbo.udf_sumofexpensesbymonth(@q1year, 11, @projectid) November on ExpenseTypes.ID = November.ExpenseTypeID
-		left outer join fsnep.dbo.udf_sumofexpensesbymonth(@q1year, 12, @projectid) December on ExpenseTypes.ID = December.ExpenseTypeID
-		left outer join fsnep.dbo.udf_sumofexpensesbymonth(@year, 1, @projectid) January on ExpenseTypes.ID = January.ExpenseTypeID
-		left outer join fsnep.dbo.udf_sumofexpensesbymonth(@year, 2, @projectid) February on ExpenseTypes.ID = February.ExpenseTypeID
-		left outer join fsnep.dbo.udf_sumofexpensesbymonth(@year, 3, @projectid) March on ExpenseTypes.ID = March.ExpenseTypeID
-		left outer join fsnep.dbo.udf_sumofexpensesbymonth(@year, 4, @projectid) April on ExpenseTypes.ID = April.ExpenseTypeID
-		left outer join fsnep.dbo.udf_sumofexpensesbymonth(@year, 5, @projectid) May on ExpenseTypes.ID = May.ExpenseTypeID
-		left outer join fsnep.dbo.udf_sumofexpensesbymonth(@year, 6, @projectid) June on ExpenseTypes.ID = June.ExpenseTypeID
-		left outer join fsnep.dbo.udf_sumofexpensesbymonth(@year, 7, @projectid) July on ExpenseTypes.ID = July.ExpenseTypeID
-		left outer join fsnep.dbo.udf_sumofexpensesbymonth(@year, 8, @projectid) August on ExpenseTypes.ID = August.ExpenseTypeID
-		left outer join fsnep.dbo.udf_sumofexpensesbymonth(@year, 9, @projectid) September on ExpenseTypes.ID = September.ExpenseTypeID
+		left outer join udf_sumofexpensesbymonth(@q1year, 10, @projectid) October on ExpenseTypes.ID = October.ExpenseTypeID
+		left outer join udf_sumofexpensesbymonth(@q1year, 11, @projectid) November on ExpenseTypes.ID = November.ExpenseTypeID
+		left outer join udf_sumofexpensesbymonth(@q1year, 12, @projectid) December on ExpenseTypes.ID = December.ExpenseTypeID
+		left outer join udf_sumofexpensesbymonth(@year, 1, @projectid) January on ExpenseTypes.ID = January.ExpenseTypeID
+		left outer join udf_sumofexpensesbymonth(@year, 2, @projectid) February on ExpenseTypes.ID = February.ExpenseTypeID
+		left outer join udf_sumofexpensesbymonth(@year, 3, @projectid) March on ExpenseTypes.ID = March.ExpenseTypeID
+		left outer join udf_sumofexpensesbymonth(@year, 4, @projectid) April on ExpenseTypes.ID = April.ExpenseTypeID
+		left outer join udf_sumofexpensesbymonth(@year, 5, @projectid) May on ExpenseTypes.ID = May.ExpenseTypeID
+		left outer join udf_sumofexpensesbymonth(@year, 6, @projectid) June on ExpenseTypes.ID = June.ExpenseTypeID
+		left outer join udf_sumofexpensesbymonth(@year, 7, @projectid) July on ExpenseTypes.ID = July.ExpenseTypeID
+		left outer join udf_sumofexpensesbymonth(@year, 8, @projectid) August on ExpenseTypes.ID = August.ExpenseTypeID
+		left outer join udf_sumofexpensesbymonth(@year, 9, @projectid) September on ExpenseTypes.ID = September.ExpenseTypeID
 	group by ExpenseTypes.Name
 	) totals
 	order by Name
