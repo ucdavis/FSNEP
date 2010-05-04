@@ -128,10 +128,12 @@ namespace FSNEP.Controllers
                 UserBLL.EnsurePersistent(user);
 
                 //Send the user a message
-                var newUserTokenPath = Url.AbsoluteAction("Index", "Home", new { token = user.Token });
-                var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser(user.Supervisor.ID).Email;
+                //var newUserTokenPath = Url.AbsoluteAction("Index", "Home", new { token = user.Token });
+                //var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser(user.Supervisor.ID).Email;
+                //MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail, newUserTokenPath);
 
-                MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail, newUserTokenPath);
+                var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser(user.Supervisor.ID).Email;
+                MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail, Url.AbsoluteAction("Index", "Home", new { token = user.Token }));
 
                 ts.CommitTransaction();
             }
