@@ -73,3 +73,21 @@
         %>
     </div>
 </div>
+
+<div id="dialogTimeRecordEntry" class="TimeRecordEntryDialog" title="Add Entry">
+    <fieldset>
+        <legend>Entry Information</legend>
+        <p>
+            <p>
+                This is the default dialog which is useful for displaying information. The dialog
+                window can be moved, resized and closed with the 'x' icon.</p>
+        </p>
+        <p>
+            <label for="hours">Hours:</label><input id="hours" type="text" />
+        </p>
+        <p>
+            <label for="activityTypes">Activity Types:</label>
+            <% Html.RenderPartial("ActivityTypeSelect", Model.ActivityCategories); %>
+        </p>
+    </fieldset>
+</div>

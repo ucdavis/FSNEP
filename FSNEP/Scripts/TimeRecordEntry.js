@@ -4,8 +4,13 @@ $(function() {
 
     $(".AddCalendarEntry").live('click', function() {
         var clicked = $(this);
+
+        var id = GetIdFromElement(clicked, ElementType.Add);
+
+        DisplayMessage("You clicked on the add entry for day " + id);
+
+        AddEntry(id);
         
-        DisplayMessage("You clicked on the add entry for day " + GetIdFromElement(clicked, ElementType.Add));
     });
 
     $(".EditCalendarEntry").live('click', function() {
@@ -20,6 +25,27 @@ $(function() {
         DisplayMessage("You clicked on the delete entry for id " + GetIdFromElement(clicked, ElementType.Delete));
     });
 });
+
+function AddEntry(id) {
+    var addEntryDiv = $("#dialogTimeRecordEntry");
+
+    OpenDialog(addEntryDiv, null, "Add Entry", null);
+}
+
+function OpenDialog(dialog /*The dialog DIV JQuery object*/, buttons /*Button collection */, title, onClose) {
+    dialog.dialog("destroy"); //Reset the dialog to its initial state
+    dialog.dialog({
+        autoOpen: true,
+        closeOnEscape: false,
+        width: 400,
+        //height: 600,
+        modal: false,
+        title: title,
+        buttons: buttons,
+        //show: 'fold',
+        close: onClose
+    });
+}
 
 function DisplayMessage(message){
     $().message(message);

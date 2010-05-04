@@ -163,6 +163,7 @@
     <Content Include="Views\Lookup\HoursInMonths.aspx" />
     <Content Include="Views\Lookup\LookupsHeader.ascx" />
     <Content Include="Views\Lookup\Projects.aspx" />
+    <Content Include="Views\TimeRecord\ActivityTypeSelect.ascx" />
     <Content Include="Views\TimeRecord\Calendar.ascx" />
     <Content Include="Views\TimeRecord\Entry.aspx" />
     <Content Include="Views\UserAdministration\Create.aspx" />
