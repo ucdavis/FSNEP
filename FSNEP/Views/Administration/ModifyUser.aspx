@@ -49,11 +49,25 @@
                     <td><%= Html.DropDownList("Supervisor", Model.Supervisors, "Select A Supervisor") %></td>
                     <td><%= Html.ValidationMessageFor(u=>u.User.Supervisor) %></td>
                 </tr>
+                <tr>
+                    <td>Projects: </td>
+                    <td><%= this.MultiSelect("Projects").Options(Model.Projects) %></td>
+                    <td><%= Html.ValidationMessageFor(u=>u.User.Projects) %></td>
+                </tr>
+                <tr>
+                    <td>Fund Types: </td>
+                    <td><%= this.MultiSelect("FundType").Options(Model.FundTypes) %></td>
+                    <td><%= Html.ValidationMessageFor(u=>u.User.FundTypes) %></td>
+                </tr>
             </table>
         </fieldset>
         
-        <input type="submit" value="Create User" />
-
+        <% if (Model.NewUser) { %>
+                <input type="submit" value="Create User" />
+        <% } else { %>
+                <input type="submit" value="Modify User" />
+        <% } %>
+    
     <% } %>
 
     <div>

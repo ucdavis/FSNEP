@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using FSNEP.BLL.Impl;
 using FSNEP.Core.Domain;
+using System.Linq;
 
 namespace FSNEP.Controllers
 {
@@ -20,12 +21,7 @@ namespace FSNEP.Controllers
         public ActionResult ModifyUser(string id)
         {
             //First get the lookups, like projects, fundtypes, and supervisors  
-            var viewModel = new ModifyUserViewModel
-                                {
-                                    Projects = new SelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name"),
-                                    FundTypes = new SelectList(UserBLL.GetAvailableFundTypes(), "Name", "ID"),
-                                    Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName")
-                                };
+            var viewModel = new ModifyUserViewModel();
 
             if (string.IsNullOrEmpty(id))
             {
@@ -33,7 +29,17 @@ namespace FSNEP.Controllers
             }
 
             viewModel.User = UserBLL.GetUser(id);
-            
+
+            //Populate the supervisor with the correct supervisor chosen
+            viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
+                                                   viewModel.User.Supervisor.ID);
+
+            viewModel.Projects = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
+                                                     viewModel.User.Projects.Select(p => p.ID));
+
+            viewModel.FundTypes = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
+                                                     viewModel.User.FundTypes.Select(p => p.ID));
+
             return View(viewModel);
         }
 
@@ -57,8 +63,8 @@ namespace FSNEP.Controllers
 
         public SelectList Supervisors { get; set; }
 
-        public SelectList Projects { get; set; }
+        public MultiSelectList Projects { get; set; }
 
-        public SelectList FundTypes { get; set; }
+        public MultiSelectList FundTypes { get; set; }
     }
 }
