@@ -33,9 +33,9 @@ namespace FSNEP.Tests.Controllers
 
             var result = Controller.ListUsers()
                             .AssertViewRendered()
-                            .WithViewData<IQueryable<User>>();
+                            .WithViewData<List<User>>();
 
-            Assert.AreEqual(4, result.Count());
+            Assert.AreEqual(4, result.Count);
         }
 
         [TestMethod]

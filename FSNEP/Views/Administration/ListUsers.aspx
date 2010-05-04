@@ -8,6 +8,10 @@
 
     <h2>ListUsers</h2>
 
+    <p>
+        Jump to User: <%= Html.DropDownList("dlUserJump", new SelectList(Model, "ID", "FullNameLastFirst", "--Search--"))%> [TODO]
+    </p>
+    
     <table>
         <tr>
             <th></th>

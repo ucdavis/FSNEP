@@ -38,7 +38,7 @@ namespace FSNEP.Controllers
         {
             var users = UserBLL.GetAllUsers();
 
-            return View(users);
+            return View(users.ToList());
         }
 
         /// <summary>
