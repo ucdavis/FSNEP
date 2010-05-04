@@ -162,7 +162,7 @@ namespace FSNEP.Tests.Controllers
             #endregion newUser
 
             #region Parameters needed for the Create Method
-            var roleList = new List<string> {"Supervisor", "Timesheet User"};
+            var roleList = new List<string> {RoleNames.RoleSupervisor, RoleNames.RoleTimeSheet};
 
             #endregion Parameters needed for the Create Method
 
@@ -1204,6 +1204,8 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual(projects, userModelOriginal.User.Projects, "Value was not changed in the modify method.");
         }
 
+        
+
 
         #endregion Modify valid changes saves for each type of value that can be modified.
 
@@ -1505,7 +1507,7 @@ namespace FSNEP.Tests.Controllers
         }
 
         [TestMethod]
-        public void ModifyExistingValidUserDoesNotSaveWithEmptyChangesProjectss()
+        public void ModifyExistingValidUserDoesNotSaveWithEmptyChangesProjects()
         {
             var emptyProject = new List<Project>();
 
@@ -1525,9 +1527,44 @@ namespace FSNEP.Tests.Controllers
             newUserModel.ViewData.ModelState.AssertErrorsAre("You must select at least one project");
         }
 
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithEmptyChangesRoleList()
+        {
+            var emptyRoles = new List<string>();
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, emptyRoles, userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("User must have at least one role");
+        }
+
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithNNullChangesRoleList()
+        {
+            //var emptyRoles = new List<string>();
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, null, userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("User must have at least one role");
+        }
+
         #endregion Modify to invalid does not save and redirects back to the view
 
         #endregion Modify user tests
+
         #region Tests to ensure Mocking is working as expected. These could be removed.
         /// <summary>
         /// This demonstrates the mock of the CreateUser.
@@ -1603,22 +1640,10 @@ namespace FSNEP.Tests.Controllers
         
         #region Helper Methods
 
-        //private static List<int> CreateListOfProjects()
-        //{
-        //    var projectList = new List<int> {2, 3};
-
-        //    return projectList;
-        //}
-        //private static List<int> CreateListOfFundTypes()
-        //{
-        //    var fundTypeList = new List<int> {4, 5};
-
-
-        //    return fundTypeList;
-        //}
+        
         private static List<string> CreateListOfRoles()
         {
-            var roleList = new List<string> {"Supervisor", "Timesheet User"};
+            var roleList = new List<string> {RoleNames.RoleSupervisor, RoleNames.RoleTimeSheet};
 
             return roleList;
         }
@@ -1782,52 +1807,7 @@ namespace FSNEP.Tests.Controllers
         }       
         
 
-        /// <summary>
-        /// Generate 2 fake projects.
-        /// </summary>
-        //private void FakeProjects()
-        //{                    
-        //    var projects = new List<Project>
-        //                       {
-        //                           new Project {Name = "Name", IsActive = true},
-        //                           new Project{Name = "Name2", IsActive = true}
-        //                       };
-        //    projects[0].SetIdTo(2);
-        //    projects[1].SetIdTo(3);  
-            
-        //    var projectRepository = FakeRepository<Project>();
-
-        //    //This ties the "().Queryable" to return "projects"
-        //    projectRepository.Expect(a => a.Queryable).Return(projects.AsQueryable());
-
-        //    //This ties the call "Repository.OfType<Project>()" to my repository here "projectRepository"
-        //    Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
- 
-        //    /* This is what is calling the above code.
-        //    var projects = from proj in Repository.OfType<Project>().Queryable
-        //                   where projectList.Contains(proj.ID)
-        //                   select proj;
-        //     */
-        //}
-
-        ///// <summary>
-        ///// Generate 3 fake fund types
-        ///// </summary>
-        //private void FakeFundTypes()
-        //{
-        //    var fundTypes = new List<FundType>
-        //                        {
-        //                            new FundType {Name = "Name1"},
-        //                            new FundType {Name = "Name2"},
-        //                            new FundType {Name = "Name3"}
-        //                        };
-        //    fundTypes[0].SetIdTo(4);
-        //    fundTypes[1].SetIdTo(5);
-        //    fundTypes[2].SetIdTo(6);
-        //    var fundRepository = FakeRepository<FundType>();
-        //    fundRepository.Expect(a => a.Queryable).Return(fundTypes.AsQueryable());
-        //    Controller.Repository.Expect(a => a.OfType<FundType>()).Return(fundRepository);
-        //}
+        
 
         /// <summary>
         /// Creates the fund types and attaches them to user.
@@ -1836,20 +1816,25 @@ namespace FSNEP.Tests.Controllers
         /// <param name="createStateFundTypes">if set to <c>true</c> [create state fund types].</param>
         private static void CreateAndAttachFundTypesToUser(UserViewModel userModel, bool createStateFundTypes)
         {
+            var fundTypes = new List<FundType>();
             if (createStateFundTypes)
             {
-                //TODO: Create some "State" fund types to test those rules.
-                throw new NotImplementedException("Specific State FundTypes not done yet.");
+                fundTypes.Add(new FundType { Name = "Name1" });
+                fundTypes.Add(new FundType { Name = "State Share" });
+
+                fundTypes[0].SetIdTo(4);
+                fundTypes[1].SetIdTo(5);
             }
-            var fundTypes = new List<FundType>
-                                {
-                                    new FundType {Name = "Name1"},
-                                    new FundType {Name = "Name2"},
-                                    new FundType {Name = "Name3"}
-                                };
-            fundTypes[0].SetIdTo(4);
-            fundTypes[1].SetIdTo(5);
-            fundTypes[2].SetIdTo(6);
+            else
+            {
+                fundTypes.Add(new FundType {Name = "Name1"});
+                fundTypes.Add(new FundType {Name = "Name2"});
+                fundTypes.Add(new FundType {Name = "Name3"});
+
+                fundTypes[0].SetIdTo(4);
+                fundTypes[1].SetIdTo(5);
+                fundTypes[2].SetIdTo(6);
+            }
 
             userModel.FundTypes = fundTypes;
             userModel.User.FundTypes = fundTypes;
