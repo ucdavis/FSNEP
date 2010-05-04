@@ -9,7 +9,7 @@ namespace FSNEP.Core.Domain
     /// </summary>
     public class TimeRecordEntry : Entry
     {
-        [Range(0,31)]
+        [Range(1,31)]
         public virtual int Date { get; set; }
 
         [RangeDouble(0,24)]
