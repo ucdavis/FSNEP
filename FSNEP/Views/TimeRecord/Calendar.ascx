@@ -39,7 +39,8 @@
            { %>
            
         <a href="javascript:;" id="addEntry<%= dayId %>" class="AddCalendarEntry">
-            <img src="../../Images/add.gif" alt="+" />
+            <img src="<%= Url.Image("add.gif") %>" alt="+" />
+            
         </a>
         <% } %>
         
@@ -54,7 +55,7 @@
                 <tr id='Entry<%= entry.Id %>'>
                     <td>
                         <span class="editEntry"><a id='editEntry<%= entry.Id %>' href="javascript:;" class="EditCalendarEntry"><%= Html.Encode(string.Format("{0} HRS", entry.Hours)) %></a></span>&nbsp;
-                        <span class="deleteEntry"><a href="javascript:;" id='deleteEntry<%= entry.Id %>' class="DeleteCalendarEntry"><img src="../../Images/x.gif" alt="x" /></a></span>
+                        <span class="deleteEntry"><a href="javascript:;" id='deleteEntry<%= entry.Id %>' class="DeleteCalendarEntry"><img src="<%= Url.Image("x.gif") %>" alt="x" /></a></span>
                         <input type="hidden" id="entryHours<%= entry.Id %>" value="<%= entry.Hours %>" />
                     </td>
                 </tr>
@@ -91,7 +92,7 @@
             <% } %>
         </ul>
         
-        <a href="javascript:;" id="AddAdjustmentEntry"><img src="../../Images/add.gif" alt="+" /> Add Adjustment [TODO]</a>
+        <a href="javascript:;" id="AddAdjustmentEntry"><img src="<%= Url.Image("add.gif") %>" alt="+" /> Add Adjustment [TODO]</a>
     </div>
 </div>
 
