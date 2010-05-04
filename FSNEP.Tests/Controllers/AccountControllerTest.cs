@@ -30,14 +30,14 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void ForgotPasswordGetReturnsView()
         {
-            GetAccountController().ForgotPassword()
+            Controller.ForgotPassword()
                 .AssertViewRendered();
         }
 
         [TestMethod]
         public void ForgotPasswordPostRedirectsToResetPasswordActionOnValidUser()
         {
-            GetAccountController().ForgotPassword("validUser")
+            Controller.ForgotPassword("validUser")
                 .AssertActionRedirect()
                 .ToAction<AccountController>(a => a.ResetPassword("validUser"));
         }
@@ -45,7 +45,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void ForgotPasswordPostShowsErrorMessageForInvalidUser()
         {
-            GetAccountController().ForgotPassword("invalidUser")
+            Controller.ForgotPassword("invalidUser")
                 .AssertViewRendered()
                 .ViewData["Message"]
                 .ShouldBe("User information not found.");
@@ -61,7 +61,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void ResetPasswordGetRedirectsToForgotPasswordWhenUsernameInvalid()
         {
-            GetAccountController().ResetPassword("invalidUser")
+            Controller.ResetPassword("invalidUser")
                 .AssertActionRedirect()
                 .ToAction<AccountController>(a => a.ForgotPassword());
         }
@@ -69,7 +69,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void ResetPasswordGetPopulatesPasswordQuestionWhenUsernameIsValid()
         {
-            GetAccountController().ResetPassword("validUser")
+            Controller.ResetPassword("validUser")
                 .AssertViewRendered()
                 .ViewData["PasswordQuestion"]
                 .ShouldBe("Question");
@@ -78,7 +78,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void ResetPasswordPostGivesErrorMessageWhenAnswerIsIncorrect()
         {
-            GetAccountController().ResetPassword("validUser", "invalidAnswer")
+            Controller.ResetPassword("validUser", "invalidAnswer")
                 .AssertViewRendered()
                 .ViewData["Message"]
                 .ShouldBe("Your answer could not be verified. Please try again.");
@@ -87,7 +87,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void ResetPasswordPostGivesErrorMessageWhenAnswerIsBlank()
         {
-            GetAccountController().ResetPassword("validUser", "")
+            Controller.ResetPassword("validUser", "")
                 .AssertViewRendered()
                 .ViewData["Message"]
                 .ShouldBe("Your answer can not be blank.  Please try again.");
@@ -96,7 +96,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void ResetPasswordPostRedirectsToPasswordSuccessPageWhenAnswerIsValid()
         {
-            var controller = GetAccountController();
+            var controller = Controller;
             controller.MessageService = new MockMessageGateway();
 
             controller.ResetPassword("validUser", "validAnswer")
@@ -111,7 +111,7 @@ namespace FSNEP.Tests.Controllers
             var messageGateway = MockRepository.GenerateMock<IMessageGateway>();
 
             //Get the account controller
-            var controller = GetAccountController();
+            var controller = Controller;
             controller.MessageService = messageGateway;
 
             controller.ResetPassword("validUser", "validAnswer");
@@ -122,7 +122,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void ChangePasswordGetReturnsView()
         {
-            GetAccountController().ChangePassword()
+            Controller.ChangePassword()
                 .AssertViewRendered()
                 .ViewData["PasswordLength"]
                 .ShouldBe(6);
@@ -142,7 +142,7 @@ namespace FSNEP.Tests.Controllers
         public void ChangePasswordPostReturnsViewIfCurrentPasswordNotSpecified()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             var result = (ViewResult)controller.ChangePassword("", "newPassword", "newPassword");
@@ -156,7 +156,7 @@ namespace FSNEP.Tests.Controllers
         public void ChangePasswordPostReturnsViewIfNewPasswordDoesNotMatchConfirmPassword()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             ViewResult result = (ViewResult)controller.ChangePassword("currentPassword", "newPassword", "otherPassword");
@@ -170,7 +170,7 @@ namespace FSNEP.Tests.Controllers
         public void ChangePasswordPostReturnsViewIfNewPasswordIsNull()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             ViewResult result = (ViewResult)controller.ChangePassword("currentPassword", null, null);
@@ -184,7 +184,7 @@ namespace FSNEP.Tests.Controllers
         public void ChangePasswordPostReturnsViewIfNewPasswordIsTooShort()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             ViewResult result = (ViewResult)controller.ChangePassword("currentPassword", "12345", "12345");
@@ -198,7 +198,7 @@ namespace FSNEP.Tests.Controllers
         public void ChangePasswordPostReturnsViewIfProviderRejectsPassword()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             ViewResult result = (ViewResult)controller.ChangePassword("oldPass", "badPass", "badPass");
@@ -212,7 +212,7 @@ namespace FSNEP.Tests.Controllers
         public void ChangePasswordSuccess()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             ViewResult result = (ViewResult)controller.ChangePasswordSuccess();
@@ -225,7 +225,7 @@ namespace FSNEP.Tests.Controllers
         public void LoginGet()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             ViewResult result = (ViewResult)controller.LogOn();
@@ -238,7 +238,7 @@ namespace FSNEP.Tests.Controllers
         public void LoginPostRedirectsHomeIfLoginSuccessfulButNoReturnUrlGiven()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             RedirectToRouteResult result = (RedirectToRouteResult)controller.LogOn("someUser", "goodPass", true, null);
@@ -252,7 +252,7 @@ namespace FSNEP.Tests.Controllers
         public void LoginPostRedirectsToReturnUrlIfLoginSuccessfulAndReturnUrlGiven()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             RedirectResult result = (RedirectResult)controller.LogOn("someUser", "goodPass", false, "someUrl");
@@ -265,7 +265,7 @@ namespace FSNEP.Tests.Controllers
         public void LoginPostReturnsViewIfPasswordNotSpecified()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             ViewResult result = (ViewResult)controller.LogOn("username", "", true, null);
@@ -278,7 +278,7 @@ namespace FSNEP.Tests.Controllers
         public void LoginPostReturnsViewIfUsernameNotSpecified()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             ViewResult result = (ViewResult)controller.LogOn("", "somePass", false, null);
@@ -291,7 +291,7 @@ namespace FSNEP.Tests.Controllers
         public void LoginPostReturnsViewIfUsernameOrPasswordIsIncorrect()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             ViewResult result = (ViewResult)controller.LogOn("someUser", "badPass", true, null);
@@ -304,7 +304,7 @@ namespace FSNEP.Tests.Controllers
         public void LogOff()
         {
             // Arrange
-            AccountController controller = GetAccountController();
+            AccountController controller = Controller;
 
             // Act
             RedirectToRouteResult result = (RedirectToRouteResult)controller.LogOff();
@@ -312,11 +312,6 @@ namespace FSNEP.Tests.Controllers
             // Assert
             Assert.AreEqual("Home", result.RouteValues["controller"]);
             Assert.AreEqual("Index", result.RouteValues["action"]);
-        }
-
-        private AccountController GetAccountController()
-        {
-            return Controller;
         }
 
         public class MockMessageGateway : IMessageGateway
