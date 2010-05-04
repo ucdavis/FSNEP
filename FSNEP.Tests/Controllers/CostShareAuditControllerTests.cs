@@ -243,7 +243,7 @@ namespace FSNEP.Tests.Controllers
             }
             catch (Exception ex)
             {
-                Assert.AreEqual("Exclude Reason is required", ex.Message);
+                Assert.AreEqual("Exclude Reason Is Not Valid", ex.Message);
                 throw;
             }
         }
@@ -269,7 +269,7 @@ namespace FSNEP.Tests.Controllers
             }
             catch (Exception ex)
             {
-                Assert.AreEqual("Exclude Reason is required", ex.Message);
+                Assert.AreEqual("Exclude Reason Is Not Valid", ex.Message);
                 throw;
             }
         }
@@ -301,7 +301,7 @@ namespace FSNEP.Tests.Controllers
             }
             catch (Exception ex)
             {
-                Assert.AreEqual("Exclude Reason is required", ex.Message);
+                Assert.AreEqual("Exclude Reason Is Not Valid", ex.Message);
                 throw;
             }
         }

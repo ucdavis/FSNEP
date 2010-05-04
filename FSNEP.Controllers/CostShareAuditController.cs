@@ -6,6 +6,7 @@ using FSNEP.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Core.Utils;
 using MvcContrib.Attributes;
+using UCDArch.Web.Helpers;
 
 namespace FSNEP.Controllers
 {
@@ -44,12 +45,17 @@ namespace FSNEP.Controllers
 
             Check.Require(costShareEntry != null, "Invalid Entry Identifier");
 
-            //Set the entry to be excluded and include the reason, which can't be null
-            Check.Require(string.IsNullOrEmpty(excludeReason) == false, "Exclude Reason is required");
-
+            //Set the entry to be excluded and include the reason
             costShareEntry.Exclude = true;
             costShareEntry.ExcludeReason = excludeReason;
 
+            if (costShareEntry.ExcludeReason == null || costShareEntry.ExcludeReason.Trim() == string.Empty)
+                ModelState.AddModelError("ExcludeReason", "Exclude Reason Is Required");
+
+            costShareEntry.TransferValidationMessagesTo(ModelState);
+            
+            Check.Require(ModelState.IsValid, "Exclude Reason Is Not Valid");
+            
             costShareEntryRepository.EnsurePersistent(costShareEntry);
 
             return Json(new {Success = true, EntryId = costShareEntry.Id});
