@@ -47,6 +47,8 @@ $(function() {
                 function(result) {
                     LogMessage("Add Entry Result", result);
                     DisplayMessage("New Entry Added with id = " + result.id);
+
+                    $("#dialogTimeRecordEntry").dialog("close");
                 },
                 'json'
             );
@@ -75,6 +77,8 @@ $(function() {
                 function(result) {
                     LogMessage("Edit Entry Result", result);
                     DisplayMessage("Entry Edited with id = " + result.id);
+
+                    $("#dialogTimeRecordEdit").dialog("close");
                 },
                 'json'
             );
