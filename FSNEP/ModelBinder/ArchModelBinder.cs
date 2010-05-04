@@ -357,7 +357,7 @@ namespace FSNEP.ModelBinder
             object entityRepository = GenericRepositoryFactory.CreateEntityRepositoryFor(collectionEntityType, idType);
 
             return entityRepository.GetType()
-                .InvokeMember("Get", BindingFlags.InvokeMethod, null, entityRepository, new[] { typedId });
+                .InvokeMember("GetByID", BindingFlags.InvokeMethod, null, entityRepository, new[] { typedId });
         }
 
         private readonly Type collectionType;
