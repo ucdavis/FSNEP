@@ -163,7 +163,7 @@ namespace FSNEP.Controllers
 
             Message = string.Format("Cost Share for {0:MMMM yyyy} Submitted Successfully", costShare.Date);
 
-            return RedirectToAction("History");
+            return this.RedirectToAction(a => a.History());
         }
     }
 
