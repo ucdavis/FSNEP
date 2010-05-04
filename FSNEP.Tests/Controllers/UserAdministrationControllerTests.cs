@@ -1210,8 +1210,11 @@ namespace FSNEP.Tests.Controllers
         #endregion Modify valid changes saves for each type of value that can be modified.
 
         #region Modify to invalid does not save and redirects back to the view
-        
 
+
+        /// <summary>
+        /// Modifies the first name of the existing valid user does not save with too long changes.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithTooLongChangesFirstName()
         {
@@ -1233,6 +1236,9 @@ namespace FSNEP.Tests.Controllers
             newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
         }
 
+        /// <summary>
+        /// Modifies the first name of the existing valid user does not save with null changes.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithNullChangesFirstName()
         {
@@ -1255,6 +1261,9 @@ namespace FSNEP.Tests.Controllers
                 "FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
         }
 
+        /// <summary>
+        /// Modifies the last name of the existing valid user does not save withtoo long changes.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithtooLongChangesLastName()
         {
@@ -1275,6 +1284,10 @@ namespace FSNEP.Tests.Controllers
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
             newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
         }
+
+        /// <summary>
+        /// Modifies the last name of the existing valid user does not save with null changes.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithNullChangesLastName()
         {
@@ -1297,6 +1310,10 @@ namespace FSNEP.Tests.Controllers
                 "LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");            
         
         }
+
+        /// <summary>
+        /// Modifies the last name of the existing valid user does not save with spaces only changes.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithSpacesOnlyChangesLastName()
         {
@@ -1317,6 +1334,10 @@ namespace FSNEP.Tests.Controllers
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
             newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: Required"); 
         }
+
+        /// <summary>
+        /// Modifies the existing valid user does not save with less than zero changes salary.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithLessThanZeroChangesSalary()
         {
@@ -1337,6 +1358,10 @@ namespace FSNEP.Tests.Controllers
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
             newUserModel.ViewData.ModelState.AssertErrorsAre("Salary: Must be greater than zero"); 
         }
+
+        /// <summary>
+        /// Modifies the existing valid user does not save with zero changes salary.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithZeroChangesSalary()
         {
@@ -1357,6 +1382,10 @@ namespace FSNEP.Tests.Controllers
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
             newUserModel.ViewData.ModelState.AssertErrorsAre("Salary: Must be greater than zero");
         }
+
+        /// <summary>
+        /// Modifies the existing valid user does not save with less than zero changes fte.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithLessThanZeroChangesFte()
         {
@@ -1378,6 +1407,9 @@ namespace FSNEP.Tests.Controllers
             newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive)."); 
         }
 
+        /// <summary>
+        /// Modifies the existing valid user does not save with zero changes fte.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithZeroChangesFte()
         {
@@ -1400,6 +1432,9 @@ namespace FSNEP.Tests.Controllers
 
         }
 
+        /// <summary>
+        /// Modifies the existing valid user does not save with greater than one changes fte.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithGreaterThanOneChangesFte()
         {
@@ -1422,6 +1457,9 @@ namespace FSNEP.Tests.Controllers
 
         }
 
+        /// <summary>
+        /// Modifies the existing valid user does not save with less than zero changes benefit rate.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithLessThanZeroChangesBenefitRate()
         {
@@ -1443,6 +1481,9 @@ namespace FSNEP.Tests.Controllers
             newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).");
         }
 
+        /// <summary>
+        /// Modifies the existing valid user does not save with greater than two changes benefit rate.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithGreaterThanTwoChangesBenefitRate()
         {
@@ -1464,6 +1505,9 @@ namespace FSNEP.Tests.Controllers
             newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).");
         }
 
+        /// <summary>
+        /// Modifies the existing valid user does not save with null changes supervisor.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithNullChangesSupervisor()
         {
@@ -1485,6 +1529,9 @@ namespace FSNEP.Tests.Controllers
         }
 
 
+        /// <summary>
+        /// Modifies the existing valid user does not save with empty changes fund types.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithEmptyChangesFundTypes()
         {
@@ -1506,6 +1553,9 @@ namespace FSNEP.Tests.Controllers
             newUserModel.ViewData.ModelState.AssertErrorsAre("You must select at least one fund type");
         }
 
+        /// <summary>
+        /// Modifies the existing valid user does not save with empty changes projects.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithEmptyChangesProjects()
         {
@@ -1527,6 +1577,9 @@ namespace FSNEP.Tests.Controllers
             newUserModel.ViewData.ModelState.AssertErrorsAre("You must select at least one project");
         }
 
+        /// <summary>
+        /// Modifies the existing valid user does not save with empty changes role list.
+        /// </summary>
         [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithEmptyChangesRoleList()
         {
@@ -1544,8 +1597,11 @@ namespace FSNEP.Tests.Controllers
             newUserModel.ViewData.ModelState.AssertErrorsAre("User must have at least one role");
         }
 
+        /// <summary>
+        /// Modifies the existing valid user does not save with null changes role list.
+        /// </summary>
         [TestMethod]
-        public void ModifyExistingValidUserDoesNotSaveWithNNullChangesRoleList()
+        public void ModifyExistingValidUserDoesNotSaveWithNullChangesRoleList()
         {
             //var emptyRoles = new List<string>();
 
@@ -1640,7 +1696,11 @@ namespace FSNEP.Tests.Controllers
         
         #region Helper Methods
 
-        
+
+        /// <summary>
+        /// Creates the list of roles.
+        /// </summary>
+        /// <returns></returns>
         private static List<string> CreateListOfRoles()
         {
             var roleList = new List<string> {RoleNames.RoleSupervisor, RoleNames.RoleTimeSheet};
