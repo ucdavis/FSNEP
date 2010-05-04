@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Specialized;
 using FSNEP.Core.Abstractions;
 using FSNEP.Core.Domain;
@@ -7,6 +8,7 @@ namespace FSNEP.BLL.Dev
     public interface IReportBLL
     {
         ReportResult GenerateIndividualTimeRecordReport(TimeRecord timeRecord, ReportType reportType);
+        ReportResult GenerateCostShare(Project project, int year, ReportType reportType);
     }
 
     public class ReportBLL : IReportBLL
@@ -19,6 +21,11 @@ namespace FSNEP.BLL.Dev
             parameters["TimeRecordID"] = timeRecord.Id;
 
             return GetReport(reportPath, parameters, reportType);
+        }
+
+        public ReportResult GenerateCostShare(Project project, int year, ReportType reportType)
+        {
+            throw new NotImplementedException();
         }
 
         public ReportResult GetReport(string reportPath, ListDictionary parameters, ReportType reportType)
