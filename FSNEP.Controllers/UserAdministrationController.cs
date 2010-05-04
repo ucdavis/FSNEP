@@ -53,7 +53,7 @@ namespace FSNEP.Controllers
 
                 using (var ts = new TransactionScope())
                 {
-                    UserBLL.Repository.Remove(user);
+                    UserBLL.Remove(user);
 
                     ts.CommitTransaction();
                 }
@@ -125,7 +125,7 @@ namespace FSNEP.Controllers
             try
             {
                 //save the user
-                UserBLL.Repository.EnsurePersistent(user);
+                UserBLL.EnsurePersistent(user);
 
                 //Send the user a message
                 var newUserTokenPath = Url.AbsoluteAction("Index", "Home", new { token = user.Token });
@@ -221,7 +221,7 @@ namespace FSNEP.Controllers
             //We have a valid viewstate, so save the changes
             using (var ts = new TransactionScope())
             {
-                UserBLL.Repository.EnsurePersistent(user);
+                UserBLL.EnsurePersistent(user);
 
                 ts.CommitTransaction();
             }
@@ -249,13 +249,13 @@ namespace FSNEP.Controllers
         private void PopulateUserProperties(User user, Guid? supervisorId, IEnumerable<int> projectList,
                                             IEnumerable<int> fundTypeList)
         {
-            user.Supervisor = UserBLL.Repository.GetByID(supervisorId.Value);
+            user.Supervisor = UserBLL.GetByID(supervisorId.Value);
 
-            var projects = from proj in UserBLL.Repository.EntitySet<Project>()
+            var projects = from proj in UserBLL.EntitySet<Project>()
                            where projectList.Contains(proj.ID)
                            select proj;
 
-            var fundtypes = from ft in UserBLL.Repository.EntitySet<FundType>()
+            var fundtypes = from ft in UserBLL.EntitySet<FundType>()
                             where fundTypeList.Contains(ft.ID)
                             select ft;
 

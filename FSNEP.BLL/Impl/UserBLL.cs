@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CAESArch.BLL;
+using CAESArch.BLL.Repositories;
+using CAESArch.Core.DataInterfaces;
 using CAESArch.Core.Utils;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Domain;
@@ -9,10 +10,9 @@ using FSNEP.Core.Abstractions;
 
 namespace FSNEP.BLL.Impl
 {
-    public interface IUserBLL
+    public interface IUserBLL : IRepository<User>
     {
         IUserAuth UserAuth { get; set; }
-        INonStaticGenericBLLBase<User, Guid> Repository { get; set; }
         IQueryable<FundType> GetAvailableFundTypes();
         IQueryable<Project> GetAllProjectsByUser();
         IQueryable<User> GetSupervisors();
@@ -27,7 +27,7 @@ namespace FSNEP.BLL.Impl
         IQueryable<User> GetAllUsers();
     }
 
-    public class UserBLL : GenericBLL<User,Guid>, IUserBLL
+    public class UserBLL : Repository<User>, IUserBLL
     {
         public IUserAuth UserAuth { get; set; }
 
@@ -38,14 +38,14 @@ namespace FSNEP.BLL.Impl
 
         public IQueryable<FundType> GetAvailableFundTypes()
         {
-            return Repository.EntitySet<FundType>();
+            return EntitySet<FundType>();
         }
 
         public IQueryable<Project> GetAllProjectsByUser()
         {
             if (UserAuth.IsCurrentUserInRole(RoleNames.RoleAdmin))
             {
-                return Repository.EntitySet<Project>().Where(p => p.IsActive);
+                return EntitySet<Project>().Where(p => p.IsActive);
             }
 
             if (UserAuth.IsCurrentUserInRole(RoleNames.RoleProjectAdmin))
@@ -70,7 +70,7 @@ namespace FSNEP.BLL.Impl
                 userKeys.Add((Guid)UserAuth.GetUser(userName).ProviderUserKey);
             }
 
-            var users = from usr in Repository.Queryable
+            var users = from usr in Queryable
                         where userKeys.ToList().Contains(usr.ID)
                         select usr;
 
@@ -88,7 +88,7 @@ namespace FSNEP.BLL.Impl
 
             var member = UserAuth.GetUser(username);
 
-            return Repository.GetByID((Guid)member.ProviderUserKey);
+            return GetByID((Guid)member.ProviderUserKey);
         }
 
         public List<string> GetAllRoles()
@@ -122,7 +122,7 @@ namespace FSNEP.BLL.Impl
         public IQueryable<User> GetSubordinates(User user)
         {
             //Get all users who have the current user as a supervisor
-            return Repository.Queryable.Where(u => u.Supervisor.ID == user.ID);
+            return Queryable.Where(u => u.Supervisor.ID == user.ID);
         }
 
         public void SetRoles(string username, List<string> roleList)
@@ -143,7 +143,7 @@ namespace FSNEP.BLL.Impl
             if (UserAuth.IsCurrentUserInRole(RoleNames.RoleAdmin))
             {
                 //Admins can get all active users
-                return Repository.Queryable.Where(u => u.IsActive).OrderBy(u => u.LastName);
+                return Queryable.Where(u => u.IsActive).OrderBy(u => u.LastName);
             }
             
             if (UserAuth.IsCurrentUserInRole(RoleNames.RoleProjectAdmin))
@@ -152,7 +152,7 @@ namespace FSNEP.BLL.Impl
                 
                 var currentUserProjectIds = GetUser().Projects.Select(p => p.ID).ToList(); //Get a list of projectIds for the current user
                 
-                var users = from u in Repository.Queryable
+                var users = from u in Queryable
                             where u.IsActive && u.Projects.Any(p=>currentUserProjectIds.Contains(p.ID))
                             select u;
 

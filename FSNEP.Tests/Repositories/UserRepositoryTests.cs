@@ -38,7 +38,7 @@ namespace FSNEP.Tests.Repositories
             var project3 = projectBLL.Repository.GetByID(3);
             var project4 = projectBLL.Repository.GetByID(4);
 
-            var currentUser = UserBLL.Repository.GetByID(UserIds[0]);
+            var currentUser = UserBLL.GetByID(UserIds[0]);
 
             //The current user gets projects 1 and 3
             currentUser.Projects.Add(project1);
@@ -48,11 +48,11 @@ namespace FSNEP.Tests.Repositories
             using (var ts = new TransactionScope())
             {
                 //first save the current user
-                UserBLL.Repository.EnsurePersistent(currentUser);
+                UserBLL.EnsurePersistent(currentUser);
 
                 for (int i = 1; i < UserIds.Count; i++)
                 {
-                    var user = UserBLL.Repository.GetByID(UserIds[i]);
+                    var user = UserBLL.GetByID(UserIds[i]);
 
                     if (i == 1) user.Projects.Add(project1); //selected
                     if (i == 2) user.Projects.Add(project2); //not selected
@@ -75,7 +75,7 @@ namespace FSNEP.Tests.Repositories
                         user.Projects.Add(project3);
                     }
 
-                    UserBLL.Repository.EnsurePersistent(user);
+                    UserBLL.EnsurePersistent(user);
                 }
 
                 ts.CommitTransaction();
@@ -95,19 +95,19 @@ namespace FSNEP.Tests.Repositories
             UserBLL.UserAuth.Expect(a => a.GetUser("currentuser")).Return(new FakeMembershipUser(UserIds[0])); //Current user is the first user
 
             //Give all users project1
-            var project1 = UserBLL.Repository.EntitySet<Project>().Where(p => p.ID == 1).Single();
-            var project2 = UserBLL.Repository.EntitySet<Project>().Where(p => p.ID == 2).Single();
+            var project1 = UserBLL.EntitySet<Project>().Where(p => p.ID == 1).Single();
+            var project2 = UserBLL.EntitySet<Project>().Where(p => p.ID == 2).Single();
 
-            var currentUser = UserBLL.Repository.GetByID(UserIds[0]);
+            var currentUser = UserBLL.GetByID(UserIds[0]);
             currentUser.Projects.Add(project1);
 
             using (var ts = new TransactionScope())
             {
-                UserBLL.Repository.EnsurePersistent(currentUser);
+                UserBLL.EnsurePersistent(currentUser);
 
                 for (int i = 1; i < UserIds.Count; i++)
                 {
-                    var user = UserBLL.Repository.GetByID(UserIds[i]);
+                    var user = UserBLL.GetByID(UserIds[i]);
 
                     if (i%2 == 0)
                     {
@@ -118,7 +118,7 @@ namespace FSNEP.Tests.Repositories
                         user.Projects.Add(project2);
                     }
 
-                    UserBLL.Repository.EnsurePersistent(user);
+                    UserBLL.EnsurePersistent(user);
                 }
 
                 ts.CommitTransaction();
@@ -138,17 +138,17 @@ namespace FSNEP.Tests.Repositories
             UserBLL.UserAuth.Expect(a => a.GetUser("currentuser")).Return(new FakeMembershipUser(UserIds[0])); //Current user is the first user
 
             //Give all users project1
-            var project1 = UserBLL.Repository.EntitySet<Project>().First();
+            var project1 = UserBLL.EntitySet<Project>().First();
 
             using (var ts = new TransactionScope())
             {
                 foreach (var userID in UserIds)
                 {
-                    var currentUser = UserBLL.Repository.GetByID(userID);
+                    var currentUser = UserBLL.GetByID(userID);
 
                     currentUser.Projects.Add(project1);
 
-                    UserBLL.Repository.EnsurePersistent(currentUser);
+                    UserBLL.EnsurePersistent(currentUser);
                 }
 
                 ts.CommitTransaction();
@@ -190,10 +190,10 @@ namespace FSNEP.Tests.Repositories
             //Make one user inactive
             using (var ts = new TransactionScope())
             {
-                var user = UserBLL.Repository.GetByID(UserIds[0]);
+                var user = UserBLL.GetByID(UserIds[0]);
                 user.IsActive = false;
 
-                UserBLL.Repository.EnsurePersistent(user);
+                UserBLL.EnsurePersistent(user);
                 
                 ts.CommitTransaction();
             }

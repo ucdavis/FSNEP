@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Security.Principal;
 using Castle.Windsor;
 using FSNEP.BLL.Impl;
@@ -6,6 +5,7 @@ using FSNEP.Core.Abstractions;
 using System.Web.Security;
 using CAESArch.Core.DataInterfaces;
 using CAESArch.BLL.Repositories;
+using FSNEP.BLL.Interfaces;
 
 namespace FSNEP
 {
@@ -22,6 +22,8 @@ namespace FSNEP
 
             container.AddComponent("roleProvider", typeof (RoleProvider), typeof (RoleProviderService));
 
+            container.AddComponent("userAuth", typeof (IUserAuth), typeof (UserAuth));
+            
             container.AddComponent("auditInterceptor", typeof (NHibernate.IInterceptor), typeof (AuditInterceptor));
             
             AddRepositoriesTo(container);
@@ -40,6 +42,9 @@ namespace FSNEP
         /// </summary>
         private static void AddBLLClassesTo(IWindsorContainer container)
         {
+            container.AddComponent("userBLL", typeof (IUserBLL), typeof (UserBLL));
+
+            /*
             var types = typeof(GenericBLL<,>).Assembly.GetTypes().Where(t => t.IsInterface == false && t.IsAbstract == false); //.Where(a => a.BaseType == typeof (GenericBLL<,>));
 
             foreach (var type in types)
@@ -51,6 +56,7 @@ namespace FSNEP
                     container.AddComponent(type.Name, matchingInterface, type);
                 }
             }
+             */
         }
     }
 }

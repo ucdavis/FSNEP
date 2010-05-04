@@ -71,7 +71,7 @@ namespace FSNEP.Tests.Core
 
             UserIds.Add(userId);
 
-            userBLL.Repository.EnsurePersistent(supervisor, true);
+            userBLL.EnsurePersistent(supervisor, true);
 
             //Create 5 users
             for (int i = 0; i < 5; i++)
@@ -92,7 +92,7 @@ namespace FSNEP.Tests.Core
 
                 UserIds.Add(userId);
 
-                userBLL.Repository.EnsurePersistent(user, true);
+                userBLL.EnsurePersistent(user, true);
             }
         }
     }
