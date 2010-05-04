@@ -122,17 +122,36 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// WIP. FundTypes fake needs ID to pass the Unit Test.
         /// </summary>
-        [TestMethod, Ignore]
+        [TestMethod]
         public void CreateUserSavesNewUser()
         {            
-            FakeProjects();
-            FakeFundTypes();
-            
-
-            #region newUser
             const string validValueName = "ValidName";
             const int validValueSalary = 1;
             const int validValueFte = 1;
+
+            FakeProjects();
+            FakeFundTypes();
+
+            #region Supervisor User
+
+            var supervisor = new User
+             {
+                 FirstName = validValueName,
+                 LastName = validValueName,
+                 Salary = validValueSalary,
+                 FTE = validValueFte,
+                 IsActive = true,                
+             };
+            var supervisorId = Guid.NewGuid();
+            supervisor.Supervisor = supervisor; //Supervior is own Supervisor.
+            supervisor.SetUserID(supervisorId);            
+            UserBLL.Expect(a => a.GetByID(supervisorId)).Return(supervisor).Repeat.Any();            
+
+            #endregion Supervisor User
+
+
+            #region newUser
+            
 
             var newUser = new User
             {
@@ -142,14 +161,13 @@ namespace FSNEP.Tests.Controllers
                 FTE = validValueFte,
                 IsActive = true,
             };
-            newUser.Supervisor = newUser; //I'm my own supervisor //May need or want to change this
+            newUser.Supervisor = supervisor;
 
             var userId = Guid.NewGuid();
             newUser.SetUserID(userId);
             #endregion newUser
 
             #region Parameters needed for the Create Method
-            var supervisorGuid = newUser.ID;
             var projectList = new List<int>();
             var fundTypeList = new List<int>();
             var roleList = new List<string>();
@@ -172,9 +190,9 @@ namespace FSNEP.Tests.Controllers
                 Email = "test@test.edu"
             };
 
-            MembershipCreateStatus status = MembershipCreateStatus.Success;
+            
 
-            //TODO:
+           
             //UserBLL.UserAuth = MockRepository.GenerateStub<IUserAuth>();
             //UserBLL.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
 
@@ -190,7 +208,7 @@ namespace FSNEP.Tests.Controllers
 
             //Controller.UserBLL.UserAuth.MembershipService.Expect(
             //    a =>
-            //    a.CreateUser(userModel.UserName, "dfgsdf", userModel.Email, userModel.Question, userModel.Answer, true,
+            //    a.CreateUser(userModel.UserName, "1212dfgsdf", userModel.Email, userModel.Question, userModel.Answer, true,
             //                 null, out status)).OutRef(status = MembershipCreateStatus.Success).Return(mockUser);
 
             //MembershipCreateStatus createStatus;
@@ -201,39 +219,102 @@ namespace FSNEP.Tests.Controllers
             //var tet = testMem.ProviderUserKey;
             //Assert.IsNotNull(tet);
 
-            //Controller.Create(userModel, supervisorGuid, projectList, fundTypeList, roleList);
+            MembershipCreateStatus createStatus;
+            var mockGuid = Guid.NewGuid();
+            //UserBLL = MockRepository.GenerateStub<IUserBLL>();
+            UserBLL.UserAuth = MockRepository.GenerateStub<IUserAuth>();
+            UserBLL.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
+            var memberShipUser = MockRepository.GenerateStub<MembershipUser>();
+
+            //If Repeat.any() isn't used, it will return the Guid only once, which means if you debug and inspect the value, it will be null the next time it is looked at.
+            memberShipUser.Expect(a => a.ProviderUserKey).IgnoreArguments().Return(mockGuid).Repeat.Any();
+            memberShipUser.Email = "test@test.edu";
+            UserBLL.UserAuth.MembershipService.Expect(a => a.GetUser(supervisorId)).IgnoreArguments().Return(memberShipUser).Repeat.Any();
+
+            //If IgnoreArguments is not used, the params don't match and it isn't mocked.
+            UserBLL.UserAuth.MembershipService.Expect(a => a.CreateUser(userModel.UserName, "jaskidjflkajsdlf$#12", userModel.Email, userModel.Question, userModel.Answer, true,
+                                                                null, out createStatus)).OutRef(createStatus = MembershipCreateStatus.Success).Return(memberShipUser);
+
+            //Controller.Url.RequestContext.HttpContext.Request.Url.Expect()           
+            Controller.MessageGateway.Expect(a => a.SendMessageToNewUser(newUser, "ignore", "ignore", "ignore", "ignore")).IgnoreArguments().Repeat.Any();
+
+            Controller.Create(userModel, supervisorId, projectList, fundTypeList, roleList);
 
         }
 
         /// <summary>
-        /// WIP, Need to figure out why it isn't working
+        /// This demonstrates the mock of the CreateUser.
         /// </summary>
         [TestMethod]
         public void MockTest()
         {
             var status = MembershipCreateStatus.Success;
 
+            var mockGuid = Guid.NewGuid();
             UserBLL = MockRepository.GenerateStub<IUserBLL>();
             UserBLL.UserAuth = MockRepository.GenerateStub<IUserAuth>();
             UserBLL.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
             var memberShipUser = MockRepository.GenerateStub<MembershipUser>();
-            memberShipUser.Expect(a => a.ProviderUserKey).IgnoreArguments().Return(Guid.NewGuid());
 
+            //If Repeat.any() isn't used, it will return the Guid only once, which means if you debug and inspect the value, it will be null the next time it is looked at.
+            memberShipUser.Expect(a => a.ProviderUserKey).IgnoreArguments().Return(mockGuid).Repeat.Any();
+
+            //If IgnoreArguments is not used, the params don't match and it isn't mocked.
             UserBLL.UserAuth.MembershipService.Expect(a => a.CreateUser("Test", "dfgsdf345234", "Test@test.edu", "Q", "A", true,
-                                                                null, out status)).IgnoreArguments().Return(memberShipUser);
-           
+                                                                null, out status)).IgnoreArguments().OutRef(status = MembershipCreateStatus.Success).Return(memberShipUser);
+  
 
-
-            var testStatus = MembershipCreateStatus.Success;
+            var testStatus = MembershipCreateStatus.UserRejected; //Prime to a different value to make sure the OutRef works as expected.
             var testMemebershipUser = UserBLL.UserAuth.MembershipService.CreateUser("1Test", "1dfgsdf345234",
                                                                                     "1Test@test.edu", "1Q", "A", true,
                                                                                     null, out testStatus);
+            Assert.AreEqual(MembershipCreateStatus.Success, testStatus);
             Assert.IsNotNull(testMemebershipUser.ProviderUserKey);            
         }
 
 
+        [TestMethod]
+        public void MockTest2()
+        {
+            var status = MembershipCreateStatus.Success;
+
+            var mockGuid = Guid.NewGuid();
+            UserBLL = MockRepository.GenerateStub<IUserBLL>();
+            UserBLL.UserAuth = MockRepository.GenerateStub<IUserAuth>();
+            UserBLL.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
+            var memberShipUser = MockRepository.GenerateStub<MembershipUser>();
+
+            //If Repeat.any() isn't used, it will return the Guid only once, which means if you debug and inspect the value, it will be null the next time it is looked at.
+            memberShipUser.Expect(a => a.ProviderUserKey).IgnoreArguments().Return(mockGuid).Repeat.Any();
+
+            //If IgnoreArguments is not used, the params don't match and it isn't mocked.
+            UserBLL.UserAuth.MembershipService.Expect(a => a.CreateUser("Test", "dfgsdf345234", "Test@test.edu", "Q", "A", true,
+                                                                null, out status)).IgnoreArguments().OutRef(status = MembershipCreateStatus.Success).Return(memberShipUser);
+
+
+            var testStatus = MembershipCreateStatus.UserRejected; //Prime to a different value to make sure the OutRef works as expected.
+            var testMemebershipUser = UserBLL.UserAuth.MembershipService.CreateUser("1Test", "1dfgsdf345234",
+                                                                                    "1Test@test.edu", "1Q", "A", true,
+                                                                                    null, out testStatus);
+            Assert.AreEqual(MembershipCreateStatus.Success, testStatus);
+            Assert.IsNotNull(testMemebershipUser.ProviderUserKey);
+
+            memberShipUser.Email = "test@test.edu";
+
+            UserBLL.UserAuth.MembershipService.Expect(a => a.GetUser("test")).Return(
+                memberShipUser).Repeat.Any();
+
+            var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser("test").Email;
+            Assert.AreEqual("test@test.edu", supervisorEmail);
+
+        }
+
+        /// <summary>
+        /// Generate 2 fake projects.
+        /// </summary>
         private void FakeProjects()
-        {                                  
+        {                  
+            //TODO: Assign specific ID's using EntityIdSetter.    
             var projects = new List<Project>
                                {
                                    new Project {Name = "Name", IsActive = true},
@@ -266,6 +347,17 @@ namespace FSNEP.Tests.Controllers
             var fundRepository = FakeRepository<FundType>();
             fundRepository.Expect(a => a.Queryable).Return(fundTypes);
             Controller.Repository.Expect(a => a.OfType<FundType>()).Return(fundRepository);
+        }
+
+        public class MockMessageGateway : IMessageGateway
+        {
+            public void SendMessage(string to, string subject, string body)
+            {
+            }
+
+            public void SendMessageToNewUser(User user, string username, string userEmail, string supervisorEmail, string newUserTokenPath)
+            {
+            }
         }
     }
 }
