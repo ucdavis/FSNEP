@@ -17,7 +17,7 @@ DECLARE @MailList CURSOR
 SET @MailList = CURSOR FOR
 
 --Get all of the FTE TimeSheet Users who should have submitted a time record
-SELECT     aspnet_Membership.Email, Users.FirstName, Users.LastName, sup.Email
+SELECT     aspnet_Membership.Email, Users.FirstName + ' ' + Users.LastName as FullName, sup.Email
 FROM         aspnet_Membership INNER JOIN
                       Users ON aspnet_Membership.UserId = Users.UserId INNER JOIN
                       aspnet_UsersInRoles ON aspnet_Membership.UserId = aspnet_UsersInRoles.UserId INNER JOIN
@@ -38,16 +38,23 @@ WHERE     (aspnet_Roles.RoleName = N'Timesheet User') AND (Users.IsActive = 1)
 
 OPEN @MailList
 
-DECLARE @Email varchar(50), @FirstName varchar(50), @LastName varchar(50), @SupervisorEmail varchar(50)
-FETCH NEXT FROM @MailList INTO @Email, @FirstName, @LastName, @SupervisorEmail
+DECLARE @Email varchar(50), @FullName varchar(100), @SupervisorEmail varchar(50)
+FETCH NEXT FROM @MailList INTO @Email, @FullName, @SupervisorEmail
 
 WHILE (@@FETCH_STATUS = 0)
 	BEGIN
 		--Send Emails on some date (TBD) to those who should have submitted a time record and didn't 
+		DECLARE @bodyText varchar(MAX)
+		
+		SET @bodyText = 'Dear ' + @FullName + '. This is the body of the test message.
+				Database Mail Received By you Successfully.'
 
-		SELECT @Email, @FirstName, @LastNAme
+		EXEC msdb.dbo.sp_send_dbmail
+			@recipients=@Email
+			@subject='FSNEP Time Record Submit Reminder',
+			@body=@bodyText
  
-		FETCH NEXT FROM @MailList INTO @Email, @FirstName, @LastName, @SupervisorEmail
+		FETCH NEXT FROM @MailList INTO @Email, @FullName, @SupervisorEmail
 	END
 
 CLOSE @MailList
