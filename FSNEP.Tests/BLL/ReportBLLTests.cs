@@ -17,7 +17,7 @@ namespace FSNEP.Tests.BLL
             _reportBLL = new ReportBLL();
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void GenerateIndividualTimeRecordReportGeneratesReport()
         {
             var timeRecord = CreateValidEntities.TimeRecord(null);
@@ -29,7 +29,7 @@ namespace FSNEP.Tests.BLL
             Assert.AreEqual(new byte[1].ToString(), result.ReportContent.ToString());
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void GenerateCostShareReturnsReportResult()
         {
             var result = _reportBLL.GenerateCostShare(CreateValidEntities.Project(null), 2009, ReportType.Excel);
