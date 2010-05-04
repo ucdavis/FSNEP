@@ -25,7 +25,7 @@ namespace FSNEP.Tests.Controllers
     {
         private static readonly User User = CreateValidUser();
         private readonly ITimeRecordBLL _timeRecordBll = MockRepository.GenerateStub<ITimeRecordBLL>();
-        private readonly IRepository<TimeRecord> _timeRecordRepository =
+        private IRepository<TimeRecord> _timeRecordRepository =
             MockRepository.GenerateStub<IRepository<TimeRecord>>();
         private readonly TimeRecord _timeRecord = CreateValidTimeRecord();
         private readonly IUserBLL _userBll = MockRepository.GenerateStub<IUserBLL>();
@@ -102,6 +102,16 @@ namespace FSNEP.Tests.Controllers
         {
             //"~/TimeRecord/GetEntry".ShouldMapToIgnoringParams("TimeRecord", "GetEntry");
             "~/TimeRecord/GetEntry".ShouldMapTo<TimeRecordController>(a => a.GetEntry(1), true);
+        }
+
+
+        /// <summary>
+        /// Routing history maps to history.
+        /// </summary>
+        [TestMethod]
+        public void RoutingHistoryMapsToHistory()
+        {
+            "~/TimeRecord/History".ShouldMapTo<TimeRecordController>(a => a.History());
         }
 
         #endregion Routing maps
@@ -448,8 +458,83 @@ namespace FSNEP.Tests.Controllers
         }
         #endregion
 
+        #region History Tests
+
+        /// <summary>
+        /// History returns the correct records, with the correct order.
+        /// Only the records for the current user are returned. Status does not effect retured records.
+        /// </summary>
+        [TestMethod]
+        public void HistoryReturnsTheCorrectRecords()
+        {
+            Controller.ControllerContext.HttpContext.User = _principal;
+            var timeRecords = new List<TimeRecord>();
+            FakeTimeRecords(timeRecords);
+            var result = Controller.History().AssertViewRendered().WithViewData<List<TimeRecord>>();
+            Assert.IsNotNull(result);
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.AreEqual("CommentOrder" + (i + 1), result[i].ReviewComment);
+            }
+            
+        }
+
+        
+        
+
+        #endregion History Tests
+
         #region Helper Methods
 
+
+        /// <summary>
+        /// Fakes the time records.
+        /// </summary>
+        /// <param name="timeRecords">The records.</param>
+        private void FakeTimeRecords(IList<TimeRecord> timeRecords)
+        {
+            
+            for (int i = 0; i < 8; i++)
+            {
+                timeRecords.Add(CreateValidTimeRecord());
+            }
+
+            var differentUser = CreateValidUser("DifferentUser");
+            timeRecords[1].User = differentUser;
+            timeRecords[4].User = differentUser;
+            timeRecords[6].User = differentUser;
+
+            timeRecords[0].Year = 2009;
+            timeRecords[0].Month = 7;
+            timeRecords[0].ReviewComment = "CommentOrder2";
+            timeRecords[0].Status = new Status {NameOption = Status.Option.Approved};
+
+            timeRecords[2].Year = 2009;
+            timeRecords[2].Month = 12;
+            timeRecords[2].ReviewComment = "CommentOrder1";
+            timeRecords[0].Status = new Status { NameOption = Status.Option.Current };
+
+            timeRecords[3].Year = 2009;
+            timeRecords[3].Month = 3;
+            timeRecords[3].ReviewComment = "CommentOrder4";
+            timeRecords[0].Status = new Status { NameOption = Status.Option.Disapproved };
+
+            timeRecords[5].Year = 2008;
+            timeRecords[5].Month = 3;
+            timeRecords[5].ReviewComment = "CommentOrder5";
+            timeRecords[0].Status = new Status { NameOption = Status.Option.PendingReview };
+
+            timeRecords[7].Year = 2009;
+            timeRecords[7].Month = 4;
+            timeRecords[7].ReviewComment = "CommentOrder3";
+
+            //var timeRecordRepository = FakeRepository<TimeRecord>();
+            //timeRecordRepository.Expect(a => a.Queryable).Return(timeRecords.AsQueryable()).Repeat.Any();
+            //Controller.Repository.Expect(a => a.OfType<TimeRecord>()).Return(timeRecordRepository).Repeat.Any();
+            //Controller.Repository.OfType<TimeRecord>().Expect(a => a.Queryable).Return(timeRecords.AsQueryable()).Repeat.Any();
+            _timeRecordRepository.Expect(a => a.Queryable).Return(timeRecords.AsQueryable()).Repeat.Any();
+
+        }
 
         /// <summary>
         /// Mocks the projects for user.
