@@ -427,7 +427,7 @@ namespace FSNEP.Tests.Controllers
         /// Edit entry copies comments and hours.
         /// </summary>
         [TestMethod]
-        public void EditEntryCopiesCommentsAndHours()
+        public void EditEntryCopiesCommentsAndHoursAndActivityType()
         {
             var timeRecordEntryRepository = FakeRepository<TimeRecordEntry>();
             Controller.Repository.Expect(a => a.OfType<TimeRecordEntry>()).Return(timeRecordEntryRepository).Repeat.
@@ -456,8 +456,9 @@ namespace FSNEP.Tests.Controllers
             Controller.EditEntry(timeRecordEntryToUpdate.Id, timeRecordEntry);
             Assert.AreEqual(timeRecordEntry.Comment, timeRecordEntryToUpdate.Comment);
             Assert.AreEqual(timeRecordEntry.Hours, timeRecordEntryToUpdate.Hours);
+            Assert.AreEqual(timeRecordEntry.ActivityType, timeRecordEntryToUpdate.ActivityType);
+            
             Assert.AreNotEqual(timeRecordEntry.Account, timeRecordEntryToUpdate.Account);
-            Assert.AreNotEqual(timeRecordEntry.ActivityType, timeRecordEntryToUpdate.ActivityType);
             Assert.AreNotEqual(timeRecordEntry.AdjustmentDate, timeRecordEntryToUpdate.AdjustmentDate);
             Assert.AreNotEqual(timeRecordEntry.Date, timeRecordEntryToUpdate.Date);
             Assert.AreNotEqual(timeRecordEntry.FundType, timeRecordEntryToUpdate.FundType);
