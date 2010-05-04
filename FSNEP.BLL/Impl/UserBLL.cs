@@ -44,7 +44,7 @@ namespace FSNEP.BLL.Impl
                 var currentUser = GetUser();
                 
                 Check.Ensure(currentUser != null);
-                Check.Ensure(currentUser.Projects != null);
+                Check.Ensure(currentUser.Projects != null, "User must have at least one project");
 
                 return currentUser.Projects.Where(p => p.IsActive).AsQueryable();
             }
