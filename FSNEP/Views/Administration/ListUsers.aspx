@@ -92,7 +92,7 @@
     </table>
 
     <p>
-        <%= Html.ActionLink("Create New", "Create") %>
+        <%= Html.ActionLink("Create New", "CreateUser") %>
     </p>
 
 </asp:Content>
