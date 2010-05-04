@@ -69,7 +69,7 @@
                 Supervisor:
             </td>
             <td>
-                <%= Html.DropDownList("SupervisorID", Model.Supervisors, "Select A Supervisor") %>
+                <%= Html.DropDownListFor(u=>u.User.Supervisor, new SelectList(Model.Supervisors, "ID", "FullNameLastFirst"), "Select A Supervisor") %>
             </td>
             <td>
                 <%= Html.ValidationMessage("SupervisorID") %>
@@ -80,10 +80,12 @@
                 Projects:
             </td>
             <td>
-                <%= this.MultiSelect("ProjectList").Options(Model.Projects) %>
+                <%= Html.ListBox("User.Projects", new MultiSelectList(Model.Projects, "ID", "Name", Model.User.Projects.Select(a=>a.ID))) %>
+                <%--<%= this.MultiSelect("User.Projects").Options(new MultiSelectList(Model.Projects, "ID", "Name", Model.User.Projects.Select(a=>a.ID)))%>--%>
+                <%--<%= this.MultiSelect("ProjectList").Options(Model.Projects) %>--%>
             </td>
             <td>
-                <%= Html.ValidationMessage("ProjectList") %>
+                <%= Html.ValidationMessage("User.Projects") %>
             </td>
         </tr>
         <tr>
@@ -91,10 +93,19 @@
                 Fund Types:
             </td>
             <td>
-                <%= this.MultiSelect("FundTypeList").Options(Model.FundTypes) %>
+                <%
+                    var fundtypes = Model.FundTypes;
+                    var fundtypesids = new[] { 2 }; //Model.User.FundTypes.Select(a => a.ID);
+                    int i = 0;
+                    
+                    
+                     %>
+            
+                <%= this.MultiSelect("User.FundTypes").Options(new MultiSelectList(Model.FundTypes, "ID", "Name")).Selected(fundtypesids) %>
+                <%--<%= this.MultiSelect("FundTypeList").Options(Model.FundTypes) %>--%>
             </td>
             <td>
-                <%= Html.ValidationMessage("FundTypeList") %>
+                <%= Html.ValidationMessage("User.FundTypes") %>
             </td>
         </tr>
     </table>

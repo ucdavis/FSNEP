@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using CAESArch.BLL;
+using CAESArch.Core.DataInterfaces;
 using FSNEP.BLL.Impl;
 using FSNEP.Controllers.Helpers;
 using FSNEP.Controllers.Helpers.Extensions;
@@ -217,12 +218,13 @@ namespace FSNEP.Controllers
                 return this.RedirectToAction(a => a.Create());
             }
 
-            var viewModel = new UserViewModel { User = UserBLL.GetUser(id) };
+            var user = UserBLL.GetUser(id);
 
             //If the user could not be found, redirect to creating a user
-            if (viewModel.User == null) return this.RedirectToAction(a => a.Create());
+            if (user == null) return this.RedirectToAction(a => a.Create());
 
-            PopulateDefaultUserViewModel(viewModel);
+            var viewModel = UserViewModel.Create(UserBLL);
+            viewModel.User = user;
 
             //Now the user roles are the roles for the given id
             viewModel.UserRoles = UserBLL.GetUserRoles(id);
@@ -246,8 +248,6 @@ namespace FSNEP.Controllers
             result.AppendLine("<br/>");
             result.AppendFormat("Supervisor is {0}", userViewModel.User.Supervisor);
 
-
-
             return result.ToString();
         }
 
@@ -262,12 +262,13 @@ namespace FSNEP.Controllers
                 return this.RedirectToAction(a => a.Create());
             }
 
-            var viewModel = new UserViewModel { User = UserBLL.GetUser(id) };
+            var user = UserBLL.GetUser(id);
 
             //If the user could not be found, redirect to creating a user
-            if (viewModel.User == null) return this.RedirectToAction(a => a.Create());
+            if (user == null) return this.RedirectToAction(a => a.Create());
 
-            PopulateDefaultUserViewModel(viewModel);
+            var viewModel = UserViewModel.Create(UserBLL);
+            viewModel.User = user;
 
             //Now the user roles are the roles for the given id
             viewModel.UserRoles = UserBLL.GetUserRoles(id);
@@ -276,9 +277,17 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult Modify(string id, Guid? supervisorId, IEnumerable<int> projectList,
-                                       IEnumerable<int> fundTypeList, List<string> roleList)
+        public ActionResult Modify(User user, List<string> roleList)
         {
+            //ValidationHelper<User>.Validate(user, ModelState);
+
+            var viewModel = UserViewModel.Create(UserBLL);
+            viewModel.User = user;
+
+            return View(viewModel);
+
+            #region OldCode
+            /*
             var user = UserBLL.GetUser(id);
 
             TryUpdateModel(user, "User"); //Update the user from the data entered in the form
@@ -318,6 +327,9 @@ namespace FSNEP.Controllers
             }
 
             return this.RedirectToAction<HomeController>(a => a.Index());
+             */
+
+            #endregion
         }
 
         /// <summary>
@@ -357,6 +369,8 @@ namespace FSNEP.Controllers
 
         private void PopulateDefaultUserViewModel(UserViewModel viewModel)
         {
+            throw new NotImplementedException();
+            /*
             viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
                                                    viewModel.User.Supervisor != null
                                                        ? viewModel.User.Supervisor.ID
@@ -369,6 +383,7 @@ namespace FSNEP.Controllers
                                                       viewModel.User.FundTypes.Select(p => p.ID));
 
             viewModel.AvailableRoles = UserBLL.GetAllRoles();
+             */
         }
 
         private static void EnsureProperRoles(ICollection<string> roles, User user)
@@ -417,10 +432,26 @@ namespace FSNEP.Controllers
 
     public class UserViewModel
     {
+        /// <summary>
+        /// Creates the user view model, including populating the lookups
+        /// </summary>
+        public static UserViewModel Create(IUserBLL userBLL)
+        {
+            var viewModel = new UserViewModel
+                                {
+                                    Supervisors = userBLL.GetSupervisors().OrderBy(a => a.LastName).ToList(),
+                                    Projects = userBLL.GetAllProjectsByUser().OrderBy(a => a.Name).ToList(),
+                                    FundTypes = userBLL.GetAvailableFundTypes().OrderBy(a => a.Name).ToList(),
+                                    AvailableRoles = userBLL.GetAllRoles()
+                                };
+
+            return viewModel;
+        }
+
         public User User { get; set; }
-        public SelectList Supervisors { get; set; }
-        public MultiSelectList Projects { get; set; }
-        public MultiSelectList FundTypes { get; set; }
+        public List<User> Supervisors { get; set; }
+        public List<Project> Projects { get; set; }
+        public List<FundType> FundTypes { get; set; }
 
         public IEnumerable<string> AvailableRoles { get; set; }
         public IEnumerable<string> UserRoles { get; set; }

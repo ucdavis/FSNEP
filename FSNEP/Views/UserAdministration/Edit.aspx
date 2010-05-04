@@ -83,7 +83,7 @@
                     Supervisor:
                 </td>
                 <td>
-                    <%= Html.DropDownListFor(a=>a.User.Supervisor, Model.Supervisors, "Select A Supervisor") %>
+                    <%= Html.DropDownListFor(a => a.User.Supervisor, new SelectList(Model.Supervisors, "ID", "FullNameLastFirst"), "Select A Supervisor")%>
                 </td>
                 <td>
                     <%= Html.ValidationMessage("SupervisorID") %>
@@ -94,7 +94,8 @@
                     Projects:
                 </td>
                 <td>
-                    <%= this.MultiSelect("ProjectList").Options(Model.Projects) %>
+                    <%= this.MultiSelect("User.FundTypes").Options(new MultiSelectList(Model.FundTypes, "ID", "Name", Model.User.FundTypes.Select(a=>a.ID)))%>
+                    <%--<%= this.MultiSelect("ProjectList").Options(Model.Projects) %>--%>
                 </td>
                 <td>
                     <%= Html.ValidationMessage("ProjectList") %>
