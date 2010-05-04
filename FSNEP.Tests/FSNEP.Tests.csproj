@@ -113,6 +113,7 @@
     <Compile Include="Repositories\ExpenseTypeRepositoryTests.cs" />
     <Compile Include="Repositories\FundTypeRepositoryTests.cs" />
     <Compile Include="Repositories\HoursInMonthRepositoryTests.cs" />
+    <Compile Include="Repositories\ProjectRepositoryTests.cs" />
     <Compile Include="Repositories\UserRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
