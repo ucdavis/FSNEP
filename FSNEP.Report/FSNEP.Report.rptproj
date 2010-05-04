@@ -13,12 +13,12 @@
       <FullPath>CostShare.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>IndividualActivityRecord.rdl</Name>
-      <FullPath>IndividualActivityRecord.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>IndividualActivityCertification.rdl</Name>
       <FullPath>IndividualActivityCertification.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>IndividualActivityRecord.rdl</Name>
+      <FullPath>IndividualActivityRecord.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
