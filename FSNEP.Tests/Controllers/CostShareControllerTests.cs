@@ -296,12 +296,13 @@ namespace FSNEP.Tests.Controllers
             const int id = 5;
             var costShare = CreateValidEntities.CostShare(null);
             costShare.User = _currentUser;
+            costShare.Status = new Status {NameOption = Status.Option.PendingReview}; //Not Editable
             costShare.SetIdTo(id);
 
 
             _costShareRepository.Expect(a => a.GetNullableByID(id)).Return(costShare).Repeat.Once();
             _costShareBLL.Expect(a => a.HasAccess(_principal, costShare)).Return(true).Repeat.Once();
-            _costShareBLL.Expect(a => a.IsEditable(costShare)).Return(false).Repeat.Once();
+            //_costShareBLL.Expect(a => a.IsEditable(costShare)).Return(false).Repeat.Once();
 
             Controller.Entry(id)
                 .AssertActionRedirect()
