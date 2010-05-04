@@ -212,7 +212,7 @@ namespace FSNEP.Tests.Controllers
 
         #endregion AddEntry Tests
 
-        #region TimeRecordEntry Tests       
+        #region TimeRecordEntry Tests
         /// <summary>
         /// Get time record entry returns correct view.
         /// </summary>
@@ -307,6 +307,102 @@ namespace FSNEP.Tests.Controllers
         }
 
         #endregion TimeRecordEntry Tests
+
+        #region GetEntry Tests
+        /// <summary>
+        /// Get entry returns json net result.
+        /// </summary>
+        [TestMethod]
+        public void GetEntryReturnsJsonNetResult()
+        {
+            var timeRecordEntryRepository = FakeRepository<TimeRecordEntry>();
+            Controller.Repository.Expect(a => a.OfType<TimeRecordEntry>()).Return(timeRecordEntryRepository).Repeat.
+                Any();
+            var timeRecordEntry = CreateValidTimeRecordEntry();
+            timeRecordEntry.Project = new Project {IsActive = true, Name = "ProjectName1"};
+            timeRecordEntry.FundType = new FundType { Name = "FundTypeName1" };
+            timeRecordEntry.ActivityType = new ActivityType { IsActive = true, Name = "ActivityTypeName1" };
+            timeRecordEntry.Account = new Account {IsActive = true, Name = "AccountName1"};
+            timeRecordEntry.Comment = "CommentText";
+            timeRecordEntry.SetIdTo(12);
+            timeRecordEntryRepository.EnsurePersistent(timeRecordEntry);
+
+            timeRecordEntryRepository.Expect(a => a.GetNullableByID(timeRecordEntry.Id)).Return(timeRecordEntry).Repeat.
+                Once();
+
+            var result = Controller.GetEntry(timeRecordEntry.Id);
+            Assert.IsNotNull(result);
+            Assert.AreEqual("{ Hours = 6.5, Id = 12, Comment = CommentText, ActivityType = ActivityTypeName1, Project = ProjectName1, Account = AccountName1, FundType = FundTypeName1 }", result.Data.ToString());
+
+        }
+
+        /// <summary>
+        /// Gets the null time record entry by id redirects to error.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void GetNullTimeRecordEntryByIdRedirectsToError()
+        {
+            var timeRecordEntryRepository = FakeRepository<TimeRecordEntry>();
+            Controller.Repository.Expect(a => a.OfType<TimeRecordEntry>()).Return(timeRecordEntryRepository).Repeat.
+                Any();
+            try
+            {
+                Controller.GetEntry(12);
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Entry not found", message.Message);
+                throw;
+            }
+        }
+
+        #endregion GetEntry Tests
+        
+        #region EditEntry Tests
+        /// <summary>
+        /// Edit entry copies comments and hours.
+        /// </summary>
+        [TestMethod]
+        public void EditEntryCopiesCommentsAndHours()
+        {
+            var timeRecordEntryRepository = FakeRepository<TimeRecordEntry>();
+            Controller.Repository.Expect(a => a.OfType<TimeRecordEntry>()).Return(timeRecordEntryRepository).Repeat.
+                Any();
+
+            var timeRecordEntry = CreateValidTimeRecordEntry();
+            timeRecordEntry.Project = new Project { IsActive = true, Name = "ProjectName1" };
+            timeRecordEntry.FundType = new FundType { Name = "FundTypeName1" };
+            timeRecordEntry.ActivityType = new ActivityType { IsActive = true, Name = "ActivityTypeName1" };
+            timeRecordEntry.Account = new Account { IsActive = true, Name = "AccountName1" };
+            timeRecordEntry.Comment = "CommentText";
+            timeRecordEntry.AdjustmentDate = DateTime.Now;
+            timeRecordEntry.Record = new Record {ReviewComment = "test comment"};
+            timeRecordEntry.SetIdTo(12);
+            timeRecordEntryRepository.EnsurePersistent(timeRecordEntry);
+
+            var timeRecordEntryToUpdate = CreateValidTimeRecordEntry();
+            timeRecordEntryToUpdate.Comment = "This will be changed";
+            timeRecordEntryToUpdate.Hours = 4;
+            timeRecordEntryToUpdate.Date = 10;
+            timeRecordEntryToUpdate.SetIdTo(14);
+
+            timeRecordEntryRepository.Expect(a => a.GetNullableByID(timeRecordEntryToUpdate.Id)).Return(timeRecordEntryToUpdate).Repeat.
+                Once();
+
+            Controller.EditEntry(timeRecordEntryToUpdate.Id, timeRecordEntry);
+            Assert.AreEqual(timeRecordEntry.Comment, timeRecordEntryToUpdate.Comment);
+            Assert.AreEqual(timeRecordEntry.Hours, timeRecordEntryToUpdate.Hours);
+            Assert.AreNotEqual(timeRecordEntry.Account, timeRecordEntryToUpdate.Account);
+            Assert.AreNotEqual(timeRecordEntry.ActivityType, timeRecordEntryToUpdate.ActivityType);
+            Assert.AreNotEqual(timeRecordEntry.AdjustmentDate, timeRecordEntryToUpdate.AdjustmentDate);
+            Assert.AreNotEqual(timeRecordEntry.Date, timeRecordEntryToUpdate.Date);
+            Assert.AreNotEqual(timeRecordEntry.FundType, timeRecordEntryToUpdate.FundType);
+            Assert.AreNotEqual(timeRecordEntry.Id, timeRecordEntryToUpdate.Id);
+            Assert.AreNotEqual(timeRecordEntry.Project, timeRecordEntryToUpdate.Project);
+            Assert.AreNotEqual(timeRecordEntry.Record, timeRecordEntryToUpdate.Record);
+        }
+        #endregion
 
         #region Helper Methods
 
