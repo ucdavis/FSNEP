@@ -6,18 +6,24 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
+<script type="text/javascript">
+    $(function() {
+        $("#CreateExpenseForm").validate();
+    });
+</script>
+
 <% Html.RenderPartial("LookupsHeader"); %>
 
     <h3><%= Html.Encode(TempData["Message"]) %></h3>
     <h2>Expense Types</h2>
 
-    <%using (Html.BeginForm("CreateExpenseType", "Lookup"))
+    <%using (Html.BeginForm("CreateExpenseType", "Lookup", FormMethod.Post, new { id = "CreateExpenseForm" }))
       { %>
     
     <fieldset>
         <legend>New Expense Type:</legend>
         <p>
-            <%= this.TextBox("name").Label("Expense Type Name: ")%>
+            <%= this.TextBox("name").Label("Expense Type Name: ").MaxLength(50).Class("required") %>
         </p>
         <p>
             <input type="submit" value="Add Expense Type" />

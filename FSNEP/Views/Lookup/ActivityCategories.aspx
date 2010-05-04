@@ -6,18 +6,24 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
+<script type="text/javascript">
+    $(function() {
+        $("#CreateActivityCategoryForm").validate();
+    });
+</script>
+
 <% Html.RenderPartial("LookupsHeader"); %>
 
     <h3><%= Html.Encode(TempData["Message"]) %></h3>
     <h2>Activity Categories</h2>
 
-    <%using (Html.BeginForm("CreateActivityCategory", "Lookup"))
+    <%using (Html.BeginForm("CreateActivityCategory", "Lookup", FormMethod.Post, new { id = "CreateActivityCategoryForm" }))
       { %>
     
     <fieldset>
         <legend>New Activity Category:</legend>
         <p>
-            <%= this.TextBox("name").Label("Activity Category Name: ")%>
+            <%= this.TextBox("name").Label("Activity Category Name: ").MaxLength(50).Class("required") %>
         </p>
         <p>
             <input type="submit" value="Add Activity Category" />

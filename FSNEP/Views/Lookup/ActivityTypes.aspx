@@ -6,25 +6,31 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
+<script type="text/javascript">
+    $(function() {
+        $("#CreateActivityTypeForm").validate();
+    });
+</script>
+
 <% Html.RenderPartial("LookupsHeader"); %>
 
     <h3><%= Html.Encode(TempData["Message"]) %></h3>
     <h2>Activity Types</h2>
 
-    <%using (Html.BeginForm("CreateActivityType", "Lookup"))
+    <%using (Html.BeginForm("CreateActivityType", "Lookup", FormMethod.Post, new { id = "CreateActivityTypeForm" }))
       { %>
     
     <fieldset>
         <legend>New Activity Type:</legend>
         <p>
-            <%= this.TextBox("name").Label("Activity Type Name: ")%>
+            <%= this.TextBox("name").Label("Activity Type Name: ").MaxLength(50).Class("required") %>
         </p>
         <p>
-            <%= this.TextBox("indicator").MaxLength(2).Label("Indicator: ") %>
+            <%= this.TextBox("indicator").Label("Indicator: ").MaxLength(2).Class("required") %>
         </p>
         <p>
             <label id="activityCategoryId_Label" for="activityCategoryId">Category: </label>
-            <%= Html.DropDownList("activityCategoryId", new SelectList((IEnumerable)ViewData["ActivityCategories"], "ID", "Name"))%>
+            <%= Html.DropDownList("activityCategoryId", new SelectList((IEnumerable)ViewData["ActivityCategories"], "ID", "Name"), "Select A Category", new {@class="required"})%>
             <%= Html.ActionLink<FSNEP.Controllers.LookupController>(a=>a.ActivityCategories(), "Create New Activity Category") %>
         </p>
         <p>
