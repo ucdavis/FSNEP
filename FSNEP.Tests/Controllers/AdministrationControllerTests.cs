@@ -35,6 +35,16 @@ namespace FSNEP.Tests.Controllers
         }
 
         [TestMethod]
+        public void ModifyUserRedirectsToCreateUserWithInvalidUsername()
+        {
+            UserBLL.Expect(a => a.GetUser("BADUSER")).Return(null);
+
+            Controller.ModifyUser("BADUSER")
+                .AssertActionRedirect()
+                .ToAction<AdministrationController>(a => a.CreateUser());
+        }
+
+        [TestMethod]
         public void ModifyUserRedirectsToCreateUserWithEmptyId()
         {
             Controller.ModifyUser(string.Empty)

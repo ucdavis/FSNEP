@@ -22,13 +22,15 @@ namespace FSNEP.Controllers
         public ActionResult CreateUser()
         {
             //Create the viewmodel with a blank user
-            var viewModel = new CreateUserViewModel { User = new User() };
-            
-            viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName");
-
-            viewModel.Projects = new MultiSelectList(UserBLL.GetAllProjectsByUser().ToList(), "ID", "Name");
-
-            viewModel.FundTypes = new MultiSelectList(UserBLL.GetAvailableFundTypes().ToList(), "ID", "Name");
+            var viewModel = new CreateUserViewModel
+                                {
+                                    User = new User(),
+                                    Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName"),
+                                    Projects =
+                                        new MultiSelectList(UserBLL.GetAllProjectsByUser().ToList(), "ID", "Name"),
+                                    FundTypes =
+                                        new MultiSelectList(UserBLL.GetAvailableFundTypes().ToList(), "ID", "Name")
+                                };
 
             return View(viewModel);
         }
@@ -44,7 +46,10 @@ namespace FSNEP.Controllers
                 return this.RedirectToAction(a => a.CreateUser());
             }
 
-            var viewModel = new ModifyUserViewModel { User = UserBLL.GetUser(id) };
+            var viewModel = new UserViewModel { User = UserBLL.GetUser(id) };
+
+            //If the user could not be found, redirect to creating a user
+            if (viewModel.User == null) return this.RedirectToAction(a => a.CreateUser());
 
             viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
                                                    viewModel.User.Supervisor.ID);
@@ -80,15 +85,12 @@ namespace FSNEP.Controllers
         }
     }
 
-    public class CreateUserViewModel
+    public class CreateUserViewModel : UserViewModel
     {
-        public User User { get; set; }
-        public SelectList Supervisors { get; set; }
-        public MultiSelectList Projects { get; set; }
-        public MultiSelectList FundTypes { get; set; }        
+
     }
 
-    public class ModifyUserViewModel
+    public class UserViewModel
     {
         public User User { get; set; }
         public SelectList Supervisors { get; set; }
