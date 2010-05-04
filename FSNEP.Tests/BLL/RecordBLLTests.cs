@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Web;
 using FSNEP.BLL.Dev;
 using FSNEP.BLL.Interfaces;
+using FSNEP.Core.Abstractions;
 using FSNEP.Core.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
@@ -293,6 +294,115 @@ namespace FSNEP.Tests.BLL
         }
 
         #endregion GetCurrentRecord Tests
+
+        #region GetCurrentSheetDate Tests
+
+        /// <summary>
+        /// Get current sheet date returns expected date for January 2009.
+        /// </summary>
+        [TestMethod]
+        public void GetCurrentSheetDateReturnsExpectedDateForJanuary2009()
+        {
+            var january = new DateTime(2008,12,31); //Prime to December 
+
+            for (int i = 0; i < 30; i++)
+            {
+                january = january.AddDays(1);
+                DateTime time = january;
+                SystemTime.Now = () => time;
+
+                DateTime result = _recordBLL.GetCurrentSheetDate();
+                Assert.IsNotNull(result, "Was null. Position " + i);
+                Assert.AreEqual(2008, result.Year, "Year was not 2008. Position " + i);
+                Assert.AreEqual(12, result.Month, "Month was not 12. Position " + i);
+                Assert.AreEqual(january.Day, result.Day, "Day was not Expected. Position " + i);
+            }          
+            Assert.AreEqual(1, january.Month);
+            Assert.AreEqual(30, january.Day);
+
+            january = january.AddDays(1); //January 31
+            SystemTime.Now = () => january;
+            DateTime nextResult = _recordBLL.GetCurrentSheetDate();
+            Assert.IsNotNull(nextResult);
+            Assert.AreEqual(2009, nextResult.Year);
+            Assert.AreEqual(01, nextResult.Month);
+            Assert.AreEqual(january.Day, nextResult.Day);
+        }
+
+        /// <summary>
+        /// Get current sheet date returns expected date for February 2009.
+        /// All of Feb returns Jan, March 1 returns Feb
+        /// </summary>
+        [TestMethod]
+        public void GetCurrentSheetDateReturnsExpectedDateForFebruary2009()
+        {
+            var february = new DateTime(2009, 01, 31); //Prime to january 
+
+            for (int i = 0; i < 28; i++) //28 days in Feb 2009
+            {
+                february = february.AddDays(1);
+                DateTime time = february;
+                SystemTime.Now = () => time;
+
+                DateTime result = _recordBLL.GetCurrentSheetDate();
+                Assert.IsNotNull(result, "Was null. Position " + i);
+                Assert.AreEqual(2009, result.Year, "Year was not 2009. Position " + i);
+                Assert.AreEqual(1, result.Month, "Month was not 1. Position " + i);
+                Assert.AreEqual(february.Day, result.Day, "Day was not Expected. Position " + i);
+            }
+            Assert.AreEqual(2, february.Month);
+            Assert.AreEqual(28, february.Day);
+
+            february = february.AddDays(1); //March 1
+            SystemTime.Now = () => february;
+            DateTime nextResult = _recordBLL.GetCurrentSheetDate();
+            Assert.IsNotNull(nextResult);
+            Assert.AreEqual(2009, nextResult.Year);
+            Assert.AreEqual(02, nextResult.Month);
+            Assert.AreEqual(1, nextResult.Day); //March 1st
+        }
+
+        /// <summary>
+        /// Get current sheet date returns expected date for march 2009.
+        /// </summary>
+        [TestMethod]
+        public void GetCurrentSheetDateReturnsExpectedDateForMarch2009()
+        {
+            var march = new DateTime(2009, 02, 28); //Prime to End of Feb 
+
+            for (int i = 0; i < 30; i++) 
+            {
+                march = march.AddDays(1);
+                DateTime time = march;
+                SystemTime.Now = () => time;
+
+                DateTime result = _recordBLL.GetCurrentSheetDate();
+                Assert.IsNotNull(result, "Was null. Position " + i);
+                Assert.AreEqual(2009, result.Year, "Year was not 2009. Position " + i);
+                Assert.AreEqual(2, result.Month, "Month was not 2. Position " + i);
+                if (march.Day > 28)
+                {
+                    Assert.AreEqual(28, result.Day, "Day was not Expected. Position " + i);
+                }
+                else
+                {
+                    Assert.AreEqual(march.Day, result.Day, "Day was not Expected. Position " + i);
+                }
+                
+            }
+            Assert.AreEqual(03, march.Month);
+            Assert.AreEqual(30, march.Day);
+
+            march = march.AddDays(1); //March 31
+            SystemTime.Now = () => march;
+            DateTime nextResult = _recordBLL.GetCurrentSheetDate();
+            Assert.IsNotNull(nextResult);
+            Assert.AreEqual(2009, nextResult.Year);
+            Assert.AreEqual(03, nextResult.Month);
+            Assert.AreEqual(march.Day, nextResult.Day); //March 31st
+        }
+
+        #endregion GetCurrentSheetDate Tests
 
         #region Helper Methods
 
