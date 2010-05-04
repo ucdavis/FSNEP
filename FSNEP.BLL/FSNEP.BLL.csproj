@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dev\DelegateBLL.cs" />
     <Compile Include="Dev\DevCostShareBLL.cs" />
     <Compile Include="Dev\DevDelegateBLL.cs" />
     <Compile Include="Dev\DevRecordBLL.cs" />
