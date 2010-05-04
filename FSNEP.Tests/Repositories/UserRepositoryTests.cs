@@ -273,7 +273,7 @@ namespace FSNEP.Tests.Repositories
             }
             catch (Exception message)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: LastName, The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).\r\nLastName, Required\r\n", message.Message, "Expected Exception Not encountered");
+                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: LastName, Required\r\nLastName, The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }
