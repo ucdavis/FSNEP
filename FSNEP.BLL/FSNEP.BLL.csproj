@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Impl\AccountBLL.cs" />
     <Compile Include="Impl\GenericBLL.cs" />
     <Compile Include="Impl\LookupBLL.cs" />
     <Compile Include="Impl\ProjectBLL.cs" />

@@ -145,6 +145,7 @@
     <Content Include="Views\Account\LogOn.aspx" />
     <Content Include="Views\Account\ResetPassword.aspx" />
     <Content Include="Views\Account\ResetPasswordSuccess.aspx" />
+    <Content Include="Views\Lookup\Accounts.aspx" />
     <Content Include="Views\Lookup\Projects.aspx" />
     <Content Include="Views\UserAdministration\Create.aspx" />
     <Content Include="Views\UserAdministration\List.aspx" />

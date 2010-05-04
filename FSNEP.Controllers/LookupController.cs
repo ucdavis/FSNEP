@@ -13,12 +13,77 @@ namespace FSNEP.Controllers
     public class LookupController : SuperController
     {
         public IProjectBLL ProjectBLL;
+        public IAccountBLL AccountBLL;
 
-        public LookupController(IProjectBLL projectBLL)
+        public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL)
         {
             ProjectBLL = projectBLL;
+            AccountBLL = accountBLL;
         }
         
+        [Transaction]
+        public ActionResult Accounts()
+        {
+            var activeAccounts = AccountBLL.Repository.Queryable.Where(a => a.IsActive);
+
+            return View(activeAccounts);
+        }
+
+        [AcceptPost]
+        public ActionResult InactivateAccount(int accountId)
+        {
+            //get the account
+            var account = AccountBLL.Repository.GetNullableByID(accountId);
+
+            if (account == null)
+            {
+                Message = "Account Not Found";
+
+                return this.RedirectToAction(a => a.Accounts());
+            }
+
+            //inactivate the project
+            using (var ts = new TransactionScope())
+            {
+                account.IsActive = false;
+
+                AccountBLL.Repository.EnsurePersistent(account);
+
+                ts.CommitTransaction();
+            }
+
+            Message = "Account Removed Successfully";
+
+            return this.RedirectToAction(a => a.Accounts());
+        }
+
+        [AcceptPost]
+        public ActionResult CreateAccount(Account newAccount)
+        {
+            newAccount.IsActive = true;
+
+            ValidationHelper<Account>.Validate(newAccount, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                Message = "Account Creation Failed";
+
+                return this.RedirectToAction(a => a.Accounts());
+            }
+
+            //Add the new project
+            using (var ts = new TransactionScope())
+            {
+                AccountBLL.Repository.EnsurePersistent(newAccount);
+
+                ts.CommitTransaction();
+            }
+
+            Message = "Account Created Successfully";
+
+            return this.RedirectToAction(a => a.Accounts());
+        }
+
         /// <summary>
         /// Return a list of all projects
         /// </summary>

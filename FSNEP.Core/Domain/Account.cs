@@ -4,14 +4,8 @@ using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
 
 namespace FSNEP.Core.Domain
 {
-    public class Account : DomainObject<Account, int>
+    public class Account : LookupObject<Account, int>
     {
-        [NotNullValidator]
-        [StringLengthValidator(50)]
-        public virtual string Name { get; set; }
-
-        public virtual bool IsActive { get; set; }
-
         [RangeValidator(0.00, RangeBoundaryType.Inclusive, 0.30, RangeBoundaryType.Inclusive)]
         public virtual double IndirectCost { get; set; }
 
