@@ -286,11 +286,12 @@ function EditEntryLoaded(result) {
     LogMessage("Edit Entry Loaded", result);
 
     $("#Edit_EntryId").val(result.Id);
-    
+
     $("#Edit_ActivityType").val(result.ActivityType);
-    $("#Edit_FundType").html(result.FundType);
-    $("#Edit_Project").html(result.Project);
-    $("#Edit_Account").html(result.Account);
+
+    $("#Edit_FundType_Readonly").html(result.FundType);
+    $("#Edit_Project_Readonly").html(result.Project);
+    $("#Edit_Account_Readonly").html(result.Account);
     
     $("#Edit_Hours").val(result.Hours);
     $("#Edit_Comment").val(result.Comment);

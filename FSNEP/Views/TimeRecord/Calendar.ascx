@@ -203,16 +203,16 @@
                 </select>
             </p>
             <p>
-                <label for="Edit_FundType">Fund Type:</label>
-                <span id="Edit_FundType"></span>
+                <label for="Edit_FundType_Readonly">Fund Type:</label>
+                <span id="Edit_FundType_Readonly"></span>
             </p>
             <p>
                 <label for="Edit_Project">Project:</label>
-                <span id="Edit_Project"></span>
+                <span id="Edit_Project_Readonly"></span>
             </p>
             <p>
                 <label for="Edit_Account">Account:</label>
-                <span id="Edit_Account"></span>
+                <span id="Edit_Account_Readonly"></span>
             </p>
             <p>
                 <%= this.TextBox("Edit_Hours").Class("required").Label("Hours")  %>
