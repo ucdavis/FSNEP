@@ -8,28 +8,20 @@ using FSNEP.Core.Abstractions;
 using FSNEP.Helpers.Attributes;
 using MvcContrib;
 using MvcContrib.Attributes;
+using CAESArch.Core.Utils;
 
 namespace FSNEP.Controllers
 {
     [HandleErrorWithELMAH]
     public class AccountController : Controller
     {
-
-        // This constructor is used by the MVC framework to instantiate the controller using
-        // the default forms authentication and membership providers.
-
-        public AccountController()
-            : this(null, null)
-        {
-        }
-
-        // This constructor is not used by the MVC framework but is instead provided for ease
-        // of unit testing this type. See the comments at the end of this file for more
-        // information.
         public AccountController(IFormsAuthentication formsAuth, IMembershipService service)
         {
-            FormsAuth = formsAuth ?? new FormsAuthenticationService();
-            MembershipService = service ?? new AccountMembershipService();
+            Check.Require(formsAuth != null, "Forms Authentication Service required");
+            Check.Require(service != null, "Membership Service required");
+
+            FormsAuth = formsAuth;
+            MembershipService = service;
 
             MessageService = new MessageGateway();
         }
