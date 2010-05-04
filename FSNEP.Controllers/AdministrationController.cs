@@ -13,6 +13,7 @@ using MvcContrib;
 using System;
 using System.Web.Security;
 using FSNEP.Core.Abstractions;
+using CAESArch.Core.Utils;
 
 namespace FSNEP.Controllers
 {
@@ -55,7 +56,7 @@ namespace FSNEP.Controllers
         public ActionResult CreateUser()
         {
             //Create the viewmodel with a blank user
-            var viewModel = new CreateUserViewModel {User = new User {FTE = 1}};
+            var viewModel = new CreateUserViewModel { User = new User { FTE = 1 } };
 
             PopulateDefaultUserViewModel(viewModel);
 
@@ -63,13 +64,14 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult CreateUser(CreateUserViewModel model, Guid? supervisorId, IEnumerable<int> projectList, IEnumerable<int> fundTypeList)
+        public ActionResult CreateUser(CreateUserViewModel model, Guid? supervisorId, IEnumerable<int> projectList,
+                                       IEnumerable<int> fundTypeList, List<string> roleList)
         {
             var user = model.User;
             user.Supervisor = new User();
 
             ValidationHelper<CreateUserViewModel>.Validate(model, ModelState); //Validate the create user properties
-            
+
             CheckUserProperties(supervisorId, projectList, fundTypeList); //Make sure the associations are set
 
             ValidationHelper<User>.Validate(user, ModelState, "User"); //validate the user properties
@@ -81,10 +83,15 @@ namespace FSNEP.Controllers
 
             PopulateUserProperties(user, supervisorId, projectList, fundTypeList);
 
+            if (roleList == null) roleList = new List<string>();
+
+            EnsureProperRoles(roleList, user);
+
             MembershipCreateStatus createStatus;
 
             //Create the user
-            MembershipUser membershipUser = UserBLL.UserAuth.MembershipService.CreateUser(model.UserName, DefaultPassword,
+            MembershipUser membershipUser = UserBLL.UserAuth.MembershipService.CreateUser(model.UserName,
+                                                                                          DefaultPassword,
                                                                                           model.Email, model.Question,
                                                                                           model.Answer, true, null,
                                                                                           out createStatus);
@@ -99,8 +106,8 @@ namespace FSNEP.Controllers
                 return CreateUser();
             }
 
-            user.SetUserID((Guid) membershipUser.ProviderUserKey);
-            
+            user.SetUserID((Guid)membershipUser.ProviderUserKey);
+
             user.Token = Guid.NewGuid(); //setup the new user token
 
             var ts = new TransactionScope();
@@ -109,11 +116,11 @@ namespace FSNEP.Controllers
             {
                 //save the user
                 UserBLL.Repository.EnsurePersistent(user);
-                
+
                 //Send the user a message
-                var newUserTokenPath = Url.AbsoluteAction("Index", "Home", new {token = user.Token});
+                var newUserTokenPath = Url.AbsoluteAction("Index", "Home", new { token = user.Token });
                 var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser(user.Supervisor.ID).Email;
-                
+
                 MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail, newUserTokenPath);
 
                 ts.CommitTransaction();
@@ -122,7 +129,8 @@ namespace FSNEP.Controllers
             {
                 ts.RollBackTransaction();
 
-                UserBLL.UserAuth.MembershipService.DeleteUser(model.UserName); //delete the user then throw the exception
+                UserBLL.UserAuth.MembershipService.DeleteUser(model.UserName);
+                //delete the user then throw the exception
 
                 throw;
             }
@@ -141,7 +149,7 @@ namespace FSNEP.Controllers
                 return this.RedirectToAction(a => a.CreateUser());
             }
 
-            var viewModel = new UserViewModel {User = UserBLL.GetUser(id)};
+            var viewModel = new UserViewModel { User = UserBLL.GetUser(id) };
 
             //If the user could not be found, redirect to creating a user
             if (viewModel.User == null) return this.RedirectToAction(a => a.CreateUser());
@@ -156,7 +164,7 @@ namespace FSNEP.Controllers
 
         [AcceptPost]
         public ActionResult ModifyUser(string id, Guid? supervisorId, IEnumerable<int> projectList,
-                                       IEnumerable<int> fundTypeList)
+                                       IEnumerable<int> fundTypeList, List<string> roleList)
         {
             var user = UserBLL.GetUser(id);
 
@@ -172,6 +180,10 @@ namespace FSNEP.Controllers
             }
 
             PopulateUserProperties(user, supervisorId, projectList, fundTypeList);
+
+            if (roleList == null) roleList = new List<string>();
+
+            EnsureProperRoles(roleList, user);
 
             //We have a valid viewstate, so save the changes
             using (var ts = new TransactionScope())
@@ -233,6 +245,28 @@ namespace FSNEP.Controllers
 
             viewModel.AvailableRoles = UserBLL.GetAllRoles();
         }
+
+        private static void EnsureProperRoles(ICollection<string> roles, User user)
+        {
+            //Business role checks
+            Check.Require(roles != null);
+
+            //If user selects a 'state' fund type, ensure the timehseet role
+            bool hasStateType = false;
+
+            foreach (var ft in user.FundTypes)
+            {
+                if (ft.Name.StartsWith("State", StringComparison.OrdinalIgnoreCase))
+                {
+                    hasStateType = true;
+                }
+            }
+
+            if (hasStateType && !roles.Contains(RoleNames.RoleTimeSheet))
+            {
+                roles.Add(RoleNames.RoleTimeSheet);
+            }
+        }
     }
 
     public class CreateUserViewModel : UserViewModel
@@ -240,12 +274,13 @@ namespace FSNEP.Controllers
         [NotNullValidator]
         [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
         public string UserName { get; set; }
-        
+
         [NotNullValidator]
         [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
-        [RegexValidator(@"\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b", RegexOptions.IgnoreCase, MessageTemplate= "Must be a valid email address")]
+        [RegexValidator(@"\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b", RegexOptions.IgnoreCase,
+            MessageTemplate = "Must be a valid email address")]
         public string Email { get; set; }
-        
+
         [NotNullValidator]
         [StringLengthValidator(1, 50, MessageTemplate = "Must be between {3} and {5} characters long")]
         public string Question { get; set; }
