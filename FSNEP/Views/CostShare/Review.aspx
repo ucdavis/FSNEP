@@ -10,7 +10,6 @@
     
     <%= Html.Grid(Model.CostShareEntries)
             .DisplayAlternateMessageWhen(Model.CostShareEntries.Count() == 0, "No Cost Share Entries Found")
-            .Transactional()
             .Name("CostShareEntries")
             .Columns(col=>
                          {
