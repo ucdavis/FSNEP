@@ -11,24 +11,29 @@ namespace FSNEP.Tests.Controllers
         public void Index()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            var controller = new HomeController();
 
             // Act
-            ViewResult result = controller.Index() as ViewResult;
+            var result = controller.Index() as ViewResult;
+
+            Assert.IsNotNull(result);
 
             // Assert
-            ViewDataDictionary viewData = result.ViewData;
-            Assert.AreEqual("Welcome to ASP.NET MVC!", viewData["Message"]);
+            if (result != null)
+            {
+                var viewData = result.ViewData;
+                Assert.AreEqual("Welcome to ASP.NET MVC!", viewData["Message"]);
+            }
         }
 
         [TestMethod]
         public void About()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            var controller = new HomeController();
 
             // Act
-            ViewResult result = controller.About() as ViewResult;
+            var result = controller.About() as ViewResult;
 
             // Assert
             Assert.IsNotNull(result);
