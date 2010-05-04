@@ -40,12 +40,13 @@ namespace FSNEP.Tests.Controllers
             var fourUsers = new List<User> {new User(), new User(), new User(), new User()};
 
             UserBll.Expect(u=>u.GetAllUsers()).Return(fourUsers.AsQueryable());
+            UserBll.Expect(u => u.GetAllProjectsByUser(null)).IgnoreArguments().Return(new List<Project>().AsQueryable());
 
             var result = Controller.List(null)
                             .AssertViewRendered()
-                            .WithViewData<List<User>>();
+                            .WithViewData<UserListViewModel>();
 
-            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual(4, result.Users.Count());
         }
 
         [TestMethod]
