@@ -15,18 +15,19 @@ namespace FSNEP.Controllers
         public IAccountBLL AccountBLL;
         public IExpenseTypeBLL ExpenseTypeBLL;
 
-        public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL)
+        public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL, IExpenseTypeBLL expenseTypeBLL)
         {
             ProjectBLL = projectBLL;
             AccountBLL = accountBLL;
+            ExpenseTypeBLL = expenseTypeBLL;
         }
 
         [Transaction]
         public ActionResult ExpenseTypes()
         {
-            var activeAccounts = ExpenseTypeBLL.GetActive();
+            var activeExpenseTypes = ExpenseTypeBLL.GetActive();
 
-            return View(activeAccounts);
+            return View(activeExpenseTypes);
         }
 
         [AcceptPost]

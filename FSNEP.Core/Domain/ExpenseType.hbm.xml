@@ -8,6 +8,7 @@
     </id>
 
     <property name="Name" column="Name" />
+    <property name="IsActive" column="IsActive" />
     
   </class>
 </hibernate-mapping>
