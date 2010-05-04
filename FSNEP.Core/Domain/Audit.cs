@@ -25,26 +25,26 @@ namespace FSNEP.Core.Domain
 
         public virtual DateTime AuditDate { get; set; }
 
-        public virtual void SetActionCode(AuditCodes auditCode)
+        public virtual void SetActionCode(AuditActionType auditActionType)
         {
-            switch (auditCode)
+            switch (auditActionType)
             {
-                case AuditCodes.Create:
+                case AuditActionType.Create:
                     ActionCodeId = "C";
                     break;
-                case AuditCodes.Update:
+                case AuditActionType.Update:
                     ActionCodeId = "U";
                     break;
-                case AuditCodes.Delete:
+                case AuditActionType.Delete:
                     ActionCodeId = "D";
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("auditCode");
+                    throw new ArgumentOutOfRangeException("auditActionType");
             }
         }
     }
 
-    public enum AuditCodes
+    public enum AuditActionType
     {
         Create, Update, Delete
     }

@@ -28,7 +28,7 @@ namespace FSNEP.Tests.Repositories
                                 Username = "newuser"
                             };
             
-            audit.SetActionCode(AuditCodes.Update);
+            audit.SetActionCode(AuditActionType.Update);
 
             using (var ts = new TransactionScope())
             {
@@ -50,7 +50,7 @@ namespace FSNEP.Tests.Repositories
                 Username = "newuser"
             };
 
-            audit.SetActionCode(AuditCodes.Update);
+            audit.SetActionCode(AuditActionType.Update);
 
             using (var ts = new TransactionScope())
             {
