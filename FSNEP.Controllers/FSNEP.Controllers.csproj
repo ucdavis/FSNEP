@@ -90,6 +90,7 @@
       <DependentUpon>Constants.resx</DependentUpon>
     </Compile>
     <Compile Include="LookupController.cs" />
+    <Compile Include="TimeRecordController.cs" />
     <Compile Include="UserAdministrationController.cs" />
     <Compile Include="Helpers\Attributes\HandleErrorWithELMAHAttribute.cs" />
     <Compile Include="Helpers\Attributes\TransactionAttribute.cs" />
