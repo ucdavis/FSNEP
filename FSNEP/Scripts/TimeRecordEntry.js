@@ -1,6 +1,7 @@
 ﻿///<reference path="jquery-1.3.2-vsdoc.js">
 $(function() {
     DisplayMessage("Message OnLoad");
+    PopulateAccounts($("#Project"));
 
     $(".AddCalendarEntry").live('click', function() {
         var clicked = $(this);
@@ -30,14 +31,31 @@ $(function() {
         return false;
     });
 
-    $("#Project").change(PopulateAccounts);
+    $("#Project").change(function() { PopulateAccounts(this); });
 });
 
-function PopulateAccounts() {
-    var proj = $(this).val();
+function PopulateAccounts(el) {
+    var projectId = $(el).val();
 
     //Get the new accounts for this project
+    $.getJSON(
+        Services.GetAccountsForProject + "/" + projectId,
+        null,
+        OnPopulateAccountsComplete);       
+}
+
+function OnPopulateAccountsComplete(result) {
+    LogMessage("Result", result);
     
+    var accountSelect = $("#Account");
+    accountSelect.empty(); //remove the current options
+
+    $(result).each(function() { //append in the new elements
+        var acct = this;
+        var newOption = $("<option>" + acct.Name + "</option>").val(acct.Id);
+
+        accountSelect.append(newOption);
+    });
 }
 
 function AddEntry(id) {
@@ -45,7 +63,7 @@ function AddEntry(id) {
 
     var addRecordDay = $("#addRecordDay");
     addRecordDay.val(id);
-
+    
     OpenDialog(addEntryDiv, null, "Add Entry", null);
 }
 
@@ -66,6 +84,15 @@ function OpenDialog(dialog /*The dialog DIV JQuery object*/, buttons /*Button co
 
 function DisplayMessage(message){
     $().message(message);
+}
+
+function LogMessage(message, data) {
+
+    var canDebug = typeof (window.console) != "undefined";
+
+    if (canDebug) {
+        console.log(message, data);
+    }
 }
 
 function GetIdFromElement(el, elementType) {

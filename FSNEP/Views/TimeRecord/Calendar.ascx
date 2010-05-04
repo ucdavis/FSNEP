@@ -1,5 +1,14 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<FSNEP.Controllers.TimeRecordEntryViewModel>" %>
 
+<script type="text/javascript">
+    var Services = {
+        Add: "/Add",
+        Edit: "/Edit",
+        Delete: "/Delete",
+        GetAccountsForProject: '<%= Url.Action("GetAccountsForProject", "Association") %>'
+    }
+</script>
+
 <div style="width: 847px; margin: 0 auto;">
     <img src="../Images/cal_sunday.gif" alt="sunday" style="margin-left: 1px;" /><img
         src="../Images/cal_monday.gif" alt="monday" style="margin-left: 1px;" /><img src="../Images/cal_tuesday.gif"
@@ -96,7 +105,7 @@
         <p>
             <label for="Account" id="Account_Label">Account:</label>
             <select class="required" id="Account" name="Account">
-                <option value="">Select An Account</option>
+                <option value="">Project Has No Accounts</option>
             </select>
         </p>
         <p>

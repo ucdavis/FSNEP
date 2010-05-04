@@ -9,6 +9,7 @@ using UCDArch.Web.Attributes;
 
 namespace FSNEP.Controllers
 {
+    [Authorize] //TODO: Control access
     public class AssociationController : SuperController
     {
         [Transaction]
