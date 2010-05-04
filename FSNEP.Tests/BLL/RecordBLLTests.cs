@@ -983,6 +983,41 @@ namespace FSNEP.Tests.BLL
 
         #endregion Submit Tests
 
+
+
+        #region GetReviewableAndCurrentRecords Tests
+
+        /// <summary>
+        /// Get reviewable and current records returns only expected records in correct order for time record.
+        /// </summary>
+        [TestMethod]
+        public void GetReviewableAndCurrentRecordsReturnsOnlyExpectedRecordsInCorrectOrderForTimeRecord()
+        {
+            FakeTimeRecordsToCheckWithGetReviewableAndCurrentRecords();
+            var timeRecords = _timeRecordBLL.GetReviewableAndCurrentRecords(_principal);
+            Assert.IsNotNull(timeRecords);
+            Assert.AreEqual(9, timeRecords.Count());
+            foreach (var timeRecord in timeRecords)
+            {
+                Assert.AreEqual(CurrentUser, timeRecord.User.Supervisor);
+            }
+            var timeRecordList = timeRecords.ToList();
+            //Abby
+            Assert.AreEqual("ReviewComment13", timeRecordList[0].ReviewComment);
+            Assert.AreEqual("ReviewComment12", timeRecordList[1].ReviewComment);
+            Assert.AreEqual("ReviewComment11", timeRecordList[2].ReviewComment);
+            //Chancy
+            Assert.AreEqual("ReviewComment7", timeRecordList[3].ReviewComment);
+            Assert.AreEqual("ReviewComment5", timeRecordList[4].ReviewComment);
+            Assert.AreEqual("ReviewComment6", timeRecordList[5].ReviewComment);
+            //Zeb
+            Assert.AreEqual("ReviewComment8", timeRecordList[6].ReviewComment);
+            Assert.AreEqual("ReviewComment9", timeRecordList[7].ReviewComment);
+            Assert.AreEqual("ReviewComment10", timeRecordList[8].ReviewComment);            
+        }            
+
+        #endregion GetReviewableAndCurrentRecords Tests
+
         #endregion TimeRecord Tests
 
         #region CostShare Tests
@@ -1061,6 +1096,39 @@ namespace FSNEP.Tests.BLL
         }
 
         #endregion Submit Tests
+
+        #region GetReviewableAndCurrentRecords Tests
+
+        /// <summary>
+        /// Get reviewable and current records returns only expected records in correct order for cost share.
+        /// </summary>
+        [TestMethod]
+        public void GetReviewableAndCurrentRecordsReturnsOnlyExpectedRecordsInCorrectOrderForCostShare()
+        {
+            FakeCostShareRecordsToCheckWithGetReviewableAndCurrentRecords();
+            var costShareRecords = _costShareBLL.GetReviewableAndCurrentRecords(_principal);
+            Assert.IsNotNull(costShareRecords);
+            Assert.AreEqual(9, costShareRecords.Count());
+            foreach (var timeRecord in costShareRecords)
+            {
+                Assert.AreEqual(CurrentUser, timeRecord.User.Supervisor);
+            }
+            var costShareRecordList = costShareRecords.ToList();
+            //Abby
+            Assert.AreEqual("ReviewComment13", costShareRecordList[0].ReviewComment);
+            Assert.AreEqual("ReviewComment12", costShareRecordList[1].ReviewComment);
+            Assert.AreEqual("ReviewComment11", costShareRecordList[2].ReviewComment);
+            //Chancy
+            Assert.AreEqual("ReviewComment7", costShareRecordList[3].ReviewComment);
+            Assert.AreEqual("ReviewComment5", costShareRecordList[4].ReviewComment);
+            Assert.AreEqual("ReviewComment6", costShareRecordList[5].ReviewComment);
+            //Zeb
+            Assert.AreEqual("ReviewComment8", costShareRecordList[6].ReviewComment);
+            Assert.AreEqual("ReviewComment9", costShareRecordList[7].ReviewComment);
+            Assert.AreEqual("ReviewComment10", costShareRecordList[8].ReviewComment);
+        }
+
+        #endregion GetReviewableAndCurrentRecords Tests
 
         //TODO: Other CostShare Tests
 
@@ -1168,6 +1236,267 @@ namespace FSNEP.Tests.BLL
             _repository.Expect(a => a.OfType<TimeRecord>()).Return(timeRecordRepository).Repeat.Any();
             timeRecordRepository.Expect(a => a.Queryable).Return(timeRecords.AsQueryable()).Repeat.Any();
         }
+
+        /// <summary>
+        /// Fakes the time records to check for getReviewableAndCurrentRecords method.
+        /// </summary>
+        private void FakeTimeRecordsToCheckWithGetReviewableAndCurrentRecords()
+        {
+            var differentSupervisor = CreateValidEntities.User(null);
+            differentSupervisor.UserName = "SomeOtherSupervisor";
+            var userList = new List<User>();
+            for (int i = 0; i < 4; i++)
+            {
+                userList.Add(CreateValidEntities.User(i+1));
+                userList[i].Supervisor = CurrentUser;
+            }
+            userList[1].Supervisor = differentSupervisor;
+
+            userList[3].LastName = "Abby";            
+            userList[0].LastName = "Chancy";
+            userList[2].LastName = "Zeb";
+
+            var statusCurrent = new Status { NameOption = Status.Option.Current };
+            var statusApproved = new Status { NameOption = Status.Option.Approved };
+            var statusDisapproved = new Status { NameOption = Status.Option.Disapproved };
+            var statusPendingReview = new Status { NameOption = Status.Option.PendingReview };
+
+            var timeRecords = new List<TimeRecord>();
+
+            for (int i = 0; i < 13; i++)
+            {
+                timeRecords.Add(CreateValidEntities.TimeRecord(i+1));
+            }
+
+            #region regardless of status, non of these time records will be returned because they have a different supervisor
+            timeRecords[0].User = userList[1];
+            timeRecords[0].Status = statusApproved;
+            timeRecords[1].User = userList[1];
+            timeRecords[1].Status = statusCurrent;
+            timeRecords[2].User = userList[1];
+            timeRecords[2].Status = statusDisapproved;
+            timeRecords[3].User = userList[1];
+            timeRecords[3].Status = statusPendingReview;
+            #endregion regardless of status, non of these time records will be returned because they have a different supervisor
+
+            #region TimeRecords for Chancy (Order 2)
+            //Order 2
+            timeRecords[4].User = userList[0];
+            timeRecords[4].Year = 2009;
+            timeRecords[4].Month = 6;
+            timeRecords[4].Status = statusPendingReview;
+
+            //Order 3
+            timeRecords[5].User = userList[0];
+            timeRecords[5].Year = 2009;
+            timeRecords[5].Month = 12;
+            timeRecords[5].Status = statusCurrent;
+
+            //Order 1
+            timeRecords[6].User = userList[0];
+            timeRecords[6].Year = 2008;
+            timeRecords[6].Month = 5;
+            timeRecords[6].Status = statusCurrent;
+            #endregion TimeRecords for Chancy
+
+            #region TimeRecords for Zeb (Order 3)
+            //Order 1
+            timeRecords[7].User = userList[2];
+            timeRecords[7].Year = 2007;
+            timeRecords[7].Month = 6;
+            timeRecords[7].Status = statusPendingReview;
+
+            //Order 2
+            timeRecords[8].User = userList[2];
+            timeRecords[8].Year = 2008;
+            timeRecords[8].Month = 12;
+            timeRecords[8].Status = statusPendingReview;
+
+            //Order 3
+            timeRecords[9].User = userList[2];
+            timeRecords[9].Year = 2009;
+            timeRecords[9].Month = 5;
+            timeRecords[9].Status = statusCurrent;
+            #endregion TimeRecords for Zeb 
+
+            #region TimeRecords for Abby (Order 1)
+            //Order 3
+            timeRecords[10].User = userList[3];
+            timeRecords[10].Year = 2009;
+            timeRecords[10].Month = 6;
+            timeRecords[10].Status = statusCurrent;
+
+            //Order 2
+            timeRecords[11].User = userList[3];
+            timeRecords[11].Year = 2008;
+            timeRecords[11].Month = 12;
+            timeRecords[11].Status = statusCurrent;
+
+            //Order 1
+            timeRecords[12].User = userList[3];
+            timeRecords[12].Year = 2007;
+            timeRecords[12].Month = 5;
+            timeRecords[12].Status = statusPendingReview;
+            #endregion TimeRecords for Abby
+
+            #region Status of Approved and Disapproved are filtered out
+
+            for (int i = 0; i < 6; i++)
+            {
+                timeRecords.Add(CreateValidEntities.TimeRecord(i + 13));
+                if(i%2==0)
+                {
+                    timeRecords[i + 13].Status = statusApproved;
+                }
+                else
+                {
+                    timeRecords[i + 13].Status = statusDisapproved; 
+                }
+            }
+            timeRecords[13].User = userList[0];
+            timeRecords[14].User = userList[0];
+            timeRecords[15].User = userList[2];
+            timeRecords[16].User = userList[2];
+            timeRecords[17].User = userList[3];
+            timeRecords[18].User = userList[3];
+
+            #endregion Status of Approved and Disapproved are filtered out
+
+            var timeRecordRepository = MockRepository.GenerateStub<IRepository<TimeRecord>>();
+            _repository.Expect(a => a.OfType<TimeRecord>()).Return(timeRecordRepository).Repeat.Any();
+            timeRecordRepository.Expect(a => a.Queryable).Return(timeRecords.AsQueryable()).Repeat.Any();
+        }
+
+        /// <summary>
+        /// Fakes the cost share records to check for getReviewableAndCurrentRecords method.
+        /// </summary>
+        private void FakeCostShareRecordsToCheckWithGetReviewableAndCurrentRecords()
+        {
+            var differentSupervisor = CreateValidEntities.User(null);
+            differentSupervisor.UserName = "SomeOtherSupervisor";
+            var userList = new List<User>();
+            for (int i = 0; i < 4; i++)
+            {
+                userList.Add(CreateValidEntities.User(i + 1));
+                userList[i].Supervisor = CurrentUser;
+            }
+            userList[1].Supervisor = differentSupervisor;
+
+            userList[3].LastName = "Abby";
+            userList[0].LastName = "Chancy";
+            userList[2].LastName = "Zeb";
+
+            var statusCurrent = new Status { NameOption = Status.Option.Current };
+            var statusApproved = new Status { NameOption = Status.Option.Approved };
+            var statusDisapproved = new Status { NameOption = Status.Option.Disapproved };
+            var statusPendingReview = new Status { NameOption = Status.Option.PendingReview };
+
+            var costShareRecords = new List<CostShare>();
+
+            for (int i = 0; i < 13; i++)
+            {
+                costShareRecords.Add(CreateValidEntities.CostShare(i + 1));
+            }
+
+            #region regardless of status, non of these costShareRecords will be returned because they have a different supervisor
+            costShareRecords[0].User = userList[1];
+            costShareRecords[0].Status = statusApproved;
+            costShareRecords[1].User = userList[1];
+            costShareRecords[1].Status = statusCurrent;
+            costShareRecords[2].User = userList[1];
+            costShareRecords[2].Status = statusDisapproved;
+            costShareRecords[3].User = userList[1];
+            costShareRecords[3].Status = statusPendingReview;
+            #endregion regardless of status, non of these costShareRecords will be returned because they have a different supervisor
+
+            #region TimeRecords for Chancy (Order 2)
+            //Order 2
+            costShareRecords[4].User = userList[0];
+            costShareRecords[4].Year = 2009;
+            costShareRecords[4].Month = 6;
+            costShareRecords[4].Status = statusPendingReview;
+
+            //Order 3
+            costShareRecords[5].User = userList[0];
+            costShareRecords[5].Year = 2009;
+            costShareRecords[5].Month = 12;
+            costShareRecords[5].Status = statusCurrent;
+
+            //Order 1
+            costShareRecords[6].User = userList[0];
+            costShareRecords[6].Year = 2008;
+            costShareRecords[6].Month = 5;
+            costShareRecords[6].Status = statusCurrent;
+            #endregion TimeRecords for Chancy
+
+            #region TimeRecords for Zeb (Order 3)
+            //Order 1
+            costShareRecords[7].User = userList[2];
+            costShareRecords[7].Year = 2007;
+            costShareRecords[7].Month = 6;
+            costShareRecords[7].Status = statusPendingReview;
+
+            //Order 2
+            costShareRecords[8].User = userList[2];
+            costShareRecords[8].Year = 2008;
+            costShareRecords[8].Month = 12;
+            costShareRecords[8].Status = statusPendingReview;
+
+            //Order 3
+            costShareRecords[9].User = userList[2];
+            costShareRecords[9].Year = 2009;
+            costShareRecords[9].Month = 5;
+            costShareRecords[9].Status = statusCurrent;
+            #endregion TimeRecords for Zeb
+
+            #region TimeRecords for Abby (Order 1)
+            //Order 3
+            costShareRecords[10].User = userList[3];
+            costShareRecords[10].Year = 2009;
+            costShareRecords[10].Month = 6;
+            costShareRecords[10].Status = statusCurrent;
+
+            //Order 2
+            costShareRecords[11].User = userList[3];
+            costShareRecords[11].Year = 2008;
+            costShareRecords[11].Month = 12;
+            costShareRecords[11].Status = statusCurrent;
+
+            //Order 1
+            costShareRecords[12].User = userList[3];
+            costShareRecords[12].Year = 2007;
+            costShareRecords[12].Month = 5;
+            costShareRecords[12].Status = statusPendingReview;
+            #endregion TimeRecords for Abby
+
+            #region Status of Approved and Disapproved are filtered out
+
+            for (int i = 0; i < 6; i++)
+            {
+                costShareRecords.Add(CreateValidEntities.CostShare(i + 13));
+                if (i % 2 == 0)
+                {
+                    costShareRecords[i + 13].Status = statusApproved;
+                }
+                else
+                {
+                    costShareRecords[i + 13].Status = statusDisapproved;
+                }
+            }
+            costShareRecords[13].User = userList[0];
+            costShareRecords[14].User = userList[0];
+            costShareRecords[15].User = userList[2];
+            costShareRecords[16].User = userList[2];
+            costShareRecords[17].User = userList[3];
+            costShareRecords[18].User = userList[3];
+
+            #endregion Status of Approved and Disapproved are filtered out
+
+            var costShareRepository = MockRepository.GenerateStub<IRepository<CostShare>>();
+            _repository.Expect(a => a.OfType<CostShare>()).Return(costShareRepository).Repeat.Any();
+            costShareRepository.Expect(a => a.Queryable).Return(costShareRecords.AsQueryable()).Repeat.Any();
+        }
+
 
         /// <summary>
         /// Create and return a valid user.

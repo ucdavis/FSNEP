@@ -207,15 +207,20 @@ namespace FSNEP.Tests.Core.Helpers
         /// <returns></returns>
         public static TimeRecord TimeRecord(int? counter)
         {
-            return new TimeRecord
+            var extra = "";
+            if (counter != null)
             {
-                Month = 10,
-                Year = 2009,
-                Salary = 200,
-                Status = new Status { NameOption = Status.Option.Current },
-                User = new User(),
-                ReviewComment = "A review is a review except when it isn't."
-            };
+                extra = counter.ToString();
+            }
+            return new TimeRecord
+                       {
+                           Month = 10,
+                           Year = 2009,
+                           Salary = 200,
+                           Status = new Status {NameOption = Status.Option.Current},
+                           User = new User(),
+                           ReviewComment = "ReviewComment" + extra
+                       };
         }
 
         //TODO: add and use other entities
