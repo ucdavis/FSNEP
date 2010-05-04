@@ -26,7 +26,7 @@ namespace FSNEP.Core.Domain
         // [NotNullValidator] Must be at least one project?
         public virtual IList<Project> Projects { get; set; }
 
-        [RangeValidator(0.00, RangeBoundaryType.Exclusive, 0.00, RangeBoundaryType.Ignore)] //Testing -- this should mean that salary > 0
+        [RangeValidator(0.00, RangeBoundaryType.Exclusive, 0.00, RangeBoundaryType.Ignore, MessageTemplate = "Must be greater than zero")]
             public virtual double Salary { get; set; }
 
         [RangeValidator(0.00, RangeBoundaryType.Inclusive, 2.00, RangeBoundaryType.Inclusive)]
