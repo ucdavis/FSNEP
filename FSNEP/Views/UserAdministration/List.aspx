@@ -56,7 +56,7 @@
                              col.Add(x => x.Salary);
                              col.Add(x => x.BenefitRate);
                              col.Add(x => x.FTE);
-                             col.Add(x => x.Token);
+                             //col.Add(x => x.Token);
                          })
             .Pageable(x => x.PageSize(20))
             .Sortable()
