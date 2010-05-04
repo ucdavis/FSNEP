@@ -24,6 +24,9 @@ namespace FSNEP.Tests.Controllers
         public const string InvalidNameMessageTooLong = "Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).";
 
         #region Project Tests
+        /// <summary>
+        /// Creates the project saves new project.
+        /// </summary>
         [TestMethod]
         public void CreateProjectSavesNewProject()
         {
@@ -47,6 +50,9 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual("Project Created Successfully", Controller.Message);
         }
 
+        /// <summary>
+        /// Does not save project with the long name.
+        /// </summary>
         [TestMethod]
         public void CreateProjectDoesNotSavesProjectWithLongName()
         {
@@ -66,6 +72,9 @@ namespace FSNEP.Tests.Controllers
 
         }
 
+        /// <summary>
+        /// Create the project redirects to projects.
+        /// </summary>
         [TestMethod]
         public void CreateProjectRedirectsToProjects()
         {
@@ -76,6 +85,9 @@ namespace FSNEP.Tests.Controllers
                 .ToAction<LookupController>(a => a.Projects());
         }
 
+        /// <summary>
+        /// Inactivate the project redirects on invalid project id.
+        /// </summary>
         [TestMethod]
         public void InactivateProjectRedirectsOnInvalidProjectId()
         {
@@ -92,6 +104,9 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual("Project Not Found", Controller.Message);
         }
 
+        /// <summary>
+        /// Inactivate the project persists changes on valid project id.
+        /// </summary>
         [TestMethod]
         public void InactivateProjectPersistsChangesOnValidProjectId()
         {
@@ -130,6 +145,9 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual("Project Not Found", Controller.Message);
         }
 
+        /// <summary>
+        /// Inactivate the project redirects on valid project id.
+        /// </summary>
         [TestMethod]
         public void InactivateProjectRedirectsOnValidProjectId()
         {
@@ -147,6 +165,9 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual("Project Removed Successfully", Controller.Message);
         }
 
+        /// <summary>
+        /// Projects gets only active projects.
+        /// </summary>
         [TestMethod]
         public void ProjectsGetsOnlyActiveProjects()
         {
@@ -167,6 +188,9 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual(3, result.Count, "Should only get the three active projects");
         }
 
+        /// <summary>
+        /// Routings project gets all projects.
+        /// </summary>
         [TestMethod]
         public void RoutingProjectsGetsAllProjects()
         {
@@ -174,6 +198,9 @@ namespace FSNEP.Tests.Controllers
                 .ShouldMapTo<LookupController>(a => a.Projects());
         }
 
+        /// <summary>
+        /// Routing inactivate project calls inactivate project with parameter.
+        /// </summary>
         [TestMethod]
         public void RoutingInactivateProjectCallsInactivateProjectWithParameter()
         {
@@ -181,6 +208,9 @@ namespace FSNEP.Tests.Controllers
                 .ShouldMapTo<LookupController>(a => a.InactivateProject(10));
         }
 
+        /// <summary>
+        /// Routing create project calls create project.
+        /// </summary>
         [TestMethod]
         public void RoutingCreateProjectCallsCreateProject()
         {
@@ -254,6 +284,9 @@ namespace FSNEP.Tests.Controllers
             Assert.IsTrue(Controller.Message.StartsWith("Activity Type Creation Failed."));
         }
 
+        /// <summary>
+        /// Create activity type redirects to activityType.
+        /// </summary>
         [TestMethod]
         public void CreateActivityTypeRedirectsActivityType()
         {
