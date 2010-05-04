@@ -139,6 +139,7 @@
     <Content Include="Images\but_home.gif" />
     <Content Include="Images\but_home2.gif" />
     <Content Include="Images\topbgfiller.gif" />
+    <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Views\Account\ChangePassword.aspx" />
     <Content Include="Views\Account\ChangePasswordSuccess.aspx" />
     <Content Include="Views\Account\ForgotPassword.aspx" />
