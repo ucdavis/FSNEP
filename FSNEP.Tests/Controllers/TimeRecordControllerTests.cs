@@ -1,23 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
 using System.Web;
-using System.Web.Mvc;
 using FSNEP.BLL.Impl;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Controllers;
 using FSNEP.Core.Calendar;
-using FSNEP.Tests.Core;
+using FSNEP.Core.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
-using FSNEP.Core.Domain;
-using FSNEP.Core.Abstractions;
-using System.Web.Security;
-using FSNEP.Tests.Core.Extensions;
 using UCDArch.Testing;
-using Rhino.Mocks.Interfaces;
 
 
 namespace FSNEP.Tests.Controllers
@@ -25,26 +18,26 @@ namespace FSNEP.Tests.Controllers
     [TestClass]
     public class TimeRecordControllerTests : Core.ControllerTestBase<TimeRecordController>
     {
-        private User _user = CreateValidUser();
+        private static readonly User User = CreateValidUser();
+        private readonly ITimeRecordBLL _timeRecordBll = MockRepository.GenerateStub<ITimeRecordBLL>();
+        private readonly TimeRecord _timeRecord = CreateValidTimeRecord();
+
         /// <summary>
         /// Override this method to setup a controller that doesn't have an empty ctor
         /// </summary>
         protected override void SetupController()
         {
-            var timeRecordBll = MockRepository.GenerateStub<ITimeRecordBLL>();
             var userBll = MockRepository.GenerateStub<IUserBLL>();
-            //var timeRecordCalendarGenerator = MockRepository.GenerateStub<ITimeRecordCalendarGenerator>();            
             var timeRecordCalendarGenerator = new TimeRecordCalendarGenerator();
-            FakeTimeRecord(timeRecordBll);
+            _timeRecord.SetIdTo(1);
+            _timeRecordBll.Expect(a => a.GetNullableByID(_timeRecord.Id)).Return(_timeRecord).Repeat.Any();
+            _timeRecordBll.Expect(a => a.HasAccess("UserName", _timeRecord)).Return(true).Repeat.Any();
 
-            timeRecordBll.Expect(a => a.HasAccess("UserName", new TimeRecord())).IgnoreArguments().Return(true).Repeat.
-                Any();
-
-            CreateController(timeRecordBll, userBll, timeRecordCalendarGenerator);
+            CreateController(_timeRecordBll, userBll, timeRecordCalendarGenerator);
 
             var fakeContext =
                 MockRepository.GenerateStub<UCDArch.Core.PersistanceSupport.IDbContext>();
-            timeRecordBll.Expect(a => a.DbContext).Return(fakeContext).Repeat.Any();
+            _timeRecordBll.Expect(a => a.DbContext).Return(fakeContext).Repeat.Any();
         }
 
         #region Routing maps
@@ -68,36 +61,29 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void CanAddValidTimeRecordEntry()
         {
-            var timeRecordEntry = new TimeRecordEntry();            
+            var timeRecordEntry = CreateValidTimeRecordEntry();
+            timeRecordEntry.SetIdTo(24);
             IPrincipal userPrincipal = new MockPrincipal();
             Controller.ControllerContext.HttpContext.User = userPrincipal;
-         
-            var result = Controller.AddEntry(1, CreateValidTimeRecordEntry());
+
+            var timeRecord = _timeRecordBll.GetNullableByID(1);
+
+            var result = Controller.AddEntry(timeRecord.Id, timeRecordEntry);
+            _timeRecordBll.AssertWasCalled(a => a.EnsurePersistent(timeRecord));
+            Assert.IsNotNull(result);
+            Assert.AreEqual("{ id = 24 }", result.Data.ToString());
         }
 
         #endregion AddEntry Tests
 
 
         #region Helper Methods
-
-        /// <summary>
-        /// Fakes the time record.
-        /// </summary>
-        /// <param name="bll">The BLL.</param>
-        private void FakeTimeRecord(ITimeRecordBLL timeRecordBLL)
-        {
-            TimeRecord timeRecord = CreateValidTimeRecord();
-            timeRecord.SetIdTo(1);
-
-            timeRecordBLL.Expect(a => a.GetNullableByID(1)).Return(timeRecord).Repeat.Any();
-            
-        }
-
+      
         /// <summary>
         /// Creates the valid time record.
         /// </summary>
         /// <returns></returns>
-        private TimeRecord CreateValidTimeRecord()
+        private static TimeRecord CreateValidTimeRecord()
         {
             return new TimeRecord
                        {
@@ -105,7 +91,7 @@ namespace FSNEP.Tests.Controllers
                            Year = DateTime.Now.Year,
                            Salary = 200,
                            Status = new Status { Name = "S1" },
-                           User = _user,
+                           User = User,
                            ReviewComment = "A review is a review except when it isn't."
                        };
         }
@@ -140,7 +126,7 @@ namespace FSNEP.Tests.Controllers
         /// Creates the valid time record entry.
         /// </summary>
         /// <returns></returns>
-        private TimeRecordEntry CreateValidTimeRecordEntry()
+        private static TimeRecordEntry CreateValidTimeRecordEntry()
         {
             const int validDate = 25;
             const string validComment = "Comment";
@@ -161,6 +147,9 @@ namespace FSNEP.Tests.Controllers
         #endregion Helper Methods
 
         #region mocks
+        /// <summary>
+        /// Mock the Identity. Used for getting the current user name
+        /// </summary>
         public class MockIdentity : IIdentity
         {
             public string AuthenticationType
@@ -187,21 +176,24 @@ namespace FSNEP.Tests.Controllers
                 }
             }
         }
-        
 
+
+        /// <summary>
+        /// Mock the Principal. Used for getting the current user name
+        /// </summary>
         public class MockPrincipal : IPrincipal
         {
-            IIdentity identity;
+            IIdentity _identity;
 
             public IIdentity Identity
             {
                 get
                 {
-                    if (identity == null)
+                    if (_identity == null)
                     {
-                        identity = new MockIdentity();
+                        _identity = new MockIdentity();
                     }
-                    return identity;
+                    return _identity;
                 }
             }
 
@@ -211,23 +203,26 @@ namespace FSNEP.Tests.Controllers
             }
         }
 
+        /// <summary>
+        /// Mock the HttpContext. Used for getting the current user name
+        /// </summary>
         public class MockHttpContext : HttpContextBase
         {
-            private IPrincipal user;
+            private IPrincipal _user;
 
             public override IPrincipal User
             {
                 get
                 {
-                    if (user == null)
+                    if (_user == null)
                     {
-                        user = new MockPrincipal();
+                        _user = new MockPrincipal();
                     }
-                    return user;
+                    return _user;
                 }
                 set
                 {
-                    user = value;
+                    _user = value;
                 }
             }
         }
