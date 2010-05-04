@@ -25,9 +25,8 @@ namespace FSNEP.Tests.Controllers
             var membershipProvider = new MockMembershipProvider();
             var membershipService = new AccountMembershipService(membershipProvider);
 
-            container.Kernel.AddComponentInstance("formsAuth", typeof (IFormsAuthentication), new MockFormsAuthenticationService());
-            container.Kernel.AddComponentInstance("membershipService", typeof(IMembershipService), membershipService);
-            
+            ServiceLocator.AddInstance<IFormsAuthentication>(new MockFormsAuthenticationService());
+            ServiceLocator.AddInstance<IMembershipService>(membershipService);
             ServiceLocator.AddInstance<IMessageGateway>(MockRepository.GenerateStub<IMessageGateway>());
         }
 
@@ -122,9 +121,7 @@ namespace FSNEP.Tests.Controllers
 
             //Get the account controller
             var controller = GetAccountController();
-            //controller.MessageService = messageGateway;
-
-            ServiceLocator.AddInstance<IMessageGateway>(messageGateway);
+            controller.MessageService = messageGateway;
 
             controller.ResetPassword("validUser", "validAnswer");
 
