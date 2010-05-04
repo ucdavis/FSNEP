@@ -92,7 +92,9 @@
         </p>
         <p>
             <label for="activityType">Activity Type:</label>
-            <% Html.RenderPartial("ActivityTypeSelect", Model.ActivityCategories); %>
+            <select id="ActivityType" name="ActivityType" class="required">
+                <% Html.RenderPartial("ActivityTypeSelectOptions", Model.ActivityCategories); %>
+            </select>
         </p>
         <p>
             <%= this.Select("FundType").Options(Model.FundTypes, f=>f.Id, f=>f.Name).Label("Fund Type:").Class("required").Disabled(Model.FundTypes.Count() == 1) %>
@@ -132,7 +134,9 @@
             <legend>Entry Information</legend>
             <p>
                 <label for="Edit_ActivityType">Activity Type:</label>
-                <span id="Edit_ActivityType"></span>
+                <select id="Edit_ActivityType" name="Edit.ActivityType" class="required">
+                    <% Html.RenderPartial("ActivityTypeSelectOptions", Model.ActivityCategories); %>
+                </select>
             </p>
             <p>
                 <label for="Edit_FundType">Fund Type:</label>

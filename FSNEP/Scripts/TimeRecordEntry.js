@@ -238,7 +238,7 @@ function EditEntryLoaded(result) {
 
     $("#Edit_EntryId").val(result.Id);
     
-    $("#Edit_ActivityType").html(result.ActivityType);
+    $("#Edit_ActivityType").val(result.ActivityType);
     $("#Edit_FundType").html(result.FundType);
     $("#Edit_Project").html(result.Project);
     $("#Edit_Account").html(result.Account);

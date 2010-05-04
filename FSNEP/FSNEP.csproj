@@ -221,7 +221,7 @@
     <Content Include="Views\Supervisor\RecordReviewTable.ascx" />
     <Content Include="Views\Supervisor\TimeRecordList.aspx" />
     <Content Include="Views\Supervisor\TimeRecordReview.aspx" />
-    <Content Include="Views\TimeRecord\ActivityTypeSelect.ascx" />
+    <Content Include="Views\TimeRecord\ActivityTypeSelectOptions.ascx" />
     <Content Include="Views\TimeRecord\Calendar.ascx" />
     <Content Include="Views\TimeRecord\Entry.aspx" />
     <Content Include="Views\TimeRecord\History.aspx" />

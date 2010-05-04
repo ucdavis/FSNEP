@@ -192,12 +192,13 @@ namespace FSNEP.Controllers
 
         /// <summary>
         /// Transfer the new values from the given entry to the entry to update.
-        /// Currently you can only update the comment and hours
+        /// Currently you can only update the comment, hours, and activity type
         /// </summary>
         private static void TransferValuesTo(TimeRecordEntry entryToUpdate, TimeRecordEntry entry)
         {
             entryToUpdate.Comment = entry.Comment;
             entryToUpdate.Hours = entry.Hours;
+            entryToUpdate.ActivityType = entry.ActivityType;
         }
     }
 
