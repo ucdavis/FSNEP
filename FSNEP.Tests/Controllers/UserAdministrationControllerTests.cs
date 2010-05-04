@@ -794,7 +794,8 @@ namespace FSNEP.Tests.Controllers
             userModel.Question = invalidValueQuestion;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Question: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Question"].Errors[0].ErrorMessage);            
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Question: Must be between 1 and 50 characters long");
+            //Assert.AreEqual("Question: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Question"].Errors[0].ErrorMessage);            
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -810,8 +811,11 @@ namespace FSNEP.Tests.Controllers
             userModel.Question = invalidValueQuestion;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Question: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Question"].Errors[0].ErrorMessage);
-            Assert.AreEqual("Question: Required", newUserModel.ViewData.ModelState["Question"].Errors[1].ErrorMessage);
+            var errorMessages = GetErrorMessages(newUserModel.ViewData.ModelState);
+            errorMessages.AssertContains("Question: Must be between 1 and 50 characters long");
+            errorMessages.AssertContains("Question: Required"); 
+            //Assert.AreEqual("Question: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Question"].Errors[0].ErrorMessage);
+            //Assert.AreEqual("Question: Required", newUserModel.ViewData.ModelState["Question"].Errors[1].ErrorMessage);
             Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -827,7 +831,8 @@ namespace FSNEP.Tests.Controllers
             userModel.Question = invalidValueQuestion;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Question: Required", newUserModel.ViewData.ModelState["Question"].Errors[0].ErrorMessage);            
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Question: Required");
+            //Assert.AreEqual("Question: Required", newUserModel.ViewData.ModelState["Question"].Errors[0].ErrorMessage);            
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         #endregion Question Tests
