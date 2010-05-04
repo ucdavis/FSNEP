@@ -145,5 +145,24 @@ namespace FSNEP.Tests.Controllers
             "~/Administration/Lookups/CreateProject"
                 .ShouldMapTo<LookupController>(a => a.CreateProject(null));
         }
+
+        /// <summary>
+        /// Based on InactivateProjectRedirectsOnValidProjectId test
+        /// </summary>
+        [TestMethod]
+        public void InactivateActivityTypeRedirectsOnValidActivityTypeId()
+        {
+            const int validActivityTypeId = 1;
+            var validActivityType = new ActivityType();
+
+            var activityTypeRepository = FakeRepository<ActivityType>();
+            activityTypeRepository.Expect(a => a.GetNullableByID(validActivityTypeId)).Return(validActivityType);
+
+            Controller.Repository.Expect(a => a.OfType<ActivityType>()).Return(activityTypeRepository).Repeat.Any();
+
+            Controller.InactivateActivityType(validActivityTypeId)
+                .AssertActionRedirect()
+                .ToAction<LookupController>(a => a.ActivityTypes());
+        }
     }
 }
