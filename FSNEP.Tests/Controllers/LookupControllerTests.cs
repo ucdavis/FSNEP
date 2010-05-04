@@ -954,12 +954,30 @@ namespace FSNEP.Tests.Controllers
 
         /// <summary>
         /// CreateHoursInMonth Does Not Save HoursInMonth With Years And Months of Zero
-        /// Unless HoursInMonth is changed, this test will not pass.
         /// </summary>
         [TestMethod]
         public void CreateHoursInMonthDoesNotSaveHoursInMonthWithYearsAndMonthsOfZero()
         {
             var newYearMonthComposite = new YearMonthComposite(0000, 00);
+            var newHoursInMonth = new HoursInMonth(newYearMonthComposite.Year, newYearMonthComposite.Month) { Hours = 100 };
+
+            var hoursInMonthRepository = FakeRepository<HoursInMonth>();
+
+            Controller.Repository.Expect(a => a.OfType<HoursInMonth>()).Return(hoursInMonthRepository);
+
+            Controller.CreateHoursInMonth(newHoursInMonth, newYearMonthComposite);
+
+            hoursInMonthRepository
+                .AssertWasNotCalled(a => a.EnsurePersistent(newHoursInMonth));//make sure we didn't call persist
+        }
+
+        /// <summary>
+        /// CreateHoursInMonth Does Not Save HoursInMonth With Months of 14
+        /// </summary>
+        [TestMethod]
+        public void CreateHoursInMonthDoesNotSaveHoursInMonthWithMonthsOf14()
+        {
+            var newYearMonthComposite = new YearMonthComposite(2008, 14);
             var newHoursInMonth = new HoursInMonth(newYearMonthComposite.Year, newYearMonthComposite.Month) { Hours = 100 };
 
             var hoursInMonthRepository = FakeRepository<HoursInMonth>();
