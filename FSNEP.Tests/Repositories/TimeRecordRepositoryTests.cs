@@ -44,6 +44,37 @@ namespace FSNEP.Tests.Repositories
 
         #endregion Init
 
+        #region Valid Tests
+
+        #region TargetHours Tests
+
+        [TestMethod]
+        public void TargetHoursReturnsZeroWhenHoursInMonthIsNull()
+        {
+            var timeRecord = CreateValidEntities.TimeRecord(null);
+            timeRecord.HoursInMonth = null;
+            timeRecord.User.FTE = 1;
+
+            Assert.AreEqual(0, timeRecord.TargetHours);
+        }
+
+        [TestMethod]
+        public void TargetHoursReturnsNonZeroWhenHoursInMonthHasValues()
+        {
+            var hoursInMonth = CreateValidEntities.HoursInMonth();
+            hoursInMonth.Hours = 40;
+
+            var timeRecord = CreateValidEntities.TimeRecord(null);
+            timeRecord.HoursInMonth = hoursInMonth;
+            timeRecord.User.FTE = 0.5;
+
+            Assert.AreEqual(20, timeRecord.TargetHours);
+        }
+
+        #endregion TargetHours Tests
+
+        #endregion Valid Tests
+
         #region Invalid Salary Tests
 
         /// <summary>

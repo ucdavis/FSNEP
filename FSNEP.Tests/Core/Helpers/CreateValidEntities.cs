@@ -223,6 +223,11 @@ namespace FSNEP.Tests.Core.Helpers
                        };
         }
 
+        public static HoursInMonth HoursInMonth()
+        {
+            return new HoursInMonth(2009, 01) {Hours = 80};
+        }
+
         //TODO: add and use other entities
     }
 }
