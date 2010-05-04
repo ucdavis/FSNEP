@@ -50,8 +50,8 @@ namespace FSNEP.Controllers
             var octoberFirst = new DateTime(now.Year, 10, 1);
 
             if (
-                    (aprilFirst < now && now < aprilFirst.AddDays(15)) ||
-                    (octoberFirst < now && now < octoberFirst.AddDays(15))
+                    (aprilFirst <= now && now < aprilFirst.AddDays(15)) ||
+                    (octoberFirst <= now && now < octoberFirst.AddDays(15))
                 )
             {
                 //Now we are in one of the correct date ranges
