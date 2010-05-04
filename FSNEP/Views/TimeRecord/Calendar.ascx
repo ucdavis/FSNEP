@@ -80,6 +80,21 @@
     </div>
     <div class="TimeRecordAdjustment">
         <a href="javascript:;" id="addAdjustment">Add Adjustment [TODO]</a>
+        
+        <ul id="AdjustmentEntries">
+            <% foreach (var adjustmentEntry in Model.AdjustmentEntries) { %>
+            <li>
+                <%= Html.Encode(
+                        string.Format("{0} HRS, {1}, {2}, {3}, {4}", 
+                            adjustmentEntry.Hours, 
+                            adjustmentEntry.Project.Name, 
+                            adjustmentEntry.FundType.Name, 
+                            adjustmentEntry.ActivityType.Name, 
+                            adjustmentEntry.Account.Name)) 
+                %>
+            </li>
+            <% } %>
+        </ul>
     </div>
 </div>
 

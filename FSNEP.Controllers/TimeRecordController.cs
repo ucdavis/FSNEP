@@ -233,8 +233,17 @@ namespace FSNEP.Controllers
                                     Projects = userBLL.GetAllProjectsByUser(repository.OfType<Project>()).ToList(),
                                     FundTypes = userBLL.GetUser().FundTypes,
                                     ActivityCategories =
-                                        repository.OfType<ActivityCategory>().Queryable.Where(c => c.IsActive).OrderBy(
-                                        c => c.Name).ToList()
+                                        repository.OfType<ActivityCategory>()
+                                        .Queryable
+                                        .Where(c => c.IsActive)
+                                        .OrderBy(c => c.Name)
+                                        .ToList(),
+                                    AdjustmentEntries =
+                                        repository.OfType<TimeRecordEntry>()
+                                        .Queryable
+                                        .Where(x => x.Record.Id == timeRecord.Id && x.AdjustmentDate != null)
+                                        .OrderBy(x => x.AdjustmentDate)
+                                        .ToList()
                                 };
 
             return viewModel;
@@ -245,5 +254,6 @@ namespace FSNEP.Controllers
         public IList<Project> Projects { get; set; }
         public IList<FundType> FundTypes { get; set; }
         public IList<ActivityCategory> ActivityCategories { get; set; }
+        public IList<TimeRecordEntry> AdjustmentEntries { get; set; }
     }
 }
