@@ -186,8 +186,6 @@ namespace FSNEP.BLL.Dev
         /// </summary>
         public void Submit(T record, IPrincipal user)
         {
-            var recordStatusOption = record.Status.NameOption;
-
             Check.Require(record.IsEditable, "Record must be have either the current or disapproved status in order to be submitted");
 
             Status pendingReviewStatus = _repository.OfType<Status>()
