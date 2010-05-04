@@ -94,7 +94,12 @@
     <Compile Include="Domain\TimeRecord.cs" />
     <Compile Include="Domain\TimeRecordEntry.cs" />
     <Compile Include="Domain\User.cs" />
+    <Compile Include="Dto\SignableCostShareEntry.cs" />
+    <Compile Include="Dto\SignableRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Dto\SignableCostShare.cs" />
+    <Compile Include="Dto\SignableTimeRecord.cs" />
+    <Compile Include="Dto\SignableTimeRecordEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Domain\Account.hbm.xml" />
