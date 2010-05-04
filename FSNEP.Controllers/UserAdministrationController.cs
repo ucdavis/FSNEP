@@ -38,11 +38,11 @@ namespace FSNEP.Controllers
         /// Provides a list of all active users in the system
         /// </summary>
         [Transaction]
-        public ActionResult List()
+        public ActionResult List(int? projectId)
         {
-            var users = UserBLL.GetAllUsers();
+            var viewModel = UserListViewModel.Create(UserBLL, Repository.OfType<Project>(), projectId);
 
-            return View(users.ToList());
+            return View(viewModel);
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace FSNEP.Controllers
 
                 Message = string.Format("{0} Created Successfully", model.UserName);
 
-                return this.RedirectToAction(a => a.List());
+                return this.RedirectToAction(a => a.List(null));
             }
         }
 
@@ -345,7 +345,7 @@ namespace FSNEP.Controllers
 
                 Message = string.Format("{0} Modified Successfully", id);
 
-                return this.RedirectToAction(a => a.List());
+                return this.RedirectToAction(a => a.List(null));
             }
         }
 
@@ -396,6 +396,29 @@ namespace FSNEP.Controllers
                 roles.Add(RoleNames.RoleSupervisor);
             }
         }
+    }
+
+    public class UserListViewModel
+    {
+        public static UserListViewModel Create(IUserBLL userBLL, IRepository<Project> projectRepository, int? filterProjectId)
+        {
+            var users = filterProjectId == null
+                            ? userBLL.GetAllUsers()
+                            : userBLL.GetAllUsers().Where(x => x.Projects.Contains(projectRepository.GetById(filterProjectId.Value)));
+
+            var viewModel = new UserListViewModel
+                                {
+                                    Users = users.ToList(),
+                                    Projects = userBLL.GetAllProjectsByUser(projectRepository).ToList(),
+                                    SelectedFilterProjectId = filterProjectId
+                                };
+
+            return viewModel;
+        }
+
+        public IEnumerable<User> Users { get; set; }
+        public IEnumerable<Project> Projects { get; set; }
+        public int? SelectedFilterProjectId { get; set; }
     }
 
     public class CreateUserViewModel : UserViewModel

@@ -41,7 +41,7 @@ namespace FSNEP.Tests.Controllers
 
             UserBll.Expect(u=>u.GetAllUsers()).Return(fourUsers.AsQueryable());
 
-            var result = Controller.List()
+            var result = Controller.List(null)
                             .AssertViewRendered()
                             .WithViewData<List<User>>();
 
@@ -93,7 +93,7 @@ namespace FSNEP.Tests.Controllers
         public void RoutingListUsersMapsToListUser()
         {
             "~/Administration/Users/List"
-                .ShouldMapTo<UserAdministrationController>(a => a.List());
+                .ShouldMapTo<UserAdministrationController>(a => a.List(null));
         }
 
         [TestMethod]
@@ -190,7 +190,7 @@ namespace FSNEP.Tests.Controllers
             //Ok, it has been changed so that a successful create will redirect back to the list of users.
             Controller.Create(userModel, roleList)
                 .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
+                .ToAction<UserAdministrationController>(a => a.List(null));
             Assert.AreEqual("ValidUserName Created Successfully", Controller.Message);
         }
 
@@ -611,7 +611,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Create(userModel, CreateListOfRoles())
                 .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
+                .ToAction<UserAdministrationController>(a => a.List(null));
             Assert.AreEqual("ValidUserName Created Successfully", Controller.Message);
         }
 
@@ -629,7 +629,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Create(userModel, CreateListOfRoles())
                 .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
+                .ToAction<UserAdministrationController>(a => a.List(null));
             Assert.AreEqual("ValidUserName Created Successfully", Controller.Message);
             Assert.AreEqual(validValueBenefitRate, userModel.User.BenefitRate); //Make sure it wasn't changed?
         }
@@ -961,7 +961,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
                 .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
+                .ToAction<UserAdministrationController>(a => a.List(null));
             Assert.AreEqual("ValidUserName Modified Successfully", Controller.Message);
             Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
             Assert.AreEqual(newValidValue, userModelOriginal.User.FirstName, "Value was not changed in the modify method.");
@@ -989,7 +989,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
                 .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
+                .ToAction<UserAdministrationController>(a => a.List(null));
             Assert.AreEqual("ValidUserName Modified Successfully", Controller.Message);
             Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
             Assert.AreEqual(newValidValue, userModelOriginal.User.LastName, "Value was not changed in the modify method.");
@@ -1017,7 +1017,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
                 .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
+                .ToAction<UserAdministrationController>(a => a.List(null));
             Assert.AreEqual("ValidUserName Modified Successfully", Controller.Message);
             Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
             Assert.AreEqual(newValidValue, userModelOriginal.User.Salary, "Value was not changed in the modify method.");
@@ -1045,7 +1045,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
                 .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
+                .ToAction<UserAdministrationController>(a => a.List(null));
             Assert.AreEqual("ValidUserName Modified Successfully", Controller.Message);
             Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
             Assert.AreEqual(newValidValue, userModelOriginal.User.FTE, "Value was not changed in the modify method.");
@@ -1073,7 +1073,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
                 .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
+                .ToAction<UserAdministrationController>(a => a.List(null));
             Assert.AreEqual("ValidUserName Modified Successfully", Controller.Message);
             Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
             Assert.AreEqual(newValidValue, userModelOriginal.User.BenefitRate, "Value was not changed in the modify method.");
@@ -1101,7 +1101,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
                 .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
+                .ToAction<UserAdministrationController>(a => a.List(null));
             Assert.AreEqual("ValidUserName Modified Successfully", Controller.Message);
             Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
             Assert.AreEqual(newValidValue, userModelOriginal.User.IsActive, "Value was not changed in the modify method.");
@@ -1129,7 +1129,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
                 .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
+                .ToAction<UserAdministrationController>(a => a.List(null));
             Assert.AreEqual("ValidUserName Modified Successfully", Controller.Message);
             Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
             Assert.AreEqual(newFakeSupervisor, userModelOriginal.User.Supervisor, "Value was not changed in the modify method.");
@@ -1162,7 +1162,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
                 .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
+                .ToAction<UserAdministrationController>(a => a.List(null));
             Assert.AreEqual("ValidUserName Modified Successfully", Controller.Message);
             Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
             Assert.AreEqual(fundTypes, userModelOriginal.User.FundTypes, "Value was not changed in the modify method.");
@@ -1194,7 +1194,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
                 .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
+                .ToAction<UserAdministrationController>(a => a.List(null));
             Assert.AreEqual("ValidUserName Modified Successfully", Controller.Message);
             Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
             Assert.AreEqual(projects, userModelOriginal.User.Projects, "Value was not changed in the modify method.");

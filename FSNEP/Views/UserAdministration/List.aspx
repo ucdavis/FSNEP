@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IEnumerable<FSNEP.Core.Domain.User>>" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<UserListViewModel>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
 	ListUsers
@@ -14,6 +14,16 @@
 
                 window.location = '<%= Url.Action("ModifyById") %>/' + userId;
             });
+
+            $("#project").change(function() {
+
+                var listUrlBase = '<%= Url.Action("List") %>';
+
+                var projectId = $(this).val();
+
+                if (projectId == "") window.location = listUrlBase;
+                else window.location = listUrlBase + '/?projectId=' + projectId;
+            });
         });
     </script>
 
@@ -22,12 +32,15 @@
     <h3><%= Html.Encode(TempData["Message"]) %></h3>
 
     <p>
-        Jump to User: 
-            <%= this.Select("dlUserJump").Options(Model, a=>a.Id, a=>a.FullNameLastFirst).FirstOption("--Search--") %>
+            <%= this.Select("dlUserJump").Options(Model.Users, a=>a.Id, a=>a.FullNameLastFirst).FirstOption("--Search--").Label("Jump to User: ") %>
+    </p>
+    
+    <p>
+            <%= this.Select("project").Options(Model.Projects, x=>x.Id, x=>x.Name).Selected(Model.SelectedFilterProjectId ?? 0).FirstOption("--All Projects--").Label("Filter by Project: ") %>
     </p>
     
     <%
-        Html.Grid(Model)
+        Html.Grid(Model.Users)
             .Name("Users")
             .PrefixUrlParameters(false)
             .Columns(col =>
