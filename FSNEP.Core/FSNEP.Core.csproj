@@ -39,6 +39,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\CAESArch.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Validation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=667f3cb07abadf4b, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -53,7 +54,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Account.cs" />
+    <Compile Include="Domain\ActivityType.cs" />
+    <Compile Include="Domain\ExpenseSheet.cs" />
+    <Compile Include="Domain\ExpenseSheetEntry.cs" />
+    <Compile Include="Domain\ExpenseType.cs" />
+    <Compile Include="Domain\FundType.cs" />
+    <Compile Include="Domain\HoursInMonth.cs" />
+    <Compile Include="Domain\ISheetEntry.cs" />
+    <Compile Include="Domain\ITrackable.cs" />
+    <Compile Include="Domain\Project.cs" />
+    <Compile Include="Domain\School.cs" />
+    <Compile Include="Domain\SchoolDistrict.cs" />
+    <Compile Include="Domain\SheetBase.cs" />
+    <Compile Include="Domain\SheetTracking.cs" />
+    <Compile Include="Domain\Status.cs" />
+    <Compile Include="Domain\TimeSheet.cs" />
+    <Compile Include="Domain\TimeSheetEntry.cs" />
+    <Compile Include="Domain\User.cs" />
+    <Compile Include="Domain\UserToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Account.hbm.xml" />
+    <EmbeddedResource Include="Domain\ActivityType.hbm.xml" />
+    <EmbeddedResource Include="Domain\ExpenseSheet.hbm.xml" />
+    <EmbeddedResource Include="Domain\ExpenseSheetEntry.hbm.xml" />
+    <EmbeddedResource Include="Domain\ExpenseType.hbm.xml" />
+    <EmbeddedResource Include="Domain\FundType.hbm.xml" />
+    <EmbeddedResource Include="Domain\HoursInMonth.hbm.xml" />
+    <EmbeddedResource Include="Domain\Project.hbm.xml" />
+    <EmbeddedResource Include="Domain\School.hbm.xml" />
+    <EmbeddedResource Include="Domain\SchoolDistrict.hbm.xml" />
+    <EmbeddedResource Include="Domain\SheetTracking.hbm.xml" />
+    <EmbeddedResource Include="Domain\Status.hbm.xml" />
+    <EmbeddedResource Include="Domain\TimeSheet.hbm.xml" />
+    <EmbeddedResource Include="Domain\TimeSheetEntry.hbm.xml" />
+    <EmbeddedResource Include="Domain\User.hbm.xml" />
+    <EmbeddedResource Include="Domain\UserToken.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class
+    name="FSNEP.Core.Domain.Project, FSNEP.Core"
+    table="Projects" >
+    <id name="ID" access="nosetter.lowercase" column="ID">
+      <generator class="identity" />
+    </id>
+
+    <property name="Name" column="Name" />
+    <property name="IsActive" column="IsActive" />
+    
+	  <bag name="Accounts" table="ProjectXFinanceAccount">
+		  <key column="ProjectID" />
+		  <many-to-many column="FinanceAccountID" class="FSNEP.Core.Domain.Account, FSNEP.Core" where="IsActive = 1" />
+	  </bag>
+
+  </class>
+</hibernate-mapping>

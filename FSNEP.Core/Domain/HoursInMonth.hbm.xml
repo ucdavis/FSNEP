@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class
+    name="FSNEP.Core.Domain.HoursInMonth, FSNEP.Core"
+    table="HoursInMonths" >
+
+    <composite-id name="id" access="field" class="FSNEP.Core.Domain.YearMonthComposite, FSNEP.Core" unsaved-value="any">
+      <key-property name="Month" column="Month"/>
+      <key-property name="Year" column="Year"/>
+    </composite-id>
+
+    <property name="Hours" column="HoursInMonth" />
+    
+  </class>
+</hibernate-mapping>

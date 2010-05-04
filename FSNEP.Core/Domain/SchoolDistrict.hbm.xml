@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class
+    name="FSNEP.Core.Domain.SchoolDistrict, FSNEP.Core"
+    table="SchoolDistricts" >
+    <id name="ID" access="nosetter.lowercase" column="ID">
+      <generator class="identity" />
+    </id>
+
+    <property name="Name" column="DistrictName" />
+    <property name="IsActive" column="IsActive" />
+    
+  </class>
+</hibernate-mapping>

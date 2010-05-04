@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class
+    name="FSNEP.Core.Domain.TimeSheetEntry, FSNEP.Core"
+    table="TimeSheetEntries" >
+    <id name="ID" access="nosetter.lowercase" column="ID">
+      <generator class="identity" />
+    </id>
+
+    <property name="Date" column="Date" />
+    <property name="Hours" column="Hours" />
+    <property name="Comment" column="Comment" />
+    <property name="AdjustmentDate" column="AdjustmentDate" />
+
+    <many-to-one name="AssociatedTimeSheet" column="TimeSheetID" class="FSNEP.Core.Domain.TimeSheet, FSNEP.Core"></many-to-one>
+
+    <many-to-one name="Project" column="ProjectID" class="FSNEP.Core.Domain.Project, FSNEP.Core"></many-to-one>
+
+    <many-to-one name="Account" column="FinanceAccountID" class="FSNEP.Core.Domain.Account, FSNEP.Core"></many-to-one>
+
+    <many-to-one name="FundType" column="FundTypeID" class="FSNEP.Core.Domain.FundType, FSNEP.Core"></many-to-one>
+
+    <many-to-one name="ActivityType" column="ActivityTypeID" class="FSNEP.Core.Domain.ActivityType, FSNEP.Core"></many-to-one>
+
+  </class>
+</hibernate-mapping>
