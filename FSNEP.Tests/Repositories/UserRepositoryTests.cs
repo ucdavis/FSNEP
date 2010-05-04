@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using FSNEP.Tests.Core;
 using FSNEP.Tests.Core.Fakes;
@@ -244,6 +245,8 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -255,11 +258,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(2, results.Count);
-                results.AssertContains("FirstName: The value cannot be null.");
-                results.AssertContains("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("FirstName: may not be null or empty");
+                //results.AssertContains("FirstName: length must be between 0 and 50");
                 //Assert.IsTrue(results.Contains("FirstName: The value cannot be null."), "Expected the validation result to have \"FirstName: The value cannot be null.\"");
-                //Assert.IsTrue(results.Contains("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive)."), "Expected the validation result to have \"FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\"");
+                //Assert.IsTrue(results.Contains("FirstName: length must be between 0 and 50"), "Expected the validation result to have \"FirstName: length must be between 0 and 50\"");
                 throw;
             }
         }
@@ -279,6 +282,9 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
+            //may not be null or empty
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -291,7 +297,7 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count); 
-                results.AssertContains("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
+                results.AssertContains("FirstName: length must be between 0 and 50");
                 throw;
             }
         }
@@ -314,6 +320,10 @@ namespace FSNEP.Tests.Repositories
             };
             user.Supervisor = user; //I'm my own supervisor
 
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
+            //may not be null or empty
+
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
             try
@@ -324,7 +334,7 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("LastName: Required");
+                results.AssertContains("LastName: may not be null or empty");
                 //Assert.AreEqual(true, results.Contains("LastName: Required"), "Expected the validation result to have \"LastName: Required\"");    
                 throw;
             }
@@ -345,6 +355,9 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
+            //may not be null or empty
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -356,11 +369,11 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 var results = user.ValidationResults().AsMessageList();
-                Assert.AreEqual(2, results.Count);
-                results.AssertContains("LastName: Required");
-                results.AssertContains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("LastName: may not be null or empty");
+                //results.AssertContains("LastName: length must be between 1 and 50");
                 //Assert.AreEqual(true, results.Contains("LastName: Required"), "Expected the validation result to have \"LastName: Required\"");
-                //Assert.AreEqual(true, results.Contains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive)."), "Expected the validation result to have \"LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).\"");
+                //Assert.AreEqual(true, results.Contains("LastName: length must be between 1 and 50"), "Expected the validation result to have \"LastName: length must be between 1 and 50\"");
                 throw;
             }
         }
@@ -380,6 +393,9 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
+            //may not be null or empty
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -391,8 +407,8 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
-                //Assert.AreEqual(true, results.Contains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive)."), "Expected the validation result to have \"LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).\"");
+                results.AssertContains("LastName: length must be between 0 and 50");
+                //Assert.AreEqual(true, results.Contains("LastName: length must be between 1 and 50"), "Expected the validation result to have \"LastName: length must be between 1 and 50\"");
                 throw;
             }
         }
@@ -411,6 +427,9 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
+
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -436,6 +455,9 @@ namespace FSNEP.Tests.Repositories
                    UserName = "UserName"
                };
 
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
+
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
             try
@@ -446,11 +468,13 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("Supervisor: You must select a supervisor");
+                results.AssertContains("Supervisor: may not be empty");
                 //Assert.AreEqual(true, results.Contains("Supervisor: The value cannot be null."), "Expected the validation result to have \"Supervisor: The value cannot be null.\"");
                 throw;
             }
         }
+
+        
         #endregion Supervisor Test
 
         #region Salary Tests
@@ -469,6 +493,9 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
+         
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -501,6 +528,8 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -535,6 +564,8 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -546,8 +577,8 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).");
-                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                results.AssertContains("BenefitRate: must be between 0 and 2");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, must be between 0 and 2\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }
@@ -568,6 +599,8 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -579,8 +612,8 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).");
-                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                results.AssertContains("BenefitRate: must be between 0 and 2");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, must be between 0 and 2\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }
@@ -600,6 +633,8 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -621,6 +656,8 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -642,6 +679,8 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -653,7 +692,7 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
+                results.AssertContains("FTE: must be between 0.01 and 1");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
@@ -674,6 +713,8 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -685,7 +726,7 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
+                results.AssertContains("FTE: must be between 0.01 and 1");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
@@ -707,6 +748,8 @@ namespace FSNEP.Tests.Repositories
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
@@ -718,7 +761,7 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
+                results.AssertContains("FTE: must be between 0.01 and 1");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }          
@@ -733,15 +776,38 @@ namespace FSNEP.Tests.Repositories
                 FirstName = ValidValueName,
                 LastName = ValidValueName,
                 Salary = ValidValueSalary,
-                FTE = 0.00001,
+                FTE = 0.01,
                 IsActive = true,
                 UserName = "UserName"
             };
             user.Supervisor = user; //I'm my own supervisor
+            user.Projects = FakeProjects();
+            user.FundTypes = FakeFundTypes();
 
             var userId = Guid.NewGuid();
             user.SetUserID(userId);
             userBLL.EnsurePersistent(user, true);            
+        }
+
+        private static IList<FundType> FakeFundTypes()
+        {
+            var fundTypes = new List<FundType>();
+
+            fundTypes.Add(new FundType { Name = "Name1" });
+            fundTypes.Add(new FundType { Name = "Name2" });
+            fundTypes.Add(new FundType { Name = "Name3" });
+            return fundTypes;
+        }
+
+        private static IList<Project> FakeProjects()
+        {
+            var projects = new List<Project>
+                               {
+                                   new Project {Name = "Name", IsActive = true},
+                                   new Project{Name = "Name2", IsActive = true}
+                               };
+            return projects;
+            
         }
     }
 }

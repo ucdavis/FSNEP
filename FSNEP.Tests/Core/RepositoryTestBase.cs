@@ -43,8 +43,9 @@ namespace FSNEP.Tests.Core
             using (var ts = new TransactionScope())
             {
                 //load base data
-                CreateUsers();
                 CreateProjects();
+                CreateUsers();
+                
 
                 ts.CommitTransaction();
             }
@@ -80,6 +81,31 @@ namespace FSNEP.Tests.Core
             supervisor.Supervisor = supervisor; //i'm my own boss
             supervisor.SetUserID(userId);
 
+            #region test
+            var projects = new List<Project>
+                               {
+                                   new Project {Name = "Name", IsActive = true},
+                                   new Project{Name = "Name2", IsActive = true}
+                               };
+            projects[0].SetIdTo(2);
+            projects[1].SetIdTo(3);
+            supervisor.Projects = projects;
+
+            var fundTypes = new List<FundType>();
+            
+                fundTypes.Add(new FundType { Name = "Name1" });
+                fundTypes.Add(new FundType { Name = "Name2" });
+                fundTypes.Add(new FundType { Name = "Name3" });
+
+                fundTypes[0].SetIdTo(4);
+                fundTypes[1].SetIdTo(5);
+                fundTypes[2].SetIdTo(6);
+            
+
+            supervisor.FundTypes = fundTypes;
+
+            #endregion
+
             UserIds.Add(userId);
 
             userBLL.EnsurePersistent(supervisor, true);
@@ -97,7 +123,8 @@ namespace FSNEP.Tests.Core
                                    Supervisor = supervisor,
                                    UserName = "UserName" + i
                                };
-
+                user.Projects = projects;
+                user.FundTypes = fundTypes;
                 userId = Guid.NewGuid();
 
                 user.SetUserID(userId);
