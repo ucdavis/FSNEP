@@ -1,13 +1,11 @@
-using System.Linq;
-using CAESArch.BLL;
+using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Domain;
 
 namespace FSNEP.BLL.Impl
 {
-    public interface IProjectBLL
+    public interface IProjectBLL : ILookupBLL<Project,int>
     {
-        IQueryable<Project> GetActive();
-        INonStaticGenericBLLBase<Project, int> Repository { get; set; }
+        
     }
 
     public class ProjectBLL : LookupBLL<Project,int>, IProjectBLL

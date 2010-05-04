@@ -13,13 +13,78 @@ namespace FSNEP.Controllers
     {
         public IProjectBLL ProjectBLL;
         public IAccountBLL AccountBLL;
+        public IExpenseTypeBLL ExpenseTypeBLL;
 
         public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL)
         {
             ProjectBLL = projectBLL;
             AccountBLL = accountBLL;
         }
-        
+
+        [Transaction]
+        public ActionResult ExpenseTypes()
+        {
+            var activeAccounts = ExpenseTypeBLL.GetActive();
+
+            return View(activeAccounts);
+        }
+
+        [AcceptPost]
+        public ActionResult InactivateExpenseType(int expenseTypeId)
+        {
+            //get the account
+            var expenseType = ExpenseTypeBLL.Repository.GetNullableByID(expenseTypeId);
+
+            if (expenseType == null)
+            {
+                Message = "Expense Type Not Found";
+
+                return this.RedirectToAction(a => a.ExpenseTypes());
+            }
+
+            //inactivate the project
+            using (var ts = new TransactionScope())
+            {
+                expenseType.IsActive = false;
+
+                ExpenseTypeBLL.Repository.EnsurePersistent(expenseType);
+
+                ts.CommitTransaction();
+            }
+
+            Message = "Expense Type Removed Successfully";
+
+            return this.RedirectToAction(a => a.ExpenseTypes());
+        }
+
+        [AcceptPost]
+        public ActionResult CreateExpenseType(ExpenseType newExpenseType)
+        {
+            newExpenseType.IsActive = true;
+
+            ValidationHelper<ExpenseType>.Validate(newExpenseType, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                Message = "Expense Type Creation Failed";
+
+                return this.RedirectToAction(a => a.ExpenseTypes());
+            }
+
+            //Add the new project
+            using (var ts = new TransactionScope())
+            {
+                ExpenseTypeBLL.Repository.EnsurePersistent(newExpenseType);
+
+                ts.CommitTransaction();
+            }
+
+            Message = "Expense Type Created Successfully";
+
+            return this.RedirectToAction(a => a.ExpenseTypes());
+        }
+
+
         [Transaction]
         public ActionResult Accounts()
         {

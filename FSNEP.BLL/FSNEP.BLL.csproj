@@ -60,11 +60,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Impl\AccountBLL.cs" />
+    <Compile Include="Impl\ExpenseTypeBLL.cs" />
     <Compile Include="Impl\GenericBLL.cs" />
     <Compile Include="Impl\LookupBLL.cs" />
     <Compile Include="Impl\ProjectBLL.cs" />
     <Compile Include="Impl\UserAuth.cs" />
     <Compile Include="Impl\UserBLL.cs" />
+    <Compile Include="Interfaces\ILookupBLL.cs" />
     <Compile Include="Interfaces\IUserAuth.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
