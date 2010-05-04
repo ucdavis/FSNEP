@@ -229,11 +229,11 @@ namespace FSNEP.Tests.Controllers
                 CostShareEntryRecords.Add(CreateValidEntities.CostShareEntry(i+1));
                 CostShareEntryRecords[i].SetIdTo(i + 1);                
             }
-            CostShareEntryRecords[2].Record = CostShareRecords[2];
-            CostShareEntryRecords[3].Record = CostShareRecords[2];
-            //CostShareRecords[2].AddEntry(CostShareEntryRecords[2]);
-            //CostShareRecords[2].AddEntry(CostShareEntryRecords[3]);
-            //CostShareRecords[4].AddEntry(CostShareEntryRecords[2]);
+            //CostShareEntryRecords[2].Record = CostShareRecords[2];
+            //CostShareEntryRecords[3].Record = CostShareRecords[2];
+            CostShareRecords[2].AddEntry(CostShareEntryRecords[2]);
+            CostShareRecords[2].AddEntry(CostShareEntryRecords[3]);
+            CostShareRecords[4].AddEntry(CostShareEntryRecords[5]);
 
             CostShareEntryRepository.Expect(a => a.Queryable).Return(CostShareEntryRecords.AsQueryable()).Repeat.Any();
         }
