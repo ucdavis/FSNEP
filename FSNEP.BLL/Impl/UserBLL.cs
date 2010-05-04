@@ -33,6 +33,8 @@ namespace FSNEP.BLL.Impl
         /// A user can view any user in the 'all users' category, plus their subordinates
         /// </remarks>
         IEnumerable<User> GetAllViewableUsers();
+
+        IEnumerable<User> GetSubordinatesForUser(User user);
     }
 
     public class UserBLL : RepositoryWithTypedId<User, Guid>, IUserBLL
@@ -206,6 +208,11 @@ namespace FSNEP.BLL.Impl
 
 
             return Enumerable.Union(adminViewableUsers, subordinates);
+        }
+
+        public IEnumerable<User> GetSubordinatesForUser(User user)
+        {
+            return Queryable.Where(x => x.Supervisor.IsActive && x.Supervisor.Id == user.Id);
         }
     }
 }

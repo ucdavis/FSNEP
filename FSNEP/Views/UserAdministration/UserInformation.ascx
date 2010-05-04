@@ -126,3 +126,13 @@
         </tr>
     </table>
 </fieldset>
+
+<div>
+    Subordinates:
+    
+    <ul>
+    <% foreach (var sub in Model.Subordinates) { %>
+        <li><%= Html.Encode(sub.FullName) %></li>
+    <% } %>
+    </ul>
+</div>

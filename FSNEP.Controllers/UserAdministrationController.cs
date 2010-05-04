@@ -281,6 +281,8 @@ namespace FSNEP.Controllers
                 }
             }
 
+            viewModel.Subordinates = UserBLL.GetSubordinatesForUser(user).ToList();
+
             return View(viewModel);
         }
 
@@ -475,7 +477,8 @@ namespace FSNEP.Controllers
                                     Supervisors = userBLL.GetSupervisors().OrderBy(a => a.LastName).ToList(),
                                     Projects = userBLL.GetAllProjectsByUser(repository.OfType<Project>()).OrderBy(a => a.Name).ToList(),
                                     FundTypes = userBLL.GetAvailableFundTypes(repository.OfType<FundType>()).OrderBy(a => a.Name).ToList(),
-                                    AvailableRoles = userBLL.GetVisibleRoles()
+                                    AvailableRoles = userBLL.GetVisibleRoles(),
+                                    Subordinates = new List<User>()
                                 };
 
             return viewModel;
@@ -488,5 +491,6 @@ namespace FSNEP.Controllers
 
         public IEnumerable<string> AvailableRoles { get; set; }
         public IEnumerable<string> UserRoles { get; set; }
+        public IEnumerable<User> Subordinates { get; set; }
     }
 }
