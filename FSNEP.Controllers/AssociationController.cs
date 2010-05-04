@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using FSNEP.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Core.Utils;
+using UCDArch.Web.ActionResults;
 using UCDArch.Web.Attributes;
 
 namespace FSNEP.Controllers
@@ -30,7 +31,7 @@ namespace FSNEP.Controllers
 
             Check.Require(project != null);
 
-            return Json(project.Accounts);
+            return new JsonNetResult(project.Accounts);
         }
 
         /// <summary>

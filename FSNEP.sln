@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Bin\MvcContrib.dll = Bin\MvcContrib.dll
 		Bin\MvcContrib.FluentHtml.dll = Bin\MvcContrib.FluentHtml.dll
 		Bin\MvcContrib.TestHelper.dll = Bin\MvcContrib.TestHelper.dll
+		Bin\Newtonsoft.Json.dll = Bin\Newtonsoft.Json.dll
 		Bin\NHibernate.ByteCode.Spring.dll = Bin\NHibernate.ByteCode.Spring.dll
 		Bin\NHibernate.dll = Bin\NHibernate.dll
 		Bin\NHibernate.Linq.dll = Bin\NHibernate.Linq.dll
