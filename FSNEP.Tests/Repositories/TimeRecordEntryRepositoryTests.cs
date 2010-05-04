@@ -106,6 +106,32 @@ namespace FSNEP.Tests.Repositories
 
             Assert.AreEqual(false, timerecordEntry.IsTransient());
         }
+        /// <summary>
+        /// Determines whether this instance [can save valid time record entry null adjustment date].
+        /// </summary>
+        [TestMethod]
+        public void CanSaveValidTimeRecordEntryNullAdjustmentDate()
+        {
+            var timerecordEntry = CreateValidTimerecordEntry();
+            timerecordEntry.AdjustmentDate = null;
+
+            Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
+
+            Assert.AreEqual(false, timerecordEntry.IsTransient());
+        }
+        /// <summary>
+        /// Determines whether this instance [can save valid time record entry null adjustment date].
+        /// </summary>
+        [TestMethod]
+        public void CanSaveValidTimeRecordEntryValidAdjustmentDate()
+        {
+            var timerecordEntry = CreateValidTimerecordEntry();
+            timerecordEntry.AdjustmentDate = DateTime.Now;
+
+            Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
+
+            Assert.AreEqual(false, timerecordEntry.IsTransient());
+        }
         #endregion Valid Time record Entry Tests
 
 
@@ -317,7 +343,6 @@ namespace FSNEP.Tests.Repositories
             }
         }
         #endregion Comment Tests
-
 
         #region Helper Methods
         /// <summary>
