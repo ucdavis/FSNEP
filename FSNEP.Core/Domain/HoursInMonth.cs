@@ -1,6 +1,8 @@
 ﻿using System;
 using NHibernate.Validator.Constraints;
+using NHibernate.Validator.Engine;
 using UCDArch.Core.DomainModel;
+using UCDArch.Core.NHibernateValidator.CommonValidatorAdapter;
 
 namespace FSNEP.Core.Domain
 {
@@ -12,6 +14,35 @@ namespace FSNEP.Core.Domain
         public HoursInMonth()
         {
 
+        }
+
+        [NotNull (Message = "cannot be greater than 2 years from now or less than 1900")]
+        public virtual string Year { get; set; }
+
+        [NotNull(Message = "The year and month entered are not valid")]
+        public override YearMonthComposite Id
+        {
+            get
+            {
+                return base.Id;
+            }
+            protected set
+            {
+                base.Id = value;
+                try
+                {
+                    Year = Id.Year.ToString();
+                    var date = new DateTime(Id.Year, Id.Month, 1);
+                    if(Id.Year < 1900 || Id.Year > DateTime.Now.Year + 2)
+                    {
+                        Year = null;
+                    }                    
+                }
+                catch (Exception)
+                {
+                    base.Id = null;
+                }                                
+            }
         }
 
         public HoursInMonth(int year, int month)
