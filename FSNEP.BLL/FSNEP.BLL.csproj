@@ -39,10 +39,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\CAESArch.BLL.dll</HintPath>
     </Reference>
+    <Reference Include="CAESArch.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=667f3cb07abadf4b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\CAESArch.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -54,10 +59,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Impl\GenericBLL.cs" />
+    <Compile Include="Impl\UserAuth.cs" />
+    <Compile Include="Impl\UserBLL.cs" />
+    <Compile Include="Interfaces\IUserAuth.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Interfaces\" />
+    <ProjectReference Include="..\FSNEP.Core\FSNEP.Core.csproj">
+      <Project>{E8EF47BB-45DB-480D-94B0-0F5E43E7DFC4}</Project>
+      <Name>FSNEP.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
