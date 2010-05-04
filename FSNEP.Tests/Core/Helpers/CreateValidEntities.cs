@@ -31,6 +31,27 @@ namespace FSNEP.Tests.Core.Helpers
         }
 
         /// <summary>
+        /// Create a valid entry file for tests. 
+        /// Repository tests may need to modify this data to supply real linked data.
+        /// </summary>
+        /// <param name="counter">The counter.</param>
+        /// <returns></returns>
+        public static EntryFile EntryFile(int? counter)
+        {
+            var extra = "";
+            if (counter != null)
+            {
+                extra = counter.ToString();
+            }
+           return new EntryFile
+                              {
+                                  Content = new byte[0],
+                                  ContentType = "application/pdf",
+                                  Name = "SomeFile" + extra + ".pdf"
+                              };
+        }
+
+        /// <summary>
         /// Creates a valid Record Entity (Mostly)
         /// </summary>
         /// <param name="counter">The counter.</param>

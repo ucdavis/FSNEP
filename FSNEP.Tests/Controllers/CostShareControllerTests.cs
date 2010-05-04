@@ -3,21 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Web;
-using System.Web.Mvc;
 using FSNEP.BLL.Impl;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Controllers;
-using FSNEP.Core.Abstractions;
-using FSNEP.Core.Calendar;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core.Extensions;
 using FSNEP.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
-using UCDArch.Testing;
-using UCDArch.Web.ActionResults;
 using UCDArch.Core.PersistanceSupport;
+using UCDArch.Testing;
 
 namespace FSNEP.Tests.Controllers
 {
