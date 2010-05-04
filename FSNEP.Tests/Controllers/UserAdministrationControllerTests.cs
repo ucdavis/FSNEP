@@ -12,6 +12,7 @@ using Rhino.Mocks;
 using FSNEP.Core.Domain;
 using FSNEP.Core.Abstractions;
 using System.Web.Security;
+using FSNEP.Tests.Core.Extensions;
 
 namespace FSNEP.Tests.Controllers
 {
@@ -216,8 +217,8 @@ namespace FSNEP.Tests.Controllers
             userModel.User.FirstName = invalidValueName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).", newUserModel.ViewData.ModelState["User.FirstName"].Errors[0].ErrorMessage);
-            Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
+            Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");            
         }        
 
         /// <summary>
@@ -232,9 +233,10 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.FirstName = invalidValueName;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());            
-            Assert.AreEqual("FirstName: The value cannot be null.", newUserModel.ViewData.ModelState["User.FirstName"].Errors[0].ErrorMessage);
-            Assert.AreEqual("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).", newUserModel.ViewData.ModelState["User.FirstName"].Errors[1].ErrorMessage);
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            var errorMessages = GetErrorMessages(newUserModel.ViewData.ModelState);
+            errorMessages.AssertContains("FirstName: The value cannot be null.");
+            errorMessages.AssertContains("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");            
             Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }        
         #endregion First Name Validation Tests
@@ -252,8 +254,8 @@ namespace FSNEP.Tests.Controllers
             CreateUserViewModel userModel = CreateValidUserModel();
             userModel.User.LastName = invalidValueName;
 
-            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());            
-            Assert.AreEqual("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).", newUserModel.ViewData.ModelState["User.LastName"].Errors[0].ErrorMessage);
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
 
@@ -270,8 +272,11 @@ namespace FSNEP.Tests.Controllers
             userModel.User.LastName = invalidValueName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("LastName: Required", newUserModel.ViewData.ModelState["User.LastName"].Errors[0].ErrorMessage);
-            Assert.AreEqual("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).", newUserModel.ViewData.ModelState["User.LastName"].Errors[1].ErrorMessage);
+            var errorMessages = GetErrorMessages(newUserModel.ViewData.ModelState);
+            errorMessages.AssertContains("LastName: Required");
+            errorMessages.AssertContains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");            
+            //Assert.AreEqual("LastName: Required", newUserModel.ViewData.ModelState["User.LastName"].Errors[0].ErrorMessage);
+            //Assert.AreEqual("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).", newUserModel.ViewData.ModelState["User.LastName"].Errors[1].ErrorMessage);
             Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
 
@@ -288,7 +293,8 @@ namespace FSNEP.Tests.Controllers
             userModel.User.LastName = invalidValueName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("LastName: Required", newUserModel.ViewData.ModelState["User.LastName"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("LastName: Required"); 
+            //Assert.AreEqual("LastName: Required", newUserModel.ViewData.ModelState["User.LastName"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
 
@@ -307,7 +313,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, null, CreateListOfProjects(),
                                       CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("You must select a supervisor", newUserModel.ViewData.ModelState["SupervisorID"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("You must select a supervisor"); 
+            //Assert.AreEqual("You must select a supervisor", newUserModel.ViewData.ModelState["SupervisorID"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
 
@@ -323,7 +330,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, null,
                                       CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("You must select at least one project", newUserModel.ViewData.ModelState["ProjectList"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("You must select at least one project"); 
+            //Assert.AreEqual("You must select at least one project", newUserModel.ViewData.ModelState["ProjectList"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
 
@@ -339,7 +347,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
                                       null, CreateListOfRoles());
-            Assert.AreEqual("You must select at least one fund type", newUserModel.ViewData.ModelState["FundTypeList"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("You must select at least one fund type"); 
+            //Assert.AreEqual("You must select at least one fund type", newUserModel.ViewData.ModelState["FundTypeList"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
 
@@ -355,7 +364,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
                                       CreateListOfFundTypes(), null);
-            Assert.AreEqual("User must have at least one role", newUserModel.ViewData.ModelState["RoleList"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("User must have at least one role"); 
+            //Assert.AreEqual("User must have at least one role", newUserModel.ViewData.ModelState["RoleList"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
 
@@ -371,7 +381,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
                                       CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Username already exists", newUserModel.ViewData.ModelState["Username"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Username already exists"); 
+            //Assert.AreEqual("Username already exists", newUserModel.ViewData.ModelState["Username"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         #endregion Other Validation Tests
@@ -386,12 +397,13 @@ namespace FSNEP.Tests.Controllers
         public void CreateUserDoesNotSaveWithCreateStatusErrorDuplicateEmail()
         {
             
-                CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.DuplicateEmail);
+            CreateUserViewModel userModel = CreateValidUserModel(MembershipCreateStatus.DuplicateEmail);
 
-                var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
-                                          CreateListOfFundTypes(), CreateListOfRoles());
-                Assert.AreEqual("Create Failed Duplicate Email", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
-                Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");                        
+            var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
+                                      CreateListOfFundTypes(), CreateListOfRoles());
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Create Failed Duplicate Email"); 
+            //Assert.AreEqual("Create Failed Duplicate Email", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
+            Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");                        
         }
         /// <summary>
         /// Creates a valid user, but mock the create to fail because of a Create Status Error.
@@ -406,7 +418,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
                                       CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Create Failed Duplicate Provider User Key", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Create Failed Duplicate Provider User Key"); 
+            //Assert.AreEqual("Create Failed Duplicate Provider User Key", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -422,7 +435,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
                                       CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Create Failed Invalid Answer", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Create Failed Invalid Answer"); 
+            //Assert.AreEqual("Create Failed Invalid Answer", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -438,7 +452,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
                                       CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Create Failed Invalid Email", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Create Failed Invalid Email"); 
+            //Assert.AreEqual("Create Failed Invalid Email", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -454,7 +469,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
                                       CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Create Failed Invalid Password", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Create Failed Invalid Password"); 
+            //Assert.AreEqual("Create Failed Invalid Password", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -470,7 +486,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
                                       CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Create Failed Invalid Provider User Key", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Create Failed Invalid Provider User Key"); 
+            //Assert.AreEqual("Create Failed Invalid Provider User Key", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -486,7 +503,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
                                       CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Create Failed Invalid Question", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Create Failed Invalid Question"); 
+            //Assert.AreEqual("Create Failed Invalid Question", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -502,7 +520,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
                                       CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Create Failed Invalid User Name", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Create Failed Invalid User Name"); 
+            //Assert.AreEqual("Create Failed Invalid User Name", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -518,7 +537,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
                                       CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Create Failed Provider Error", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Create Failed Provider Error"); 
+            //Assert.AreEqual("Create Failed Provider Error", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -534,7 +554,8 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(),
                                       CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Create Failed User Rejected", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Create Failed User Rejected"); 
+            //Assert.AreEqual("Create Failed User Rejected", newUserModel.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         #endregion MembershipCreateStatus tests that still need to be done. These will fail when code is added
@@ -553,7 +574,8 @@ namespace FSNEP.Tests.Controllers
             userModel.User.Salary = invalidValueSalary;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Salary: Must be greater than zero", newUserModel.ViewData.ModelState["User.Salary"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Salary: Must be greater than zero"); 
+            //Assert.AreEqual("Salary: Must be greater than zero", newUserModel.ViewData.ModelState["User.Salary"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
 
@@ -570,7 +592,8 @@ namespace FSNEP.Tests.Controllers
             userModel.User.Salary = invalidValueSalary;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Salary: Must be greater than zero", newUserModel.ViewData.ModelState["User.Salary"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Salary: Must be greater than zero"); 
+            //Assert.AreEqual("Salary: Must be greater than zero", newUserModel.ViewData.ModelState["User.Salary"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         #endregion Salary Validation Tests
@@ -589,7 +612,8 @@ namespace FSNEP.Tests.Controllers
             userModel.User.BenefitRate = invalidValueBenefitRate;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).", newUserModel.ViewData.ModelState["User.BenefitRate"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive)."); 
+            //Assert.AreEqual("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).", newUserModel.ViewData.ModelState["User.BenefitRate"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -605,7 +629,8 @@ namespace FSNEP.Tests.Controllers
             userModel.User.BenefitRate = invalidValueBenefitRate;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).", newUserModel.ViewData.ModelState["User.BenefitRate"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive)."); 
+            //Assert.AreEqual("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).", newUserModel.ViewData.ModelState["User.BenefitRate"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
 
@@ -658,7 +683,8 @@ namespace FSNEP.Tests.Controllers
             userModel.User.FTE = invalidValueFte;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).", newUserModel.ViewData.ModelState["User.FTE"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive)."); 
+            //Assert.AreEqual("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).", newUserModel.ViewData.ModelState["User.FTE"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -674,7 +700,8 @@ namespace FSNEP.Tests.Controllers
             userModel.User.FTE = invalidValueFte;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).", newUserModel.ViewData.ModelState["User.FTE"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive)."); 
+            //Assert.AreEqual("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).", newUserModel.ViewData.ModelState["User.FTE"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -690,7 +717,8 @@ namespace FSNEP.Tests.Controllers
             userModel.User.FTE = invalidValueFte;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).", newUserModel.ViewData.ModelState["User.FTE"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive)."); 
+            //Assert.AreEqual("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).", newUserModel.ViewData.ModelState["User.FTE"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         #endregion FTE Validation Tests
@@ -709,7 +737,8 @@ namespace FSNEP.Tests.Controllers
             userModel.UserName = invalidValueUserName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("UserName: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["UserName"].Errors[0].ErrorMessage);            
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("UserName: Must be between 1 and 50 characters long"); 
+            //Assert.AreEqual("UserName: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["UserName"].Errors[0].ErrorMessage);            
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -725,8 +754,11 @@ namespace FSNEP.Tests.Controllers
             userModel.UserName = invalidValueUserName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("UserName: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["UserName"].Errors[0].ErrorMessage);
-            Assert.AreEqual("UserName: Required", newUserModel.ViewData.ModelState["UserName"].Errors[1].ErrorMessage);
+            var errorMessages = GetErrorMessages(newUserModel.ViewData.ModelState);
+            errorMessages.AssertContains("UserName: Required");
+            errorMessages.AssertContains("UserName: Must be between 1 and 50 characters long"); 
+            //Assert.IsTrue(errorMessages.Contains("UserName: Required"), "Expected value \"UserName: Required\" not found");
+            //Assert.IsTrue(errorMessages.Contains("UserName: Must be between 1 and 50 characters long"), "Expected value \"UserName: Must be between 1 and 50 characters long\" not found");            
             Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -742,7 +774,8 @@ namespace FSNEP.Tests.Controllers
             userModel.UserName = invalidValueUserName;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("UserName: Required", newUserModel.ViewData.ModelState["UserName"].Errors[0].ErrorMessage);            
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("UserName: Required");
+            //Assert.AreEqual("UserName: Required", newUserModel.ViewData.ModelState["UserName"].Errors[0].ErrorMessage);            
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         } 
         #endregion userName Tests
@@ -813,7 +846,8 @@ namespace FSNEP.Tests.Controllers
             userModel.Answer = invalidValueAnswer;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Answer: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Answer"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Answer: Must be between 1 and 50 characters long");
+            //Assert.AreEqual("Answer: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Answer"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -829,8 +863,11 @@ namespace FSNEP.Tests.Controllers
             userModel.Answer = invalidValueAnswer;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Answer: Required", newUserModel.ViewData.ModelState["Answer"].Errors[0].ErrorMessage);
-            Assert.AreEqual("Answer: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Answer"].Errors[1].ErrorMessage);            
+            var errorMessages = GetErrorMessages(newUserModel.ViewData.ModelState);
+            errorMessages.AssertContains("Answer: Required");
+            errorMessages.AssertContains("Answer: Must be between 1 and 50 characters long");            
+            //Assert.AreEqual("Answer: Required", newUserModel.ViewData.ModelState["Answer"].Errors[0].ErrorMessage);
+            //Assert.AreEqual("Answer: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Answer"].Errors[1].ErrorMessage);            
             Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -846,7 +883,8 @@ namespace FSNEP.Tests.Controllers
             userModel.Answer = invalidValueAnswer;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Answer: Required", newUserModel.ViewData.ModelState["Answer"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Answer: Required");
+            //Assert.AreEqual("Answer: Required", newUserModel.ViewData.ModelState["Answer"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         #endregion Answer Tests
@@ -865,9 +903,13 @@ namespace FSNEP.Tests.Controllers
             userModel.Email = invalidValueEmail;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Email: Required", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
-            Assert.AreEqual("Email: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Email"].Errors[1].ErrorMessage);
-            Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[2].ErrorMessage);
+            var errorMessages = GetErrorMessages(newUserModel.ViewData.ModelState);
+            errorMessages.AssertContains("Email: Required");
+            errorMessages.AssertContains("Email: Must be between 1 and 50 characters long");
+            errorMessages.AssertContains("Email: Must be a valid email address");
+            //Assert.AreEqual("Email: Required", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            //Assert.AreEqual("Email: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Email"].Errors[1].ErrorMessage);
+            //Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[2].ErrorMessage);
             Assert.AreEqual(3, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -883,8 +925,11 @@ namespace FSNEP.Tests.Controllers
             userModel.Email = invalidValueEmail;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Email: Required", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
-            Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[1].ErrorMessage);
+            var errorMessages = GetErrorMessages(newUserModel.ViewData.ModelState);
+            errorMessages.AssertContains("Email: Required");
+            errorMessages.AssertContains("Email: Must be a valid email address");
+            //Assert.AreEqual("Email: Required", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            //Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[1].ErrorMessage);
             Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -900,9 +945,11 @@ namespace FSNEP.Tests.Controllers
             userModel.Email = invalidValueEmail;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            //Assert.AreEqual("Email: Required", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
-            Assert.AreEqual("Email: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
-            Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[1].ErrorMessage);
+            var errorMessages = GetErrorMessages(newUserModel.ViewData.ModelState);
+            errorMessages.AssertContains("Email: Must be between 1 and 50 characters long");
+            errorMessages.AssertContains("Email: Must be a valid email address");            
+            //Assert.AreEqual("Email: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            //Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[1].ErrorMessage);
             Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
 
@@ -919,9 +966,11 @@ namespace FSNEP.Tests.Controllers
             userModel.Email = invalidValueEmail;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            //Assert.AreEqual("Email: Required", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
-            Assert.AreEqual("Email: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
-            Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[1].ErrorMessage);
+            var errorMessages = GetErrorMessages(newUserModel.ViewData.ModelState);
+            errorMessages.AssertContains("Email: Must be between 1 and 50 characters long");
+            errorMessages.AssertContains("Email: Must be a valid email address"); 
+            //Assert.AreEqual("Email: Must be between 1 and 50 characters long", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            //Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[1].ErrorMessage);
             Assert.AreEqual(2, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");
         }
         /// <summary>
@@ -940,7 +989,8 @@ namespace FSNEP.Tests.Controllers
             userModel.Email = invalidEmail;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Email: Must be a valid email address"); 
+            //Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");          
         }
         /// <summary>
@@ -959,7 +1009,8 @@ namespace FSNEP.Tests.Controllers
             userModel.Email = invalidEmail;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, userModel.User.Supervisor.ID, CreateListOfProjects(), CreateListOfFundTypes(), CreateListOfRoles());
-            Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
+            GetErrorMessages(newUserModel.ViewData.ModelState).AssertContains("Email: Must be a valid email address"); 
+            //Assert.AreEqual("Email: Must be a valid email address", newUserModel.ViewData.ModelState["Email"].Errors[0].ErrorMessage);
             Assert.AreEqual(1, CountErrorMessages(newUserModel.ViewData.ModelState), "Wrong number of error messages.");          
         }
         #endregion Email Tests
@@ -1037,6 +1088,7 @@ namespace FSNEP.Tests.Controllers
         #endregion Tests to ensure Mocking is working as expected. These could be removed.
 
         #region Helper Methods
+
         private static List<int> CreateListOfProjects()
         {
             var projectList = new List<int> {2, 3};

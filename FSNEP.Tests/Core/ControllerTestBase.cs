@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Web.Mvc;
 using CAESArch.BLL;
 using MvcContrib.TestHelper;
@@ -62,5 +63,26 @@ namespace FSNEP.Tests.Core
             }
             return returnValue;
         }
+
+        /// <summary>
+        /// Get all the error messages
+        /// </summary>
+        /// <param name="modelState"></param>
+        /// <returns></returns>
+        protected List<string> GetErrorMessages(ModelStateDictionary modelState)
+        {
+            var resultsList = new List<string>();
+
+            foreach (var result in modelState.Values)
+            {
+                foreach (var errs in result.Errors)
+                {
+                    resultsList.Add(errs.ErrorMessage);
+                }
+            }
+
+            return resultsList;
+        }
+
     }
 }
