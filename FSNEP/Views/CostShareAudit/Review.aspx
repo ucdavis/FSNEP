@@ -11,4 +11,8 @@
 
     <% Html.RenderPartial("CostShareEntryList", Model.Entries); %>
 
+    <div>
+        <%= Html.ActionLink<CostShareAuditController>(x=>x.History(null), "Back to Cost Share History") %>
+    </div>    
+
 </asp:Content>
