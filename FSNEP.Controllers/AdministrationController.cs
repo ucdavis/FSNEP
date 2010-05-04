@@ -30,6 +30,9 @@ namespace FSNEP.Controllers
             MessageGateway = messageGateway;
         }
 
+        /// <summary>
+        /// TODO: Remove this testing method
+        /// </summary>
         public ActionResult DeleteUser(string id)
         {
             //This only works with tester accounts
@@ -153,7 +156,8 @@ namespace FSNEP.Controllers
                                        IEnumerable<int> fundTypeList)
         {
             var user = UserBLL.GetUser(id);
-            UpdateModel(user, "User"); //Update the user from the data entered in the form
+
+            TryUpdateModel(user, "User"); //Update the user from the data entered in the form
 
             CheckUserProperties(supervisorId, projectList, fundTypeList);
 
