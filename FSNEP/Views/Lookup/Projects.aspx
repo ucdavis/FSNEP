@@ -39,15 +39,12 @@
     
         <tr>
             <td>
-                <%= Html.Encode(item.Name) %>
+                <%= Html.Encode(item) %>
             </td>
             <td>
-                <% using (Html.BeginForm<FSNEP.Controllers.LookupController>(a => a.InactivateProject(item.ID)))
-                   { %>
-                
+                <form method="post" action="<%= Url.Action("InactivateProject", new { item.ID }) %>">
                     <input type="submit" value="Inactivate" />
-                
-                <%} %>
+                </form>
             </td>
         </tr>
     
