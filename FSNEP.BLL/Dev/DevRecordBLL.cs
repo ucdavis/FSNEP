@@ -4,6 +4,7 @@ using System.Security.Principal;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
+using UCDArch.Core.Utils;
 
 namespace FSNEP.BLL.Dev
 {
@@ -28,7 +29,15 @@ namespace FSNEP.BLL.Dev
 
         public bool IsEditable(T record)
         {
-            return true;
+            Check.Require(record != null);
+
+            //if (record.Status.Name == Status.Option.Current.ToString() || record.Status.Name == Status.Option.Disapproved.ToString())
+            if (record.Status.NameOption == Status.Option.Current || record.Status.NameOption == Status.Option.Disapproved)
+            {
+                return true; //editable only if the status is current or disapproved
+            }
+
+            return false;
         }
 
         public T GetCurrent(IPrincipal user)

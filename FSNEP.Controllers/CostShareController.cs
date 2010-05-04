@@ -158,7 +158,7 @@ namespace FSNEP.Controllers
 
             _costShareBLL.Submit(costShare, CurrentUser);
 
-            Message = "Cost Share Submitted Successfully";
+            Message = string.Format("Cost Share for {0:MMMM yyyy} Submitted Successfully", costShare.Date);
 
             return RedirectToAction("History");
         }
