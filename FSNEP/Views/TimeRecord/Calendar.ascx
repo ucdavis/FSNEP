@@ -79,7 +79,6 @@
         Target Hours For Month: <%= Html.Encode(Model.TimeRecord.TargetHours) %> Hour(s)
     </div>
     <div class="TimeRecordAdjustment">
-        <a href="javascript:;" id="addAdjustment">Add Adjustment [TODO]</a>
         
         <ul id="AdjustmentEntries">
             <% foreach (var adjustmentEntry in Model.AdjustmentEntries) { %>
@@ -98,6 +97,8 @@
             </li>
             <% } %>
         </ul>
+        
+        <a href="javascript:;" id="AddAdjustmentEntry">Add Adjustment [TODO]</a>
     </div>
 </div>
 
@@ -140,7 +141,7 @@
     </form>
 </div>
 
-<div id="dialogTimeRecordAdjustment" class="TimeRecordAdjustmentDialog" title="Adjust Entry" style="display:block">
+<div id="dialogTimeRecordAdjustment" class="TimeRecordAdjustmentDialog" title="Adjust Entry" style="display:none">
     <%= Html.ClientSideValidation<FSNEP.Core.Domain.TimeRecordEntry>("Adjust")
             .AddRule("AdjustmentDate", new xVal.Rules.DataTypeRule(xVal.Rules.DataTypeRule.DataType.Date))
     %>

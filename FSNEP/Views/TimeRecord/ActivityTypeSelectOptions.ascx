@@ -7,8 +7,7 @@
         <%
             foreach (var activityType in category.ActivityTypes)
             {%>
-        <option value="<%= activityType.Id %>">
-            <%= Html.Encode(activityType.Name) %></option>
+        <option value="<%= activityType.Id %>"><%= Html.Encode(activityType.Name) %></option>
         <% 
             } %>
     </optgroup>

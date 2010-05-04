@@ -35,6 +35,12 @@ $(function() {
         RemoveEntry(id);
     });
 
+    $("#AddAdjustmentEntry").click(function() {
+        DisplayMessage("You click on the add adjustment entry link");
+
+        AddAdjustmentEntry();
+    });
+
     $(".DeleteAdjustmentEntry").live('click', function() {
         var clicked = $(this);
 
@@ -104,6 +110,36 @@ $(function() {
         return false;
     });
 
+    $("#formAdjustEntry").submit(function() {
+        if ($(this).valid()) {
+            var data = GatherAdjustmentEntryData();
+            var displayValues = GatherAdjustmentEntryText();
+
+            var serviceUrl = Services.AddEntry;
+
+            $.post(
+                serviceUrl,
+                data,
+                function(result) {
+                    LogMessage("Add Adjustment Entry Result", result);
+                    DisplayMessage("New Adjustment Entry Added with id = " + result.Id);
+
+                    //$("#dialogTimeRecordAdjustment").dialog("close");
+                    $("#dialogTimeRecordAdjustment").slideUp();
+                                        
+                    UpdateAddAdjustmentEntryUI(result.Id, displayValues);
+                    UpdateTimeRecordTotalHours(result.HoursDelta);
+                },
+                'json'
+            );
+        }
+        else {
+            alert("Entry not valid -- check your values");
+        }
+
+        return false;
+    });
+
     $("#Adjust_Project").change(function() { PopulateAccounts(this, $("#Adjust_Account")); });
     $("#Project").change(function() { PopulateAccounts(this, $("#Account")); });
 
@@ -154,6 +190,34 @@ function UpdateAddEntryUI(id, date, hours) {
     $("#entriesFor" + date).append(newEntry);
 }
 
+function UpdateAddAdjustmentEntryUI(id, displayValues) {
+    var adjustmentEntryList = $("#AdjustmentEntries");
+
+    var adjustmentText = displayValues.Hours + " HRS";
+
+    adjustmentText = adjustmentText + ", " +
+                        displayValues.Project + ", " +
+                        displayValues.FundType + ", " +
+                        displayValues.ActivityType + ", " +
+                        displayValues.Account;
+
+    var newAdjustmentEntry = $('<li>').attr('id', 'AdjustmentEntry' + id)
+                            .html(adjustmentText)
+                            .append(
+                                $('<span>')
+                                .addClass('deleteAdjustmentEntry')
+                                .append(
+                                    $('<a>')
+                                    .addClass('DeleteAdjustmentEntry')
+                                    .attr('href', 'javascript:;')
+                                    .attr('id', 'deleteAdjustmentEntry' + id)
+                                    .html('X')
+                                )
+                            );
+
+    adjustmentEntryList.append(newAdjustmentEntry);
+}
+
 function RemoveEntry(entryId) {
 
     var data = { entryId: entryId, __RequestVerificationToken: __RequestVerificationToken };
@@ -171,6 +235,13 @@ function RemoveEntry(entryId) {
         },
         'json'
     );
+}
+
+function AddAdjustmentEntry() {
+    var addAdjustmentEntryDiv = $("#dialogTimeRecordAdjustment");
+
+    addAdjustmentEntryDiv.slideDown();
+    //OpenDialog(addAdjustmentEntryDiv, null, "Adjust Entry", null);
 }
 
 function RemoveAdjustmentEntry(entryId) {
@@ -227,6 +298,45 @@ function GatherEditEntryData() {
     };
 
     return data;
+}
+
+function GatherAdjustmentEntryData() {
+    var adjustmentDate = $("#Adjust_AdjustmentDate").val();
+
+    var hours = $("#Adjust_Hours").val();
+    var activityType = $("#Adjust_ActivityType").val();
+
+    var fundType = $("#Adjust_FundType").val();
+    var project = $("#Adjust_Project").val();
+    var account = $("#Adjust_Account").val();
+    var comment = $("#Adjust_Comment").val();
+
+    var data = { Date: 1, AdjustmentDate: adjustmentDate, Hours: hours, ActivityType: activityType, FundType: fundType,
+        Project: project, Account: account, Comment: comment,
+        __RequestVerificationToken: __RequestVerificationToken
+    };
+
+    return data;
+}
+
+function GatherAdjustmentEntryText() {
+    //var adjustmentDate = $("#Adjust_AdjustmentDate").val();
+
+    var hours = $("#Adjust_Hours").val();
+    var activityType = $("#Adjust_ActivityType option:selected").text();
+
+    var fundType = $("#Adjust_FundType :selected").text();
+    var project = $("#Adjust_Project :selected").text();
+    var account = $("#Adjust_Account :selected").text();
+    var comment = $("#Adjust_Comment").val();
+    
+    
+
+    var text = { Hours: hours, ActivityType: activityType, FundType: fundType,
+        Project: project, Account: account, Comment: comment
+    };
+
+    return text;
 }
 
 function PopulateAccounts(el, acctEl) {
