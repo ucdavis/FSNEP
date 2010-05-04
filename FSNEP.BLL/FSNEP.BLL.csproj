@@ -60,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Impl\GenericBLL.cs" />
+    <Compile Include="Impl\LookupBLL.cs" />
+    <Compile Include="Impl\ProjectBLL.cs" />
     <Compile Include="Impl\UserAuth.cs" />
     <Compile Include="Impl\UserBLL.cs" />
     <Compile Include="Interfaces\IUserAuth.cs" />
