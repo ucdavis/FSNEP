@@ -18,12 +18,14 @@ namespace FSNEP.Controllers
         private readonly ICostShareBLL _costShareBLL;
         private readonly ITimeRecordBLL _timeRecordBLL;
         private readonly IUserBLL _userBLL;
+        private readonly IDelegateBLL _delegateBLL;
 
-        public SupervisorController(ICostShareBLL costShareBLL, ITimeRecordBLL timeRecordBLL, IUserBLL userBLL)
+        public SupervisorController(ICostShareBLL costShareBLL, ITimeRecordBLL timeRecordBLL, IUserBLL userBLL, IDelegateBLL delegateBLL)
         {
             _costShareBLL = costShareBLL;
             _timeRecordBLL = timeRecordBLL;
             _userBLL = userBLL;
+            _delegateBLL = delegateBLL;
         }
 
         public ActionResult CostShareList()
@@ -149,7 +151,15 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult AssignDelegate(Guid userId)
         {
-            throw new NotImplementedException();
+            var userToAssign = _userBLL.GetNullableByID(userId);
+
+            Check.Require(userToAssign != null);
+
+            _delegateBLL.AssignDelegate();
+
+            Message = string.Format("{0} Assigned as a Delegate", userToAssign.FullName);
+
+            return this.RedirectToAction<HomeController>(x => x.Index());
         }
 
         [Authorize(Roles="Supervisor")]
@@ -169,7 +179,15 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult RemoveDelegate(Guid userId)
         {
-            throw new NotImplementedException();
+            var userToRemove = _userBLL.GetNullableByID(userId);
+
+            Check.Require(userToRemove != null);
+
+            _delegateBLL.RemoveDelegate();
+
+            Message = string.Format("{0} Removed as a Delegate", userToRemove.FullName);
+
+            return this.RedirectToAction<HomeController>(x => x.Index());
         }
 
         public bool CurrentUserHasDelegate()

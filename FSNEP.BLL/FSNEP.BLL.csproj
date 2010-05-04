@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dev\DevCostShareBLL.cs" />
+    <Compile Include="Dev\DevDelegateBLL.cs" />
     <Compile Include="Dev\DevRecordBLL.cs" />
     <Compile Include="Dev\DevTimeRecordBLL.cs" />
     <Compile Include="Dev\ReportBLL.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Impl\GenericBLL.cs" />
     <Compile Include="Impl\UserAuth.cs" />
     <Compile Include="Impl\UserBLL.cs" />
+    <Compile Include="Interfaces\IDelegateBLL.cs" />
     <Compile Include="Interfaces\IRecordBLL.cs" />
     <Compile Include="Interfaces\ITimeRecordBLL.cs" />
     <Compile Include="Interfaces\IUserAuth.cs" />
