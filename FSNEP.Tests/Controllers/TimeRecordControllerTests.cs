@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using FSNEP.BLL.Impl;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Controllers;
+using FSNEP.Core.Abstractions;
 using FSNEP.Core.Calendar;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core.Extensions;
@@ -112,6 +113,15 @@ namespace FSNEP.Tests.Controllers
         public void RoutingHistoryMapsToHistory()
         {
             "~/TimeRecord/History".ShouldMapTo<TimeRecordController>(a => a.History());
+        }
+
+        /// <summary>
+        /// Routing current maps to current.
+        /// </summary>
+        [TestMethod]
+        public void RoutingCurrentMapsToCurrent()
+        {
+            "~/TimeRecord/Current".ShouldMapTo<TimeRecordController>(a => a.Current());
         }
 
         #endregion Routing maps
@@ -484,6 +494,83 @@ namespace FSNEP.Tests.Controllers
 
         #endregion History Tests
 
+        #region Current Tests
+
+        /// <summary>
+        /// Current redirects to history with message when get current returns null.
+        /// </summary>
+        [TestMethod]
+        public void CurrentRedirectsToHistoryWithMessageWhenGetCurrentReturnsNull()
+        {
+            #region Unnecessary Code
+            //var fakeDate = new DateTime(2009, 10, 31);
+            //SystemTime.Now = () => fakeDate;
+
+            //Controller.ControllerContext.HttpContext.User = _principal;
+            //var timeRecords = new List<TimeRecord>();
+            //FakeTimeRecords(timeRecords);
+            //var differentUser = CreateValidUser("DifferentUser");
+
+            //_timeRecord.User = differentUser;
+
+            //foreach (var timeRecord in timeRecords)
+            //{
+            //    timeRecord.User = differentUser; //Make sure non of these have the currentUser.
+            //}
+
+            //timeRecords.Add(new TimeRecord
+            //{
+            //    Month = 09,
+            //    Year = 2009,
+            //    User = User,
+            //    Status = new Status { NameOption = Status.Option.Approved },
+            //    ReviewComment = "ReturnThisRecord1",
+            //    Entries = new List<Entry>(),
+            //    Salary = 1234.56
+            //});
+            //timeRecords.Add(new TimeRecord
+            //{
+            //    Month = 10,
+            //    Year = 2009,
+            //    User = User,
+            //    Status = new Status { NameOption = Status.Option.PendingReview },
+            //    ReviewComment = "ReturnThisRecord2",
+            //    Entries = new List<Entry>(),
+            //    Salary = 1234.56
+            //});
+            
+
+            #endregion Unnecessary Code
+            
+            _timeRecordBll.Expect(a => a.GetCurrent(_principal)).IgnoreArguments().Return(null).Repeat.Once();
+
+            Controller.Current()
+                .AssertActionRedirect()
+                .ToAction<TimeRecordController>(a => a.History());
+            Assert.AreEqual("No current time record available.  You can view your time record history here.", Controller.Message);
+        }
+
+        /// <summary>
+        /// Current redirects to entry when get current returns A time record.
+        /// </summary>
+        [TestMethod]
+        public void CurrentRedirectsToEntryWhenGetCurrentReturnsATimeRecord()
+        {
+            var timeRecord = CreateValidTimeRecord();
+            timeRecord.SetIdTo(2);
+            _timeRecordBll.Expect(a => a.GetCurrent(null)).IgnoreArguments().Return(timeRecord).Repeat.Once();
+            //var result = (RedirectToRouteResult)Controller.Current();
+            //Assert.IsNotNull(result);
+            //Assert.AreEqual("Entry", result.RouteValues["action"]);
+            //Assert.AreEqual(2, result.RouteValues["id"]);
+            Controller.Current()
+                .AssertActionRedirect()
+                .ToAction<TimeRecordController>(a => a.TimeRecordEntry(2));
+            
+        }
+
+        #endregion Current Tests
+
         #region Helper Methods
 
 
@@ -615,7 +702,7 @@ namespace FSNEP.Tests.Controllers
             {
                 FirstName = "FName",
                 LastName = "LName",
-                Salary = 1,
+                Salary = 10000.01,
                 BenefitRate = 2,
                 FTE = 1,
                 IsActive = true,
