@@ -183,7 +183,7 @@ namespace FSNEP.Tests.Controllers
             timeRecord.SetIdTo(5);
             _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
 
-            _userBLL.Expect(a => a.GetAllViewableUsers()).Return(null).Repeat.Once();
+            _userBLL.Expect(a => a.GetAllViewableUsers()).Return(new List<User>()).Repeat.Once();
 
             Controller.PrintViewableTimeRecord(timeRecord.Id).AssertResultIs<HttpUnauthorizedResult>();
         }
