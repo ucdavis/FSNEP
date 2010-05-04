@@ -18,6 +18,14 @@
             <%= this.TextBox("name").Label("Activity Type Name: ")%>
         </p>
         <p>
+            <%= this.TextBox("indicator").MaxLength(2).Label("Indicator: ") %>
+        </p>
+        <p>
+            <label id="activityCategoryId_Label" for="activityCategoryId">Category: </label>
+            <%= Html.DropDownList("activityCategoryId", new SelectList((IEnumerable)ViewData["ActivityCategories"], "ID", "Name"))%>
+            <%= Html.ActionLink<FSNEP.Controllers.LookupController>(a=>a.ActivityCategories(), "Create New Activity Category") %>
+        </p>
+        <p>
             <input type="submit" value="Add Activity Type" />
         </p>
     </fieldset>
@@ -38,7 +46,7 @@
     
         <tr>
             <td>
-                <%= Html.Encode(item.Name) %>
+                <%= Html.Encode(string.Format("{0} ({1}) -- {2}", item.Name, item.Indicator, item.ActivityCategory.Name)) %>
             </td>
             <td>
                 <% using (Html.BeginForm<FSNEP.Controllers.LookupController>(a => a.InactivateActivityType(item.ID)))
