@@ -84,201 +84,6 @@ ORDER BY Date</CommandText>
   </DataSets>
   <Body>
     <ReportItems>
-      <Textbox Name="textbox1">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>FSNEP Activity Record For Documentation</Value>
-                <Style>
-                  <FontWeight>Bold</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>textbox1</rd:DefaultName>
-        <Left>0.9375in</Left>
-        <Height>0.25in</Height>
-        <Width>4.375in</Width>
-        <Style>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="textbox2">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Name: </Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>textbox2</rd:DefaultName>
-        <Top>0.36313in</Top>
-        <Left>0.0625in</Left>
-        <Height>0.25in</Height>
-        <Width>0.625in</Width>
-        <ZIndex>1</ZIndex>
-        <Style>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="textbox3">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!FirstName.Value, "TimeSheetEntries") + " " + First(Fields!LastName.Value, "TimeSheetEntries")</Value>
-                <Style>
-                  <TextDecoration>Underline</TextDecoration>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>textbox3</rd:DefaultName>
-        <Top>0.36313in</Top>
-        <Left>0.8125in</Left>
-        <Height>0.25in</Height>
-        <Width>5in</Width>
-        <ZIndex>2</ZIndex>
-        <Style>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="textbox4">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Month:</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>textbox4</rd:DefaultName>
-        <Top>0.73813in</Top>
-        <Left>0.0625in</Left>
-        <Height>0.25in</Height>
-        <Width>0.625in</Width>
-        <ZIndex>3</ZIndex>
-        <Style>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="textbox5">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=DateValue(First(Fields!Month.Value, "TimeSheetEntries").ToString()+"/1/"+First(Fields!Year.Value, "TimeSheetEntries").ToString()).ToString("MMMM yyyy")</Value>
-                <Style>
-                  <TextDecoration>Underline</TextDecoration>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>textbox5</rd:DefaultName>
-        <Top>0.73813in</Top>
-        <Left>0.8125in</Left>
-        <Height>0.25in</Height>
-        <Width>4.875in</Width>
-        <ZIndex>4</ZIndex>
-        <Style>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="textbox6">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>County/Campus/Organization:</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>textbox6</rd:DefaultName>
-        <Top>1.11313in</Top>
-        <Left>0.0625in</Left>
-        <Height>0.25in</Height>
-        <Width>2in</Width>
-        <ZIndex>5</ZIndex>
-        <Style>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="textbox8">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Committed State Share Hours:____________________ hours __________________ percent</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>textbox8</rd:DefaultName>
-        <Top>1.48813in</Top>
-        <Left>0.0625in</Left>
-        <Height>0.25in</Height>
-        <Width>6.125in</Width>
-        <ZIndex>6</ZIndex>
-        <Style>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
       <Tablix Name="table2">
         <TablixBody>
           <TablixColumns>
@@ -663,77 +468,16 @@ ORDER BY Date</CommandText>
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>TimeSheetEntries</DataSetName>
-        <Top>1.86313in</Top>
+        <Top>0.11312in</Top>
         <Left>0.0625in</Left>
         <Height>0.68in</Height>
         <Width>6.125in</Width>
-        <ZIndex>7</ZIndex>
         <Style>
           <FontSize>8pt</FontSize>
         </Style>
       </Tablix>
-      <Textbox Name="ProjectName">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=IIf(CountDistinct(Fields!ProjectName.Value) = 1, First(Fields!ProjectName.Value), "")</Value>
-                <Style>
-                  <TextDecoration>Underline</TextDecoration>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>ProjectName</rd:DefaultName>
-        <Top>1.11313in</Top>
-        <Left>2.1875in</Left>
-        <Height>0.25in</Height>
-        <Width>3.625in</Width>
-        <ZIndex>8</ZIndex>
-        <Style>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="StatusName">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=IIF(First(Fields!StatusName.Value).ToString() = "Approved", "", "PRELIMINARY")</Value>
-                <Style>
-                  <FontSize>12pt</FontSize>
-                  <FontWeight>ExtraBold</FontWeight>
-                  <TextDecoration>Underline</TextDecoration>
-                  <Color>Red</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>StatusName</rd:DefaultName>
-        <Left>0.1875in</Left>
-        <Height>0.25in</Height>
-        <Width>1.375in</Width>
-        <ZIndex>9</ZIndex>
-        <Style>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
     </ReportItems>
-    <Height>2.65625in</Height>
+    <Height>0.83333in</Height>
     <Style />
   </Body>
   <ReportParameters>
@@ -742,8 +486,307 @@ ORDER BY Date</CommandText>
       <Prompt>Time Record ID</Prompt>
     </ReportParameter>
   </ReportParameters>
-  <Width>6.5in</Width>
+  <Width>6.59042in</Width>
   <Page>
+    <PageHeader>
+      <Height>1.9375in</Height>
+      <PrintOnFirstPage>true</PrintOnFirstPage>
+      <PrintOnLastPage>true</PrintOnLastPage>
+      <ReportItems>
+        <Textbox Name="textbox1">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>FSNEP Activity Record For Documentation</Value>
+                  <Style>
+                    <FontWeight>Bold</FontWeight>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Center</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>textbox1</rd:DefaultName>
+          <Top>0.02677in</Top>
+          <Left>1.03125in</Left>
+          <Height>0.25in</Height>
+          <Width>4.375in</Width>
+          <Style>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="textbox2">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Name: </Value>
+                  <Style />
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>textbox2</rd:DefaultName>
+          <Top>0.38989in</Top>
+          <Left>0.15625in</Left>
+          <Height>0.25in</Height>
+          <Width>0.625in</Width>
+          <ZIndex>1</ZIndex>
+          <Style>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="textbox3">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=First(Fields!FirstName.Value, "TimeSheetEntries") + " " + First(Fields!LastName.Value, "TimeSheetEntries")</Value>
+                  <Style>
+                    <TextDecoration>Underline</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>textbox3</rd:DefaultName>
+          <Top>0.38989in</Top>
+          <Left>0.90625in</Left>
+          <Height>0.25in</Height>
+          <Width>5in</Width>
+          <ZIndex>2</ZIndex>
+          <Style>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="textbox4">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Month:</Value>
+                  <Style />
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>textbox4</rd:DefaultName>
+          <Top>0.76489in</Top>
+          <Left>0.15625in</Left>
+          <Height>0.25in</Height>
+          <Width>0.625in</Width>
+          <ZIndex>3</ZIndex>
+          <Style>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="textbox5">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=DateValue(First(Fields!Month.Value, "TimeSheetEntries").ToString()+"/1/"+First(Fields!Year.Value, "TimeSheetEntries").ToString()).ToString("MMMM yyyy")</Value>
+                  <Style>
+                    <TextDecoration>Underline</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>textbox5</rd:DefaultName>
+          <Top>0.76489in</Top>
+          <Left>0.90625in</Left>
+          <Height>0.25in</Height>
+          <Width>4.875in</Width>
+          <ZIndex>4</ZIndex>
+          <Style>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="textbox6">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>County/Campus/Organization:</Value>
+                  <Style />
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>textbox6</rd:DefaultName>
+          <Top>1.13989in</Top>
+          <Left>0.15625in</Left>
+          <Height>0.25in</Height>
+          <Width>2in</Width>
+          <ZIndex>5</ZIndex>
+          <Style>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="textbox8">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Committed State Share Hours:____________________ hours __________________ percent</Value>
+                  <Style />
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>textbox8</rd:DefaultName>
+          <Top>1.51489in</Top>
+          <Left>0.15625in</Left>
+          <Height>0.25in</Height>
+          <Width>6.125in</Width>
+          <ZIndex>6</ZIndex>
+          <Style>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="ProjectName">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=IIf(CountDistinct(Fields!ProjectName.Value, "TimeSheetEntries") = 1, First(Fields!ProjectName.Value, "TimeSheetEntries"), "")</Value>
+                  <Style>
+                    <TextDecoration>Underline</TextDecoration>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>ProjectName</rd:DefaultName>
+          <Top>1.13989in</Top>
+          <Left>2.28125in</Left>
+          <Height>0.25in</Height>
+          <Width>3.625in</Width>
+          <ZIndex>7</ZIndex>
+          <Style>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="StatusName">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=IIF(First(Fields!StatusName.Value, "TimeSheetEntries").ToString() = "Approved", "", "PRELIMINARY")</Value>
+                  <Style>
+                    <FontSize>12pt</FontSize>
+                    <FontWeight>ExtraBold</FontWeight>
+                    <TextDecoration>Underline</TextDecoration>
+                    <Color>Red</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>StatusName</rd:DefaultName>
+          <Top>0.02677in</Top>
+          <Left>0.28125in</Left>
+          <Height>0.25in</Height>
+          <Width>1.375in</Width>
+          <ZIndex>8</ZIndex>
+          <Style>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="Textbox82">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>="Page "&amp; Globals!PageNumber &amp; " of " &amp; Globals!TotalPages</Value>
+                  <Style />
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox82</rd:DefaultName>
+          <Top>0.02677in</Top>
+          <Left>5.43417in</Left>
+          <Height>0.25in</Height>
+          <Width>1in</Width>
+          <ZIndex>9</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+      </ReportItems>
+      <Style>
+        <Border>
+          <Style>None</Style>
+        </Border>
+      </Style>
+    </PageHeader>
     <PageFooter>
       <Height>1.13542in</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
