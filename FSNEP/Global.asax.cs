@@ -7,7 +7,6 @@ using MvcContrib.Castle;
 using NHibernate;
 using UCDArch.Data.NHibernate;
 using UCDArch.Web.IoC;
-using UCDArch.Web.ModelBinder;
 using UCDArch.Web.Validator;
 
 namespace FSNEP
@@ -20,7 +19,7 @@ namespace FSNEP
         protected void Application_Start()
         {
             #if DEBUG
-            HibernatingRhinos.NHibernate.Profiler.Appender.NHibernateProfiler.Initialize();
+            HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
             #endif
 
             xVal.ActiveRuleProviders.Providers.Add(new ValidatorRulesProvider());
