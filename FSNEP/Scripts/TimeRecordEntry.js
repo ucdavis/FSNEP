@@ -2,6 +2,7 @@
 $(function() {
     DisplayMessage("Message OnLoad");
     PopulateAccounts($("#Project"));
+    PopulateAccounts($("#Adjust_Project"));
 
     $(".AddCalendarEntry").live('click', function() {
         var clicked = $(this);
@@ -103,7 +104,16 @@ $(function() {
         return false;
     });
 
+    $("#Adjust_Project").change(function() { PopulateAccounts(this); });
     $("#Project").change(function() { PopulateAccounts(this); });
+
+    //alert(new Date().getDate());
+
+    $("#Adjust_AdjustmentDate").datepicker({
+        numberOfMonths: 3,
+        maxDate: '-' + new Date().getDate() + 'D'
+    });
+
 });
 
 function UpdateAddEntryUI(id, date, hours) {
@@ -226,13 +236,18 @@ function PopulateAccounts(el) {
     $.getJSON(
         Services.GetAccountsForProject + "/" + projectId,
         null,
-        OnPopulateAccountsComplete);       
+        function(result) {
+            OnPopulateAccountsComplete(result, el);
+        }
+
+    );
 }
 
-function OnPopulateAccountsComplete(result) {
+function OnPopulateAccountsComplete(result, el) {
     LogMessage("Result", result);
     
     var accountSelect = $("#Account");
+    
     accountSelect.empty(); //remove the current options
 
     $(result).each(function() { //append in the new elements

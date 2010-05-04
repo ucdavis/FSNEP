@@ -140,6 +140,49 @@
     </form>
 </div>
 
+<div id="dialogTimeRecordAdjustment" class="TimeRecordAdjustmentDialog" title="Adjust Entry" style="display:block">
+    <%= Html.ClientSideValidation<FSNEP.Core.Domain.TimeRecordEntry>("Adjust")
+            .AddRule("AdjustmentDate", new xVal.Rules.DataTypeRule(xVal.Rules.DataTypeRule.DataType.Date))
+    %>
+    <%= Html.ClientSideValidation<FSNEP.Core.Domain.Entry>("Adjust") %>
+    <form id="formAdjustEntry" method="post" action="<%= Url.Action("AddEntry", "TimeRecord") %>">
+    <fieldset>
+        <legend>Entry Information</legend>
+        <p>
+            <%= this.TextBox("Adjust_AdjustmentDate").Class("required").Label("Adjusted Date: ") %>
+        </p>
+        <p>
+            <%= this.TextBox("Adjust_Hours").Class("required").Label("Hours:")%>
+        </p>
+        <p>
+            <label for="Adjust_ActivityType">Activity Type:</label>
+            <select id="Adjust_ActivityType" name="Adjust_ActivityType" class="required">
+                <% Html.RenderPartial("ActivityTypeSelectOptions", Model.ActivityCategories); %>
+            </select>
+        </p>
+        <p>
+            <%= this.Select("Adjust_FundType").Options(Model.FundTypes, f => f.Id, f => f.Name).Label("Fund Type:").Class("required").Disabled(Model.FundTypes.Count() == 1)%>
+        </p>
+        <p>
+            <%= this.Select("Adjust_Project").Options(Model.Projects, p => p.Id, p => p.Name).Label("Project:").Class("required").Disabled(Model.Projects.Count() == 1)%>
+        </p>
+        <p>
+            <label for="Adjust_Account">Account:</label>
+            <select class="required" id="Adjust_Account" name="Adjust.Account">
+                <option value="">Project Has No Accounts</option>
+            </select>
+        </p>
+        <p>
+            <%= this.TextArea("Adjust_Comment").Columns(25).Class("required").Label("Comments:")%>
+        </p>
+        <p>
+            <input type="submit" value="Save!" />
+        </p>
+        
+    </fieldset>
+    </form>
+</div>
+
 <div id="dialogTimeRecordEdit" class="TimeRecordEditDialog" title="Edit Entry" style="display:none">
     <span style="display: none;" id="spanLoadingEntryDetails">
         <br/>
