@@ -295,6 +295,7 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [Transaction]
         public ActionResult InactivateProject(int projectId)
         {
             //get the project
@@ -307,15 +308,9 @@ namespace FSNEP.Controllers
                 return this.RedirectToAction(a => a.Projects());
             }
 
-            //inactivate the project
-            using (var ts = new TransactionScope())
-            {
-                project.IsActive = false;
-
-                Repository.OfType<Project>().EnsurePersistent(project);
-
-                ts.CommitTransaction();
-            }
+            //inactivate and save the project
+            project.IsActive = false;
+            Repository.OfType<Project>().EnsurePersistent(project);
 
             Message = "Project Removed Successfully";
 
@@ -323,6 +318,7 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [Transaction]
         public ActionResult CreateProject(string newProjectName)
         {
             var newProject = new Project {IsActive = true, Name = newProjectName};
@@ -337,12 +333,7 @@ namespace FSNEP.Controllers
             }
 
             //Add the new project
-            using (var ts = new TransactionScope())
-            {
-                Repository.OfType<Project>().EnsurePersistent(newProject);
-
-                ts.CommitTransaction();
-            }
+            Repository.OfType<Project>().EnsurePersistent(newProject);
 
             Message = "Project Created Successfully";
 
