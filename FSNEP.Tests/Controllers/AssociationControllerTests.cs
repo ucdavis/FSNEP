@@ -13,7 +13,7 @@ using UCDArch.Testing;
 namespace FSNEP.Tests.Controllers
 {
     [TestClass]
-    public class AssociationControllerTests : FSNEP.Tests.Core.ControllerTestBase<AssociationController>
+    public class AssociationControllerTests : Core.ControllerTestBase<AssociationController>
     {
         [TestMethod]
         public void RoutingProjectIdMapsToProjectWithIdParam()
@@ -167,9 +167,10 @@ namespace FSNEP.Tests.Controllers
             accountRepository.Expect(a => a.Queryable).Return(accounts).Repeat.Any();
             for (int i = 0; i < 5; i++)
             {
-                accountRepository.Expect(a => a.GetById(i+1)).Return(accountList[i]).Repeat.Any();
+                int localId = i + 1;
+                accountRepository.Expect(a => a.GetById(localId)).Return(accountList[i]).Repeat.Any();
             }
-            
+
 
             Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository).Repeat.Any();
         }
