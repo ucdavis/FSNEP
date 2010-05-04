@@ -14,6 +14,7 @@ Begin DataProject = "FSNEP.SQL"
       End
    End
    Begin Folder = "Reporting"
+      Script = "udf_QuarterTotalHours.sql"
       Script = "udf_SumOfExpensesByMonth.sql"
       Script = "udf_SumOfHoursByMonth.sql"
       Script = "usp_GenerateExpenseCostShare.sql"
