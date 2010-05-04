@@ -53,8 +53,9 @@
             <a id="A1" href='<%= Url.Action("Index", "Home") %>' class="homebutton"><img id="Img1" src='<%= Url.Content("~/Images/bannertop.jpg") %>' alt="FSNEP Time Record/Cost Share Reporting" /></a>
         </div>
         
-        <% if (true /*Trish you can change this to true when working on the menu*/) Html.RenderAction("Menu", "Home"); %>
-        
+        <div id="menu-section" class="home">
+            <% if (true /*Trish you can change this to true when working on the menu*/) Html.RenderAction("Menu", "Home"); %>
+        </div>
         
         <div id="welcome">
             <% Html.RenderPartial("LogOnUserControl"); %>
