@@ -35,8 +35,8 @@ Begin DataProject = "FSNEP.SQL"
    End
    Begin Folder = "SPROCs"
       Script = "NotifyCostShareUsers.sql"
-      Script = "NotifyTimeRecordUsers.sql"
       Script = "usp_NotifyCertifiers.sql"
+      Script = "usp_NotifyTimeRecordUsers.sql"
       Script = "usp_NotifyUsersOfSemiAnnualCertification.sql"
    End
 End
