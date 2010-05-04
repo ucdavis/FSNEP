@@ -29,6 +29,11 @@ namespace FSNEP.BLL.Dev
             return record.User.UserName == user.Identity.Name;
         }
 
+        /// <summary>
+        /// True if the user can review this sheet.
+        /// This is if they are the user's supervisor or 
+        /// A delegate of the supervisor can also access it
+        /// </summary>
         public virtual bool HasReviewAccess(IPrincipal user, T record)
         {
             Check.Require(record != null);
@@ -178,7 +183,7 @@ namespace FSNEP.BLL.Dev
         /// <remarks>
         /// Criteria for a record being visible
         /// 1) Current user is the supervisor of the record's owner
-        /// TODO: 2) Current user is a delegate for a supervisor who supervises the record's owner
+        /// 2) Current user is a delegate for a supervisor who supervises the record's owner
         /// </remarks>
         /// <param name="user">The user who will review the record</param>
         public virtual IEnumerable<T> GetReviewableAndCurrentRecords(IPrincipal user)
@@ -186,7 +191,8 @@ namespace FSNEP.BLL.Dev
             var reviewableAndCurrentStatuses = new[] {"PendingReview", "Current"};
 
             var records = _repository.OfType<T>().Queryable
-                .Where(x => x.User.Supervisor.UserName == user.Identity.Name)
+                .Where(x => x.User.Supervisor.UserName == user.Identity.Name
+                        || (x.User.Supervisor.Delegate != null && x.User.Supervisor.Delegate.UserName == user.Identity.Name))
                 .Where(x => reviewableAndCurrentStatuses.Contains(x.Status.Name))
                 .OrderBy(x => x.User.LastName)
                 .ThenBy(x => x.Year)

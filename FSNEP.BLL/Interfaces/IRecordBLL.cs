@@ -51,7 +51,7 @@ namespace FSNEP.BLL.Interfaces
         /// <remarks>
         /// Criteria for a record being visible
         /// 1) Current user is the supervisor of the record's owner
-        /// TODO: 2) Current user is a delegate for a supervisor who supervises the record's owner
+        /// 2) Current user is a delegate for a supervisor who supervises the record's owner
         /// </remarks>
         /// <param name="user">The user who will review the record</param>
         IEnumerable<T> GetReviewableAndCurrentRecords(IPrincipal user);
