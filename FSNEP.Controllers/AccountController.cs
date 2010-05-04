@@ -52,6 +52,7 @@ namespace FSNEP.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
+        [BypassAntiForgeryToken]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Needs to take same parameter type as Controller.Redirect()")]
         public ActionResult LogOn(string userName, string password, bool rememberMe, string returnUrl)
@@ -101,6 +102,7 @@ namespace FSNEP.Controllers
         /// </summary>
         [AcceptPost]
         [Transaction]
+        [BypassAntiForgeryToken]
         public ActionResult NewUser(Guid? id, NewUserViewModel viewModel)
         {
             var user = Repository.OfType<User>().Queryable.Where(u => u.Token == id).SingleOrDefault();
@@ -167,6 +169,7 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [BypassAntiForgeryToken]
         public ActionResult ForgotPassword(string id)
         {
             var member = MembershipService.GetUser(id);
@@ -196,6 +199,7 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        [BypassAntiForgeryToken]
         public ActionResult ResetPassword(string id, string passwordAnswer)
         {
             var member = MembershipService.GetUser(id);
@@ -255,6 +259,7 @@ namespace FSNEP.Controllers
 
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
+        [BypassAntiForgeryToken]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Exceptions result in password not being changed.")]
         public ActionResult ChangePassword(string currentPassword, string newPassword, string confirmPassword)
