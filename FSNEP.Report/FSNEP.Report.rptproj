@@ -43,7 +43,8 @@
       <Name>Release</Name>
       <Platform>Win32</Platform>
       <Options>
-        <TargetFolder>FSNEP.Report</TargetFolder>
+        <TargetServerURL>http://blotto.caesdo.caes.ucdavis.edu/reportserver</TargetServerURL>
+        <TargetFolder>FSNEP2</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
       </Options>
     </Configuration>
