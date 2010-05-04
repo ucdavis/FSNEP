@@ -16,8 +16,6 @@
         <img src="<%= Url.Content("~/Images/menu-time.png") %>" alt="Time Records" />
     <ul>
         <li>
-            <%=Html.ActionLink("View Time Record #2", "Entry", "TimeRecord", new {id = 2}, null)%></li>
-        <li>
             <%=Html.ActionLink<TimeRecordController>(x => x.Current(), "Current time record")%></li>
         <li>
             <%=Html.ActionLink<TimeRecordController>(x => x.History(), "Time Record History")%></li>
