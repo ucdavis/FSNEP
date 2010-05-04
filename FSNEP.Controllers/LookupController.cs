@@ -31,6 +31,34 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
+        public ActionResult InactivateProject(int projectId)
+        {
+            //get the project
+            var project = ProjectBLL.Repository.GetNullableByID(projectId);
+
+            if (project == null)
+            {
+                Message = "Project Not Found";
+
+                return this.RedirectToAction(a => a.Projects());
+            }
+
+            //inactivate the project
+            using (var ts = new TransactionScope())
+            {
+                project.IsActive = false;
+
+                ProjectBLL.Repository.EnsurePersistent(project);
+
+                ts.CommitTransaction();
+            }
+
+            Message = "Project Removed Successfully";
+
+            return this.RedirectToAction(a => a.Projects());
+        }
+
+        [AcceptPost]
         public ActionResult CreateProject(string newProjectName)
         {
             var newProject = new Project {IsActive = true, Name = newProjectName};

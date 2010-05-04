@@ -10,33 +10,25 @@
 
     <table>
         <tr>
-            <th></th>
             <th>
                 Name
             </th>
-            <th>
-                IsActive
-            </th>
-            <th>
-                ID
-            </th>
+            <th></th>
         </tr>
 
     <% foreach (var item in Model) { %>
     
         <tr>
             <td>
-                <%= Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) %> |
-                <%= Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })%>
-            </td>
-            <td>
                 <%= Html.Encode(item.Name) %>
             </td>
             <td>
-                <%= Html.Encode(item.IsActive) %>
-            </td>
-            <td>
-                <%= Html.Encode(item.ID) %>
+                <% using (Html.BeginForm<FSNEP.Controllers.LookupController>(a => a.InactivateProject(item.ID)))
+                   { %>
+                
+                    <input type="submit" value="Inactivate" />
+                
+                <%} %>
             </td>
         </tr>
     
