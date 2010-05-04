@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<FSNEP.Controllers.CostShareEntryViewModel>" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<CostShareEntryViewModel>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
 	Entry
@@ -69,7 +69,7 @@
                 <%= this.TextBox("Entry.Description").Label("Expense Description:")%>
             </p>
             <p>
-                <%= this.FileUpload("PostedFile").Label("Expense Recepit:") %>
+                <%= this.FileUpload("PostedFile").Label("Expense Recepit (PDF):") %>
             </p>
             <p>
                 <%= this.Select("Entry.FundType")
