@@ -1,4 +1,5 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<FSNEP.Controllers.UserViewModel>" %>
+
 <fieldset>
     <legend>User Information</legend>
     <table>
@@ -69,7 +70,11 @@
                 Supervisor:
             </td>
             <td>
-                <%= Html.DropDownListFor(u=>u.User.Supervisor, new SelectList(Model.Supervisors, "ID", "FullNameLastFirst"), "Select A Supervisor") %>
+                <%= this.Select("User.Supervisor")
+                                    .FirstOption("--Select A Supervisor--")
+                                    .HideFirstOptionWhen(Model.User.Supervisor != null)
+                                    .Options(Model.Supervisors, s=>s.ID, s=>s.FullNameLastFirst)
+                                    .Selected(Model.User.Supervisor != null ? Model.User.Supervisor.ID : Guid.Empty) %>
             </td>
             <td>
                 <%= Html.ValidationMessage("SupervisorID") %>
@@ -80,9 +85,7 @@
                 Projects:
             </td>
             <td>
-                <%= Html.ListBox("User.Projects", new MultiSelectList(Model.Projects, "ID", "Name", Model.User.Projects.Select(a=>a.ID))) %>
-                <%--<%= this.MultiSelect("User.Projects").Options(new MultiSelectList(Model.Projects, "ID", "Name", Model.User.Projects.Select(a=>a.ID)))%>--%>
-                <%--<%= this.MultiSelect("ProjectList").Options(Model.Projects) %>--%>
+                <%= this.MultiSelect("User.Projects").Options(Model.Projects, a=>a.ID, a=>a.Name).Selected(Model.User.Projects.Select(a=>a.ID)) %>
             </td>
             <td>
                 <%= Html.ValidationMessage("User.Projects") %>
@@ -101,7 +104,7 @@
                     
                      %>
             
-                <%= this.MultiSelect("User.FundTypes").Options(new MultiSelectList(Model.FundTypes, "ID", "Name")).Selected(fundtypesids) %>
+                <%--<%= this.MultiSelect("User.FundTypes").Options(new MultiSelectList(Model.FundTypes, "ID", "Name")).Selected(fundtypesids) %>--%>
                 <%--<%= this.MultiSelect("FundTypeList").Options(Model.FundTypes) %>--%>
             </td>
             <td>
