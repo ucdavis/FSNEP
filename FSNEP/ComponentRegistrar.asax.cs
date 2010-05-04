@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Security.Principal;
 using Castle.Windsor;
