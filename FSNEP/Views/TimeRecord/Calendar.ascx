@@ -43,7 +43,7 @@
            { %>
            
         <a href="javascript:;" id="addEntry<%= dayId %>" class="AddCalendarEntry">
-            Add
+            <img src="../../Images/add.gif" alt="+" />
         </a>
         <% } %>
         <table>
@@ -59,7 +59,7 @@
                             </a>
                         </span>
                         <span class="deleteEntry">
-                            <a href="javascript:;" id='deleteEntry<%= entry.Id %>' class="DeleteCalendarEntry">X</a>
+                            <a href="javascript:;" id='deleteEntry<%= entry.Id %>' class="DeleteCalendarEntry"><img src="../../Images/x.gif" alt="X" /></a>
                         </span>
                         <input type="hidden" id="entryHours<%= entry.Id %>" value="<%= entry.Hours %>" />
                     </td>
@@ -72,7 +72,7 @@
     <% } %>
 </div>
 
-<div class="TimeRecordOptionsBox">
+<div class="TimeRecordOptionsBox clear">
     <div class="TimeRecordTotals">
         TimeRecord Totals: <span id="timeSheetHours"><%= Html.Encode(Model.TotalHours) %></span> Hour(s)
     </div>

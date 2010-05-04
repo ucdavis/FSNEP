@@ -34,10 +34,9 @@ a:link {color:#1a4b5e;}
 a:visited {color:#1a4b5e;}
 a:hover {text-decoration:none;}
 
-.centerit 
-{
-	margin:0 auto;
-}
+.centerit {margin:0 auto;}
+.clear {clear: both;}
+.error {color:Red;}
 
 
 
@@ -235,35 +234,6 @@ ul#navigation2 {
    top:1px;
 }
 
-ul#navigation3 {
-   list-style:none;
-   list-style-image: none;
-   padding:0;
-   width:300px;
-   margin:0 0 0 50px;
-}
-
-/* IE7 Only */
-*:first-child+html ul#navigation3 {
-   margin:-5px 0 0 70px;
-}
-
-#navigation3 li a.homebutton{
-   height:0px; 
-   padding-top:31px;
-   width:85px;
-   overflow:hidden;
-   background:url(../Images/but_home.gif) no-repeat;
-}
-
-#navigation3 li a.homebutton:hover{
-   height:0px; 
-   padding-top:31px;
-   width:85px;
-   overflow:hidden;
-   background:url(../Images/but_home2.gif) no-repeat;
-}
-
 
 /* ----------------- */
 /* ==menu            */
@@ -285,6 +255,56 @@ ul#navigation3 {
 .menu-section img {padding: .5em 0;}
 .menu-section ul {padding: 0px; margin: 0px;}
 .menu-section li {list-style: none; margin: 0 0 .2em 0;}
+
+/* ----- dropdown ----- */
+
+ul#navigation3 {
+   list-style:none;
+   list-style-image: none;
+   padding:0;
+   width:800px;
+   margin:-5px 0 0 50px;
+}
+
+/* IE7 Only */
+*:first-child+html ul#navigation3 {
+   margin:-5px 0 0 70px;
+}
+
+#navigation3 li a.homebutton
+{
+    /*
+   height:0px; 
+   padding-top:31px;
+   width:85px;
+   overflow:hidden;
+   background:url(../Images/but_home.gif) no-repeat; */
+}
+
+#navigation3 li a.homebutton:hover
+{
+    /*
+   height:0px; 
+   padding-top:31px;
+   width:85px;
+   overflow:hidden;
+   background:url(../Images/but_home2.gif) no-repeat; */
+}
+
+#menu {margin: -5px 0 0 25px;}
+#menu li {margin: 0; padding: 0; float: left; display: block; width: 16em; 
+          font-size: .7em; text-align: center;
+          background: url(../Images/menu-bg.gif) left top; 
+          height: 22px; padding: 9px 5px 0; 
+          border-left: 1px solid #b9b9af; border-right: 1px solid #ebebe8;}
+#menu li a {width: 16em; height: 31px; display: block;}
+#menu li:hover {background-position: left bottom;}
+#menu li a {text-decoration: none;}
+
+#menu li ul {position: absolute; left: -9999px; margin: 5px 0 0 -4em;}
+#menu li li {clear: left; font-size: 1em; margin-left: -2px;}
+#menu li:hover ul {left: auto;}
+
 
 
 
@@ -479,15 +499,6 @@ ul#navigation3 {
 
 /*---------------------- MISC ----------------------------
 ----------------------------------------------------------*/
-.clear
-{
-    clear: both;
-}
-
-.error
-{
-    color:Red;
-}
 
 #logindisplay
 {
