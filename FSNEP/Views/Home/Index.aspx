@@ -13,7 +13,7 @@
     <div class="menu-section timerecords">
     <h3>
         Time Records</h3>
-        <img src="../../Images/menu-time.png" alt="Time Records" />
+        <img src="<%= Url.Content("~/Images/menu-time.png") %>" alt="Time Records" />
     <ul>
         <li>
             <%=Html.ActionLink("View Time Record #2", "Entry", "TimeRecord", new {id = 2}, null)%></li>
@@ -25,7 +25,7 @@
     <div class="menu-section costshare">
     <h3>
         Cost Share</h3>
-        <img src="../../Images/menu-share.png" alt="Cost Share" />
+        <img src="<%= Url.Content("~/Images/menu-share.png") %>" alt="Cost Share" />
     <ul>
         <li>
             <%=Html.ActionLink<CostShareController>(x => x.Current(), "Current Cost Share")%></li>
@@ -33,7 +33,7 @@
     </ul></div>
     <div class="menu-section supervisor">
     <h3>Supervisor</h3>
-        <img src="../../Images/menu-supe.png" alt="Supervisor" />
+        <img src="<%= Url.Content("~/Images/menu-supe.png") %>" alt="Supervisor" />
     <ul>
         <li><%= Html.ActionLink<SupervisorController>(x=>x.TimeRecordList(), "Time Record Review") %></li>
         <li><%= Html.ActionLink<SupervisorController>(x=>x.CostShareList(), "Cost Share Review") %></li>
@@ -42,7 +42,7 @@
     <div class="menu-section admin">
     <h3>
         Administration</h3>
-        <img src="../../Images/menu-admin.png" alt="Administration" />
+        <img src="<%= Url.Content("~/Images/menu-admin.png") %>" alt="Administration" />
     <ul>
         <li>
             <%=Html.ActionLink("Lookups (Project)", "Projects", "Lookup")%></li>
@@ -60,7 +60,7 @@
     </ul></div>
     <div class="menu-section reports">
         <h3>Reports</h3>
-        <img src="../../Images/menu-reports.png" alt="Reports" />
+        <img src="<%= Url.Content("~/Images/menu-reports.png") %>" alt="Reports" />
     <ul>
         <li>
             <%= Html.ActionLink("Cost Share", "CostShare", "Report") %>
