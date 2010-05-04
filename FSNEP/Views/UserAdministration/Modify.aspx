@@ -12,7 +12,8 @@
     <%= Html.ValidationSummary("User modification was unsuccessful. Please correct the errors and try again.") %>
 
     <% using (Html.BeginForm()) {%>
-
+    <%= Html.AntiForgeryToken() %>
+    
         <h3>
             Modifying <%= Html.Encode(string.Format("{0} ({1})", Model.User.FullName, Model.User.UserName)) %>
         </h3>

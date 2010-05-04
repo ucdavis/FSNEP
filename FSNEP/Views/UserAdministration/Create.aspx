@@ -12,7 +12,8 @@
     <%= Html.ValidationSummary("User creation was unsuccessful. Please correct the errors and try again.") %>
 
     <% using (Html.BeginForm()) {%>
-        
+    <%= Html.AntiForgeryToken() %>
+    
     <fieldset>
         <legend>New User Info</legend>
         <table>
