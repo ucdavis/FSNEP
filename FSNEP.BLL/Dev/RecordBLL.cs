@@ -85,7 +85,7 @@ namespace FSNEP.BLL.Dev
             if (SheetExists(user, currentDate))
             {
                 //Does a sheet exist for the next month? (current calendar month)
-                if (SheetExists(user, DateTime.Now))
+                if (SheetExists(user, SystemTime.Now()))
                 {
                     return default(T); //Don't create the sheet if one already exists
                 }
@@ -114,7 +114,7 @@ namespace FSNEP.BLL.Dev
         {
             var tracking = new RecordTracking
             {
-                ActionDate = DateTime.Now,
+                ActionDate = SystemTime.Now(),
                 Record = record,
                 Status = record.Status,
                 UserName = user.Identity.Name
@@ -143,7 +143,7 @@ namespace FSNEP.BLL.Dev
         /// <remarks>Only the month and year returns from this function should be used.</remarks>
         public DateTime GetCurrentSheetDate()
         {
-            DateTime currentDate = DateTime.Now;
+            DateTime currentDate = SystemTime.Now();
 
             if (currentDate.Day <= 30) //if we are in the first 30 days of the month, we want to use the previous month
             {

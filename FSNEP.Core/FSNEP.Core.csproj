@@ -70,6 +70,7 @@
     <Compile Include="Abstractions\MessageGateway.cs" />
     <Compile Include="Abstractions\Providers.cs" />
     <Compile Include="Abstractions\RoleNames.cs" />
+    <Compile Include="Abstractions\SystemTime.cs" />
     <Compile Include="Calendar\TimeRecordCalendarDay.cs" />
     <Compile Include="Calendar\TimeRecordCalendarGenerator.cs" />
     <Compile Include="Calendar\TimeRecordCalendarMonth.cs" />
