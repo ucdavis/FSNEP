@@ -141,6 +141,27 @@ namespace FSNEP.Controllers
 
             return this.RedirectToAction(x => x.Entry(parentRecordId));
         }
+
+        [AcceptPost]
+        [Transaction]
+        [ValidateAntiForgeryToken]
+        public ActionResult Submit(int id)
+        {
+            var costShare = _costShareRepository.GetNullableByID(id);
+
+            Check.Require(costShare != null, "Invalid cost share indentifier");
+
+            if (!_costShareBLL.HasAccess(CurrentUser, costShare))
+            {
+                return RedirectToErrorPage(string.Format("{0} does not have access to submit this cost share", CurrentUser.Identity.Name));
+            }
+
+            _costShareBLL.Submit(costShare, CurrentUser);
+
+            Message = "Cost Share Submitted Successfully";
+
+            return RedirectToAction("History");
+        }
     }
 
     public class CostShareReviewViewModel

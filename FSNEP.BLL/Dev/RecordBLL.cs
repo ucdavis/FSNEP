@@ -174,5 +174,25 @@ namespace FSNEP.BLL.Dev
 
             return currentDate;
         }
+
+        /// <summary>
+        /// Submits the given record
+        /// </summary>
+        public void Submit(T record, IPrincipal user)
+        {
+            var recordStatusOption = record.Status.NameOption;
+
+            Check.Require(
+                recordStatusOption == Status.Option.Current || recordStatusOption == Status.Option.Disapproved,
+                "Record must be have either the current or disapproved status in order to be submitted");
+
+
+            Status pendingReviewStatus = _repository.OfType<Status>()
+                .Queryable.Where(x => x.Name == Status.GetName(Status.Option.PendingReview)).Single();
+
+            record.Status = pendingReviewStatus;//Set the status to "Pending Review" (submitted for review)
+
+            PersistRecordWithTracking(record, user, _repository);
+        }
     }
 }

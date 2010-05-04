@@ -97,6 +97,17 @@
     <%
        }%>
 
-    <% Html.RenderPartial("ExistingCostShareEntries", Model.CostShareEntries); %>
+    <div id="ExistingEntries">
+        <% Html.RenderPartial("ExistingCostShareEntries", Model.CostShareEntries); %>
+    </div>
+    
+    <div id="SubmitRecord">
+        <% using (Html.BeginForm("Submit", "CostShare", new {id = Model.CostShare.Id})) { %>
+            <%= Html.AntiForgeryToken() %>
+        
+            <input type="submit" value="Submit Final" />
+        
+        <% } %>
+    </div>
     
 </asp:Content>

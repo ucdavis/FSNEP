@@ -37,5 +37,7 @@ namespace FSNEP.BLL.Interfaces
         T GetCurrentRecord(IPrincipal user);
 
         DateTime GetCurrentSheetDate();
+        
+        void Submit(T record, IPrincipal user);
     }
 }

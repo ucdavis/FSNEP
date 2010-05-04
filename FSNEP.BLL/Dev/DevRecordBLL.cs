@@ -45,5 +45,10 @@ namespace FSNEP.BLL.Dev
         {
             throw new NotImplementedException();
         }
+
+        public void Submit(T record, IPrincipal user)
+        {
+            //Do nothing
+        }
     }
 }
