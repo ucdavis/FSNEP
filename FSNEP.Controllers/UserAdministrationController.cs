@@ -3,7 +3,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using CAESArch.BLL;
-using CAESArch.Core.DataInterfaces;
 using FSNEP.BLL.Impl;
 using FSNEP.Controllers.Helpers;
 using FSNEP.Controllers.Helpers.Extensions;
@@ -75,129 +74,126 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult Create(CreateUserViewModel model, Guid? supervisorId, IEnumerable<int> projectList,
-                                       IEnumerable<int> fundTypeList, List<string> roleList)
+        public ActionResult Create(CreateUserViewModel model, List<string> roleList)
         {
-            throw new NotImplementedException();
-
-            /*
-            var user = model.User;
-            user.Supervisor = new User();
-
             ValidationHelper<CreateUserViewModel>.Validate(model, ModelState); //Validate the create user properties
 
-            CheckUserProperties(supervisorId, projectList, fundTypeList); //Make sure the associations are set
+            ValidationHelper<User>.Validate(model.User, ModelState, "User"); //validate the user properties
 
-            ValidationHelper<User>.Validate(user, ModelState, "User"); //validate the user properties
+            CheckUserAssociations(model.User); //Make sure the associations are set
 
-            if (roleList == null) ModelState.AddModelError("RoleList", "User must have at least one role");
+            if (roleList == null || roleList.Count == 0)
+                ModelState.AddModelError("RoleList", "User must have at least one role");
 
             if (!ModelState.IsValid)
             {
-                return Create();
-            }
+                //If we aren't valid, return to the create page
+                var viewModel = CreateUserViewModel.Create(UserBLL);
+                viewModel.TransferValuesFrom(model);
 
-            PopulateUserProperties(user, supervisorId, projectList, fundTypeList);
+                viewModel.UserRoles = roleList;
 
-            EnsureProperRoles(roleList, user);
-
-            MembershipCreateStatus createStatus;
-
-            //Create the user
-            MembershipUser membershipUser = UserBLL.UserAuth.MembershipService.CreateUser(model.UserName,
-                                                                                          DefaultPassword,
-                                                                                          model.Email, model.Question,
-                                                                                          model.Answer, true, null,
-                                                                                          out createStatus);            
-            if (createStatus == MembershipCreateStatus.Success)
-            {
-                UserBLL.AddUserToRoles(model.UserName, roleList);
+                return View(viewModel);
             }
             else
             {
-                //TODO: provide more meaningful return values as they are added and link them to specific fields (Rememeber Unit Tests)
-                switch (createStatus)
+                var user = model.User;
+
+                //Set the current user as the new user's creator
+                user.CreatedBy = UserBLL.GetUser();
+
+                //User is valid, let's go through the create process
+                EnsureProperRoles(roleList, user);
+
+                MembershipCreateStatus createStatus;
+
+                //Create the user
+                MembershipUser membershipUser = UserBLL.UserAuth.MembershipService.CreateUser(model.UserName,
+                                                                                              DefaultPassword,
+                                                                                              model.Email,
+                                                                                              model.Question,
+                                                                                              model.Answer, true, null,
+                                                                                              out createStatus);
+                if (createStatus == MembershipCreateStatus.Success)
                 {
-                    case MembershipCreateStatus.DuplicateEmail:
-                        //This is currently disabled in the Web.config
-                        ModelState.AddModelError("_FORM", "Create Failed Duplicate Email");
-                        return Create();
-                    case MembershipCreateStatus.DuplicateProviderUserKey:
-                        ModelState.AddModelError("_FORM", "Create Failed Duplicate Provider User Key");
-                        return Create();
-                    case MembershipCreateStatus.DuplicateUserName:
-                        //This one should be working 
-                        ModelState.AddModelError("UserName", "Username already exists");
-                        return Create();                        
-                    case MembershipCreateStatus.InvalidAnswer:
-                        ModelState.AddModelError("_FORM", "Create Failed Invalid Answer");
-                        return Create();
-                    case MembershipCreateStatus.InvalidEmail:
-                        ModelState.AddModelError("_FORM", "Create Failed Invalid Email");
-                        return Create();
-                    case MembershipCreateStatus.InvalidPassword:
-                        ModelState.AddModelError("_FORM", "Create Failed Invalid Password");
-                        return Create();
-                    case MembershipCreateStatus.InvalidProviderUserKey:
-                        ModelState.AddModelError("_FORM", "Create Failed Invalid Provider User Key");
-                        return Create();
-                    case MembershipCreateStatus.InvalidQuestion:
-                        ModelState.AddModelError("_FORM", "Create Failed Invalid Question");
-                        return Create();
-                    case MembershipCreateStatus.InvalidUserName:
-                        ModelState.AddModelError("_FORM", "Create Failed Invalid User Name");
-                        return Create();
-                    case MembershipCreateStatus.ProviderError:
-                        ModelState.AddModelError("_FORM", "Create Failed Provider Error");
-                        return Create();
-                    case MembershipCreateStatus.Success:
-                        break;
-                    case MembershipCreateStatus.UserRejected:
-                        ModelState.AddModelError("_FORM", "Create Failed User Rejected");
-                        return Create();
-                    default:
-                        ModelState.AddModelError("_FORM", "Create Failed");
-                        return Create();
-
+                    UserBLL.AddUserToRoles(model.UserName, roleList);
                 }
-                
+                else
+                {
+                    //This approach clears out all entered info for the user if there is an error
+                    switch (createStatus)
+                    {
+                        case MembershipCreateStatus.DuplicateEmail:
+                            //This is currently disabled in the Web.config
+                            ModelState.AddModelError("_FORM", "Create Failed Duplicate Email");
+                            return Create();
+                        case MembershipCreateStatus.DuplicateProviderUserKey:
+                            ModelState.AddModelError("_FORM", "Create Failed Duplicate Provider User Key");
+                            return Create();
+                        case MembershipCreateStatus.DuplicateUserName:
+                            //This one should be working 
+                            ModelState.AddModelError("UserName", "Username already exists");
+                            return Create();
+                        case MembershipCreateStatus.InvalidAnswer:
+                            ModelState.AddModelError("_FORM", "Create Failed Invalid Answer");
+                            return Create();
+                        case MembershipCreateStatus.InvalidEmail:
+                            ModelState.AddModelError("_FORM", "Create Failed Invalid Email");
+                            return Create();
+                        case MembershipCreateStatus.InvalidQuestion:
+                            ModelState.AddModelError("_FORM", "Create Failed Invalid Question");
+                            return Create();
+                        case MembershipCreateStatus.InvalidUserName:
+                            ModelState.AddModelError("_FORM", "Create Failed Invalid User Name");
+                            return Create();
+                        case MembershipCreateStatus.ProviderError:
+                            ModelState.AddModelError("_FORM", "Create Failed Provider Error");
+                            return Create();
+                        case MembershipCreateStatus.Success:
+                            break;
+                        case MembershipCreateStatus.UserRejected:
+                            ModelState.AddModelError("_FORM", "Create Failed User Rejected");
+                            return Create();
+                        default:
+                            ModelState.AddModelError("_FORM", "Create Failed");
+                            return Create();
+
+                    }
+                }
+
+
+
+                user.SetUserID((Guid) membershipUser.ProviderUserKey);
+
+                user.Token = Guid.NewGuid(); //setup the new user token
+
+                var ts = new TransactionScope();
+
+                try
+                {
+                    //save the user
+                    UserBLL.EnsurePersistent(user);
+
+                    var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser(user.Supervisor.ID).Email;
+                    MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail,
+                                                        Url.AbsoluteAction("Index", "Home", new {token = user.Token}));
+
+                    ts.CommitTransaction();
+                }
+                catch (Exception)
+                {
+                    ts.RollBackTransaction();
+
+                    //delete the user then throw the exception
+                    UserBLL.UserAuth.MembershipService.DeleteUser(model.UserName);
+
+                    throw;
+                }
+
+                Message = string.Format("{0} Created Successfully", model.UserName);
+
+                return this.RedirectToAction(a => a.List());
             }
-
-            
-
-            user.SetUserID((Guid)membershipUser.ProviderUserKey);
-
-            user.Token = Guid.NewGuid(); //setup the new user token
-
-            var ts = new TransactionScope();
-
-            try
-            {
-                //save the user
-                UserBLL.EnsurePersistent(user);
-
-                //Send the user a message
-                //var newUserTokenPath = Url.AbsoluteAction("Index", "Home", new { token = user.Token });
-                //var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser(user.Supervisor.ID).Email;
-                //MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail, newUserTokenPath);
-
-                var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser(user.Supervisor.ID).Email;
-                MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail, Url.AbsoluteAction("Index", "Home", new { token = user.Token }));
-
-                ts.CommitTransaction();
-            }
-            catch (Exception)
-            {
-                ts.RollBackTransaction();
-
-                UserBLL.UserAuth.MembershipService.DeleteUser(model.UserName);
-                //delete the user then throw the exception
-
-                throw;
-            }
-
-            return this.RedirectToAction<HomeController>(a => a.Index());
-             */
         }
 
         /// <summary>
@@ -291,7 +287,14 @@ namespace FSNEP.Controllers
             if (roleList == null || roleList.Count == 0)
                 ModelState.AddModelError("RoleList", "User must have at least one role");
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                var viewModel = UserViewModel.Create(UserBLL);
+                viewModel.User = userToUpdate;
+
+                return View(viewModel);
+            }
+            else
             {
                 //Do the save
                 EnsureProperRoles(roleList, userToUpdate);
@@ -310,14 +313,6 @@ namespace FSNEP.Controllers
                 Message = string.Format("{0} modified successfully", id);
 
                 return this.RedirectToAction(a => a.List());
-             
-            }
-            else //Not valid -- repopulate the viewmodel and send the user back to make the corrections
-            {
-                var viewModel = UserViewModel.Create(UserBLL);
-                viewModel.User = userToUpdate;
-
-                return View(viewModel);
             }
         }
 
@@ -401,6 +396,16 @@ namespace FSNEP.Controllers
                                 };
 
             return viewModel;
+        }
+
+        public void TransferValuesFrom(CreateUserViewModel model)
+        {
+            UserName = model.UserName;
+            Email = model.Email;
+            Question = model.Question;
+            Answer = model.Answer;
+
+            User = model.User;
         }
 
         [RequiredValidator]
