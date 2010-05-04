@@ -4,6 +4,8 @@ using System.Text;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using UCDArch.Core.PersistanceSupport;
+using UCDArch.Data.NHibernate;
 using UCDArch.Testing.Extensions;
 
 namespace FSNEP.Tests.Repositories
@@ -13,6 +15,54 @@ namespace FSNEP.Tests.Repositories
     {
         private const int ValidYear = 2009;
         private const int ValidMonth = 6;
+
+        #region Init
+        protected override void LoadData()
+        {
+            base.LoadData();
+
+            using (var ts = new TransactionScope())
+            {
+                LoadStatus();
+                LoadRecords();
+
+                ts.CommitTransaction();
+            }
+
+            NHibernateSessionManager.Instance.GetSession().Flush();
+        }
+
+        private void LoadRecords()
+        {
+            var record = CreateValidRecord();
+
+            Repository.OfType<Record>().EnsurePersistent(record);
+        }
+
+        private Record CreateValidRecord()
+        {
+            var record = new Record
+            {
+                Month = ValidMonth,
+                Year = ValidYear,
+                Status = Repository.OfType<Status>().Queryable.First(),
+                User = Repository.OfType<User>().Queryable.First()
+            };
+
+            return record;
+        }
+
+        public void LoadStatus()
+        {
+            var status1 = new Status { Name = "S1" };
+            var status2 = new Status { Name = "S2" };
+
+            var statusRepository = Repository.OfType<Status>();
+
+            statusRepository.EnsurePersistent(status1);
+            statusRepository.EnsurePersistent(status2);
+        }
+        #endregion Init
 
         #region Valid Time Record Tests
         /// <summary>
@@ -40,6 +90,34 @@ namespace FSNEP.Tests.Repositories
             Repository.OfType<TimeRecord>().EnsurePersistent(timeRecord);
 
             Assert.AreEqual(false, timeRecord.IsTransient());
+        }
+
+        /// <summary>
+        /// Time record saves with entries.
+        /// </summary>
+        [TestMethod]
+        public void CanSaveValidTimeRecordWithEntries()
+        {
+            var timeRecord = CreateValidTimeRecord();
+            timeRecord.AddEntry(new Entry
+                                    {
+                Comment = "Valid",
+                Record = Repository.OfType<Record>().Queryable.First(),
+                FundType = Repository.OfType<FundType>().Queryable.First(),
+                Project = Repository.OfType<Project>().Queryable.First(),
+                Account = Repository.OfType<Account>().Queryable.First()
+            });
+            timeRecord.AddEntry(new Entry
+                                    {
+                Comment = "AnotherValid",
+                Record = Repository.OfType<Record>().Queryable.First(),
+                FundType = Repository.OfType<FundType>().Queryable.First(),
+                Project = Repository.OfType<Project>().Queryable.First(),
+                Account = Repository.OfType<Account>().Queryable.First()
+            });
+            Repository.OfType<TimeRecord>().EnsurePersistent(timeRecord);
+            Assert.AreEqual(false, timeRecord.IsTransient());
+
         }
         #endregion Valid Time Record Tests
 
@@ -380,6 +458,38 @@ namespace FSNEP.Tests.Repositories
             }
         }
         #endregion Review Comment Tests
+
+        #region Entries Tests
+        /// <summary>
+        /// Time record does not save with null entries.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ApplicationException))]
+        public void TimeRecordDoesNotSaveWithNullEntries()
+        {
+            TimeRecord timeRecord = null;
+            try
+            {
+                timeRecord = CreateValidTimeRecord();
+                timeRecord.Entries = null;
+                Repository.OfType<TimeRecord>().EnsurePersistent(timeRecord);
+            }
+            catch (Exception)
+            {
+                Assert.IsNotNull(timeRecord);
+                if (timeRecord != null)
+                {
+                    var results = timeRecord.ValidationResults().AsMessageList();
+                    results.AssertErrorsAre("Entries: may not be empty");
+                    Assert.IsTrue(timeRecord.IsTransient());
+                    Assert.IsFalse(timeRecord.IsValid());
+                }
+
+                throw;
+            }
+        }
+        
+        #endregion Entries Tests
 
         #region Helper Methods
         /// <summary>
