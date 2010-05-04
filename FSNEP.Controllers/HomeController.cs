@@ -60,7 +60,7 @@ namespace FSNEP.Controllers
 
                 userRepository.DbContext.CommitTransaction();
 
-                if (currentUserHasOneFte) viewModel.ShouldShowCertificationLink = true;    
+                if (currentUserHasOneFte && CurrentUser.IsInRole(RoleNames.RoleTimeSheet)) viewModel.ShouldShowCertificationLink = true;
             }
             
             return View(viewModel);
