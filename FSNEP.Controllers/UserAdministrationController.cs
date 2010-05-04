@@ -84,7 +84,8 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult Create(CreateUserViewModel model, List<string> roleList)
         {
-            model.User.UserName = model.UserName; //transfer the username to the user class
+            model.User.UserName = model.UserName; //transfer the username & email to the user class
+            model.User.Email = model.Email;
 
             MvcValidationAdapter.TransferValidationMessagesTo(ModelState,
                                                               MvcValidationAdapter.GetValidationResultsFor(model));
@@ -359,20 +360,6 @@ namespace FSNEP.Controllers
             userToUpdate.Supervisor = user.Supervisor;
             userToUpdate.FundTypes = user.FundTypes;
             userToUpdate.Projects = user.Projects;
-        }
-
-        /// <summary>
-        /// Checks on associated user info accoding to business rules
-        /// </summary>
-        /// <param name="user">The user instance to check</param>
-        private void CheckUserAssociations(User user)
-        {
-            throw new NotImplementedException("This method is no longer needed because the validation is done with the users.cs");
-            //if (user.Projects.Count == 0) 
-            //    ModelState.AddModelError("User.Projects", "You must select at least one project");
-
-            //if (user.FundTypes.Count == 0)
-            //    ModelState.AddModelError("User.FundTypes", "You must select at least one fund type");
         }
 
         /// <summary>
