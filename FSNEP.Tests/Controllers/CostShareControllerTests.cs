@@ -11,6 +11,7 @@ using FSNEP.Core.Abstractions;
 using FSNEP.Core.Calendar;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core.Extensions;
+using FSNEP.Tests.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
@@ -26,6 +27,9 @@ namespace FSNEP.Tests.Controllers
         private readonly IRepository<CostShare> _costShareRepository = MockRepository.GenerateStub<IRepository<CostShare>>();
         private readonly ICostShareBLL _costShareBLL = MockRepository.GenerateStub<ICostShareBLL>();
         private readonly IUserBLL _userBll = MockRepository.GenerateStub<IUserBLL>();
+
+        private User _currentUser = CreateValidEntities.User(null);
+        private readonly IPrincipal _principal = new MockPrincipal();
 
         protected override void SetupController()
         {            
@@ -105,6 +109,135 @@ namespace FSNEP.Tests.Controllers
 
         #endregion Routing Tests
 
+        #region History Tests
+
+        [TestMethod]
+        public void HistoryReturnsExpectedData()
+        {
+            Controller.ControllerContext.HttpContext.User = _principal;
+            FakeCostShareRecords();
+
+
+        }
+        
+
+        #endregion History Tests
+
+        #region Helper Methods
+
+        private void FakeCostShareRecords()
+        {
+            var differentUser = CreateValidEntities.User(null);
+            differentUser.UserName = "DifferentUser";
+            var differentUserWithCurrentUserAsSupervisor = CreateValidEntities.User(null);
+            differentUserWithCurrentUserAsSupervisor.Supervisor = _currentUser;
+
+            var costShareList = new List<CostShare>();
+            for (int i = 0; i < 10; i++)
+            {
+                costShareList.Add(CreateValidEntities.CostShare(i));
+                switch (i)
+                {
+                    case 2:
+                    case 4:
+                        costShareList[i].User = differentUser;
+                        break;
+                    case 6:
+                    case 7:
+                        costShareList[i].User = differentUserWithCurrentUserAsSupervisor;
+                        break;
+                    default:
+                        costShareList[i].User = _currentUser;
+                        break;
+                }
+                
+            }
+        }
+
+        #endregion Helper Methods
+
+
+        #region mocks
+        /// <summary>
+        /// Mock the Identity. Used for getting the current user name
+        /// </summary>
+        public class MockIdentity : IIdentity
+        {
+            public string AuthenticationType
+            {
+                get
+                {
+                    return "MockAuthentication";
+                }
+            }
+
+            public bool IsAuthenticated
+            {
+                get
+                {
+                    return true;
+                }
+            }
+
+            public string Name
+            {
+                get
+                {
+                    return "UserName";
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Mock the Principal. Used for getting the current user name
+        /// </summary>
+        public class MockPrincipal : IPrincipal
+        {
+            IIdentity _identity;
+
+            public IIdentity Identity
+            {
+                get
+                {
+                    if (_identity == null)
+                    {
+                        _identity = new MockIdentity();
+                    }
+                    return _identity;
+                }
+            }
+
+            public bool IsInRole(string role)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Mock the HttpContext. Used for getting the current user name
+        /// </summary>
+        public class MockHttpContext : HttpContextBase
+        {
+            private IPrincipal _user;
+
+            public override IPrincipal User
+            {
+                get
+                {
+                    if (_user == null)
+                    {
+                        _user = new MockPrincipal();
+                    }
+                    return _user;
+                }
+                set
+                {
+                    _user = value;
+                }
+            }
+        }
+        #endregion
 
     }
 }
