@@ -19,6 +19,7 @@ namespace FSNEP.Tests.BLL
     {
         private IRecordBLL<Record> _recordBLL;
         private IRecordBLL<TimeRecord> _timeRecordBLL;
+        private IRecordBLL<CostShare> _costShareBLL;
         private IRepository _repository;
         private IPrincipal _principal = MockRepository.GenerateStub<MockPrincipal>();
         private List<Record> Records { get; set; }
@@ -31,11 +32,14 @@ namespace FSNEP.Tests.BLL
             _repository = MockRepository.GenerateStub<IRepository>();
             _recordBLL = new RecordBLL<Record>(_repository);
             _timeRecordBLL = new RecordBLL<TimeRecord>(_repository);
+            _costShareBLL = new RecordBLL<CostShare>(_repository);
 
             CurrentUser = CreateValidUser();
             CurrentUser.UserName = "CurrentUser";
         }
 
+        #region TimeRecord Tests
+                   
         #region IsEditable Tests
 
         [TestMethod]
@@ -881,6 +885,186 @@ namespace FSNEP.Tests.BLL
  
 
         #endregion GetCurrent Tests
+
+        #region Submit Tests
+
+        /// <summary>
+        /// Submit throws exception when status is pending review.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void SubmitThrowsExceptionWhenStatusIsPendingReviewForRecord()
+        {
+            try
+            {
+                var record = CreateValidEntities.Record(null);
+                record.Status = new Status{NameOption = Status.Option.PendingReview};
+                _recordBLL.Submit(record, _principal);
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(message);
+                Assert.AreEqual("Record must be have either the current or disapproved status in order to be submitted"
+                    , message.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Submit throws exception when status is pending review.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void SubmitThrowsExceptionWhenStatusIsPendingReviewForTimeRecord()
+        {
+            try
+            {
+                var record = CreateValidEntities.TimeRecord(null);
+                record.Status = new Status { NameOption = Status.Option.PendingReview };
+                record.User = CurrentUser;
+                _timeRecordBLL.Submit(record, _principal);
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(message);
+                Assert.AreEqual("Record must be have either the current or disapproved status in order to be submitted"
+                    , message.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Submit throws exception when status is approved for time record.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void SubmitThrowsExceptionWhenStatusIsApprovedForTimeRecord()
+        {
+            try
+            {
+                var record = CreateValidEntities.TimeRecord(null);
+                record.Status = new Status { NameOption = Status.Option.Approved };
+                record.User = CurrentUser;
+                _timeRecordBLL.Submit(record, _principal);
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(message);
+                Assert.AreEqual("Record must be have either the current or disapproved status in order to be submitted"
+                    , message.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Submit for time record sets status to pending review and persist record with tracking.
+        /// </summary>
+        [TestMethod]
+        public void SubmitForTimeRecordSetsStatusToPendingReviewAndPersistRecordWithTracking()
+        {
+            var record = CreateValidEntities.TimeRecord(null);
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.User = CurrentUser;
+
+            var recordTrackingRepository = MockRepository.GenerateStub<IRepository<RecordTracking>>();
+            _repository.Expect(a => a.OfType<RecordTracking>()).Return(recordTrackingRepository).Repeat.Any();
+            var timeRecordRepository = MockRepository.GenerateStub<IRepository<TimeRecord>>();
+            _repository.Expect(a => a.OfType<TimeRecord>()).Return(timeRecordRepository).Repeat.Any();
+
+            FakeStatusQuery();
+
+            _timeRecordBLL.Submit(record, _principal);            
+
+            recordTrackingRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<RecordTracking>.Is.Anything));
+            _repository.OfType<TimeRecord>().AssertWasCalled(a => a.EnsurePersistent(Arg<TimeRecord>.Is.Anything));
+
+            Assert.AreEqual(Status.Option.PendingReview, record.Status.NameOption);
+        }
+
+        #endregion Submit Tests
+
+        #endregion TimeRecord Tests
+
+        #region CostShare Tests
+
+        #region Submit Tests
+
+        /// <summary>
+        /// Submit throws exception when status is pending review.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void SubmitThrowsExceptionWhenStatusIsPendingReviewForCostShare()
+        {
+            try
+            {
+                var record = CreateValidEntities.CostShare(null);
+                record.Status = new Status { NameOption = Status.Option.PendingReview };
+                record.User = CurrentUser;
+                _costShareBLL.Submit(record, _principal);
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(message);
+                Assert.AreEqual("Record must be have either the current or disapproved status in order to be submitted"
+                    , message.Message);
+                throw;
+            }
+        }
+        
+        /// <summary>
+        /// Submit throws exception when status is approved for cost share.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void SubmitThrowsExceptionWhenStatusIsApprovedForCostShare()
+        {
+            try
+            {
+                var record = CreateValidEntities.CostShare(null);
+                record.Status = new Status { NameOption = Status.Option.Approved };
+                record.User = CurrentUser;
+                _costShareBLL.Submit(record, _principal);
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(message);
+                Assert.AreEqual("Record must be have either the current or disapproved status in order to be submitted"
+                    , message.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Submit for time record sets status to pending review and persist record with tracking.
+        /// </summary>
+        [TestMethod]
+        public void SubmitForcostShareSetsStatusToPendingReviewAndPersistRecordWithTracking()
+        {
+            var record = CreateValidEntities.CostShare(null);
+            record.Status = new Status { NameOption = Status.Option.Current };
+            record.User = CurrentUser;
+
+            var recordTrackingRepository = MockRepository.GenerateStub<IRepository<RecordTracking>>();
+            _repository.Expect(a => a.OfType<RecordTracking>()).Return(recordTrackingRepository).Repeat.Any();
+            var costShareRepository = MockRepository.GenerateStub<IRepository<CostShare>>();
+            _repository.Expect(a => a.OfType<CostShare>()).Return(costShareRepository).Repeat.Any();
+
+            FakeStatusQuery();
+
+            _costShareBLL.Submit(record, _principal);
+
+            recordTrackingRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<RecordTracking>.Is.Anything));
+            _repository.OfType<CostShare>().AssertWasCalled(a => a.EnsurePersistent(Arg<CostShare>.Is.Anything));
+
+            Assert.AreEqual(Status.Option.PendingReview, record.Status.NameOption);
+        }
+
+        #endregion Submit Tests
+
+        //TODO: Other CostShare Tests
+
+        #endregion CostShare Tests
 
         #region Helper Methods
 

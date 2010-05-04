@@ -30,7 +30,6 @@ namespace FSNEP.Tests.Core.Helpers
                        };
         }
 
-
         /// <summary>
         /// Creates a valid Record Entity (Mostly)
         /// </summary>
@@ -162,6 +161,11 @@ namespace FSNEP.Tests.Core.Helpers
             return project;
         }
 
+        /// <summary>
+        /// Creates the valid Fund type.
+        /// </summary>
+        /// <param name="counter">The counter.</param>
+        /// <returns></returns>
         public static FundType FundType(int? counter)
         {
             var extra = "";
@@ -175,6 +179,11 @@ namespace FSNEP.Tests.Core.Helpers
             return rtValue;
         }
 
+        /// <summary>
+        /// Creates the valid Expenses type.
+        /// </summary>
+        /// <param name="counter">The counter.</param>
+        /// <returns></returns>
         public static ExpenseType ExpenseType(int? counter)
         {
             var extra = "";
@@ -189,6 +198,24 @@ namespace FSNEP.Tests.Core.Helpers
                               };
 
             return rtValue;
+        }
+
+        /// <summary>
+        /// Creates the valid Time record.
+        /// </summary>
+        /// <param name="counter">The counter.</param>
+        /// <returns></returns>
+        public static TimeRecord TimeRecord(int? counter)
+        {
+            return new TimeRecord
+            {
+                Month = 10,
+                Year = 2009,
+                Salary = 200,
+                Status = new Status { NameOption = Status.Option.Current },
+                User = new User(),
+                ReviewComment = "A review is a review except when it isn't."
+            };
         }
 
         //TODO: add and use other entities
