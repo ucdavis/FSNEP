@@ -55,6 +55,8 @@ namespace FSNEP.Tests.Repositories
             UserBLL.UserAuth.Expect(a => a.CurrentUserName).Return("currentuser");
             UserBLL.UserAuth.Expect(a => a.GetUser("currentuser")).Return(new FakeMembershipUser(UserIds[0])); //Current user is the first user
 
+            var allProjects = projectRepository.GetAll();
+
             var project1 = projectRepository.GetById(1);
             var project2 = projectRepository.GetById(2);
             var project3 = projectRepository.GetById(3);

@@ -54,7 +54,7 @@ namespace FSNEP.Tests.Core
         private void CreateProjects()
         {
             //Create 3 projects
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 6; i++)
             {
                 var proj = new Project {Name = "Project" + i, IsActive = true};
 
@@ -82,14 +82,15 @@ namespace FSNEP.Tests.Core
             supervisor.SetUserID(userId);
 
             #region test
-            var projects = new List<Project>
-                               {
-                                   new Project {Name = "Name", IsActive = true},
-                                   new Project{Name = "Name2", IsActive = true}
-                               };
-            projects[0].SetIdTo(2);
-            projects[1].SetIdTo(3);
-            supervisor.Projects = projects;
+            //var projects = new List<Project>
+            //                   {
+            //                       new Project {Name = "Name", IsActive = true},
+            //                       new Project{Name = "Name2", IsActive = true}
+            //                   };
+            //projects[0].SetIdTo(7);
+            //projects[1].SetIdTo(8);
+            //supervisor.Projects = projects;
+            supervisor.Projects.Add(Repository.OfType<Project>().GetById(1));
 
             var fundTypes = new List<FundType>();
             
@@ -123,7 +124,7 @@ namespace FSNEP.Tests.Core
                                    Supervisor = supervisor,
                                    UserName = "UserName" + i
                                };
-                user.Projects = projects;
+                user.Projects.Add(Repository.OfType<Project>().GetById(5));
                 user.FundTypes = fundTypes;
                 userId = Guid.NewGuid();
 
