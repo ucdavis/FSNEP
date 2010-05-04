@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UCDArch.Core.DomainModel;
 using NHibernate.Validator.Constraints;
+using System;
 
 namespace FSNEP.Core.Domain
 {
@@ -11,6 +12,14 @@ namespace FSNEP.Core.Domain
 
         [Min(1)]
         public virtual int Year { get; set; }
+
+        public virtual DateTime Date
+        {
+            get
+            {
+                return new DateTime(Year, Month, 1);
+            }
+        }
 
         [NotNull]
         public virtual User User { get; set; }

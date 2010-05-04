@@ -9,7 +9,7 @@ namespace FSNEP.Core.Calendar
         public TimeRecordCalendarDay(DateTime currentDay, bool isActive)
         {
             Date = currentDay;
-            Entries = new List<Entry>();
+            Entries = new List<TimeRecordEntry>();
 
             IsActive = isActive;
         }
@@ -39,7 +39,7 @@ namespace FSNEP.Core.Calendar
             }
         }
 
-        public IList<Entry> Entries { get; set; }
+        public IList<TimeRecordEntry> Entries { get; set; }
 
         public bool IsActive { get; set; }
     }
