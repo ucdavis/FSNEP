@@ -34,7 +34,7 @@ BEGIN
 			Database Mail Received By you Successfully.'
 			
 			EXEC msdb.dbo.sp_send_dbmail
-			@recipients=@Email
+			@recipients=@Email,
 			@subject='Test message',
 			@body=@bodyText
 			
