@@ -8,6 +8,7 @@ using UCDArch.Core.NHibernateValidator.CommonValidatorAdapter;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
 using UCDArch.Core.CommonValidator;
+using FSNEP.BLL.Dev;
 
 namespace FSNEP
 {
@@ -51,6 +52,12 @@ namespace FSNEP
         private static void AddBLLClassesTo(IWindsorContainer container)
         {
             container.AddComponent("userBLL", typeof (IUserBLL), typeof (UserBLL));
+
+            #if DEBUG
+
+            container.AddComponent("devTimeRecordBLL", typeof(ITimeRecordBLL), typeof(DevTimeRecordBLL));
+
+            #endif
 
             /*
             var types = typeof(GenericBLL<,>).Assembly.GetTypes().Where(t => t.IsInterface == false && t.IsAbstract == false); //.Where(a => a.BaseType == typeof (GenericBLL<,>));
