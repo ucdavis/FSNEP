@@ -111,6 +111,70 @@ namespace FSNEP.Tests.Core.Helpers
             return rtValue;
         }
 
+        /// <summary>
+        /// Creates the valid cost share entry.
+        /// </summary>
+        /// <param name="counter">The i.</param>
+        /// <returns></returns>
+        public static CostShareEntry CostShareEntry(int? counter)
+        {
+            var extra = "";
+            if (counter != null)
+            {
+                extra = counter.ToString();
+            }
+
+            var costShareEntry = new CostShareEntry
+                                     {
+                                         Amount = 100,
+                                         ExpenseType = new ExpenseType(),
+                                         Account = new Account(),
+                                         FundType = new FundType(),
+                                         Project = new Project(),
+                                         Record = new Record(),
+                                         Comment = "Comment" + extra,
+                                         Description = "Description" + extra
+                                     };
+
+
+            return costShareEntry;
+        }
+
+        /// <summary>
+        /// Creates the valid project.
+        /// </summary>
+        /// <param name="counter">The project number being created.</param>
+        /// <returns></returns>
+        public static Project Project(int? counter)
+        {
+            var extra = "";
+            if (counter != null)
+            {
+                extra = counter.ToString();
+            }
+
+            var project = new Project
+                              {
+                                  Name = "Project" + extra, 
+                                  IsActive = true, 
+                                  Accounts = new List<Account>()
+                              };
+            return project;
+        }
+
+        public static FundType FundType(int? counter)
+        {
+            var extra = "";
+            if (counter != null)
+            {
+                extra = counter.ToString();
+            }
+
+            var rtValue = new FundType {Name = "FundTypeName" + extra};
+
+            return rtValue;
+        }
+
         //TODO: add and use other entities
     }
 }
