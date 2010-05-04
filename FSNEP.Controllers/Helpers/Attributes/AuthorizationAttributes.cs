@@ -13,6 +13,14 @@ namespace FSNEP.Controllers.Helpers.Attributes
         }
     }
 
+    public class AdminAndProjectAdmin : AuthorizeAttribute
+    {
+        public AdminAndProjectAdmin()
+        {
+            Roles = string.Format("{0}, {1}", RoleNames.RoleAdmin, RoleNames.RoleProjectAdmin);
+        }
+    }
+
     public class AllSupervisorsAttribute : AuthorizeAttribute
     {
         public AllSupervisorsAttribute()
@@ -26,6 +34,22 @@ namespace FSNEP.Controllers.Helpers.Attributes
         public DirectSupervisorsOnlyAttribute()
         {
             Roles = RoleNames.RoleSupervisor;
+        }
+    }
+
+    public class CostShareOnlyAttribute : AuthorizeAttribute
+    {
+        public CostShareOnlyAttribute()
+        {
+            Roles = RoleNames.RoleNonSalary;
+        }
+    }
+
+    public class TimeRecordOnlyAttribute : AuthorizeAttribute
+    {
+        public TimeRecordOnlyAttribute()
+        {
+            Roles = RoleNames.RoleTimeSheet;
         }
     }
 }

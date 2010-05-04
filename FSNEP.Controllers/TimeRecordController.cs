@@ -11,10 +11,11 @@ using FSNEP.Core.Domain;
 using UCDArch.Web.ActionResults;
 using UCDArch.Web.Attributes;
 using MvcContrib;
+using FSNEP.Controllers.Helpers.Attributes;
 
 namespace FSNEP.Controllers
 {
-    [Authorize] //TODO: Authorize for only time record users
+    [TimeRecordOnly]
     public class TimeRecordController : SuperController
     {
         private readonly ITimeRecordBLL _timeRecordBLL;

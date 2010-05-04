@@ -17,10 +17,11 @@ using UCDArch.Web.Attributes;
 using UCDArch.Web.Helpers;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Web.Validator;
+using FSNEP.Controllers.Helpers.Attributes;
 
 namespace FSNEP.Controllers
 {
-    [Authorize]
+    [AdminAndProjectAdmin]
     public class UserAdministrationController : SuperController
     {
         private static readonly string DefaultPassword = Constants.STR_Default_Pass;

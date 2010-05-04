@@ -11,10 +11,11 @@ using UCDArch.Web.Attributes;
 using MvcContrib;
 using UCDArch.Web.Helpers;
 using System.Web;
+using FSNEP.Controllers.Helpers.Attributes;
 
 namespace FSNEP.Controllers
 {
-    [Authorize] //TODO: Authorize only for Cost Share users
+    [CostShareOnly]
     public class CostShareController : SuperController
     {
         private readonly IRepository<CostShare> _costShareRepository;
