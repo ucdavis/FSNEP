@@ -118,12 +118,12 @@ namespace FSNEP.BLL.Dev
                                     Year = currentDate.Year,
                                     Month = currentDate.Month,
                                     Status = _repository.OfType<Status>()
-                                                .Queryable.Where(x => x.Name == "Current").Single(),
+                                                .Queryable.Where(x => x.Name == Status.GetName(Status.Option.Current)).Single(),
                                     User = _repository.OfType<User>()
                                                 .Queryable.Where(x => x.UserName == user.Identity.Name).Single()
                                 };
 
-            if (typeof(T) == typeof(TimeRecord)) (newRecord as TimeRecord).Salary = 1.2;
+            if (typeof(T) == typeof(TimeRecord)) (newRecord as TimeRecord).Salary = newRecord.User.Salary;
 
 
             //Create the record and track the creation
