@@ -251,11 +251,11 @@ namespace FSNEP.Controllers
         {
             user.Supervisor = UserBLL.GetByID(supervisorId.Value);
 
-            var projects = from proj in UserBLL.EntitySet<Project>()
+            var projects = from proj in Repository.OfType<Project>().Queryable
                            where projectList.Contains(proj.ID)
                            select proj;
 
-            var fundtypes = from ft in UserBLL.EntitySet<FundType>()
+            var fundtypes = from ft in Repository.OfType<FundType>().Queryable
                             where fundTypeList.Contains(ft.ID)
                             select ft;
 
