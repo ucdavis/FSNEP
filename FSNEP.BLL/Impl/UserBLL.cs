@@ -149,19 +149,11 @@ namespace FSNEP.BLL.Impl
             if (UserAuth.IsCurrentUserInRole(RoleNames.RoleProjectAdmin))
             {
                 //Filtered admin can only get users who are associated with their projects
-                /*
-
-                var projectIds = new List<int>();
-
-                foreach (var project in GetUser().Projects)
-                {
-                    projectIds.Add(project.ID);
-                }
-                */
-                var currentUserProjects = GetUser().Projects;
-
+                
+                var currentUserProjectIds = GetUser().Projects.Select(p => p.ID).ToList(); //Get a list of projectIds for the current user
+                
                 var users = from u in Repository.Queryable
-                            where u.IsActive && u.Projects.Any(p => currentUserProjects.Contains(p))
+                            where u.IsActive && u.Projects.Any(p=>currentUserProjectIds.Contains(p.ID))
                             select u;
 
                 return users;

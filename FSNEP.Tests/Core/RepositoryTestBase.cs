@@ -43,7 +43,7 @@ namespace FSNEP.Tests.Core
         private static void CreateProjects()
         {
             //Create 3 projects
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 var proj = new Project {Name = "Project" + i, IsActive = true};
 
