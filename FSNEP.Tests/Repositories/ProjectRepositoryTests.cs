@@ -41,14 +41,14 @@ namespace FSNEP.Tests.Repositories
         /// <param name="accountRepository">The account repository.</param>
         private static void CreateAccounts(IRepository<Account> accountRepository)
         {
-            //Create 3 accounts
-            for (int i = 1; i < 4; i++)
+            //Create 2 active accounts, 3 inactive
+            for (int i = 1; i < 6; i++)
             {
                 var account = new Account
                                   {
-                                      Name = "Account" + i, 
-                                      IsActive = true
+                                      Name = "Account" + i,                                       
                                   };
+                account.IsActive = i%2==0;
 
                 accountRepository.EnsurePersistent(account);
             }
@@ -62,13 +62,22 @@ namespace FSNEP.Tests.Repositories
         {
 
             List<Account> allAccounts = AccountRepository.GetAll();
+            List<Account> activeAccounts = new List<Account>();
+            foreach (Account account in allAccounts)
+            {
+                if (account.IsActive)
+                {
+                    activeAccounts.Add(account);
+                }
+            }
+
             
             //TODO: Verify Account associations?
             var project = new Project
                               {
                                   IsActive = true, 
                                   Name = ValidValueName,
-                                  Accounts = allAccounts
+                                  Accounts = activeAccounts
                               };
             using (var ts = new TransactionScope())
             {
