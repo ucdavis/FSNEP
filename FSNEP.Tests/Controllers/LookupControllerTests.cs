@@ -66,7 +66,7 @@ namespace FSNEP.Tests.Controllers
 
             projectRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newProject));//make sure we didn't call persist
-            GetErrorMessages(Controller.ModelState).Contains(InvalidNameMessageTooLong);
+            Controller.ModelState.AssertErrorsAre(InvalidNameMessageTooLong);
             Assert.IsFalse(Controller.ModelState.IsValid);
             Assert.IsTrue(Controller.Message.StartsWith("Project Creation Failed."));
 
@@ -277,9 +277,8 @@ namespace FSNEP.Tests.Controllers
 
             activityTypeRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newActivityType));//make sure we didn't call persist
-            
-            GetErrorMessages(Controller.ModelState).AssertContains(InvalidNameMessageTooLong);
-            Assert.AreEqual(1, CountErrorMessages(Controller.ModelState), "Wrong number of error messages");
+
+            Controller.ModelState.AssertErrorsAre(InvalidNameMessageTooLong);
             Assert.IsFalse(Controller.ModelState.IsValid);
             Assert.IsTrue(Controller.Message.StartsWith("Activity Type Creation Failed."));
         }
@@ -484,9 +483,8 @@ namespace FSNEP.Tests.Controllers
             accountRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newAccount));//make sure we didn't call persist
 
-            GetErrorMessages(Controller.ModelState).AssertContains(InvalidNameMessageTooLong);
+            Controller.ModelState.AssertErrorsAre(InvalidNameMessageTooLong);
             Assert.IsFalse(Controller.ModelState.IsValid);
-            Assert.AreEqual(1, CountErrorMessages(Controller.ModelState), "Wrong number of error messages");
         }
 
         /// <summary>
@@ -659,7 +657,7 @@ namespace FSNEP.Tests.Controllers
 
             activityCategoryRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newActivityCategory));//make sure we didn't call persist
-            GetErrorMessages(Controller.ModelState).Contains(InvalidNameMessageTooLong);
+            Controller.ModelState.AssertErrorsAre(InvalidNameMessageTooLong);
             Assert.IsFalse(Controller.ModelState.IsValid);
             Assert.IsTrue(Controller.Message.StartsWith("Activity Category Creation Failed."));
         }
@@ -853,7 +851,7 @@ namespace FSNEP.Tests.Controllers
 
             expenseTypeRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newExpenseType));//make sure we didn't call persist
-            GetErrorMessages(Controller.ModelState).Contains(InvalidNameMessageTooLong);
+            Controller.ModelState.AssertErrorsAre(InvalidNameMessageTooLong);
             Assert.IsFalse(Controller.ModelState.IsValid);
             Assert.IsTrue(Controller.Message.StartsWith("Expense Type Creation Failed."));
         }
@@ -1036,7 +1034,7 @@ namespace FSNEP.Tests.Controllers
 
             hoursInMonthRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newHoursInMonth));//make sure we didn't call persist
-            GetErrorMessages(Controller.ModelState).Contains("Hours: The value must fall within the range \"1\" (Inclusive) - \"0\" (Ignore).");
+            Controller.ModelState.AssertErrorsAre("Hours: The value must fall within the range \"1\" (Inclusive) - \"0\" (Ignore).");
             Assert.IsFalse(Controller.ModelState.IsValid);
             Assert.IsTrue(Controller.Message.StartsWith("Hours In Month Creation Failed."));
         }
@@ -1058,7 +1056,7 @@ namespace FSNEP.Tests.Controllers
 
             hoursInMonthRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newHoursInMonth));//make sure we didn't call persist
-            GetErrorMessages(Controller.ModelState).Contains("id: The year and month entered are not valid");
+            Controller.ModelState.AssertErrorsAre("id: The year and month entered are not valid");
             Assert.IsFalse(Controller.ModelState.IsValid);
             Assert.IsTrue(Controller.Message.StartsWith("Hours In Month Creation Failed."));
         }
@@ -1080,7 +1078,7 @@ namespace FSNEP.Tests.Controllers
 
             hoursInMonthRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newHoursInMonth));//make sure we didn't call persist
-            GetErrorMessages(Controller.ModelState).Contains("id: The year and month entered are not valid");
+            Controller.ModelState.AssertErrorsAre("id: The year and month entered are not valid");
             Assert.IsFalse(Controller.ModelState.IsValid);
             Assert.IsTrue(Controller.Message.StartsWith("Hours In Month Creation Failed."));
         }
