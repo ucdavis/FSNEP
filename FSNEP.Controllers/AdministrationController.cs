@@ -128,7 +128,10 @@ namespace FSNEP.Controllers
 
     public class CreateUserViewModel : UserViewModel
     {
-
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
     }
 
     public class UserViewModel
