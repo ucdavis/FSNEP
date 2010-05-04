@@ -83,6 +83,7 @@
     <Compile Include="Helpers\Attributes\TransactionAttribute.cs" />
     <Compile Include="HomeController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SuperController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FSNEP.Core\FSNEP.Core.csproj">

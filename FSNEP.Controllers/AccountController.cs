@@ -4,15 +4,13 @@ using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Security;
 using CAESArch.Core.Utils;
-using FSNEP.Controllers.Helpers.Attributes;
 using FSNEP.Core.Abstractions;
 using MvcContrib.Attributes;
 using MvcContrib;
 
 namespace FSNEP.Controllers
 {
-    [HandleErrorWithELMAH]
-    public class AccountController : Controller
+    public class AccountController : SuperController
     {
         public AccountController(IFormsAuthentication formsAuth, IMembershipService service, IMessageGateway messageGateway)
         {
