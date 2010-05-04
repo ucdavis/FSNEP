@@ -6,7 +6,7 @@
         EditEntry: '<%= Url.Action("EditEntry", "TimeRecord") %>',
         RemoveEntry: '<%= Url.Action("RemoveEntry", "TimeRecord") %>',
         GetEntry: '<%= Url.Action("GetEntry", "TimeRecord") %>',
-        GetAccountsForProject: '<%= Url.Action("GetAccountsForProject", "Association") %>'
+        GetAccountsForProject: '<%= Url.Action("GetAccountsForProject", "Service") %>'
     }
 
     var __RequestVerificationToken = null;

@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using FSNEP.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Core.Utils;
-using UCDArch.Web.ActionResults;
 using UCDArch.Web.Attributes;
 using FSNEP.Controllers.Helpers.Attributes;
 
@@ -24,16 +23,6 @@ namespace FSNEP.Controllers
             viewModel.Project = project;
 
             return View(viewModel);
-        }
-
-        [Transaction]
-        public ActionResult GetAccountsForProject(int id)
-        {
-            var project = Repository.OfType<Project>().GetNullableByID(id);
-
-            Check.Require(project != null);
-
-            return new JsonNetResult(project.Accounts.ToList());
         }
 
         /// <summary>
