@@ -44,6 +44,21 @@ namespace FSNEP.Tests.Controllers
         }
 
         [TestMethod]
+        public void CreateProjectDoesNotSavesProjectWithLongName()
+        {
+            var newProject = new Project { Name = "InvalidProjectName-TooLongLongLongLongLongLongLongLongLongLongLong" };
+
+            var projectRepository = FakeRepository<Project>();
+            
+            _repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
+
+            Controller.CreateProject(newProject);
+
+            projectRepository
+                .AssertWasNotCalled(a => a.EnsurePersistent(newProject));//make sure we called persist
+        }
+
+        [TestMethod]
         public void CreateProjectRedirectsToProjects()
         {
             _repository.Expect(a => a.OfType<Project>()).Return(FakeRepository<Project>());
