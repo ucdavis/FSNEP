@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FSNEP.BLL.Impl;
+using FSNEP.BLL.Interfaces;
 using FSNEP.Controllers;
 using FSNEP.Tests.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,6 +10,7 @@ using MvcContrib.TestHelper;
 using Rhino.Mocks;
 using FSNEP.Core.Domain;
 using FSNEP.Core.Abstractions;
+using System.Web.Security;
 
 namespace FSNEP.Tests.Controllers
 {
@@ -120,11 +122,12 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// WIP. FundTypes fake needs ID to pass the Unit Test.
         /// </summary>
-        [TestMethod, Ignore]
+        [TestMethod]
         public void CreateUserSavesNewUser()
         {            
             FakeProjects();
             FakeFundTypes();
+            
 
             #region newUser
             const string validValueName = "ValidName";
@@ -152,10 +155,10 @@ namespace FSNEP.Tests.Controllers
             var roleList = new List<string>();
             #endregion Parameters needed for the Create Method
 
-            projectList.Add(1);
-            projectList.Add(2);
-            fundTypeList.Add(1);
-            fundTypeList.Add(2);
+            projectList.Add(0); //Need to be zero
+            projectList.Add(0);
+            fundTypeList.Add(0);
+            fundTypeList.Add(0);
             roleList.Add("Supervisor");
             roleList.Add("Timesheet User");
 
@@ -168,6 +171,17 @@ namespace FSNEP.Tests.Controllers
                 UserName = "ValidUserName",
                 Email = "test@test.edu"
             };
+
+            MembershipCreateStatus status = MembershipCreateStatus.Success;
+
+            UserBLL.UserAuth = MockRepository.GenerateStub<IUserAuth>();
+            UserBLL.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
+
+            Controller.UserBLL.UserAuth.MembershipService.Expect(
+                a =>
+                a.CreateUser(userModel.UserName, "dfgsdf", userModel.Email, userModel.Question, userModel.Answer, true,
+                             null, out status)).OutRef(status = MembershipCreateStatus.Success);
+
 
             Controller.Create(userModel, supervisorGuid, projectList, fundTypeList, roleList);
 
