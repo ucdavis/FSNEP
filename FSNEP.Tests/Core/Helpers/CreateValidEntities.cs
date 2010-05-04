@@ -131,6 +131,7 @@ namespace FSNEP.Tests.Core.Helpers
                                          FundType = new FundType(),
                                          Project = new Project(),
                                          Record = new Record(),
+                                         EntryFile = new EntryFile(),
                                          Comment = "Comment" + extra,
                                          Description = "Description" + extra
                                      };
