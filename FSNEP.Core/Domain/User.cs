@@ -60,7 +60,7 @@ namespace FSNEP.Core.Domain
             }
         }
 
-        public Guid Token { get; set; }
+        public virtual Guid Token { get; set; }
 
         public virtual void SetUserID(Guid userID)
         {

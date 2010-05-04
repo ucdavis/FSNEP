@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using CAESArch.BLL;
 using FSNEP.BLL.Impl;
 using FSNEP.Controllers.Helpers;
+using FSNEP.Controllers.Helpers.Extensions;
 using FSNEP.Core.Domain;
 using System.Linq;
 using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
@@ -27,6 +28,25 @@ namespace FSNEP.Controllers
         {
             UserBLL = userBLL;
             MessageGateway = messageGateway;
+        }
+
+        public ActionResult DeleteUser(string id)
+        {
+            //This only works with tester accounts
+            if (id.StartsWith("tester"))
+            {
+                var user = UserBLL.GetUser(id);
+
+                using (var ts = new TransactionScope())
+                {
+                    UserBLL.Repository.Remove(user);
+
+                    ts.CommitTransaction();
+                }
+
+                UserBLL.UserAuth.MembershipService.DeleteUser(id);
+            }
+            return this.RedirectToAction<HomeController>(a => a.Index());
         }
 
         public ActionResult CreateUser()
@@ -88,7 +108,10 @@ namespace FSNEP.Controllers
                 UserBLL.Repository.EnsurePersistent(user);
                 
                 //Send the user a message
-                //MessageGateway.SendMessageToNewUser();
+                var newUserTokenPath = Url.AbsoluteAction("Index", "Home", new {token = user.Token});
+
+                var supervisorEmail = UserBLL.UserAuth.MembershipService.GetUser(user.Supervisor.ID).Email;
+                MessageGateway.SendMessageToNewUser(user, model.UserName, model.Email, supervisorEmail, newUserTokenPath);
 
                 ts.CommitTransaction();
             }

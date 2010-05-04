@@ -9,7 +9,7 @@ namespace FSNEP.Core.Abstractions
     public interface IMessageGateway
     {
         void SendMessage(string to, string subject, string body);
-        void SendMessageToNewUser(User user, string username, string userEmail, string supervisorEmail);
+        void SendMessageToNewUser(User user, string username, string userEmail, string supervisorEmail, string newUserTokenPath);
     }
 
     public class MessageGateway : IMessageGateway
@@ -27,15 +27,12 @@ namespace FSNEP.Core.Abstractions
         /// <summary>
         /// Send the new user a message explaining how to login to their account
         /// </summary>
-        public void SendMessageToNewUser(User user, string username, string userEmail, string supervisorEmail)
+        public void SendMessageToNewUser(User user, string username, string userEmail, string supervisorEmail, string newUserTokenPath)
         {
-            var newUserPath = new StringBuilder();
-            newUserPath.Append("PATH WITH TOKEN");
-
             var body = new StringBuilder();
 
             body.AppendLine("Welcome to the FSNEP Time/Expense Record System!");
-            body.AppendFormat("Please note that your UserID is {0}. We ask that you create a password to access the system by accessing this link:  {1}", username, newUserPath.ToString());
+            body.AppendFormat("Please note that your UserID is {0}. We ask that you create a password to access the system by accessing this link:  {1}", username, newUserTokenPath);
             body.AppendLine(Environment.NewLine);
 
             //Temporary User Contact Information

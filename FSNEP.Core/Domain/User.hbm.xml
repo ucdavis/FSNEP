@@ -12,6 +12,7 @@
     <property name="Salary" column="Salary" />
     <property name="BenefitRate" column="BenefitRate" />
     <property name="FTE" column="FTE" />
+    <property name="Token" column="Token" />
     <property name="ResetPassword" column="ResetPassword" />
     <property name="IsActive" column="IsActive" />
 

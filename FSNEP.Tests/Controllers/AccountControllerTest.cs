@@ -321,7 +321,7 @@ namespace FSNEP.Tests.Controllers
             {
             }
 
-            public void SendMessageToNewUser(User user, string username, string userEmail, string supervisorEmail)
+            public void SendMessageToNewUser(User user, string username, string userEmail, string supervisorEmail, string newUserTokenPath)
             {
             }
         }

@@ -86,6 +86,7 @@
     <Compile Include="AdministrationController.cs" />
     <Compile Include="Helpers\Attributes\HandleErrorWithELMAHAttribute.cs" />
     <Compile Include="Helpers\Attributes\TransactionAttribute.cs" />
+    <Compile Include="Helpers\Extensions\UrlExtensions.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
     <Compile Include="HomeController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
