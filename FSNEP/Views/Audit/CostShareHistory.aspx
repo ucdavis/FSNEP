@@ -50,7 +50,7 @@
                              col.Add(x => x.User.FullName).Title("User");
                              col.Add(x => x.MonthName).Title("Month");
                              col.Add(x => x.Year);
-                             col.Add(x => x.Status.Name);
+                             col.Add(x => x.Status.Name).Title("Status");
                          })
             .Render();
         
