@@ -104,17 +104,61 @@ namespace FSNEP.Controllers
                                                                                           DefaultPassword,
                                                                                           model.Email, model.Question,
                                                                                           model.Answer, true, null,
-                                                                                          out createStatus);
-
+                                                                                          out createStatus);            
             if (createStatus == MembershipCreateStatus.Success)
             {
                 UserBLL.AddUserToRoles(model.UserName, roleList);
             }
             else
             {
-                ModelState.AddModelError("UserName", "Username already exists");
-                return Create();
+                //TODO: provide more meaningful return values as they are added and link them to specific fields (Rememeber Unit Tests)
+                switch (createStatus)
+                {
+                    case MembershipCreateStatus.DuplicateEmail:
+                        ModelState.AddModelError("_FORM", "Create Failed Duplicate Email");
+                        return Create();
+                    case MembershipCreateStatus.DuplicateProviderUserKey:
+                        ModelState.AddModelError("_FORM", "Create Failed Duplicate Provider User Key");
+                        return Create();
+                    case MembershipCreateStatus.DuplicateUserName:
+                        //This one should be working 
+                        ModelState.AddModelError("UserName", "Username already exists");
+                        return Create();                        
+                    case MembershipCreateStatus.InvalidAnswer:
+                        ModelState.AddModelError("_FORM", "Create Failed Invalid Answer");
+                        return Create();
+                    case MembershipCreateStatus.InvalidEmail:
+                        ModelState.AddModelError("_FORM", "Create Failed Invalid Email");
+                        return Create();
+                    case MembershipCreateStatus.InvalidPassword:
+                        ModelState.AddModelError("_FORM", "Create Failed Invalid Password");
+                        return Create();
+                    case MembershipCreateStatus.InvalidProviderUserKey:
+                        ModelState.AddModelError("_FORM", "Create Failed Invalid Provider User Key");
+                        return Create();
+                    case MembershipCreateStatus.InvalidQuestion:
+                        ModelState.AddModelError("_FORM", "Create Failed Invalid Question");
+                        return Create();
+                    case MembershipCreateStatus.InvalidUserName:
+                        ModelState.AddModelError("_FORM", "Create Failed Invalid User Name");
+                        return Create();
+                    case MembershipCreateStatus.ProviderError:
+                        ModelState.AddModelError("_FORM", "Create Failed Provider Error");
+                        return Create();
+                    case MembershipCreateStatus.Success:
+                        break;
+                    case MembershipCreateStatus.UserRejected:
+                        ModelState.AddModelError("_FORM", "Create Failed User Rejected");
+                        return Create();
+                    default:
+                        ModelState.AddModelError("_FORM", "Create Failed");
+                        return Create();
+
+                }
+                
             }
+
+            
 
             user.SetUserID((Guid)membershipUser.ProviderUserKey);
 
