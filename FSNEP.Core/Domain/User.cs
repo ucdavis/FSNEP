@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CAESArch.Core.Domain;
 using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
+using CAESArch.Core.Validators;
 
 namespace FSNEP.Core.Domain
 {
@@ -13,6 +14,7 @@ namespace FSNEP.Core.Domain
         
         [NotNullValidator]
         [StringLengthValidator(50)]
+        [RequiredValidator]
         public virtual string LastName { get; set; }
 
         public virtual User CreatedBy { get; set; }
