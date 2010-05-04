@@ -10,6 +10,7 @@ using MvcContrib.Attributes;
 namespace FSNEP.Controllers
 {
     [Transaction]
+    [Authorize]
     public class LookupController : SuperController
     {
         public ActionResult ActivityTypes()
