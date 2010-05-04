@@ -148,7 +148,7 @@ namespace FSNEP.Controllers
 
             //We have a valid password, email the user, then redirect
             //TODO: Replace with a real message send
-            MessageService.SendMessage("automatedemail@caes.ucdavis.edu",
+            MessageService.SendMessage(
                 member.Email,
                 "Password Reset",
                 string.Format(

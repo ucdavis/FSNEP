@@ -11,17 +11,22 @@ using MvcContrib.Attributes;
 using MvcContrib;
 using System;
 using System.Web.Security;
+using FSNEP.Core.Abstractions;
 
 namespace FSNEP.Controllers
 {
     [Authorize]
     public class AdministrationController : SuperController
     {
-        public IUserBLL UserBLL;
+        private const string DefaultPassword = "jaskidjflkajsdlf$#12";
 
-        public AdministrationController(IUserBLL userBLL)
+        public IUserBLL UserBLL;
+        public IMessageGateway MessageGateway;
+
+        public AdministrationController(IUserBLL userBLL, IMessageGateway messageGateway)
         {
             UserBLL = userBLL;
+            MessageGateway = messageGateway;
         }
 
         public ActionResult CreateUser()
@@ -56,7 +61,7 @@ namespace FSNEP.Controllers
             MembershipCreateStatus createStatus;
 
             //Create the user
-            MembershipUser membershipUser = UserBLL.UserAuth.MembershipService.CreateUser(model.UserName, "PASSWORD",
+            MembershipUser membershipUser = UserBLL.UserAuth.MembershipService.CreateUser(model.UserName, DefaultPassword,
                                                                                           model.Email, model.Question,
                                                                                           model.Answer, true, null,
                                                                                           out createStatus);
@@ -72,15 +77,31 @@ namespace FSNEP.Controllers
             }
 
             user.SetUserID((Guid) membershipUser.ProviderUserKey);
+            
+            user.Token = Guid.NewGuid(); //setup the new user token
 
-            Guid newUserToken = Guid.NewGuid();
+            var ts = new TransactionScope();
 
-            //save the user
+            try
+            {
+                //save the user
+                UserBLL.Repository.EnsurePersistent(user);
+                
+                //Send the user a message
+                //MessageGateway.SendMessageToNewUser();
 
-            //TODO: Remove this test
-            UserBLL.UserAuth.MembershipService.DeleteUser(model.UserName);
+                ts.CommitTransaction();
+            }
+            catch (Exception)
+            {
+                ts.RollBackTransaction();
 
-            return CreateUser();
+                UserBLL.UserAuth.MembershipService.DeleteUser(model.UserName); //delete the user then throw the exception
+
+                throw;
+            }
+
+            return this.RedirectToAction<HomeController>(a => a.Index());
         }
 
         /// <summary>

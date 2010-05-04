@@ -60,6 +60,8 @@ namespace FSNEP.Core.Domain
             }
         }
 
+        public Guid Token { get; set; }
+
         public virtual void SetUserID(Guid userID)
         {
             this.id = userID;

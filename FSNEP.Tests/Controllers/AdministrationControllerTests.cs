@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
 using FSNEP.Core.Domain;
+using FSNEP.Core.Abstractions;
 
 namespace FSNEP.Tests.Controllers
 {
@@ -18,8 +19,9 @@ namespace FSNEP.Tests.Controllers
         protected override void SetupController()
         {
             UserBLL = MockRepository.GenerateStub<IUserBLL>();
+            var messageGateway = MockRepository.GenerateStub<IMessageGateway>();
 
-            CreateController(UserBLL);
+            CreateController(UserBLL, messageGateway);
         }
 
         [TestMethod]

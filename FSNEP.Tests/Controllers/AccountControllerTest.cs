@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using FSNEP.Core.Abstractions;
+using FSNEP.Core.Domain;
 using FSNEP.Tests.Core;
 using FSNEP.Tests.Core.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -116,7 +117,7 @@ namespace FSNEP.Tests.Controllers
 
             controller.ResetPassword("validUser", "validAnswer");
 
-            messageGateway.AssertWasCalled(a=>a.SendMessage("","","",""), a=>a.IgnoreArguments()); //Verify the message gateway was called
+            messageGateway.AssertWasCalled(a=>a.SendMessage("","",""), a=>a.IgnoreArguments()); //Verify the message gateway was called
         }
 
         [TestMethod]
@@ -316,7 +317,13 @@ namespace FSNEP.Tests.Controllers
 
         public class MockMessageGateway : IMessageGateway
         {
-            public void SendMessage(string from, string to, string subject, string body) { }
+            public void SendMessage(string to, string subject, string body)
+            {
+            }
+
+            public void SendMessageToNewUser(User user, string username, string userEmail, string supervisorEmail)
+            {
+            }
         }
 
         public class MockFormsAuthenticationService : IFormsAuthentication
