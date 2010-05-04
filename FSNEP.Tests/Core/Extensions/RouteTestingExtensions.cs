@@ -9,28 +9,6 @@ namespace FSNEP.Tests.Core.Extensions
 {
     public static class RouteTestingExtensions
     {
-        public static void ShouldMapToIgnoringParams(this string strRoute, string expectedController, string expectedAction)
-        {
-            var route = strRoute.Route();
-
-            var actualController = route.Values["controller"] as string;
-            var actualAction = route.Values["action"] as string;
-
-
-            if (actualController != expectedController)
-            {
-                throw new ArgumentException(string.Format("Controller was {0}, expected {1}", actualController,
-                                                          expectedController));
-            }
-
-            if (actualAction != expectedAction)
-            {
-                throw new ArgumentException(string.Format("Action was {0}, expected {1}", actualAction,
-                                                          expectedAction));
-            }            
-        }
-
-
         /// <summary>
         /// Validates that the route should map to a particular controller and action.
         /// </summary>
