@@ -8,20 +8,7 @@
 
     <h2><%= Html.Encode(string.Format("Cost Share for {0:MMMM yyyy}", Model.CostShare.Date)) %></h2>
     
-    <%= Html.Grid(Model.CostShareEntries)
-            .DisplayAlternateMessageWhen(Model.CostShareEntries.Count() == 0, "No Cost Share Entries Found")
-            .Name("CostShareEntries")
-            .Columns(col=>
-                         {
-                             col.Add(x => x.Amount);
-                             col.Add(x => x.ExpenseType.Name).Title("Expense Type");
-                             col.Add(x => x.Project.Name).Title("Project");
-                             col.Add(x => x.FundType.Name).Title("Fund Type");
-                             col.Add(x => x.Account.Name).Title("Account");
-                             col.Add(x => x.Description);
-                             col.Add(x => x.Comment);
-                         })
-        %>
+    <% Html.RenderPartial("CostShareEntryList", Model.CostShareEntries); %>
         
     <br />
     <div>

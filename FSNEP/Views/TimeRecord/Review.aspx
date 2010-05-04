@@ -8,20 +8,7 @@
 
 <h2><%= Html.Encode(string.Format("Time Record for {0:MMMM yyyy}", Model.TimeRecord.Date)) %></h2>
     
-    <%= Html.Grid(Model.TimeRecordEntries)
-            .DisplayAlternateMessageWhen(Model.TimeRecordEntries.Count() == 0, "No Time Record Entries Found")
-            .Name("TimeRecordEntries")
-            .Columns(col=>
-                         {
-                             col.Add(x => x.Date);
-                             col.Add(x => x.Hours);
-                             col.Add(x => x.ActivityType.Name).Title("Activity");
-                             col.Add(x => x.Project.Name).Title("Project");
-                             col.Add(x => x.FundType.Name).Title("Fund Type");
-                             col.Add(x => x.Account.Name).Title("Account");
-                             col.Add(x => x.Comment);
-                         })
-        %>
+    <% Html.RenderPartial("TimeRecordEntryList", Model.TimeRecordEntries); %>
         
     <br />
     <div>
