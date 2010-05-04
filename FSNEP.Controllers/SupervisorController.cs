@@ -130,12 +130,7 @@ namespace FSNEP.Controllers
         [Authorize(Roles="Supervisor")]
         public RedirectToRouteResult Delegate()
         {
-            var userHasDelegate = Repository.OfType<User>()
-                                            .Queryable
-                                            .Where(x => x.UserName == CurrentUser.Identity.Name && x.Delegate != null)
-                                            .Any();
-
-            return userHasDelegate ? RedirectToAction("RemoveDelegate") : RedirectToAction("AssignDelegate");
+            return CurrentUserHasDelegate() ? RedirectToAction("RemoveDelegate") : RedirectToAction("AssignDelegate");
         }
 
         /// <summary>
@@ -144,6 +139,8 @@ namespace FSNEP.Controllers
         [Authorize(Roles = "Supervisor")]
         public ActionResult AssignDelegate()
         {
+            if (CurrentUserHasDelegate()) return this.RedirectToAction(x => x.RemoveDelegate());
+
             var users = Repository.OfType<User>().Queryable.Where(x => x.IsActive && x.UserName != CurrentUser.Identity.Name).OrderBy(x=>x.LastName).ToList();
 
             return View(users);
@@ -158,14 +155,14 @@ namespace FSNEP.Controllers
         [Authorize(Roles="Supervisor")]
         public ActionResult RemoveDelegate()
         {
+            if (!CurrentUserHasDelegate()) return this.RedirectToAction(x => x.AssignDelegate());
+            
             Guid delegateUserId =
                 _userBLL.Queryable.Where(x => x.UserName == CurrentUser.Identity.Name && x.Delegate != null).Select(
-                x => x.Delegate.Id).SingleOrDefault();
+                x => x.Delegate.Id).Single();
             
             var delegateUser = _userBLL.GetNullableByID(delegateUserId);
             
-            if (delegateUser == null) return this.RedirectToAction(x => x.AssignDelegate());
-
             return View(delegateUser);
         }
 
@@ -173,6 +170,16 @@ namespace FSNEP.Controllers
         public ActionResult RemoveDelegate(Guid userId)
         {
             throw new NotImplementedException();
+        }
+
+        public bool CurrentUserHasDelegate()
+        {
+            var currentUserHasDelegate = Repository.OfType<User>()
+                                            .Queryable
+                                            .Where(x => x.UserName == CurrentUser.Identity.Name && x.Delegate != null)
+                                            .Any();
+
+            return currentUserHasDelegate;
         }
 
         #endregion
