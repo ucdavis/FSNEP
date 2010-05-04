@@ -1,7 +1,10 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using FSNEP.BLL.Impl;
 using FSNEP.Core.Domain;
 using System.Linq;
+using MvcContrib.Attributes;
+using System;
 
 namespace FSNEP.Controllers
 {
@@ -20,51 +23,36 @@ namespace FSNEP.Controllers
         /// <param name="id">the userid/username</param>
         public ActionResult ModifyUser(string id)
         {
-            //First get the lookups, like projects, fundtypes, and supervisors  
-            var viewModel = new ModifyUserViewModel();
-
-            if (string.IsNullOrEmpty(id))
-            {
-                return View(viewModel);
-            }
-
-            viewModel.User = UserBLL.GetUser(id);
+            User user = string.IsNullOrEmpty(id) ? new User() : UserBLL.GetUser(id);
+            
 
             //Populate the supervisor with the correct supervisor chosen
-            viewModel.Supervisors = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
-                                                   viewModel.User.Supervisor.ID);
+            ViewData["Supervisors"] = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
+                                                   user.Supervisor.ID);
 
-            viewModel.Projects = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
-                                                     viewModel.User.Projects.Select(p => p.ID));
+            ViewData["Projects"] = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
+                                                     user.Projects.Select(p => p.ID));
 
-            viewModel.FundTypes = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
-                                                     viewModel.User.FundTypes.Select(p => p.ID));
+            ViewData["FundTypes"] = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
+                                                     user.FundTypes.Select(p => p.ID));
 
-            return View(viewModel);
+            return View(user);
         }
 
-    }
-
-    public class ModifyUserViewModel
-    {
-        public ModifyUserViewModel() : this(new User()) {}
-
-        public ModifyUserViewModel(User user)
+        [AcceptPost]
+        public ActionResult ModifyUser(string id, User user, Guid? supervisorId, List<Project> projects)
         {
-            User = user;
+            //Look for errors
+            if (!supervisorId.HasValue)
+                ModelState.AddModelError("SupervisorID", "You must select a supervisor");
+
+            if (string.IsNullOrEmpty(user.FirstName))
+            {
+                ModelState.AddModelError("FirstName", "First Name Required");
+            }
+
+            return ModifyUser(id);
         }
 
-        public bool NewUser
-        {
-            get { return User.IsTransient(); }
-        }
-
-        public User User { get; set; }
-
-        public SelectList Supervisors { get; set; }
-
-        public MultiSelectList Projects { get; set; }
-
-        public MultiSelectList FundTypes { get; set; }
     }
 }
