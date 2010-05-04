@@ -30,6 +30,8 @@ namespace FSNEP.Tests.Core
                                                                         Instance.GetSession().Connection, null);
 
             LoadData();
+
+            HibernatingRhinos.NHibernate.Profiler.Appender.NHibernateProfiler.Initialize();
         }
 
         protected virtual void LoadData()
