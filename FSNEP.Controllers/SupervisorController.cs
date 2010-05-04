@@ -155,7 +155,7 @@ namespace FSNEP.Controllers
 
             Check.Require(userToAssign != null);
 
-            _delegateBLL.AssignDelegate();
+            _delegateBLL.AssignDelegate(userToAssign);
 
             Message = string.Format("{0} Assigned as a Delegate", userToAssign.FullName);
 
@@ -183,7 +183,7 @@ namespace FSNEP.Controllers
 
             Check.Require(userToRemove != null);
 
-            _delegateBLL.RemoveDelegate();
+            _delegateBLL.RemoveDelegate(userToRemove);
 
             Message = string.Format("{0} Removed as a Delegate", userToRemove.FullName);
 

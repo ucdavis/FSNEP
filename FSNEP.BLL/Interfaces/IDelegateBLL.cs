@@ -1,8 +1,14 @@
+using FSNEP.Core.Domain;
+
 namespace FSNEP.BLL.Interfaces
 {
     public interface IDelegateBLL
     {
-        void AssignDelegate();
-        void RemoveDelegate();
+        /// <summary>
+        /// Assign the given user as a delegate for the current user
+        /// </summary>
+        void AssignDelegate(User userToAssign);
+
+        void RemoveDelegate(User userToRemove);
     }
 }
