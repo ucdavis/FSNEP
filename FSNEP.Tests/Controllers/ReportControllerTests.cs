@@ -252,8 +252,8 @@ namespace FSNEP.Tests.Controllers
 
             var result = Controller.TimeRecord()
                 .AssertViewRendered()
-                .WithViewData<List<User>>();
-            Assert.AreEqual(5, result.Count);
+                .WithViewData<IEnumerable<User>>();
+            Assert.AreEqual(5, result.Count());
         }
 
         [TestMethod]
@@ -366,9 +366,9 @@ namespace FSNEP.Tests.Controllers
 
             var result = Controller.CostShare()
                 .AssertViewRendered()
-                .WithViewData<List<Project>>();
+                .WithViewData<IEnumerable<Project>>();
             Assert.IsNotNull(result);
-            Assert.AreEqual(5, result.Count);
+            Assert.AreEqual(5, result.Count());
         }
 
         [TestMethod]
