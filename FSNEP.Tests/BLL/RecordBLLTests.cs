@@ -21,6 +21,7 @@ namespace FSNEP.Tests.BLL
         private IRecordBLL<CostShare> _costShareBLL;
         private IRepository _repository;
         private IMessageGateway _messageGateway;
+        private readonly ISignatureFactory _signatureFactory = MockRepository.GenerateStub<ISignatureFactory>();
         private readonly IPrincipal _principal = MockRepository.GenerateStub<MockPrincipal>();
         private List<Record> Records { get; set; }
         private List<CostShare> CostShareRecords { get; set; }
@@ -32,9 +33,9 @@ namespace FSNEP.Tests.BLL
         {
             _repository = MockRepository.GenerateStub<IRepository>();
             _messageGateway = MockRepository.GenerateStub<IMessageGateway>();
-            _recordBLL = new RecordBLL<Record>(_repository, _messageGateway);
-            _timeRecordBLL = new RecordBLL<TimeRecord>(_repository, _messageGateway);
-            _costShareBLL = new RecordBLL<CostShare>(_repository, _messageGateway);
+            _recordBLL = new RecordBLL<Record>(_repository, _messageGateway, _signatureFactory);
+            _timeRecordBLL = new RecordBLL<TimeRecord>(_repository, _messageGateway, _signatureFactory);
+            _costShareBLL = new RecordBLL<CostShare>(_repository, _messageGateway, _signatureFactory);
             
             CurrentUser = CreateValidUser();
             CurrentUser.UserName = "CurrentUser";

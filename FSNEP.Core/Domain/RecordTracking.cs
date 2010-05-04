@@ -18,5 +18,8 @@ namespace FSNEP.Core.Domain
 
         [NotNull]
         public virtual Status Status { get; set; }
+
+        [NotNull]
+        public virtual byte[] DigitalSignature { get; set; }
     }
 }

@@ -14,11 +14,13 @@ namespace FSNEP.BLL.Dev
     {
         private readonly IRepository _repository;
         private readonly IMessageGateway _messageGateway;
+        private readonly ISignatureFactory _signatureFactory;
 
-        public RecordBLL(IRepository repository, IMessageGateway messageGateway)
+        public RecordBLL(IRepository repository, IMessageGateway messageGateway, ISignatureFactory signatureFactory)
         {
             _repository = repository;
             _messageGateway = messageGateway;
+            _signatureFactory = signatureFactory;
         }
 
         public virtual bool HasAccess(IPrincipal user, T record)
@@ -117,13 +119,16 @@ namespace FSNEP.BLL.Dev
             return newRecord;
         }
 
-        private static void PersistRecordWithTracking(T record, IPrincipal user, IRepository repository)
+        private void PersistRecordWithTracking(T record, IPrincipal user, IRepository repository)
         {
+            var signature = _signatureFactory.CreateSignature(record);
+
             var tracking = new RecordTracking
             {
                 ActionDate = SystemTime.Now(),
                 Record = record,
                 Status = record.Status,
+                DigitalSignature = signature,
                 UserName = user.Identity.Name
             };
 
