@@ -200,7 +200,6 @@
     <Content Include="Images\but_home.gif" />
     <Content Include="Images\but_home2.gif" />
     <Content Include="Images\topbgfiller.gif" />
-    <Content Include="Scripts\jquery.message.min.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\TimeRecordEntry.js" />
     <Content Include="Scripts\xVal.jquery.validate.js" />
@@ -273,7 +272,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\jquery.jgrowl.css" />
     <Content Include="Scripts\jquery.cascade.js" />
+    <Content Include="Scripts\jquery.jgrowl.min.js" />
     <Content Include="Views\Audit\CostShareEntryAuditList.ascx" />
     <Content Include="Views\Audit\CostShareHistory.aspx" />
     <Content Include="Views\Audit\CostShareReview.aspx" />

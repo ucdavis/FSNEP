@@ -449,7 +449,8 @@ function OpenDialog(dialog /*The dialog DIV JQuery object*/, buttons /*Button co
 }
 
 function DisplayMessage(message){
-    $().message(message);
+    $.jGrowl(message);
+    //$().message(message);
 }
 
 function LogMessage(message, data) {
