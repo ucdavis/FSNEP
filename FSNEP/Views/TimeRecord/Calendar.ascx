@@ -10,33 +10,41 @@
                             style="margin-left: 1px;" /></div>
 
 <div class="calendarDiv">
-        <% foreach (var day in Model.CalendarDays)
-           {%>
-        <%  string dayId = day.IsActive ? day.Day.ToString() : string.Empty;
-            string className = day.IsActive ? "ActiveDay" : "InactiveDay";
-        %>
-        <div id="day<%= dayId %>" class="calendarStyle <%= className %>">
-            <div class="calendarDate">
-                <%= Html.Encode(day.Day) %>
-            </div>
-            Add 
-            <table>
-                <tbody id='<%= dayId %>'>
-                    <%
-                        foreach (var entry in day.Entries)
-                        {%>
-                    <tr id='Entry<%= entry.Id %>'>
-                        <td>
-                            <span class="editEntry">
-                                <%= Html.Encode(string.Format("{0} HRS", entry.Hours)) %>
-                            </span>
-                        </td>
-                    </tr>
-                    <%
-        
-                        } %>
-                </tbody>
-            </table>
+    <% foreach (var day in Model.CalendarDays)
+       {%>
+    <%  string dayId = day.IsActive ? day.Day.ToString() : string.Empty;
+        string className = day.IsActive ? "ActiveDay" : "InactiveDay";
+    %>
+    <div id="day<%= dayId %>" class="calendarStyle <%= className %>">
+        <div class="calendarDate <%= day.IsCurrent ? "CurrentDay" : string.Empty %>">
+            <%= Html.Encode(day.Day) %>
         </div>
+        
+        <% if (day.IsActive)
+           { %>
+           
+        <a href="javascript:;" id="addEntry<%= dayId %>" class="AddCalendarEntry">
+            Add
+        </a>
         <% } %>
+        <table>
+            <tbody id='entriesFor<%= dayId %>'>
+                <%
+                    foreach (var entry in day.Entries)
+                    {%>
+                <tr id='Entry<%= entry.Id %>'>
+                    <td>
+                        <span class="editEntry">
+                            <a id='editEntry<%= entry.Id %>' href="javascript:;" class="EditCalendarEntry">
+                                <%= Html.Encode(string.Format("{0} HRS", entry.Hours)) %>
+                            </a>
+                        </span>
+                    </td>
+                </tr>
+                <%
+                    } %>
+            </tbody>
+        </table>
     </div>
+    <% } %>
+</div>

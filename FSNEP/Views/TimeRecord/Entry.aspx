@@ -3,9 +3,13 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
     Entry
 </asp:Content>
+<asp:Content ContentPlaceHolderID="AdditionalScripts" runat="server">
+    <script src='<%= Url.Content("~/Scripts/jquery.message.min.js") %>' type="text/javascript"></script>
+    <script src='<%= Url.Content("~/Scripts/TimeRecordEntry.js") %>' type="text/javascript"></script>
+</asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <h2>
-        <%= Html.Encode(string.Format("Time Record for {0}", Model.TimeRecord.Date.ToString("MMMM yyyy"))) %></h2>
+
+    <h2><%= Html.Encode(string.Format("Time Record for {0}", Model.TimeRecord.Date.ToString("MMMM yyyy"))) %></h2>
             
     <% Html.RenderPartial("Calendar"); %>
     
