@@ -118,12 +118,13 @@ namespace FSNEP.Tests.Controllers
         }
 
         /// <summary>
-        /// WIP
+        /// WIP. FundTypes fake needs ID to pass the Unit Test.
         /// </summary>
         [TestMethod, Ignore]
         public void CreateUserSavesNewUser()
         {            
             FakeProjects();
+            FakeFundTypes();
 
             #region newUser
             const string validValueName = "ValidName";
@@ -173,23 +174,41 @@ namespace FSNEP.Tests.Controllers
         }
 
 
-        ////TODO: Verify that this fake is working...
+        //TODO: Verify that this fake is working...
         private void FakeProjects()
-        {                                    
-            var projects = new List<Project>()
+        {                                  
+            var projects = new List<Project>
                                {
                                    new Project {Name = "Name", IsActive = true},
                                    new Project{Name = "Name2", IsActive = true}
                                }.AsQueryable();            
             var projectRepository = FakeRepository<Project>();
+
+            //This ties the "().Queryable" to return "projects"
             projectRepository.Expect(a => a.Queryable).Return(projects);
 
+            //This ties the call "Repository.OfType<Project>()" to my repository here "projectRepository"
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
 
+            //Note: I can't set/mock the ID of projects, so the code below will never have any matches.  
             /* This is what is calling the above code.
             var projects = from proj in Repository.OfType<Project>().Queryable
                            where projectList.Contains(proj.ID)
                            select proj;
              */
+        }
+
+        private void FakeFundTypes()
+        {
+            var fundTypes = new List<FundType>
+                                {
+                                    new FundType {Name = "Name1"},
+                                    new FundType {Name = "Name2"},
+                                    new FundType {Name = "Name3"}
+                                }.AsQueryable();
+            var fundRepository = FakeRepository<FundType>();
+            fundRepository.Expect(a => a.Queryable).Return(fundTypes);
+            Controller.Repository.Expect(a => a.OfType<FundType>()).Return(fundRepository);
         }
     }
 }
