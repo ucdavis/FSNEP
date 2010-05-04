@@ -72,6 +72,7 @@ namespace FSNEP.Core.Calendar
 
         private static int ConvertDayOfWeek(string day)
         {
+            //TODO: this could be replaced with (int)date.DayOfWeek
             switch (day)
             {
                 case "Sunday":
