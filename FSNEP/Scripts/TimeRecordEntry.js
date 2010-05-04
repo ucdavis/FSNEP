@@ -174,6 +174,8 @@ function AddEntry(id) {
 function EditEntry(entryId) {
     var editEntryDiv = $("#dialogTimeRecordEdit");
 
+    ShowEditEntryLoadingMessage(true);
+
     $.getJSON(
         Services.GetEntry,
         { entryId: entryId },
@@ -197,7 +199,23 @@ function EditEntryLoaded(result) {
     $("#Edit_Hours").val(result.Hours);
     $("#Edit_Comment").val(result.Comment);
 
+    ShowEditEntryLoadingMessage(false);
+    
     DisplayMessage("Edit Entry Loaded");
+}
+
+function ShowEditEntryLoadingMessage(loading) {
+    var spanLoadingEntryDetails = $("#spanLoadingEntryDetails");
+    var divEntryDetails = $("#divEntryDetails");
+
+    if (loading) {
+        spanLoadingEntryDetails.show();
+        divEntryDetails.css('visibility', 'hidden');
+    }
+    else {
+        spanLoadingEntryDetails.hide();
+        divEntryDetails.css('visibility', 'visible');
+    }
 }
 
 function OpenDialog(dialog /*The dialog DIV JQuery object*/, buttons /*Button collection */, title, onClose) {

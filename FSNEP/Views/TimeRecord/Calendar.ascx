@@ -128,39 +128,46 @@
 </div>
 
 <div id="dialogTimeRecordEdit" class="TimeRecordEditDialog" title="Edit Entry">
-    <%--<%= Html.ClientSideValidation<FSNEP.Core.Domain.TimeRecordEntry>("Edit") %>--%>
-    <%--<%= Html.ClientSideValidation<FSNEP.Core.Domain.Entry>("Edit") %>--%>
-    <form id="formEditEntry" method="post" action="<%= Url.Action("EditEntry", "TimeRecord") %>">
-    <input id="Edit_EntryId" type="hidden" />
-    <fieldset>
-        <legend>Entry Information</legend>
-        <p>
-            <label for="Edit_ActivityType">Activity Type:</label>
-            <span id="Edit_ActivityType"></span>
-        </p>
-        <p>
-            <label for="Edit_FundType">Fund Type:</label>
-            <span id="Edit_FundType"></span>
-        </p>
-        <p>
-            <label for="Edit_Project">Project:</label>
-            <span id="Edit_Project"></span>
-        </p>
-        <p>
-            <label for="Edit_Account">Account:</label>
-            <span id="Edit_Account"></span>
-        </p>
-        <p>
-            <%= this.TextBox("Edit_Hours").Class("required").Label("Hours")  %>
-        </p>
-        <p>
-            <label for="Edit_Comment"></label>
-            <%= this.TextArea("Edit_Comment").Columns(25).Class("required").Label("Comments:")%>
-        </p>
-        <p>
-            <input type="submit" value="Update!" />
-        </p>
-        
-    </fieldset>
-    </form>
+    <span style="display: none;" id="spanLoadingEntryDetails">
+        <br/>
+        <img alt="" src="../Images/mozilla_blu.gif"/> 
+        Loading ...
+    </span>
+    <div id="divEntryDetails">
+        <%= Html.ClientSideValidation<FSNEP.Core.Domain.TimeRecordEntry>("Edit") %>
+        <%= Html.ClientSideValidation<FSNEP.Core.Domain.Entry>("Edit") %>
+        <form id="formEditEntry" method="post" action="<%= Url.Action("EditEntry", "TimeRecord") %>">
+        <input id="Edit_EntryId" type="hidden" />
+        <fieldset>
+            <legend>Entry Information</legend>
+            <p>
+                <label for="Edit_ActivityType">Activity Type:</label>
+                <span id="Edit_ActivityType"></span>
+            </p>
+            <p>
+                <label for="Edit_FundType">Fund Type:</label>
+                <span id="Edit_FundType"></span>
+            </p>
+            <p>
+                <label for="Edit_Project">Project:</label>
+                <span id="Edit_Project"></span>
+            </p>
+            <p>
+                <label for="Edit_Account">Account:</label>
+                <span id="Edit_Account"></span>
+            </p>
+            <p>
+                <%= this.TextBox("Edit_Hours").Class("required").Label("Hours")  %>
+            </p>
+            <p>
+                <label for="Edit_Comment"></label>
+                <%= this.TextArea("Edit_Comment").Columns(25).Class("required").Label("Comments:")%>
+            </p>
+            <p>
+                <input type="submit" value="Update!" />
+            </p>
+            
+        </fieldset>
+        </form>
+    </div>
 </div>
