@@ -8,7 +8,6 @@ using UCDArch.Core.NHibernateValidator.CommonValidatorAdapter;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
 using UCDArch.Core.CommonValidator;
-using FSNEP.BLL.Dev;
 using FSNEP.Core.Calendar;
 
 namespace FSNEP
