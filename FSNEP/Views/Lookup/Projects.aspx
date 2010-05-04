@@ -6,17 +6,23 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
+<script type="text/javascript">
+    $(function() {
+        $("#CreateProjectForm").validate();
+    });
+</script>
+
 <% Html.RenderPartial("LookupsHeader"); %>
 
     <h3><%= Html.Encode(TempData["Message"]) %></h3>
     <h2>Projects</h2>
 
-    <%using (Html.BeginForm("CreateProject", "Lookup")) { %>
+    <%using (Html.BeginForm("CreateProject", "Lookup", FormMethod.Post, new {id="CreateProjectForm"})) { %>
     
     <fieldset>
         <legend>New Project:</legend>
         <p>
-            <%= this.TextBox("name").Label("Project Name: ")%>
+            <%= this.TextBox("name").Label("Project Name: ").MaxLength(50).Class("required") %>
         </p>
         <p>
             <input type="submit" value="Add Project" />
