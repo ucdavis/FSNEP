@@ -12,5 +12,10 @@ namespace FSNEP.Helpers
 
             return new CustomGridBuilder<T>(builder);
         }
+
+        public static CheckBoxListUnordered CheckBoxListUnordered(this HtmlHelper htmlHelper, string name)
+        {
+            return new CheckBoxListUnordered(name);
+        }
     }
 }

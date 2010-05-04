@@ -118,7 +118,7 @@
                 <label>Roles:</label>
             </td>
             <td>
-                <%= this.CheckBoxList("RoleList").Options(Model.AvailableRoles).Selected(Model.UserRoles) %>
+                <%= Html.CheckBoxListUnordered("RoleList").Options(Model.AvailableRoles).Selected(Model.UserRoles) %>
             </td>
             <td>
                 <%= Html.ValidationMessage("RoleList") %>
