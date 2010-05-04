@@ -39,6 +39,7 @@ namespace FSNEP.Tests.BLL
             for (int i = 0; i < 3; i++)
             {
                 _users.Add(CreateValidEntities.User(i+3));
+                //_users[i].Delegate = _users[0];
             }
         }
 
@@ -131,7 +132,39 @@ namespace FSNEP.Tests.BLL
         /// Tests the remove delegate is saved.
         /// </summary>
         [TestMethod]
-        public void TestRemoveDelegateIsSaved()
+        public void TestRemoveDelegateIsSavedWithNoOtherUsersWithTheSameDelegate()
+        {
+            const string userToRemoveUserName = "UserToRemove";
+            _userAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleSupervisor)).Return(true).Repeat.Once();
+            _userAuth.RoleProvider
+                .Expect(a => a.IsUserInRole(userToRemoveUserName, RoleNames.RoleDelegateSupervisor))
+                .Return(true).Repeat.Once();
+
+            var userToRemove = CreateValidEntities.User(2);
+            userToRemove.UserName = userToRemoveUserName;
+
+            _users[0].Delegate = _users[1];
+
+
+            CurrentUser.Delegate = userToRemove;
+            _users.Add(CurrentUser);
+
+            _userBLL.Expect(a => a.Queryable).Return(_users.AsQueryable()).Repeat.Any();
+
+            _delegateBLL.RemoveDelegate(userToRemove);
+            _userBLL.AssertWasCalled(a => a.EnsurePersistent(CurrentUser));
+
+            var argumentsForCallsMadeOn = _roleProvider.GetArgumentsForCallsMadeOn(a => a.RemoveUsersFromRoles(Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything));
+            Assert.AreEqual(1, argumentsForCallsMadeOn.Count(), "RemoveUsersFromRoles should have been called once");
+
+            Assert.IsNull(CurrentUser.Delegate);
+        }
+
+        /// <summary>
+        /// Tests the remove delegate is saved.
+        /// </summary>
+        [TestMethod]
+        public void TestRemoveDelegateIsSavedWithOtherUsersWithTheSameDelegate()
         {
             const string userToRemoveUserName = "UserToRemove";
             _userAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleSupervisor)).Return(true).Repeat.Once();
@@ -143,16 +176,89 @@ namespace FSNEP.Tests.BLL
             userToRemove.UserName = userToRemoveUserName;
 
             CurrentUser.Delegate = userToRemove;
+            _users[1].Delegate = userToRemove;
 
             _users.Add(CurrentUser);
-            _users.Add(userToRemove);
 
             _userBLL.Expect(a => a.Queryable).Return(_users.AsQueryable()).Repeat.Any();
 
             _delegateBLL.RemoveDelegate(userToRemove);
             _userBLL.AssertWasCalled(a => a.EnsurePersistent(CurrentUser));
 
+            var argumentsForCallsMadeOn = _roleProvider.GetArgumentsForCallsMadeOn(a => a.RemoveUsersFromRoles(Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything));
+            Assert.AreEqual(0, argumentsForCallsMadeOn.Count(), "RemoveUsersFromRoles should have Not been called");
+
             Assert.IsNull(CurrentUser.Delegate);
+        }
+
+        /// <summary>
+        /// Tests the remove delegate precondition is thrown when current user has null delegate.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void TestRemoveDelegatePreconditionIsThrownWhenCurrentUserHasNullDelegate()
+        {
+            try
+            {
+                const string userToRemoveUserName = "UserToRemove";
+                _userAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleSupervisor)).Return(true).Repeat.Once();
+                _userAuth.RoleProvider
+                    .Expect(a => a.IsUserInRole(userToRemoveUserName, RoleNames.RoleDelegateSupervisor))
+                    .Return(true).Repeat.Once();
+
+                var userToRemove = CreateValidEntities.User(2);
+                userToRemove.UserName = userToRemoveUserName;
+
+                CurrentUser.Delegate = null;
+                _users[1].Delegate = userToRemove;
+
+                _users.Add(CurrentUser);
+
+                _userBLL.Expect(a => a.Queryable).Return(_users.AsQueryable()).Repeat.Any();
+
+                _delegateBLL.RemoveDelegate(userToRemove);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("You can only remove your current delegate", ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Tests the remove delegate precondition is thrown when current user has different delegate from passed user.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void TestRemoveDelegatePreconditionIsThrownWhenCurrentUserHasDifferentDelegateFromPassedUser()
+        {
+            try
+            {
+                const string userToRemoveUserName = "UserToRemove";
+                _userAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleSupervisor)).Return(true).Repeat.Once();
+                _userAuth.RoleProvider
+                    .Expect(a => a.IsUserInRole(userToRemoveUserName, RoleNames.RoleDelegateSupervisor))
+                    .Return(true).Repeat.Once();
+
+                var userToRemove = CreateValidEntities.User(2);
+                userToRemove.UserName = userToRemoveUserName;
+
+                CurrentUser.Delegate = _users[0];
+                _users[1].Delegate = userToRemove;
+
+                _users.Add(CurrentUser);
+
+                _userBLL.Expect(a => a.Queryable).Return(_users.AsQueryable()).Repeat.Any();
+
+                _delegateBLL.RemoveDelegate(userToRemove);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(ex);
+                Assert.AreEqual("You can only remove your current delegate", ex.Message);
+                throw;
+            }
         }
 
         #endregion RemoveDelegate Tests
