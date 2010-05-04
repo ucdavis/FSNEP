@@ -6,6 +6,8 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
+<% Html.RenderPartial("LookupsHeader"); %>
+
     <h3><%= Html.Encode(TempData["Message"]) %></h3>
     <h2>Activity Categories</h2>
 
