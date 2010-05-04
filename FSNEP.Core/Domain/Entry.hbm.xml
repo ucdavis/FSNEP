@@ -28,6 +28,7 @@
       <property name="Amount" column="ExpenseAmount"></property>
       <property name="Description"></property>
       <many-to-one name="ExpenseType" class="ExpenseType" column="ExpenseTypeID" outer-join="true"></many-to-one>
+      <many-to-one name="EntryFile" class="EntryFile" column="EntryFileID" cascade="all-delete-orphan"></many-to-one>
     </joined-subclass>
     
   </class>

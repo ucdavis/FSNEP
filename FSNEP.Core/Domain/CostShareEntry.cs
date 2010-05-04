@@ -8,6 +8,8 @@ namespace FSNEP.Core.Domain
         [NotNull]
         public virtual ExpenseType ExpenseType { get; set; }
 
+        public virtual EntryFile EntryFile { get; set; }
+
         [Min(0)]
         public virtual double Amount { get; set; }
 

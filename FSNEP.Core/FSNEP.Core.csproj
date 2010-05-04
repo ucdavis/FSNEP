@@ -81,6 +81,7 @@
     <Compile Include="Domain\CostShare.cs" />
     <Compile Include="Domain\CostShareEntry.cs" />
     <Compile Include="Domain\Entry.cs" />
+    <Compile Include="Domain\EntryFile.cs" />
     <Compile Include="Domain\ExpenseType.cs" />
     <Compile Include="Domain\FundType.cs" />
     <Compile Include="Domain\HoursInMonth.cs" />
@@ -120,6 +121,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Domain\RecordTracking.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\EntryFile.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
