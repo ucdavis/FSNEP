@@ -6,7 +6,14 @@
 
 <asp:Content ID="indexContent" ContentPlaceHolderID="mainContent" runat="server">
     <h2><%= Html.Encode(ViewData["Message"]) %></h2>
-    <p>
-        To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
-    </p>
+    
+    <h3>Quick Links:</h3>
+        
+        <p>
+            <%= Html.ActionLink("Project", "Projects", "Lookup") %>
+        </p>
+        <p>
+            <%= Html.ActionLink("User Admin", "List", "UserAdministration") %>
+        </p>
+    
 </asp:Content>
