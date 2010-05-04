@@ -127,7 +127,7 @@
             </select>
         </p>
         <p>
-            <%= this.TextArea("Comment").Columns(25).Class("required").Label("Comments:")%>
+            <%= this.TextArea("Comment").Columns(25).Label("Comments:")%>
         </p>
         <p>
             <input type="submit" value="Save!" />
@@ -173,7 +173,7 @@
             </p>
             <p>
                 <label for="Edit_Comment"></label>
-                <%= this.TextArea("Edit_Comment").Columns(25).Class("required").Label("Comments:")%>
+                <%= this.TextArea("Edit_Comment").Columns(25).Label("Comments:")%>
             </p>
             <p>
                 <input type="submit" value="Update!" />
