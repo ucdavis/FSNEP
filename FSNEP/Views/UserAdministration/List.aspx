@@ -62,7 +62,11 @@
                              col.Add(x => x.FTE);
                              //col.Add(x => x.Token);
                          })
-            .Pageable(x => x.PageSize(20))
+            .Pageable(x =>
+                          {
+                              x.PageSize(20);
+                              x.Position(Telerik.Web.Mvc.UI.GridPagerPosition.Both);
+                          })
             .Sortable()
             .Render();
            
