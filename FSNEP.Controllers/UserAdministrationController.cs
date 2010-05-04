@@ -75,6 +75,8 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult Create(CreateUserViewModel model, List<string> roleList)
         {
+            model.User.UserName = model.UserName; //transfer the username to the user class
+
             ValidationHelper<CreateUserViewModel>.Validate(model, ModelState); //Validate the create user properties
 
             ValidationHelper<User>.Validate(model.User, ModelState, "User"); //validate the user properties
@@ -157,7 +159,6 @@ namespace FSNEP.Controllers
                             break; // return Create();
                         case MembershipCreateStatus.Success:
                             throw new ApplicationException("Unexpected value.");
-                            break;
                         case MembershipCreateStatus.UserRejected:
                             ModelState.AddModelError("_FORM", "Create Failed User Rejected");
                             break; // return Create();

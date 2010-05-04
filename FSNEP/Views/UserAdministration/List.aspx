@@ -17,6 +17,7 @@
     <table>
         <tr>
             <th></th>
+            <th>Username</th>
             <th>
                 FirstName
             </th>
@@ -57,6 +58,9 @@
         <tr>
             <td>
                 <%= Html.ActionLink("Edit", "ModifyById", new {id = item.ID}) %>
+            </td>
+            <td>
+                <%= Html.Encode(item.UserName) %>
             </td>
             <td>
                 <%= Html.Encode(item.FirstName) %>

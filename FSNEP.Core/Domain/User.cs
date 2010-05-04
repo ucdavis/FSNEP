@@ -8,6 +8,10 @@ namespace FSNEP.Core.Domain
 {
     public class User : DomainObject<User, Guid>
     {
+        [NotNullValidator(MessageTemplate="Username should be set upon creation")]
+        [StringLengthValidator(1,256)]
+        public virtual string UserName { get; set; }
+
         [NotNullValidator]
         [StringLengthValidator(50)]
         public virtual string FirstName { get; set; }

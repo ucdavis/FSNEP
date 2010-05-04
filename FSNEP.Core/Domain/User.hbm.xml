@@ -7,6 +7,7 @@
       <generator class="assigned" />
     </id>
 
+    <property name="UserName" column="UserName" />
     <property name="FirstName" column="FirstName" />
     <property name="LastName" column="LastName" />
     <property name="Salary" column="Salary" />
