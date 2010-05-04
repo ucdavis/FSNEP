@@ -8,10 +8,10 @@ using System.Security.Principal;
 
 namespace FSNEP.Controllers
 {
-    [Authorize]
     [HandleTransactionsManually]
     public class HomeController : ApplicationController
     {
+        [Authorize]
         public ActionResult Index()
         {
             ViewData["Message"] = "Welcome to ASP.NET MVC!";
@@ -20,6 +20,7 @@ namespace FSNEP.Controllers
 
             return View(viewModel);
         }
+
 
         public ActionResult Error(string errorMessage)
         {
