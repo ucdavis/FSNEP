@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Web.Mvc;
 using CAESArch.BLL;
 using FSNEP.BLL.Impl;
@@ -24,8 +23,8 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult Accounts()
         {
-            var activeAccounts = AccountBLL.Repository.Queryable.Where(a => a.IsActive);
-
+            var activeAccounts = AccountBLL.GetActive();
+            
             return View(activeAccounts);
         }
 
@@ -90,8 +89,8 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult Projects()
         {
-            var activeProjects = ProjectBLL.Repository.Queryable.Where(a => a.IsActive);
-
+            var activeProjects = ProjectBLL.GetActive();
+            
             return View(activeProjects);
         }
 
