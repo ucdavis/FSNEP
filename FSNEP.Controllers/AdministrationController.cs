@@ -6,7 +6,6 @@ using FSNEP.Core.Domain;
 using System.Linq;
 using MvcContrib.Attributes;
 using System;
-using MvcContrib.UI.Html;
 
 namespace FSNEP.Controllers
 {
@@ -30,7 +29,7 @@ namespace FSNEP.Controllers
 
             //Populate the supervisor with the correct supervisor chosen
             ViewData["Supervisors"] = new SelectList(UserBLL.GetSupervisors(), "ID", "FullName",
-                                                   user.Supervisor.ID);
+                                                   user.Supervisor != null ? user.Supervisor.ID : Guid.Empty);
 
             ViewData["Projects"] = new MultiSelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name",
                                                      user.Projects.Select(p => p.ID));
