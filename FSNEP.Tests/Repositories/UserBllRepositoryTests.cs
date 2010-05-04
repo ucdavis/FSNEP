@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Security;
 using FSNEP.Tests.Core;
 using FSNEP.Tests.Core.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,8 +10,7 @@ using Rhino.Mocks;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Abstractions;
 using UCDArch.Core.PersistanceSupport;
-using UCDArch.Data.NHibernate;
-using UCDArch.Testing.Extensions;
+
 namespace FSNEP.Tests.Repositories
 {
     [TestClass]
