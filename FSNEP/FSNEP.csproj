@@ -303,6 +303,12 @@
     <Content Include="Views\TimeRecord\ListOfActivitiesAndDescriptions.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AppSettings-Test.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ConnectionStrings-Test.config" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>

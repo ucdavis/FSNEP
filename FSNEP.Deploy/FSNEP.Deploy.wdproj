@@ -39,8 +39,17 @@
     <UseMerge>true</UseMerge>
     <SingleAssemblyName>FSNEP.Deploy</SingleAssemblyName>
     <OutputPath>.\Test</OutputPath>
+    <UseWebConfigReplacement>true</UseWebConfigReplacement>
   </PropertyGroup>
   <ItemGroup>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <WebConfigReplacementFiles Include="AppSettings-Test.config">
+      <Section>appSettings</Section>
+    </WebConfigReplacementFiles>
+    <WebConfigReplacementFiles Include="ConnectionStrings-Test.config">
+      <Section>connectionStrings</Section>
+    </WebConfigReplacementFiles>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WebDeployment\v9.0\Microsoft.WebDeployment.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
