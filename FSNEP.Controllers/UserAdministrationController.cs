@@ -252,6 +252,18 @@ namespace FSNEP.Controllers
             var viewModel = UserViewModel.Create(UserBLL, Repository);
             viewModel.User = user;
 
+            //Make sure that any projects that the user already has show up in the view of projects even if the current user doesn't have those projects.
+            if(user.Projects != null)
+            {
+                foreach (Project project in user.Projects)
+                {
+                    if(!viewModel.Projects.Contains(project))
+                    {
+                        viewModel.Projects.Add(project);
+                    }
+                }
+            }
+
             //Now the user roles are the roles for the given id
             viewModel.UserRoles = UserBLL.GetUserRoles(id);
 
