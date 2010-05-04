@@ -24,7 +24,7 @@ namespace FSNEP.BLL.Impl
 
             var parameters = new ListDictionary();
 
-            parameters["projectID"] = project.Id;
+            parameters["ProjectID"] = project.Id;
             parameters["year"] = year;
 
             return GetReport(reportPath, parameters, reportType);
