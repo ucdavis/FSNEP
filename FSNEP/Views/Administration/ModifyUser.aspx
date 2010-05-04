@@ -6,18 +6,53 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2>ModifyUser</h2>
+<h2>Modify User</h2>
 
-    <%= Html.ValidationSummary("Create was unsuccessful. Please correct the errors and try again.") %>
+    <%= Html.ValidationSummary("User modification was unsuccessful. Please correct the errors and try again.") %>
 
     <% using (Html.BeginForm()) {%>
 
         <fieldset>
-            <legend>Fields</legend>
+            <legend>User Account Info</legend>
             <p>
-                <input type="submit" value="Create" />
+            
             </p>
         </fieldset>
+
+        <br />
+
+        <fieldset>
+            <legend>User Information</legend>
+            <table>
+                <tr>
+                    <td>First Name: </td>
+                    <td><%= Html.TextBoxFor(u=>u.User.FirstName) %></td>
+                    <td><%= Html.ValidationMessageFor(u=>u.User.FirstName) %></td>
+                </tr>
+                <tr>
+                    <td>Last Name: </td>
+                    <td><%= Html.TextBoxFor(u=>u.User.LastName) %></td>
+                    <td><%= Html.ValidationMessageFor(u => u.User.LastName)%></td>
+                </tr>
+                <tr>
+                    <td>Salary: </td>
+                    <td><%= Html.TextBoxFor(u=>u.User.Salary) %></td>
+                    <td><%= Html.ValidationMessageFor(u=>u.User.Salary) %></td>
+                </tr>
+                <tr>
+                    <td>Benefit Rate: </td>
+                    <td><%= Html.TextBoxFor(u=>u.User.BenefitRate) %></td>
+                    <td><%= Html.ValidationMessageFor(u=>u.User.BenefitRate) %></td>
+                </tr>
+                <tr>
+                    <td>Supervisor: </td>
+                    <td><%= Html.DropDownList("Supervisor", Model.Supervisors, "Select A Supervisor") %></td>
+                    <td><%= Html.ValidationMessageFor(u=>u.User.Supervisor) %></td>
+                </tr>
+            </table>
+        </fieldset>
+        
+        <input type="submit" value="Create User" />
 
     <% } %>
 
