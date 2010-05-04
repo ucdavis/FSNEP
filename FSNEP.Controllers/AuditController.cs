@@ -18,7 +18,7 @@ namespace FSNEP.Controllers
     {
         public ActionResult TimeRecordHistory(int? projectId)
         {
-            var viewModel = TimeRecordAuditHistoryViewModel.Create(Repository.OfType<Project>(),
+            var viewModel = AuditHistoryViewModel<TimeRecord>.Create(Repository.OfType<Project>(),
                                                                   Repository.OfType<TimeRecord>(), Repository.OfType<User>(),
                                                                   projectId);
 
@@ -27,7 +27,7 @@ namespace FSNEP.Controllers
 
         public ActionResult CostShareHistory(int? projectId)
         {
-            var viewModel = CostShareAuditHistoryViewModel.Create(Repository.OfType<Project>(),
+            var viewModel = AuditHistoryViewModel<CostShare>.Create(Repository.OfType<Project>(),
                                                                   Repository.OfType<CostShare>(), Repository.OfType<User>(),
                                                                   projectId);
 
@@ -74,44 +74,15 @@ namespace FSNEP.Controllers
     // <summary>
     /// Model for selecting time records and displaying them to the user on the History view
     /// </summary>
-    public class TimeRecordAuditHistoryViewModel
+    public class AuditHistoryViewModel<T> where T: Record
     {
-        public static TimeRecordAuditHistoryViewModel Create(IRepository<Project> projectRepository, IRepository<TimeRecord> recordRepository, IRepository<User> userRepository, int? projectId)
+        public static AuditHistoryViewModel<T> Create(IRepository<Project> projectRepository, IRepository<T> recordRepository, IRepository<User> userRepository, int? projectId)
         {
             var chosenProject = projectId.HasValue ? projectRepository.GetNullableByID(projectId.Value) : null;
 
             var projects = projectRepository.Queryable.Where(x => x.IsActive).OrderBy(x => x.Name).ToList();
 
-            var viewModel = new TimeRecordAuditHistoryViewModel { Project = chosenProject, Projects = projects };
-
-            if (chosenProject != null)
-            {
-                var availableTimeRecordUserIds = userRepository.Queryable.Where(x => x.Projects.Contains(chosenProject)).Select(x => x.Id).ToList();
-
-                viewModel.Records =
-                    recordRepository.Queryable.Where(x => availableTimeRecordUserIds.Contains(x.User.Id)).OrderByDescending(
-                        x => x.Year).ThenByDescending(x => x.Month).ToList();
-            }
-
-            return viewModel;
-        }
-
-        public IEnumerable<TimeRecord> Records { get; set; }
-
-        public IEnumerable<Project> Projects { get; set; }
-
-        public Project Project { get; set; }
-    }
-
-    public class CostShareAuditHistoryViewModel
-    {
-        public static CostShareAuditHistoryViewModel Create(IRepository<Project> projectRepository, IRepository<CostShare> recordRepository, IRepository<User> userRepository, int? projectId)
-        {
-            var chosenProject = projectId.HasValue ? projectRepository.GetNullableByID(projectId.Value) : null;
-
-            var projects = projectRepository.Queryable.Where(x => x.IsActive).OrderBy(x => x.Name).ToList();
-
-            var viewModel = new CostShareAuditHistoryViewModel { Project = chosenProject, Projects = projects };
+            var viewModel = new AuditHistoryViewModel<T> { Project = chosenProject, Projects = projects };
 
             if (chosenProject != null)
             {
@@ -125,7 +96,7 @@ namespace FSNEP.Controllers
             return viewModel;
         }
 
-        public IEnumerable<CostShare> Records { get; set; }
+        public IEnumerable<T> Records { get; set; }
 
         public IEnumerable<Project> Projects { get; set; }
 

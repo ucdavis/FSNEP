@@ -1,4 +1,5 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<CostShareAuditHistoryViewModel>" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<AuditHistoryViewModel<CostShare>>" %>
+<%@ Import Namespace="FSNEP.Core.Domain"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
 	History

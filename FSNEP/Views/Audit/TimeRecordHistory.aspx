@@ -1,4 +1,5 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<TimeRecordAuditHistoryViewModel>" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<AuditHistoryViewModel<TimeRecord>>" %>
+<%@ Import Namespace="FSNEP.Core.Domain"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
 	Time Record History

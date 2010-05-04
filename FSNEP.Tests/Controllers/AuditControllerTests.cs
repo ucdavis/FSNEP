@@ -93,7 +93,7 @@ namespace FSNEP.Tests.Controllers
 
             var result = Controller.CostShareHistory(9)
                 .AssertViewRendered()
-                .WithViewData<CostShareAuditHistoryViewModel>();
+                .WithViewData<AuditHistoryViewModel<CostShare>>();
             Assert.IsNotNull(result);
             Assert.AreEqual(7, result.Projects.Count());
             Assert.IsNull(result.Project);
@@ -112,7 +112,7 @@ namespace FSNEP.Tests.Controllers
 
             var result = Controller.CostShareHistory(5)
                 .AssertViewRendered()
-                .WithViewData<CostShareAuditHistoryViewModel>();
+                .WithViewData<AuditHistoryViewModel<CostShare>>();
             Assert.IsNotNull(result);
             Assert.AreEqual(7, result.Projects.Count());
             Assert.AreSame(Projects[4], result.Project);
