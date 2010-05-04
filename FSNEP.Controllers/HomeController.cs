@@ -25,6 +25,13 @@ namespace FSNEP.Controllers
             return View("Error", errorMessage);
         }
 
+        public ActionResult Menu()
+        {
+            var viewModel = UserPermissionsViewModel.Create(CurrentUser);
+
+            return View("Menu", viewModel); //Menu partial
+        }
+
         public ActionResult About()
         {
             return View();

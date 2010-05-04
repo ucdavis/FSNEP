@@ -59,7 +59,7 @@
         <%--<% Html.RenderPartial("Menu"); %>--%>
         
         <div id="welcome">
-            <% Html.RenderPartial("LogOnUserControl"); %>
+            <% Html.RenderAction("Menu", "Home"); %>
         </div>
         <div style="clear: both;">
             <br />
