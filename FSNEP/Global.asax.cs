@@ -1,4 +1,9 @@
-﻿namespace FSNEP
+﻿using System.Web.Mvc;
+using CAESArch.IoC;
+using FSNEP.Controllers;
+using MvcContrib.Castle;
+
+namespace FSNEP
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
@@ -13,6 +18,19 @@
 
             //Register the routes for this site
             new RouteConfigurator().RegisterRoutes();
+
+            InitializeServiceLocator();
+        }
+
+        private static void InitializeServiceLocator()
+        {
+            var container = ServiceLocator.Container;
+
+            ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container));
+
+            container.RegisterControllers(typeof(HomeController).Assembly);
+
+            ComponentRegistrar.AddComponentsTo(container);
         }
     }
 }
