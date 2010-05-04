@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FSNEP.Controllers;
@@ -903,6 +904,74 @@ namespace FSNEP.Tests.Controllers
                 .ShouldMapTo<LookupController>(a => a.CreateExpenseType(null));
         }
         #endregion ExpenseType Tests
+
+        #region HoursInMonth Tests
+        /// <summary>
+        /// Create HoursInMonth Saves New HoursInMonth
+        /// </summary>
+        [TestMethod]
+        public void CreateHoursInMonthSavesNewHoursInMonth()
+        {
+            var newYearMonthComposite = new YearMonthComposite(01, 2009);
+            var newHoursInMonth = new HoursInMonth(newYearMonthComposite.Year, newYearMonthComposite.Month) { Hours = 999 };
+
+
+            var hoursInMonthRepository = FakeRepository<HoursInMonth>();
+            hoursInMonthRepository
+                .Expect(a => a.EnsurePersistent(Arg<HoursInMonth>.Is.Anything))
+                .WhenCalled(a => newHoursInMonth = (HoursInMonth)a.Arguments.First()); //set newHoursInMonth to the HoursInMonth that was saved
+
+            Controller.Repository.Expect(a => a.OfType<HoursInMonth>()).Return(hoursInMonthRepository);
+
+            Controller.CreateHoursInMonth(newHoursInMonth, newYearMonthComposite);
+
+            hoursInMonthRepository
+                .AssertWasCalled(a => a.EnsurePersistent(newHoursInMonth), a => a.Repeat.Once());//make sure we called persist
+
+            Assert.AreEqual(999, newHoursInMonth.Hours, "The newHoursInMonth should have 999 hours.");
+            Assert.AreEqual(newYearMonthComposite, newHoursInMonth.ID, "YearMonthComposite should be the same.");            
+            Assert.AreEqual(string.Format("{0:MMMM yyyy}: {1} Hrs", new DateTime(2009, 01, 1), 999), newHoursInMonth.ToString());
+        }
+
+        /// <summary>
+        /// CreateHoursInMonth Does Not Save HoursInMonth With Zero Hours
+        /// </summary>
+        [TestMethod]
+        public void CreateHoursInMonthDoesNotSaveHoursInMonthWithZeroHours()
+        {
+            var newYearMonthComposite = new YearMonthComposite(01, 2009);
+            var newHoursInMonth = new HoursInMonth(newYearMonthComposite.Year, newYearMonthComposite.Month) { Hours = 0 };
+
+            var hoursInMonthRepository = FakeRepository<HoursInMonth>();
+
+            Controller.Repository.Expect(a => a.OfType<HoursInMonth>()).Return(hoursInMonthRepository);
+
+            Controller.CreateHoursInMonth(newHoursInMonth, newYearMonthComposite);
+
+            hoursInMonthRepository
+                .AssertWasNotCalled(a => a.EnsurePersistent(newHoursInMonth));//make sure we didn't call persist
+        }
+
+        /// <summary>
+        /// CreateHoursInMonth Does Not Save HoursInMonth With Years And Months of Zero
+        /// Unless HoursInMonth is changed, this test will not pass.
+        /// </summary>
+        [TestMethod, Ignore]
+        public void CreateHoursInMonthDoesNotSaveHoursInMonthWithYearsAndMonthsOfZero()
+        {
+            var newYearMonthComposite = new YearMonthComposite(00, 0000);
+            var newHoursInMonth = new HoursInMonth(newYearMonthComposite.Year, newYearMonthComposite.Month) { Hours = 100 };
+
+            var hoursInMonthRepository = FakeRepository<HoursInMonth>();
+
+            Controller.Repository.Expect(a => a.OfType<HoursInMonth>()).Return(hoursInMonthRepository);
+
+            Controller.CreateHoursInMonth(newHoursInMonth, newYearMonthComposite);
+
+            hoursInMonthRepository
+                .AssertWasNotCalled(a => a.EnsurePersistent(newHoursInMonth));//make sure we didn't call persist
+        }
+        #endregion HoursInMonth Tests
 
         /// <summary>
         /// Fake a Queryable ActivityCategoryRepository.
