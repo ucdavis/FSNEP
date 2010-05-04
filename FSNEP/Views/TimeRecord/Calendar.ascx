@@ -75,19 +75,27 @@
 </div>
 
 <div id="dialogTimeRecordEntry" class="TimeRecordEntryDialog" title="Add Entry">
+    <input id="addRecordDay" type="hidden" />
     <fieldset>
         <legend>Entry Information</legend>
         <p>
-            <p>
-                This is the default dialog which is useful for displaying information. The dialog
-                window can be moved, resized and closed with the 'x' icon.</p>
+            <%= this.TextBox("hours").Label("Hours:") %>
         </p>
         <p>
-            <label for="hours">Hours:</label><input id="hours" type="text" />
-        </p>
-        <p>
-            <label for="activityTypes">Activity Types:</label>
+            <label for="activityType">Activity Type:</label>
             <% Html.RenderPartial("ActivityTypeSelect", Model.ActivityCategories); %>
+        </p>
+        <p>
+            <%= this.Select("fundType").Options(Model.FundTypes, f=>f.Id, f=>f.Name).Label("Fund Type:").Disabled(Model.FundTypes.Count() == 1) %>
+        </p>
+        <p>
+            <%= this.Select("project").Options(Model.Projects, p=>p.Id, p=>p.Name).Label("Project:").Disabled(Model.Projects.Count() == 1) %>
+        </p>
+        <p>
+            <%= this.Select("account").Options(new[] {"Select An Account"}).Label("Account:").Disabled(true) %>
+        </p>
+        <p>
+            <%= this.TextArea("comments").Columns(25).Label("Comments:")%>
         </p>
     </fieldset>
 </div>

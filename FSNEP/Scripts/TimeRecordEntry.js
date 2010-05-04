@@ -29,6 +29,9 @@ $(function() {
 function AddEntry(id) {
     var addEntryDiv = $("#dialogTimeRecordEntry");
 
+    var addRecordDay = $("#addRecordDay");
+    addRecordDay.val(id);
+
     OpenDialog(addEntryDiv, null, "Add Entry", null);
 }
 
