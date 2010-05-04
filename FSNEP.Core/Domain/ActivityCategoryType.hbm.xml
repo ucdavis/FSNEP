@@ -9,6 +9,11 @@
 
     <property name="Name" column="Name" />
     <property name="IsActive" column="IsActive" />
+
+    <bag name="ActivityTypes" table="ActivityTypes" where="IsActive = 1" inverse="true" cascade="all-delete-orphan">
+      <key column="CategoryID" />
+      <one-to-many class="FSNEP.Core.Domain.ActivityType, FSNEP.Core" />
+    </bag>
     
   </class>
 </hibernate-mapping>

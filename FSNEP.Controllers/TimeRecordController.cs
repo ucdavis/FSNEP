@@ -10,6 +10,7 @@ using UCDArch.Core.Utils;
 using FSNEP.Core.Domain;
 namespace FSNEP.Controllers
 {
+    [Authorize] //TODO: Authorize for only time record users
     public class TimeRecordController : SuperController
     {
         private readonly ITimeRecordBLL _timeRecordBLL;
