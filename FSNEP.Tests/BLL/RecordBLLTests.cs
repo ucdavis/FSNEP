@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
-using System.Web;
 using FSNEP.BLL.Dev;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Abstractions;
@@ -22,7 +21,7 @@ namespace FSNEP.Tests.BLL
         private IRecordBLL<CostShare> _costShareBLL;
         private IRepository _repository;
         private IMessageGateway _messageGateway;
-        private IPrincipal _principal = MockRepository.GenerateStub<MockPrincipal>();
+        private readonly IPrincipal _principal = MockRepository.GenerateStub<MockPrincipal>();
         private List<Record> Records { get; set; }
 
         private User CurrentUser { get; set; }
@@ -1024,6 +1023,84 @@ namespace FSNEP.Tests.BLL
 
         #region CostShare Tests
 
+        #region IsEditable Tests
+
+        [TestMethod]
+        public void CostShareIsEditableReturnsTrueIfStatusIsCurrent()
+        {
+            var status = new Status { NameOption = Status.Option.Current };
+
+            //var record = new Record {Status = status};
+            var costShare = CreateValidEntities.CostShare(null);
+            costShare.Status = status;
+
+            var editable = costShare.IsEditable;
+
+            Assert.AreEqual(true, editable);
+        }
+        
+        [TestMethod]
+        public void CostShareIsEditableReturnsTrueIfStatusIsDisapproved()
+        {
+            var status = new Status { NameOption = Status.Option.Disapproved };
+
+            //var record = new Record { Status = status };
+            var costShare = CreateValidEntities.CostShare(null);
+            costShare.Status = status;
+
+            var editable = costShare.IsEditable;
+
+            Assert.AreEqual(true, editable);
+        }
+
+        /// <summary>
+        /// Determines whether [is editable returns true if status name is default].
+        /// NameOption defaults to Current when the Name isn't a valid enum value.
+        /// </summary>
+        [TestMethod]
+        public void CostShareIsEditableReturnsTrueIfStatusNameIsDefault()
+        {
+            var status = new Status { Name = "Junk data" };
+
+            //var record = new Record { Status = status };
+            var costShare = CreateValidEntities.CostShare(null);
+            costShare.Status = status;
+
+            var editable = costShare.IsEditable;
+
+            Assert.AreEqual(true, editable);
+        }
+
+        [TestMethod]
+        public void CostShareIsEditableReturnsFalseIfStatusIsApproved()
+        {
+            var status = new Status { NameOption = Status.Option.Approved };
+
+            //var record = new Record { Status = status };
+            var costShare = CreateValidEntities.CostShare(null);
+            costShare.Status = status;
+
+            var editable = costShare.IsEditable;
+
+            Assert.AreEqual(false, editable);
+        }
+
+        [TestMethod]
+        public void CostShareIsEditableReturnsPendingReviewIfStatusIsPendingReview()
+        {
+            var status = new Status { NameOption = Status.Option.PendingReview };
+
+            //var record = new Record { Status = status };
+            var costShare = CreateValidEntities.CostShare(null);
+            costShare.Status = status;
+
+            var editable = costShare.IsEditable;
+
+            Assert.AreEqual(false, editable);
+        }
+         
+        #endregion IsEditable Tests
+
         #region Submit Tests
 
         /// <summary>
@@ -1346,14 +1423,7 @@ namespace FSNEP.Tests.BLL
             for (int i = 0; i < 6; i++)
             {
                 timeRecords.Add(CreateValidEntities.TimeRecord(i + 13));
-                if(i%2==0)
-                {
-                    timeRecords[i + 13].Status = statusApproved;
-                }
-                else
-                {
-                    timeRecords[i + 13].Status = statusDisapproved; 
-                }
+                timeRecords[i + 13].Status = i%2==0 ? statusApproved : statusDisapproved;
             }
             timeRecords[13].User = userList[0];
             timeRecords[14].User = userList[0];
@@ -1476,14 +1546,7 @@ namespace FSNEP.Tests.BLL
             for (int i = 0; i < 6; i++)
             {
                 costShareRecords.Add(CreateValidEntities.CostShare(i + 13));
-                if (i % 2 == 0)
-                {
-                    costShareRecords[i + 13].Status = statusApproved;
-                }
-                else
-                {
-                    costShareRecords[i + 13].Status = statusDisapproved;
-                }
+                costShareRecords[i + 13].Status = i % 2 == 0 ? statusApproved : statusDisapproved;
             }
             costShareRecords[13].User = userList[0];
             costShareRecords[14].User = userList[0];
