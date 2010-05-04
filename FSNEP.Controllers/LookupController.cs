@@ -25,6 +25,72 @@ namespace FSNEP.Controllers
         }
 
         [Transaction]
+        public ActionResult ActivityTypes()
+        {
+            var activeActivityTypes = ActivityTypeBLL.GetActive();
+
+            ViewData["ActivityCategories"] = ActivityTypeBLL.GetActiveActivityCategories();
+
+            return View(activeActivityTypes);
+        }
+
+        [AcceptPost]
+        public ActionResult InactivateActivityType(int activityTypeId)
+        {
+            //get the account
+            var activityType = ActivityTypeBLL.Repository.GetNullableByID(activityTypeId);
+
+            if (activityType == null)
+            {
+                Message = "Activity Type Not Found";
+
+                return this.RedirectToAction(a => a.ActivityTypes());
+            }
+
+            //inactivate the project
+            using (var ts = new TransactionScope())
+            {
+                activityType.IsActive = false;
+
+                ActivityTypeBLL.Repository.EnsurePersistent(activityType);
+
+                ts.CommitTransaction();
+            }
+
+            Message = "Activity Type Removed Successfully";
+
+            return this.RedirectToAction(a => a.ActivityTypes());
+        }
+
+        [AcceptPost]
+        public ActionResult CreateActivityType(ActivityType newActivityType, int activityCategoryId)
+        {
+            newActivityType.IsActive = true;
+
+            ValidationHelper<ActivityType>.Validate(newActivityType, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                Message = "Activity Type Creation Failed";
+
+                return this.RedirectToAction(a => a.ActivityTypes());
+            }
+
+            //Add the new project
+            using (var ts = new TransactionScope())
+            {
+                ActivityTypeBLL.Repository.EnsurePersistent(newActivityType);
+
+                ts.CommitTransaction();
+            }
+
+            Message = "Activity Type Created Successfully";
+
+            return this.RedirectToAction(a => a.ActivityTypes());
+        }
+
+
+        [Transaction]
         public ActionResult ActivityCategories()
         {
             var activeActivityCategories = ActivityTypeBLL.GetActiveActivityCategories();
