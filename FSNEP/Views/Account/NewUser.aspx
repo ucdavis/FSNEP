@@ -9,7 +9,8 @@
 
     <h2>NewUser</h2>
 
-    <%= Html.ClientSideValidation<NewUserViewModel>() %>
+    <%= Html.ClientSideValidation<NewUserViewModel>()
+            .AddRule("Password", new xVal.Rules.ComparisonRule("ConfirmPassword", xVal.Rules.ComparisonRule.Operator.Equals))%>
 
     <%= Html.ValidationSummary("Edit was unsuccessful. Please correct the errors and try again.") %>
 
