@@ -18,14 +18,12 @@ namespace FSNEP.Controllers
         public IProjectBLL ProjectBLL;
         public IAccountBLL AccountBLL;
         public IExpenseTypeBLL ExpenseTypeBLL;
-        public IActivityTypeBLL ActivityTypeBLL;
-
-        public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL, IExpenseTypeBLL expenseTypeBLL, IActivityTypeBLL activityTypeBLL, IRepository repository)
+        
+        public LookupController(IProjectBLL projectBLL, IAccountBLL accountBLL, IExpenseTypeBLL expenseTypeBLL, IRepository repository)
         {
             ProjectBLL = projectBLL;
             AccountBLL = accountBLL;
             ExpenseTypeBLL = expenseTypeBLL;
-            ActivityTypeBLL = activityTypeBLL;
             Repository = repository;
         }
 
@@ -44,7 +42,7 @@ namespace FSNEP.Controllers
         public ActionResult InactivateActivityType(int activityTypeId)
         {
             //get the account
-            var activityType = ActivityTypeBLL.Repository.GetNullableByID(activityTypeId);
+            var activityType = Repository.OfType<ActivityType>().GetNullableByID(activityTypeId);
 
             if (activityType == null)
             {
@@ -58,7 +56,7 @@ namespace FSNEP.Controllers
             {
                 activityType.IsActive = false;
 
-                ActivityTypeBLL.Repository.EnsurePersistent(activityType);
+                Repository.OfType<ActivityType>().EnsurePersistent(activityType);
 
                 ts.CommitTransaction();
             }
@@ -72,8 +70,7 @@ namespace FSNEP.Controllers
         public ActionResult CreateActivityType(ActivityType newActivityType, int activityCategoryId)
         {
             newActivityType.IsActive = true;
-            newActivityType.ActivityCategory =
-                ActivityTypeBLL.GetActivityCategoryRepository().GetNullableByID(activityCategoryId);
+            newActivityType.ActivityCategory = Repository.OfType<ActivityCategory>().GetNullableByID(activityCategoryId);
             
             ValidationHelper<ActivityType>.Validate(newActivityType, ModelState);
 
@@ -87,7 +84,7 @@ namespace FSNEP.Controllers
             //Add the new project
             using (var ts = new TransactionScope())
             {
-                ActivityTypeBLL.Repository.EnsurePersistent(newActivityType);
+                Repository.OfType<ActivityType>().EnsurePersistent(newActivityType);
 
                 ts.CommitTransaction();
             }
@@ -101,7 +98,8 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult ActivityCategories()
         {
-            var activeActivityCategories = ActivityTypeBLL.GetActiveActivityCategories();
+            var activeActivityCategories =
+                Repository.OfType<ActivityCategory>().Queryable.Where(a => a.IsActive).OrderBy(a => a.Name).ToList();
             
             return View(activeActivityCategories);
         }
@@ -110,7 +108,7 @@ namespace FSNEP.Controllers
         public ActionResult InactivateActivityCategory(int activityCategoryId)
         {
             //get the account
-            var activityCategory = ActivityTypeBLL.GetActivityCategoryRepository().GetNullableByID(activityCategoryId);
+            var activityCategory = Repository.OfType<ActivityCategory>().GetNullableByID(activityCategoryId);
 
             if (activityCategory == null)
             {
@@ -124,7 +122,7 @@ namespace FSNEP.Controllers
             {
                 activityCategory.IsActive = false;
 
-                ActivityTypeBLL.GetActivityCategoryRepository().EnsurePersistent(activityCategory);
+                Repository.OfType<ActivityCategory>().EnsurePersistent(activityCategory);
 
                 ts.CommitTransaction();
             }
@@ -151,7 +149,7 @@ namespace FSNEP.Controllers
             //Add the new project
             using (var ts = new TransactionScope())
             {
-                ActivityTypeBLL.GetActivityCategoryRepository().EnsurePersistent(newActivityCategory);
+                Repository.OfType<ActivityCategory>().EnsurePersistent(newActivityCategory);
 
                 ts.CommitTransaction();
             }
