@@ -26,16 +26,14 @@ namespace FSNEP.Controllers
             MessageService = messageGateway;
         }
 
-        public IFormsAuthentication FormsAuth
+        private IFormsAuthentication FormsAuth
         {
-            get;
-            private set;
+            get; set;
         }
 
-        public IMembershipService MembershipService
+        private IMembershipService MembershipService
         {
-            get;
-            private set;
+            get; set;
         }
 
         public IMessageGateway MessageService

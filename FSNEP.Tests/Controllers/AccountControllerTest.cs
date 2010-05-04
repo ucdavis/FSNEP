@@ -3,6 +3,7 @@ using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using CAESArch.IoC;
 using FSNEP.Core.Abstractions;
 using FSNEP.Tests.Core;
 using FSNEP.Tests.Core.Fakes;
@@ -26,7 +27,8 @@ namespace FSNEP.Tests.Controllers
 
             container.Kernel.AddComponentInstance("formsAuth", typeof (IFormsAuthentication), new MockFormsAuthenticationService());
             container.Kernel.AddComponentInstance("membershipService", typeof(IMembershipService), membershipService);
-            container.Kernel.AddComponentInstance("messageGateway", typeof(IMessageGateway), MockRepository.GenerateStub<IMessageGateway>());
+            
+            ServiceLocator.AddInstance<IMessageGateway>(MockRepository.GenerateStub<IMessageGateway>());
         }
 
         public AccountControllerTest()
@@ -120,7 +122,9 @@ namespace FSNEP.Tests.Controllers
 
             //Get the account controller
             var controller = GetAccountController();
-            controller.MessageService = messageGateway;
+            //controller.MessageService = messageGateway;
+
+            ServiceLocator.AddInstance<IMessageGateway>(messageGateway);
 
             controller.ResetPassword("validUser", "validAnswer");
 

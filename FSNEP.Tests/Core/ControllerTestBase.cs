@@ -8,6 +8,7 @@ using Rhino.Mocks;
 using FSNEP.Controllers;
 using MvcContrib.Services;
 using System.Web.Mvc;
+using CAESArch.IoC;
 
 namespace FSNEP.Tests.Core
 {
@@ -26,8 +27,10 @@ namespace FSNEP.Tests.Core
         [TestInitialize]
         public void Setup()
         {
+            ServiceLocator.Clear();
+
             Builder = new TestControllerBuilder();
-            container = new WindsorContainer();
+            container = ServiceLocator.Container;
 
             container.RegisterControllers(typeof(HomeController).Assembly); //Add all of the controllers
 
