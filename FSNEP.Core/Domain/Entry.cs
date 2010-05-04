@@ -13,7 +13,6 @@ namespace FSNEP.Core.Domain
         [NotNull]
         public virtual Record Record { get; set; }
 
-        [Required]
         [Length(256)]
         [JsonProperty]
         public virtual string Comment { get; set; }

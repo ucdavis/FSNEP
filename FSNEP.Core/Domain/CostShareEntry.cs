@@ -10,7 +10,6 @@ namespace FSNEP.Core.Domain
 
         public virtual EntryFile EntryFile { get; set; }
 
-        [Min(0)]
         public virtual double Amount { get; set; }
 
         [Required]

@@ -14,7 +14,7 @@ namespace FSNEP.Core.Domain
         [JsonProperty]
         public virtual int Date { get; set; }
 
-        [RangeDouble(0,24)]
+        [RangeDouble(-24,24)]
         [JsonProperty]
         public virtual double Hours { get; set; }
 
