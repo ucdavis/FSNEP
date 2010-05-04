@@ -4,7 +4,7 @@
     var Services = {
         AddEntry: '<%= Url.Action("AddEntry", "TimeRecord", new {recordId=Model.TimeRecord.Id}) %>',
         Edit: "/Edit",
-        Delete: "/Delete",
+        RemoveEntry: '<%= Url.Action("RemoveEntry", "TimeRecord") %>',
         GetAccountsForProject: '<%= Url.Action("GetAccountsForProject", "Association") %>'
     }
 </script>

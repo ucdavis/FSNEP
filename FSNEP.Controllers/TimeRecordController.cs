@@ -80,6 +80,17 @@ namespace FSNEP.Controllers
             return new JsonNetResult(new {id = entry.Id});
         }
 
+        [AcceptPost]
+        [Transaction]
+        public void RemoveEntry(int entryId)
+        {
+            var entryRepository = Repository.OfType<TimeRecordEntry>();
+
+            var entry = entryRepository.GetById(entryId);
+
+            entryRepository.Remove(entry);
+        }
+
         private RedirectToRouteResult RedirectToErrorPage(string message)
         {
             Message = message;

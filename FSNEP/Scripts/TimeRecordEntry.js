@@ -23,6 +23,10 @@ $(function() {
     $(".DeleteCalendarEntry").live('click', function() {
         var clicked = $(this);
 
+        var id = GetIdFromElement(clicked, ElementType.Delete);
+
+        RemoveEntry(id);
+
         DisplayMessage("You clicked on the delete entry for id " + GetIdFromElement(clicked, ElementType.Delete));
     });
 
@@ -40,16 +44,29 @@ $(function() {
                 data,
                 function(result) {
                     LogMessage("Add Entry Result", result);
+                    DisplayMessage("New Entry Added with id = " + result.id);
                 },
                 'json'
             );
         }
-        
+
         return false;
     });
 
     $("#Project").change(function() { PopulateAccounts(this); });
 });
+
+function RemoveEntry(entryId) {
+    var data = { entryId: entryId };
+
+    $.post(
+        Services.RemoveEntry,
+        data,
+        function() {
+            DisplayMessage("Entry with Id " + entryId + " removed");
+        }
+    );
+}
 
 function GatherAddEntryData() {
     var date = $("#addRecordDay").val();
