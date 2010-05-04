@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
@@ -364,6 +366,121 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual("Home", result.RouteValues["controller"]);
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
+
+        #region NewUser Tests
+        //NewUser Success routes to logon
+        //NewUser Failure (for each reason) routes to the viewModel
+        //New GUID routes to the New User.
+        [TestMethod]
+        public void NewUserGetReturnsView()
+        {
+            var token = Guid.NewGuid();
+            FakeUserForNewUserTests(token);           
+
+            Controller.NewUser(token).AssertViewRendered();
+        }
+
+        /// <summary>
+        /// A New user with invalid GUID redirects to Home.
+        /// </summary>
+        [TestMethod]
+        public void NewUserWithInvalidGuidRedirectsToHome()
+        {
+            var token = Guid.NewGuid();
+            var notFoundtoken = Guid.NewGuid();
+            FakeUserForNewUserTests(token); 
+            // Act
+            var result = (RedirectToRouteResult)Controller.NewUser(notFoundtoken);
+
+            // Assert
+            Assert.AreEqual("Home", result.RouteValues["controller"]);
+            Assert.AreEqual("Error", result.RouteValues["action"]);
+        }
+
+        /// <summary>
+        /// Fakes the user for new user tests.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        private void FakeUserForNewUserTests(Guid token)
+        {
+            var users = new User[3];
+            for (int i = 0; i < 3; i++)
+            {
+                users[i] = new User
+                {
+                    FirstName = "FName" + i + 1,
+                    LastName = "LName" + i + 1,
+                    Salary = 1,
+                    BenefitRate = 2,
+                    FTE = 1,
+                    IsActive = true,
+                    UserName = "UserName" + i + 1
+                };
+                users[i].Supervisor = users[i]; //I'm my own supervisor
+                users[i].Projects = new List<Project>
+                               {
+                                   new Project {Name = "Name", IsActive = true},
+                                   new Project{Name = "Name2", IsActive = true}
+                               };
+                users[i].FundTypes = new List<FundType>
+                                {
+                                    new FundType {Name = "Name1"},
+                                    new FundType {Name = "Name2"}
+                                };
+
+                var userId = Guid.NewGuid();
+
+                users[i].Token = Guid.NewGuid();
+                users[i].SetUserID(userId);
+            }
+
+            users[1].Token = token; //Set 1 to the passed value.
+
+            IQueryable<User> userList = new[]
+                                            {
+                                                users[0],
+                                                users[1],
+                                                users[2]
+                                            }.AsQueryable();
+
+
+            var fakeUserRepository = FakeRepository<User>();
+            fakeUserRepository.Expect(a => a.Queryable).Return(userList);
+            Controller.Repository.Expect(a => a.OfType<User>()).Return(fakeUserRepository).Repeat.Any();
+
+        }
+
+        //TODO: Something like this for NewUser
+        /*
+         [TestMethod]
+        public void ActivityCategoryGetsOnlyActiveActivityCategories()
+        {
+            //5 projects, 3 are active
+            var activityCategories =
+                new[]
+                    {
+                        new ActivityCategory { IsActive = true }, 
+                        new ActivityCategory { IsActive = true }, 
+                        new ActivityCategory { IsActive = true }, 
+                        new ActivityCategory(), 
+                        new ActivityCategory()
+                    }.
+                    AsQueryable();
+
+            var activityCategoryRepository = FakeRepository<ActivityCategory>();
+            activityCategoryRepository.Expect(a => a.Queryable).Return(activityCategories);
+
+            Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository);
+
+            var result = Controller.ActivityCategories(null)
+                .AssertViewRendered()
+                .WithViewData<List<ActivityCategory>>();
+
+            Assert.AreEqual(3, result.Count, "Should only get the three active ActivityCategories");
+        }
+         */
+
+        #endregion NewUser Tests
 
         public class MockMessageGateway : IMessageGateway
         {
