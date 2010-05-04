@@ -95,15 +95,12 @@ namespace FSNEP.Core.Abstractions
             body.AppendFormat("Please note that your UserID is {0}. We ask that you create a password to access the system by accessing this link:  {1}", username, newUserTokenPath);
             body.AppendLine(Environment.NewLine);
 
-            //Temporary User Contact Information
-            body.AppendLine("During the November 2008, December 2008 and January 2009 of system implementation please contact your State Office FSNEP Representative for hands on assistance with the system.");
-            body.AppendLine("Central Coast and Southern = Susan Padgett @ sdpadget@ucdavis.edu   530-754-4137");
-            body.AppendLine("Central Valley Region = Corine Gould @ cgould@ucdavis.edu   530-754-4934");
-            body.AppendLine("North Coast and Mountain = Gladis Lopez @ gylopez@ucdavis.edu  530-754-7796");
+
+            body.AppendFormat("For questions or problems with the on-line system, please contact your FSNEP supervisor ({0}) or your State Office analyst:", supervisorEmail);
             body.Append(Environment.NewLine);
 
-            body.AppendFormat("During standard system use following implementation (after February 1, 2009), please contact the FSNEP supervisor({0}) if you have any questions.", supervisorEmail);
-            body.Append(Environment.NewLine);
+            body.AppendLine(
+                "Yolanda Cortez, ycortez@ucdavis.edu, 530-752-0711 Corinne Gould @ cgould@ucdavis.edu, 530-754-4934 Susan Padgett @ sdpadget@ucdavis.edu, 530-754-4137");
 
             body.AppendLine(Environment.NewLine);
 
