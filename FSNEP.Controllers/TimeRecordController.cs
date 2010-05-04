@@ -87,7 +87,7 @@ namespace FSNEP.Controllers
 
             if (!_timeRecordBLL.IsEditable(timeRecord))
             {
-                throw new NotImplementedException("Need to redirect to time record review page");
+                return RedirectToAction("Review", new { id });
             }
 
             var viewModel = TimeRecordEntryViewModel.Create(Repository, _userBLL, _timeRecordBLL, timeRecord, _timeRecordCalendarGenerator);

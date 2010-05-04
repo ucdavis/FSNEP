@@ -82,7 +82,7 @@ namespace FSNEP.Controllers
 
             if (!_costShareBLL.IsEditable(costShare))
             {
-                throw new NotImplementedException("Need to redirect to the cost share review page");
+                return RedirectToAction("Review", new { id });
             }
 
             var viewModel = CostShareEntryViewModel.Create(Repository, _userBLL, _costShareBLL, costShare);
