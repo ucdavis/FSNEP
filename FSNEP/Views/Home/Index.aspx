@@ -6,6 +6,7 @@
 </asp:Content>
 <asp:Content ID="indexContent" ContentPlaceHolderID="mainContent" runat="server">
     
+    <% if (Model.IsTimeRecordUser) { %>
     <div class="menu-section timerecords">
     <h3>
         Time Records</h3>
@@ -15,7 +16,11 @@
             <%=Html.ActionLink<TimeRecordController>(x => x.Current(), "Current time record")%></li>
         <li>
             <%=Html.ActionLink<TimeRecordController>(x => x.History(), "Time Record History")%></li>
-    </ul></div>
+    </ul>
+    </div>
+    <% } %>
+    
+    <% if (Model.IsCostShareUser) { %>
     <div class="menu-section costshare">
     <h3>
         Cost Share</h3>
@@ -24,7 +29,11 @@
         <li>
             <%=Html.ActionLink<CostShareController>(x => x.Current(), "Current Cost Share")%></li>
         <li><%=Html.ActionLink<CostShareController>(x => x.History(), "Cost Share History")%></li>
-    </ul></div>
+    </ul>
+    </div>
+    <% } %>
+    
+    <% if (Model.IsSupervisor) { %>
     <div class="menu-section supervisor">
     <h3>Supervisor</h3>
         <img src="<%= Url.Content("~/Images/menu-supe.png") %>" alt="Supervisor" />
@@ -33,6 +42,9 @@
         <li><%= Html.ActionLink<SupervisorController>(x=>x.CostShareList(), "Cost Share Review") %></li>
         <li><%= Html.ActionLink<SupervisorController>(x=>x.Delegate(), "Assign/Remove Delegates") %></li>
     </ul></div>
+    <% } %>
+    
+    <% if (Model.IsAdmin) { %>
     <div class="menu-section admin">
     <h3>
         Administration</h3>
@@ -52,6 +64,9 @@
         </li>
             
     </ul></div>
+    <% } %>
+    
+    <% if (Model.IsAdmin | Model.IsProjectAdmin) { %>
     <div class="menu-section reports">
         <h3>Reports</h3>
         <img src="<%= Url.Content("~/Images/menu-reports.png") %>" alt="Reports" />
@@ -63,7 +78,8 @@
             <%= Html.ActionLink<ReportController>(x=>x.TimeRecord(), "Time Record") %>
         </li>
     </ul></div>
-    <div class="menu-section">
+    <% } %>
+    <%--<div class="menu-section">
     <% Html.RenderPartial("UserPermissions"); %>
-    </div>
+    </div>--%>
 </asp:Content>
