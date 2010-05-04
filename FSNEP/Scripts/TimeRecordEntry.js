@@ -50,7 +50,7 @@ $(function() {
 
             var data = GatherAddEntryData();
             var serviceUrl = Services.AddEntry;
-            
+
             $.post(
                 serviceUrl,
                 data,
@@ -61,6 +61,7 @@ $(function() {
                     $("#dialogTimeRecordEntry").dialog("close");
 
                     UpdateAddEntryUI(result.Id, $("#addRecordDay").val(), data.Hours);
+                    UpdateTimeRecordTotalHours(result.HoursDelta);
                 },
                 'json'
             );
@@ -89,6 +90,8 @@ $(function() {
                     DisplayMessage("Entry Edited with id = " + result.Id);
 
                     $("#dialogTimeRecordEdit").dialog("close");
+
+                    UpdateTimeRecordTotalHours(result.HoursDelta);
                 },
                 'json'
             );
@@ -152,9 +155,11 @@ function RemoveEntry(entryId) {
     $.post(
         Services.RemoveEntry,
         data,
-        function() {
-            DisplayMessage("Entry with Id " + entryId + " removed");
-        }
+        function(result) {
+            DisplayMessage("Entry with Id " + result.Id + " removed");
+            UpdateTimeRecordTotalHours(result.HoursDelta);
+        },
+        'json'
     );
 }
 
@@ -169,9 +174,11 @@ function RemoveAdjustmentEntry(entryId) {
     $.post(
         Services.RemoveEntry,
         data,
-        function() {
-            DisplayMessage("Adjustment Entry with Id " + entryId + " removed");
-        }
+        function(result) {
+            DisplayMessage("Adjustment Entry with Id " + result.Id + " removed");
+            UpdateTimeRecordTotalHours(result.HoursDelta);
+        },
+        'json'
     );
 }
 
@@ -277,6 +284,16 @@ function EditEntryLoaded(result) {
     
     DisplayMessage("Edit Entry Loaded");
 }
+
+function UpdateTimeRecordTotalHours(hoursDelta) {
+    //Updated the time record totals
+    var timeSheetHours = $("#timeSheetHours");
+
+    var totalHours = parseFloat(timeSheetHours.html()) + parseFloat(hoursDelta);
+
+    timeSheetHours.html(totalHours);
+}
+
 
 function ShowEditEntryLoadingMessage(loading) {
     var spanLoadingEntryDetails = $("#spanLoadingEntryDetails");
