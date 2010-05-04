@@ -82,6 +82,8 @@ namespace FSNEP.Controllers
             
             Check.Require(record != null, "Invalid record indentifier");
 
+            record.ReviewComment = reviewComment;
+
             if (record is TimeRecord)
             {
                 var timeRecord = (TimeRecord) record;

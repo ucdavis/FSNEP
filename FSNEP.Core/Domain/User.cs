@@ -12,6 +12,10 @@ namespace FSNEP.Core.Domain
         [Required(Message = "Username should be set upon creation")]
         public virtual string UserName { get; set; }
 
+        //[Length(1,256)]
+        //[Required(Message = "Email should be set upon creation")]
+        public virtual string Email { get; set; }
+
         [Length(50)]
         [Required]
         public virtual string FirstName { get; set; }

@@ -749,6 +749,11 @@ namespace FSNEP.Tests.Controllers
             public void SendMessageToNewUser(User user, string username, string userEmail, string supervisorEmail, string newUserTokenPath)
             {
             }
+
+            public void SendReviewMessage(Record record, bool approved)
+            {
+                
+            }
         }
 
         public class MockFormsAuthenticationService : IFormsAuthentication

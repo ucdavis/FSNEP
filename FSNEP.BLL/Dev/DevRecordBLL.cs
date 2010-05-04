@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using FSNEP.BLL.Interfaces;
+using FSNEP.Core.Abstractions;
 using FSNEP.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
-using UCDArch.Core.Utils;
 
 namespace FSNEP.BLL.Dev
 {
     public class DevRecordBLL<T> : IRecordBLL<T> where T : Record
     {
-        protected readonly IRepository _repository;
+        private readonly IRepository _repository;
+        private readonly IMessageGateway _messageGateway;
 
-        public DevRecordBLL(IRepository repository)
+        public DevRecordBLL(IRepository repository, IMessageGateway messageGateway)
         {
             _repository = repository;
+            _messageGateway = messageGateway;
         }
 
         public bool HasAccess(IPrincipal user, T record)
@@ -51,6 +53,7 @@ namespace FSNEP.BLL.Dev
         public void ApproveOrDeny(T record, IPrincipal user, bool approve)
         {
             //Do nothing
+            _messageGateway.SendReviewMessage(record, approve);
         }
 
         /// <summary>

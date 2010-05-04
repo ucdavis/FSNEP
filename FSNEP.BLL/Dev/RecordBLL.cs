@@ -13,10 +13,12 @@ namespace FSNEP.BLL.Dev
     public class RecordBLL<T> : IRecordBLL<T> where T : Record, new()
     {
         private readonly IRepository _repository;
+        private readonly IMessageGateway _messageGateway;
 
-        public RecordBLL(IRepository repository)
+        public RecordBLL(IRepository repository, IMessageGateway messageGateway)
         {
             _repository = repository;
+            _messageGateway = messageGateway;
         }
 
         public virtual bool HasAccess(IPrincipal user, T record)
@@ -210,6 +212,9 @@ namespace FSNEP.BLL.Dev
             record.Status = approveOrDenyStatus;//Set the status to approved or denied
 
             PersistRecordWithTracking(record, user, _repository);
+
+            //Now send the confirmation message
+            _messageGateway.SendReviewMessage(record, approve);
         }
     }
 }

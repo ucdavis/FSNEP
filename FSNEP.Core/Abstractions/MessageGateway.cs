@@ -1,6 +1,7 @@
 using System;
 using System.Net.Mail;
 using System.Text;
+using System.Web;
 using FSNEP.Core.Domain;
 using System.Web.Configuration;
 
@@ -10,10 +11,23 @@ namespace FSNEP.Core.Abstractions
     {
         void SendMessage(string to, string subject, string body);
         void SendMessageToNewUser(User user, string username, string userEmail, string supervisorEmail, string newUserTokenPath);
+
+        /// <summary>
+        /// Notifies the user of the end review status of their timesheet
+        /// </summary>
+        void SendReviewMessage(Record record, bool approved);
     }
 
     public class MessageGateway : IMessageGateway
     {
+        private static string AppPath
+        {
+            get
+            {
+                return HttpContext.Current.Request.Url.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped) + HttpContext.Current.Request.ApplicationPath;
+            }
+        }
+
         public void SendMessage(string to, string subject, string body)
         {
             string from = WebConfigurationManager.AppSettings["EmailFrom"];
@@ -22,6 +36,27 @@ namespace FSNEP.Core.Abstractions
             var client = new SmtpClient("smtp.ucdavis.edu");
 
             client.Send(message);
+        }
+
+        /// <summary>
+        /// Notifies the user of the end review status of their timesheet
+        /// </summary>
+        public void SendReviewMessage(Record record, bool approved)
+        {
+            var supervisorEmail = record.User.Supervisor.Email;
+
+            var body = new StringBuilder();
+
+            if (approved)
+            {
+                CreateApproveMessage(body, supervisorEmail, record.ReviewComment);
+            }
+            else
+            {
+                CreateDisapproveMessage(body, supervisorEmail, record.ReviewComment);
+            }
+
+            SendMessage(record.User.Email, "FSNEP Time/Expense Sheet", body.ToString());
         }
 
         /// <summary>
@@ -54,6 +89,47 @@ namespace FSNEP.Core.Abstractions
             body.AppendLine("System Administrator");
 
             SendMessage(userEmail, "FSNEP Time/Expense Record System", body.ToString());
+        }
+
+        private static void CreateDisapproveMessage(StringBuilder body, string supervisorEmail, string comments)
+        {
+            body.Append("Your time/expense sheet has been disapproved by the FSNEP supervisor.  Please see below comment.");
+            body.AppendLine(Environment.NewLine);
+
+            body.AppendFormat("{0}{1}", "\t\t", comments);
+            body.AppendLine(Environment.NewLine);
+
+            body.AppendFormat("Please contact the FSNEP supervisor ({0}) if you have any questions and, if applicable, resubmit your time/expense sheet as soon as possible.  ",
+                              supervisorEmail);
+            body.AppendFormat("To access the FSNEP system, click on this link: {0}", AppPath);
+            body.AppendLine(Environment.NewLine);
+
+            body.Append("Thank you.");
+            body.AppendLine(Environment.NewLine);
+
+            body.AppendLine("FSNEP");
+            body.AppendLine("System Administrator");
+        }
+
+        private static void CreateApproveMessage(StringBuilder body, string supervisorEmail, string comments)
+        {
+            body.Append("This is to confirm that your time/expense sheet has been approved by the FSNEP supervisor.");
+            body.AppendLine(Environment.NewLine);
+
+            body.AppendFormat("Please contact the FSNEP supervisor ({0}) if you have any questions.", supervisorEmail);
+            body.AppendLine(Environment.NewLine);
+
+            body.Append("Thank you.");
+            body.AppendLine(Environment.NewLine);
+
+            if (!string.IsNullOrEmpty(comments))
+            {
+                body.AppendFormat("{0}{1}", "\t\t", comments);
+                body.AppendLine(Environment.NewLine);
+            }
+
+            body.AppendLine("FSNEP");
+            body.AppendLine("System Administrator");
         }
     }
 }
