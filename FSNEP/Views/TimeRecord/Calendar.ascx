@@ -3,7 +3,7 @@
 <script type="text/javascript">
     var Services = {
         AddEntry: '<%= Url.Action("AddEntry", "TimeRecord", new {recordId=Model.TimeRecord.Id}) %>',
-        Edit: '<%= Url.Action("EditEntry", "TimeRecord") %>',
+        EditEntry: '<%= Url.Action("EditEntry", "TimeRecord") %>',
         RemoveEntry: '<%= Url.Action("RemoveEntry", "TimeRecord") %>',
         GetEntry: '<%= Url.Action("GetEntry", "TimeRecord") %>',
         GetAccountsForProject: '<%= Url.Action("GetAccountsForProject", "Association") %>'
@@ -128,9 +128,10 @@
 </div>
 
 <div id="dialogTimeRecordEdit" class="TimeRecordEditDialog" title="Edit Entry">
-    <%= Html.ClientSideValidation<FSNEP.Core.Domain.TimeRecordEntry>("Edit") %>
-    <%= Html.ClientSideValidation<FSNEP.Core.Domain.Entry>("Edit") %>
+    <%--<%= Html.ClientSideValidation<FSNEP.Core.Domain.TimeRecordEntry>("Edit") %>--%>
+    <%--<%= Html.ClientSideValidation<FSNEP.Core.Domain.Entry>("Edit") %>--%>
     <form id="formEditEntry" method="post" action="<%= Url.Action("EditEntry", "TimeRecord") %>">
+    <input id="Edit_EntryId" type="hidden" />
     <fieldset>
         <legend>Entry Information</legend>
         <p>

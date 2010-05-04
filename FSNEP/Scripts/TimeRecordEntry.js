@@ -42,7 +42,7 @@ $(function() {
             var serviceUrl = Services.AddEntry;
 
             $.post(
-                Services.AddEntry,
+                serviceUrl,
                 data,
                 function(result) {
                     LogMessage("Add Entry Result", result);
@@ -50,6 +50,8 @@ $(function() {
                 },
                 'json'
             );
+            
+            //updated UI
         }
         else {
             alert("Entry not valid -- check your values");
@@ -60,9 +62,21 @@ $(function() {
 
     $("#formEditEntry").submit(function() {
         if ($(this).valid()) {
-            //gather add entry data
-            //post the change
+            var data = GatherEditEntryData();
+            var serviceUrl = Services.EditEntry;
+
+            $.post(
+                serviceUrl,
+                data,
+                function(result) {
+                    LogMessage("Edit Entry Result", result);
+                    DisplayMessage("Entry Edited with id = " + result.id);
+                },
+                'json'
+            );
+            
             //update UI
+            debugger;
         }
         else {
             alert("Entry not valid -- check your values");
@@ -101,6 +115,25 @@ function GatherAddEntryData() {
     var data = { Date: date, Hours: hours, ActivityType: activityType, FundType: fundType,
                     Project: project, Account: account, Comment: comment, 
                     __RequestVerificationToken: __RequestVerificationToken };
+
+    return data;
+}
+
+function GatherEditEntryData() {
+    var entryId = $("#Edit_EntryId").val();
+
+    var hours = $("#Edit_Hours").val();
+    var activityType = $("#Edit_ActivityType").val();
+
+    var fundType = $("#Edit_FundType").val();
+    var project = $("#Edit_Project").val();
+    var account = $("#Edit_Account").val();
+    var comment = $("#Edit_Comment").val();
+
+    var data = { EntryId: entryId, Hours: hours, ActivityType: activityType, FundType: fundType,
+        Project: project, Account: account, Comment: comment,
+        __RequestVerificationToken: __RequestVerificationToken
+    };
 
     return data;
 }
@@ -153,7 +186,8 @@ function EditEntry(entryId) {
 
 function EditEntryLoaded(result) {
     LogMessage("Edit Entry Loaded", result);
-    
+
+    $("#Edit_EntryId").val(result.Id);
     
     $("#Edit_ActivityType").html(result.ActivityType);
     $("#Edit_FundType").html(result.FundType);

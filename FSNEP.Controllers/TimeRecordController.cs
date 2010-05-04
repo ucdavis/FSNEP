@@ -130,7 +130,7 @@ namespace FSNEP.Controllers
 
         [AcceptPost]
         [Transaction]
-        public void EditEntry(int entryId, TimeRecordEntry entry)
+        public JsonNetResult EditEntry(int entryId, TimeRecordEntry entry)
         {
             var entryRepository = Repository.OfType<TimeRecordEntry>();
 
@@ -143,6 +143,9 @@ namespace FSNEP.Controllers
             Check.Require(entryToUpdate.IsValid(), "Entry is not valid");
 
             entryRepository.EnsurePersistent(entryToUpdate);
+
+            //return the Id
+            return new JsonNetResult(new { id = entryToUpdate.Id });
         }
 
         [Transaction]
