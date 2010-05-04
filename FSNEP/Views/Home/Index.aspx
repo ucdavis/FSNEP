@@ -10,8 +10,10 @@
         
     <% Html.RenderPartial("UserPermissions"); %>
     
+    <div class="menu-section timerecords">
     <h3>
         Time Records</h3>
+        <img src="../../Images/menu-time.png" alt="Time Records" />
     <ul>
         <li>
             <%=Html.ActionLink("View Time Record #2", "Entry", "TimeRecord", new {id = 2}, null)%></li>
@@ -19,22 +21,28 @@
             <%=Html.ActionLink<TimeRecordController>(x => x.Current(), "Current time record")%></li>
         <li>
             <%=Html.ActionLink<TimeRecordController>(x => x.History(), "Time Record History")%></li>
-    </ul>
+    </ul></div>
+    <div class="menu-section costshare">
     <h3>
         Cost Share</h3>
+        <img src="../../Images/menu-share.png" alt="Cost Share" />
     <ul>
         <li>
             <%=Html.ActionLink<CostShareController>(x => x.Current(), "Current Cost Share")%></li>
         <li><%=Html.ActionLink<CostShareController>(x => x.History(), "Cost Share History")%></li>
-    </ul>
+    </ul></div>
+    <div class="menu-section supervisor">
     <h3>Supervisor</h3>
+        <img src="../../Images/menu-supe.png" alt="Supervisor" />
     <ul>
         <li><%= Html.ActionLink<SupervisorController>(x=>x.TimeRecordList(), "Time Record Review") %></li>
         <li><%= Html.ActionLink<SupervisorController>(x=>x.CostShareList(), "Cost Share Review") %></li>
         <li><%= Html.ActionLink<SupervisorController>(x=>x.Delegate(), "Assign/Remove Delegates") %></li>
-    </ul>
+    </ul></div>
+    <div class="menu-section admin">
     <h3>
         Administration</h3>
+        <img src="../../Images/menu-admin.png" alt="Administration" />
     <ul>
         <li>
             <%=Html.ActionLink("Lookups (Project)", "Projects", "Lookup")%></li>
@@ -49,8 +57,10 @@
             <%=Html.ActionLink("Time Record Audit", "TimeRecordHistory", "Audit") %>
         </li>
             
-    </ul>
+    </ul></div>
+    <div class="menu-section reports">
         <h3>Reports</h3>
+        <img src="../../Images/menu-reports.png" alt="Reports" />
     <ul>
         <li>
             <%= Html.ActionLink("Cost Share", "CostShare", "Report") %>
@@ -58,5 +68,5 @@
         <li>
             <%= Html.ActionLink<ReportController>(x=>x.TimeRecord(), "Time Record") %>
         </li>
-    </ul>
+    </ul></div>
 </asp:Content>

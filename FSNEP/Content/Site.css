@@ -1,9 +1,13 @@
-﻿body {
-	background:url(../Images/topbgfiller.gif) repeat-x #e2e1d6;
+﻿/* ----------------- */
+/* ==basic styles    */
+/* ----------------- */
+
+body {
+	background: url(../Images/topbgfiller.gif) repeat-x #e2e1d6;
     font-family: Trebuchet MS, Helvetica, Arial, Tahoma;
 	margin: 0 50px;
 	padding: 0;
-	min-width:1000px;
+	min-width: 1000px;
 	}
 	
 #skipnav {
@@ -29,6 +33,17 @@
 a:link {color:#1a4b5e;}
 a:visited {color:#1a4b5e;}
 a:hover {text-decoration:none;}
+
+.centerit 
+{
+	margin:0 auto;
+}
+
+
+
+/* ----------------- */
+/* ==navigation      */
+/* ----------------- */
 
 #sheetsButtons a
 {
@@ -249,26 +264,49 @@ ul#navigation3 {
    background:url(../Images/but_home2.gif) no-repeat;
 }
 
-#welcome {
-    float:right; 
-    font-size:12px; 
-    font-weight:bold; 
-    margin:5px 50px 0 0;
-    width: 250px;
-    text-align: right;
-}
 
-.ie #welcome {
-    margin-top: -24px;
-}
+/* ----------------- */
+/* ==calendar        */
+/* ----------------- */
 
+.menu-section {width: 250px; height: 220px; background: rgb(255,255,255); background: rgba(255,255,255,0.4);
+	float: left; margin: 1em 2em; padding: .5em .5em 2em;
+	-moz-box-shadow: 5px 5px 0px #ccc; text-align: center;
+	}
+.ie .menu-section {border-right: 5px solid #ccc; border-bottom: 5px solid #ccc;}
+.menu-section:hover {background: rgba(255,255,255,0.8);}
 
-
-.calendarStyle 
+.menu-section h3 
 {
-	border-left: solid 1px #afb7be;
-	border-bottom: solid 1px #afb7be;  
+    font-size: .9em; font-weight: bold; 
+    text-transform: uppercase; letter-spacing: 2px; 
+    font-family: Rockwell, Rockwell Extra Bold, Arial Bold, Terminal, fixed;
 }
+.menu-section img {padding: .5em 0;}
+.menu-section ul {padding: 0px; margin: 0px;}
+.menu-section li {list-style: none; margin: 0 0 .2em 0;}
+
+
+
+/* ----------------- */
+/* ==calendar        */
+/* ----------------- */
+
+.calendarStyle /* styles each date box */
+{
+    font-size: .8em;
+	width: 12%; height: 120px; float: left; overflow: hidden;
+	margin: 3px; padding: 4px 8px 6px;
+	-moz-border-radius: 18px; -webkit-border-radius: 18px;
+	background: #f3f3ef;
+}
+.calendarStyle.ActiveDay:hover {-webkit-transition: background 0.5s; background: #f9f9f7;}
+.calendarStyle.InactiveDay {background: #e9e9e0;}
+
+.calendarDate {text-align: right; background: #fff;
+	-moz-border-radius: 18px; -webkit-border-radius: 18px;
+	padding: 1px 5px; font-size: .9em;}
+.InactiveDay .calendarDate {background: #eeede6;}
 
 .calPopup
 {
@@ -310,6 +348,28 @@ ul#navigation3 {
 	left:333px;
 }
 
+.calendarDiv .InactiveDay, .calendarDiv .ActiveDay {}
+
+
+
+
+/* ----------------- */
+/* ==misc?           */
+/* ----------------- */
+
+#welcome {
+    float:right; 
+    font-size:12px; 
+    font-weight:bold; 
+    margin:5px 50px 0 0;
+    width: 250px;
+    text-align: right;
+}
+
+.ie #welcome {
+    margin-top: -24px;
+}
+
 .blackgradHead 
 {
 	background:url(../Images/gridviewtitlebg.gif) repeat-x;
@@ -323,11 +383,6 @@ ul#navigation3 {
 #ctl00_ContentPlaceHolder1_gvUsers td, #ctl00_ContentPlaceHolder1_TimeSheetReviewList1_gvEntries td, #ctl00_ContentPlaceHolder1_gvTimeSheets td, #ctl00_ContentPlaceHolder1_gvCurrentExpenses td, #ctl00_ContentPlaceHolder1_gvExpenseSheets td
 {
 	border-bottom: solid 1px #bbcfe3;	
-}
-
-.centerit 
-{
-	margin:0 auto;
 }
 
 #footergradient 
@@ -483,3 +538,7 @@ ul#navigation3 {
     filter:alpha(opacity=50);
     opacity: .5;
 }
+
+
+
+
