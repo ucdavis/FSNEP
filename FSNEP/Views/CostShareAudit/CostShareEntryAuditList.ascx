@@ -28,13 +28,16 @@
                 var data = GatherExcludeEntryData();
                 var serviceUrl = '<%= Url.Action("Exclude") %>';
 
-                console.dir(data);
-
                 $.post(
                     serviceUrl,
                     data,
                     function(result) {
-                        alert("success for " + result.EntryId);
+                        $('#dialogExcludeEntry').dialog('close');
+                
+                        var entryRow = $('#entry' + result.EntryId);
+
+                        entryRow.addClass('excluded');
+                        entryRow.fadeTo('slow', .15);
                     },
                     'json'
                 );
@@ -91,6 +94,11 @@
                          col.Add(x => x.Description);
                          col.Add(x => x.Comment);
                      })
+         .RowAction(x=>
+                        {
+                            x.HtmlAttributes.Add("id", string.Format("entry{0}", x.DataItem.Id));
+                            if (x.DataItem.Exclude) x.HtmlAttributes.Add("class", "excluded");
+                        })
         .Render();
         %>
 
