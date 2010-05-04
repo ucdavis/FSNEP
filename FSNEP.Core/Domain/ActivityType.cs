@@ -11,5 +11,10 @@ namespace FSNEP.Core.Domain
 
         [NotNullValidator]
         public virtual ActivityCategory ActivityCategory { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} ({1}) -- {2}", Name, Indicator, ActivityCategory.Name);
+        }
     }
 }

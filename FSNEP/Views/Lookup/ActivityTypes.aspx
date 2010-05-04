@@ -48,15 +48,14 @@
     
         <tr>
             <td>
-                <%= Html.Encode(string.Format("{0} ({1}) -- {2}", item.Name, item.Indicator, item.ActivityCategory.Name)) %>
+                <%= Html.Encode(item) %>
             </td>
             <td>
-                <% using (Html.BeginForm<FSNEP.Controllers.LookupController>(a => a.InactivateActivityType(item.ID)))
-                   { %>
+                <% using (Html.BeginForm("InactivateActivityType", "Lookup", new { item.ID })){ %>
                 
                     <input type="submit" value="Inactivate" />
                 
-                <%} %>
+                <% } %>
             </td>
         </tr>
     
