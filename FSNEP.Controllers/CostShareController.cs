@@ -10,6 +10,8 @@ using UCDArch.Core.PersistanceSupport;
 using UCDArch.Core.Utils;
 using UCDArch.Web.Attributes;
 using MvcContrib;
+using UCDArch.Web.Helpers;
+using UCDArch.Web.Validator;
 
 namespace FSNEP.Controllers
 {
@@ -68,13 +70,14 @@ namespace FSNEP.Controllers
             }
 
             var viewModel = CostShareEntryViewModel.Create(Repository, _userBLL, _costShareBLL, costShare);
+            viewModel.Entry = new CostShareEntry();
 
             return View(viewModel);
         }
 
         [AcceptPost]
         [Transaction]
-        public ActionResult AddEntry(int id, CostShareEntry entry)
+        public ActionResult Entry(int id, CostShareEntry entry)
         {
             var costShare = _costShareRepository.GetNullableByID(id);
 
@@ -83,10 +86,19 @@ namespace FSNEP.Controllers
             Check.Require(_costShareBLL.HasAccess(CurrentUser, costShare),
                           "Current user does not have access to this record");
 
+
+            entry.TransferValidationMessagesTo(ModelState);
+
+            if (!entry.IsValid())
+            {
+                var viewModel = CostShareEntryViewModel.Create(Repository, _userBLL, _costShareBLL, costShare);
+                viewModel.Entry = entry;
+
+                return View(viewModel);
+            }
+            
             costShare.AddEntry(entry);//Add the entry to the time record
-
-            Check.Require(entry.IsValid(), "Entry is not valid");
-
+            
             _costShareRepository.EnsurePersistent(costShare);
 
             _costShareRepository.DbContext.CommitTransaction();
@@ -118,21 +130,22 @@ namespace FSNEP.Controllers
         public static CostShareEntryViewModel Create(IRepository repository, IUserBLL userBLL, ICostShareBLL costShareBLL, CostShare costShare)
         {
             var viewModel = new CostShareEntryViewModel
-            {
-                CostShare = costShare,
-                Projects = userBLL.GetAllProjectsByUser(repository.OfType<Project>()).ToList(),
-                FundTypes = userBLL.GetUser().FundTypes,
-                ActivityCategories =
-                    repository.OfType<ActivityCategory>().Queryable.Where(c => c.IsActive).OrderBy(
-                    c => c.Name).ToList()
-            };
+                                {
+                                    CostShare = costShare,
+                                    Projects = userBLL.GetAllProjectsByUser(repository.OfType<Project>()).ToList(),
+                                    FundTypes = userBLL.GetUser().FundTypes,
+                                    ExpenseTypes =
+                                        repository.OfType<ExpenseType>().Queryable.Where(x => x.IsActive).OrderBy(
+                                        x => x.Name).ToList()
+                                };
 
             return viewModel;
         }
 
         public CostShare CostShare { get; set; }
-        public IList<Project> Projects { get; set; }
-        public IList<FundType> FundTypes { get; set; }
-        public IList<ActivityCategory> ActivityCategories { get; set; }
+        public CostShareEntry Entry { get; set; }
+        public IEnumerable<Project> Projects { get; set; }
+        public IEnumerable<FundType> FundTypes { get; set; }
+        public IEnumerable<ExpenseType> ExpenseTypes { get; set; }
     }
 }
