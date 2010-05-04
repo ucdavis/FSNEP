@@ -91,11 +91,15 @@ namespace FSNEP.Tests.Core
         {
             var status1 = new Status { NameOption = Status.Option.Current };
             var status2 = new Status { NameOption = Status.Option.PendingReview };
+            var status3 = new Status {NameOption = Status.Option.Approved};
+            var status4 = new Status { NameOption = Status.Option.Disapproved };
 
             var statusRepository = Repository.OfType<Status>();
 
             statusRepository.EnsurePersistent(status1);
             statusRepository.EnsurePersistent(status2);
+            statusRepository.EnsurePersistent(status3);
+            statusRepository.EnsurePersistent(status4);
         }
 
         private void CreateProjects()
