@@ -17,4 +17,7 @@ Begin DataProject = "FSNEP.SQL"
       Script = "InsertLookupData.sql"
       Script = "Scheema.sql"
    End
+   Begin Folder = "SPROCs"
+      Script = "NotifyUsersOfSemiAnnualCertification.sql"
+   End
 End
