@@ -22,7 +22,7 @@ namespace FSNEP.Controllers {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Constants {
+    public class Constants {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace FSNEP.Controllers {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FSNEP.Controllers.Constants", typeof(Constants).Assembly);
@@ -51,7 +51,7 @@ namespace FSNEP.Controllers {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace FSNEP.Controllers {
         /// <summary>
         ///   Looks up a localized string similar to No current cost share available.  You can view your cost share history here..
         /// </summary>
-        internal static string NoCostShare {
+        public static string NoCostShare {
             get {
                 return ResourceManager.GetString("NoCostShare", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace FSNEP.Controllers {
         /// <summary>
         ///   Looks up a localized string similar to No current time record available.  You can view your time record history here..
         /// </summary>
-        internal static string NoTimeRecord {
+        public static string NoTimeRecord {
             get {
                 return ResourceManager.GetString("NoTimeRecord", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace FSNEP.Controllers {
         /// <summary>
         ///   Looks up a localized string similar to jaskidjflkajsdlf$#12.
         /// </summary>
-        internal static string STR_Default_Pass {
+        public static string STR_Default_Pass {
             get {
                 return ResourceManager.GetString("STR_Default_Pass", resourceCulture);
             }
