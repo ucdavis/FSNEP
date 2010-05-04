@@ -452,12 +452,13 @@ namespace FSNEP.Tests.Repositories
             CostShare costShare = null;
             try
             {
+                Repository.OfType<CostShare>().DbContext.BeginTransaction();
                 costShare = CreateValidCostShare();
                 costShare.Status = new Status();
                 Repository.OfType<CostShare>().EnsurePersistent(costShare);
                 Assert.IsFalse(costShare.IsTransient());
 
-                Repository.OfType<CostShare>().DbContext.CommitChanges();
+                Repository.OfType<CostShare>().DbContext.CommitTransaction();
             }
             catch (Exception message)
             {

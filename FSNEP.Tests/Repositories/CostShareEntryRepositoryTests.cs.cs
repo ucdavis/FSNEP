@@ -171,12 +171,13 @@ namespace FSNEP.Tests.Repositories
             double[] validAmounts = {0, 0.01, 0.0001, 1, 2, 10000000};
             foreach (var validAmount in validAmounts)
             {
+                Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
                 var costShareEntry = CreateValidCostShareEntry(null);
                 costShareEntry.Amount = validAmount; 
                 Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
                 Assert.AreEqual(false, costShareEntry.IsTransient());
                 Assert.IsTrue(costShareEntry.IsValid());
-                Repository.OfType<CostShareEntry>().DbContext.CommitChanges();
+                Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
             }
         }
         #endregion Amount Tests
@@ -189,12 +190,13 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CostShareEntrySavesWithDescriptionOf128Characters()
         {
+            Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
             var costShareEntry = CreateValidCostShareEntry(null);
             costShareEntry.Description = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 12345678";
             Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
             Assert.AreEqual(false, costShareEntry.IsTransient());
             Assert.IsTrue(costShareEntry.IsValid());
-            Repository.OfType<CostShareEntry>().DbContext.CommitChanges();
+            Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
         }
         
         #endregion Description Tests
@@ -207,6 +209,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CostShareEntrySavesWithCommentOf256Characters()
         {
+            Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
             var costShareEntry = CreateValidCostShareEntry(null);
             var sb = new StringBuilder();
             for (int i = 0; i < 25; i++)
@@ -219,7 +222,7 @@ namespace FSNEP.Tests.Repositories
             Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
             Assert.AreEqual(false, costShareEntry.IsTransient());
             Assert.IsTrue(costShareEntry.IsValid());
-            Repository.OfType<CostShareEntry>().DbContext.CommitChanges();
+            Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
         }
 
         #endregion Comment Tests
@@ -270,12 +273,13 @@ namespace FSNEP.Tests.Repositories
 
             try
             {
+                Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
                 costShareEntry = CreateValidCostShareEntry(null);
                 costShareEntry.ExpenseType = new ExpenseType();
                 Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
                 Assert.IsFalse(costShareEntry.IsTransient());
 
-                Repository.OfType<CostShareEntry>().DbContext.CommitChanges();
+                Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
             }
             catch (Exception message)
             {
@@ -491,12 +495,13 @@ namespace FSNEP.Tests.Repositories
 
             try
             {
+                Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
                 costShareEntry = CreateValidCostShareEntry(null);
                 costShareEntry.Record = new Record();
                 Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
                 Assert.IsFalse(costShareEntry.IsTransient());
 
-                Repository.OfType<CostShareEntry>().DbContext.CommitChanges();
+                Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
             }
             catch (Exception message)
             {
@@ -682,12 +687,13 @@ namespace FSNEP.Tests.Repositories
 
             try
             {
+                Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
                 costShareEntry = CreateValidCostShareEntry(null);
                 costShareEntry.Project = new Project();
                 Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
                 Assert.IsFalse(costShareEntry.IsTransient());
 
-                Repository.OfType<CostShareEntry>().DbContext.CommitChanges();
+                Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
             }
             catch (Exception message)
             {
@@ -743,12 +749,13 @@ namespace FSNEP.Tests.Repositories
 
             try
             {
+                Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
                 costShareEntry = CreateValidCostShareEntry(null);
                 costShareEntry.FundType = new FundType();
                 Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
                 Assert.IsFalse(costShareEntry.IsTransient());
 
-                Repository.OfType<CostShareEntry>().DbContext.CommitChanges();
+                Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
             }
             catch (Exception message)
             {
@@ -804,12 +811,13 @@ namespace FSNEP.Tests.Repositories
 
             try
             {
+                Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
                 costShareEntry = CreateValidCostShareEntry(null);
                 costShareEntry.Account = new Account();
                 Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
                 Assert.IsFalse(costShareEntry.IsTransient());
 
-                Repository.OfType<CostShareEntry>().DbContext.CommitChanges();
+                Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
             }
             catch (Exception message)
             {
