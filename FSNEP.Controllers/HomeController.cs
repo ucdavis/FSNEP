@@ -32,8 +32,14 @@ namespace FSNEP.Controllers
         /// 1) The current user is 1.0FTE & a time record user
         /// 2) It is April 1-15 or October 1-15
         /// </summary>
+        [BypassAntiForgeryToken] //We don't need to look at the anti forgery token
         public ActionResult SemiAnnualCertification()
         {
+            if (!CurrentUser.Identity.IsAuthenticated) //return nothing if the user isn't authenticated
+            {
+                return Content(string.Empty);
+            }
+
             var viewModel = SemiAnnualCertificationViewModel.Create();
             viewModel.ShouldShowCertificationLink = false;
 
