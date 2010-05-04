@@ -101,6 +101,7 @@
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Controllers\AccountControllerTest.cs" />
     <Compile Include="Repositories\AuditRepositoryTests.cs" />
+    <Compile Include="Repositories\FundTypeRepositoryTests.cs" />
     <Compile Include="Repositories\HoursInMonthRepositoryTests.cs" />
     <Compile Include="Repositories\UserRepositoryTests.cs" />
   </ItemGroup>
