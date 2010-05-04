@@ -1,254 +1,391 @@
-﻿/*----------------------------------------------------------
-The base color for this template is #5c87b2. If you'd like
-to use a different color start by replacing all instances of
-#5c87b2 with your new color.
-----------------------------------------------------------*/
-body
-{
-    background-color: #5c87b2;
-    font-size: .75em;
-    font-family: Verdana, Helvetica, Sans-Serif;
-    margin: 0;
-    padding: 0;
-    color: #696969;
+﻿body {
+	background:url(../Images/topbgfiller.gif) repeat-x #e2e1d6;
+    font-family: Trebuchet MS, Helvetica, Arial, Tahoma;
+	margin: 0 50px;
+	padding: 0;
+	min-width:1000px;
+	}
+	
+#skipnav {
+	display: none;
 }
 
-a:link
-{
-    color: #034af3;
-    text-decoration: underline;
-}
-a:visited
-{
-    color: #505abc;
-}
-a:hover
-{
-    color: #1d60ff;
-    text-decoration: none;
-}
-a:active
-{
-    color: #12eb87;
+#main {
+	margin:0 50px;
+	padding-bottom: 75px;
 }
 
-p, ul
+#footer 
 {
-    margin-bottom: 20px;
-    line-height: 1.6em;
+    background: url(../Images/bottomgradient.jpg) repeat-x;
+	min-width: 980px;
+	text-align: center;
+	height: 170px;
+	margin: 250px auto 0px;
+	font-size: 12px;
+	clear: both;
 }
 
-/* HEADINGS   
-----------------------------------------------------------*/
-h1, h2, h3, h4, h5, h6
+a:link {color:#1a4b5e;}
+a:visited {color:#1a4b5e;}
+a:hover {text-decoration:none;}
+
+#sheetsButtons a
 {
-    font-size: 1.5em;
-    color: #000;
-    font-family: Arial, Helvetica, sans-serif;
+	display: block;
+	border: solid 1px #b1b0a9;
+	background-color:#edede6;
+	width: 290px;
+	height: 60px;
+	padding:30px;
+	text-decoration:none;
 }
 
-h1
+#sheetsButtons a:hover
 {
-    font-size: 2em;
-    padding-bottom: 0;
-    margin-bottom: 0;
-}
-h2
-{
-    padding: 0 0 10px 0;
-}
-h3
-{
-    font-size: 1.2em;
-}
-h4
-{
-    font-size: 1.1em;
-}
-h5, h6
-{
-    font-size: 1em;
+	background-color:#d9e7ea;
 }
 
-/* this rule styles <h2> tags that are the 
-first child of the left and right table columns */
-.rightColumn > h1, .rightColumn > h2, .leftColumn > h1, .leftColumn > h2
-{
-    margin-top: 0;
+
+ul#navigation {
+   list-style:none;
+   list-style-image: none;
+   padding:0;
+   margin:4px 0 0 30px;
+   width:800px;
+   margin:0 auto;
 }
 
-/* PRIMARY LAYOUT ELEMENTS   
-----------------------------------------------------------*/
-
-/* you can specify a greater or lesser percentage for the 
-page width. Or, you can specify an exact pixel width. */
-.page
-{
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
+ul#navigation2 {
+   list-style:none;
+   list-style-image: none;
+   padding:0;
+   margin:4px 0 0 30px;
+   width:1000px;
+   margin:0 auto;
 }
 
-#header
-{
-    position: relative;
-    margin-bottom: 0px;
-    color: #000;
-    padding: 0;
+#navigation li, #navigation2 li, #navigation3 li {
+   float:left;
+   margin-bottom:0;
+   margin-right:3px;
+   padding:0;
+   text-align:center;
+   font-size:14px;
+   font-weight:bold;
 }
 
-#header h1
-{
-    font-weight: bold;
-    padding: 5px 0;
-    margin: 0;
-    color: #fff;
-    border: none;
-    line-height: 2em;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 32px !important;
+#navigation li a, #navigation2 li a, #navigation3 li a{
+   display:block;
+   text-decoration:none;
 }
 
-#main
-{
-    padding: 30px 30px 15px 30px;
-    background-color: #fff;
-    margin-bottom: 30px;
-    _height: 1px; /* only IE6 applies CSS properties starting with an underscrore */
+#navigation2 li a.GenericTab{
+   height:25px; 
+   width:178px;
+   overflow:hidden;
+   padding-top:20px;
+   margin-left:10px;
 }
 
-#footer
-{
-    color: #999;
-    padding: 10px 0;
-    text-align: center;
-    line-height: normal;
-    margin: 0;
-    font-size: .9em;
+#navigation2 li a.GenericTab2{
+   height:25px; 
+   width:148px;
+   overflow:hidden;
+   padding-top:15px;
+   margin-left:10px;
+   background:url(../Images/but_genericb2.gif) no-repeat;
+   position:relative;
+   top:1px;
 }
 
-/* TAB MENU   
-----------------------------------------------------------*/
-ul#menu
-{
-    border-bottom: 1px #5C87B2 solid;
-    padding: 0 0 2px;
-    position: relative;
-    margin: 0;
+#navigation2 li a.GenericTab3{
+   height:25px; 
+   width:148px;
+   overflow:hidden;
+   padding-top:15px;
+   margin-left:10px;
+   background:url(../Images/but_genericb1.gif) no-repeat;
+}
+
+#navigation2 li a.GenericTab3:hover, #navigation2 li a.GenericTab2:hover{
+   color:#751111;
+}
+
+#navigation li a.ExpenseSheetLink{
+   height:0px; 
+   padding-top:45px;
+   width:192px;
+   overflow:hidden;
+   background:url(../Images/but_expenselist.gif) no-repeat;
+}
+
+#navigation li a.SheetListLink{
+   height:0px; 
+   padding-top:45px;
+   width:192px;
+   overflow:hidden;
+   background:url(../Images/but_sheetlist.gif) no-repeat;
+}
+
+#navigation li a.TimeSheetLink{
+   height:0px; 
+   padding-top:45px;
+   width:192px;
+   overflow:hidden;
+   background:url(../Images/but_timesheet.gif) no-repeat;
+}
+
+#navigation li a.TimeSheetListLink{
+   height:0px; 
+   padding-top:45px;
+   width:192px;
+   overflow:hidden;
+   background:url(../Images/but_timesheetlist.gif) no-repeat;
+}
+
+#navigation li a.ExpenseSheetLink:hover{
+   height:0px; 
+   padding-top:45px;
+   width:192px;
+   overflow:hidden;
+   background:url(../Images/but_expenselist3.gif) no-repeat;
+}
+
+#navigation li a.SheetListLink:hover{
+   height:0px; 
+   padding-top:45px;
+   width:192px;
+   overflow:hidden;
+   background:url(../Images/but_sheetlist3.gif) no-repeat;
+}
+
+#navigation li a.TimeSheetLink:hover{
+   height:0px; 
+   padding-top:45px;
+   width:192px;
+   overflow:hidden;
+   background:url(../Images/but_timesheet3.gif) no-repeat;
+}
+
+#navigation li a.TimeSheetListLink:hover{
+   height:0px; 
+   padding-top:45px;
+   width:192px;
+   overflow:hidden;
+   background:url(../Images/but_timesheetlist3.gif) no-repeat;
+}
+
+#navigation li a.ExpenseSheetLink2{
+   height:0px; 
+   padding-top:45px;
+   width:192px;
+   overflow:hidden;
+   background:url(../Images/but_expenselist2.gif) no-repeat;
+   position:relative;
+   z-index:7;
+   top:1px;
+}
+
+#navigation li a.SheetListLink2{
+   height:0px; 
+   padding-top:45px;
+   width:192px;
+   overflow:hidden;
+   background:url(../Images/but_sheetlist2.gif) no-repeat;
+   position:relative;
+   z-index:7;
+   top:1px;
+}
+
+#navigation li a.TimeSheetLink2{
+   height:0px; 
+   padding-top:45px;
+   width:192px;
+   overflow:hidden;
+   background:url(../Images/but_timesheet2.gif) no-repeat;
+   position:relative;
+   z-index:7;
+   top:1px;
+}
+
+#navigation li a.TimeSheetListLink2{
+   height:0px; 
+   padding-top:45px;
+   width:192px;
+   overflow:hidden;
+   background:url(../Images/but_timesheetlist2.gif) no-repeat;
+   position:relative;
+   z-index:7;
+   top:1px;
+}
+
+ul#navigation3 {
+   list-style:none;
+   list-style-image: none;
+   padding:0;
+   width:300px;
+   margin:0 0 0 50px;
+}
+
+/* IE7 Only */
+*:first-child+html ul#navigation3 {
+   margin:-5px 0 0 70px;
+}
+
+#navigation3 li a.homebutton{
+   height:0px; 
+   padding-top:31px;
+   width:85px;
+   overflow:hidden;
+   background:url(../Images/but_home.gif) no-repeat;
+}
+
+#navigation3 li a.homebutton:hover{
+   height:0px; 
+   padding-top:31px;
+   width:85px;
+   overflow:hidden;
+   background:url(../Images/but_home2.gif) no-repeat;
+}
+
+#welcome {
+    float:right; 
+    font-size:12px; 
+    font-weight:bold; 
+    margin:5px 50px 0 0;
+    width: 250px;
     text-align: right;
 }
 
-ul#menu li
-{
-    display: inline;
-    list-style: none;
+.ie #welcome {
+    margin-top: -24px;
 }
 
-ul#menu li#greeting
+
+
+.calendarStyle 
 {
-    padding: 10px 20px;
-    font-weight: bold;
-    text-decoration: none;
-    line-height: 2.8em;
-    color: #fff;
+	border-left: solid 1px #afb7be;
+	border-bottom: solid 1px #afb7be;  
 }
 
-ul#menu li a
+.calPopup
 {
-    padding: 10px 20px;
-    font-weight: bold;
-    text-decoration: none;
-    line-height: 2.8em;
-    background-color: #e8eef4;
-    color: #034af3;
+	padding-top:10px;
+	padding-left:45px;
+	background: url(../Images/cal_popup.png) no-repeat;
+	line-height:26px;
 }
 
-ul#menu li a:hover
+
+.calPopupGreen
 {
-    background-color: #fff;
-    text-decoration: none;
+	padding-top:10px;
+	padding-left:30px;
+	background: url(../Images/cal_popupgreen.png) no-repeat;
+	line-height:26px;
+	width: 400px;
+	height:319px; 
+	font-size:14px; 
+	margin: -10px 0 0 -105px
+}
+.ie .calPopupGreen
+{
+	padding-top: 0px;
+	margin-top: -10px;
 }
 
-ul#menu li a:active
+.xout 
 {
-    background-color: #a6e2a6;
-    text-decoration: none;
+	position:relative;
+	top:3px;
+	left:310px;
 }
 
-ul#menu li.selected a
+.xout2 
 {
-    background-color: #fff;
-    color: #000;
+	position:relative;
+	top:-7px;
+	left:333px;
 }
 
-/* FORM LAYOUT ELEMENTS   
-----------------------------------------------------------*/
-
-fieldset 
+.blackgradHead 
 {
-    margin: 1em 0;
-    padding: 1em;
-    border: 1px solid #CCC;
+	background:url(../Images/gridviewtitlebg.gif) repeat-x;
 }
 
-fieldset p 
+.paddingLeft
 {
-    margin: 2px 12px 10px 10px;
+	padding-left:20px;
 }
 
-fieldset label 
+#ctl00_ContentPlaceHolder1_gvUsers td, #ctl00_ContentPlaceHolder1_TimeSheetReviewList1_gvEntries td, #ctl00_ContentPlaceHolder1_gvTimeSheets td, #ctl00_ContentPlaceHolder1_gvCurrentExpenses td, #ctl00_ContentPlaceHolder1_gvExpenseSheets td
 {
-    display: block;
+	border-bottom: solid 1px #bbcfe3;	
 }
 
-fieldset label.inline 
+.centerit 
 {
-    display: inline;
+	margin:0 auto;
 }
 
-legend 
-{
-    font-size: 1.1em;
-    font-weight: 600;
-    padding: 2px 4px 8px 4px;
+#footergradient 
+{/*
+	background: url(../Images/bottomgradient.jpg) repeat-x; margin: 0px 50px;
+	min-width:980px;
+	position:relative;
+	z-index:0;*/
 }
 
-input[type="text"] 
-{
-    width: 200px;
-    border: 1px solid #CCC;
+/* IE7 Only 
+*:first-child+html #footergradient {
+   margin-top: 150px;
+}*/
+
+/*Textbox Watermark*/
+
+.unwatermarked {
+	font-weight:bold;
 }
 
-input[type="password"] 
-{
-    width: 200px;
-    border: 1px solid #CCC;
+.watermarked {
+	border:1px solid #BEBEBE;
+	background-color:#F0F8FF;
+	color:gray;
 }
 
-/* TABLE
-----------------------------------------------------------*/
+/* edit entry styles */
 
-table 
-{
-  border: solid 1px #e8eef4;
-  border-collapse: collapse;
+.updateEntry {
+    float: right;
+    margin-right: 70px
+}
+.ie updateEntry {display: none;}
+
+.addEntry {
+    float: right;
+    margin-right: 50px
 }
 
-table td 
-{
-  padding: 5px;   
-  border: solid 1px #e8eef4;
+#ulAdjustments {
+    width: 606px; float: right; list-style-position: inside; font-size: 0.9em;
 }
 
-table th
-{
-  padding: 6px 5px;
-  text-align: left;
-  background-color: #e8eef4; 
-  border: solid 1px #e8eef4;   
+
+.ie #ulAdjustments {
+    width: 600px; float: left; font-size: 0.9em;
+    margin: 29px 0px 0px 113px;
 }
 
-/* MISC  
+#errorMsg {width: 847px; margin: 0 auto;}
+#errorMsg img {float: left; margin: 0 1em}
+
+
+.ie img[alt*="Delete"] {border: none 0px; margin-left: 3px;}
+.ie tr[id*="Entry"] {font-size: 12px;}
+
+/*---------------------- MISC ----------------------------
 ----------------------------------------------------------*/
 .clear
 {
@@ -258,18 +395,6 @@ table th
 .error
 {
     color:Red;
-}
-
-#menucontainer
-{
-    margin-top:40px;
-}
-
-div#title
-{
-    display:block;
-    float:left;
-    text-align:left;
 }
 
 #logindisplay

@@ -114,8 +114,14 @@
     <Compile Include="RouteConfigurator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Print.css" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Images\bannertop.jpg" />
+    <Content Include="Images\bottomgradient.jpg" />
+    <Content Include="Images\but_home.gif" />
+    <Content Include="Images\but_home2.gif" />
+    <Content Include="Images\topbgfiller.gif" />
     <Content Include="Views\Account\ChangePassword.aspx" />
     <Content Include="Views\Account\ChangePasswordSuccess.aspx" />
     <Content Include="Views\Account\ForgotPassword.aspx" />

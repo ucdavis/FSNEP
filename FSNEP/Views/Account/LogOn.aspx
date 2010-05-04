@@ -1,10 +1,10 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage" %>
 
-<asp:Content ID="loginTitle" ContentPlaceHolderID="TitleContent" runat="server">
+<asp:Content ID="loginTitle" ContentPlaceHolderID="titleContent" runat="server">
     Log On
 </asp:Content>
 
-<asp:Content ID="loginContent" ContentPlaceHolderID="MainContent" runat="server">
+<asp:Content ID="loginContent" ContentPlaceHolderID="mainContent" runat="server">
     <h2>Log On</h2>
     <p>
         Please enter your username and password. <%= Html.ActionLink("Register", "Register") %> if you don't have an account.

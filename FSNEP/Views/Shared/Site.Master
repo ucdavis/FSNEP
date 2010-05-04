@@ -2,39 +2,81 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title><asp:ContentPlaceHolder ID="TitleContent" runat="server" /></title>
-    <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />
+<head id="head" runat="server">
+    <title>
+        <asp:ContentPlaceHolder ID="titleContent" runat="server" />
+    </title>
+    <link href="../../Content/Site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="../../Content/Print.css" rel="Stylesheet" type="text/css" media="print" />
 </head>
-
 <body>
-    <div class="page">
-
+    <div id="page_content">
+        <!--
+	This will show only in text-only browsers and allows the user
+	to skip the primary navigation and go directly to either
+	the second-level navigation or the main content of the page
+-->
+        <div id="skipnav">
+            Skip directly to: <a href="#nav">Navigation for this section</a> | <a href="#content">
+                Main page content</a></div>
         <div id="header">
-            <div id="title">
-                <h1>My MVC Application</h1>
-            </div>
-              
-            <div id="logindisplay">
-                <% Html.RenderPartial("LogOnUserControl"); %>
-            </div> 
-            
-            <div id="menucontainer">
-            
-                <ul id="menu">              
-                    <li><%= Html.ActionLink("Home", "Index", "Home")%></li>
-                    <li><%= Html.ActionLink("About", "About", "Home")%></li>
-                </ul>
-            
-            </div>
+            <img id="Img1" src='<%= Url.Content("~/Images/bannertop.jpg") %>' alt="FSNEP Time Record/Cost Share Reporting" />
         </div>
-
+        <ul id="navigation3">
+            <li><a id="A1" href='<%= Url.Action("Index", "Home") %>' class="homebutton">Home</a></li>
+        </ul>
+        <div id="welcome">
+            <% Html.RenderPartial("LogOnUserControl"); %>
+        </div>
+        <div style="clear: both;">
+            <br />
+        </div>
         <div id="main">
-            <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+            <a name="content"></a>
+            <!-- End breadcrumb navigation -->
+            <!-- ********** Main content area of the page ********** -->
+            <asp:ContentPlaceHolder ID="mainContent" runat="server" />
+            <!-- ********** End main content area of the page ********** -->
+            <!-- This item is required so the columns appear to be of equal length. -->
+        </div>
+        <!-- ******************** End main two columns ******************** -->
+    </div>
+    <!-- ******************** Footer ******************** 
+	<div id="footergradient">-->
+    <div id="footer">
+        <div id="nav_bottom">
+            <p>
+                <br />
+                <br />
+                <a href="http://fsnep.ucdavis.edu/administrative/time-records-info/FSNEP-Time-Record-Online-System-Instructions.pdf">
+                    View Help Page (PDF)</a> | <strong>Version:</strong>&nbsp;0.0.0.0.TODO&nbsp;|</span>
+                <span id="contact_link">
+                    <!-- This JavaScript block will help hide the contact e-mail address from Web spiders -->
 
-            <div id="footer">
-            </div>
+                    <script language="JavaScript" type="text/javascript">
+						<!--
+                        linkname = ('Questions or comments?');
+                        emailaddress = ('cgo' + 'uld' + '@' + 'ucda' + 'vis.edu');
+                        document.write('<a href="mailto:' + emailaddress + '?subject=FSNEP Question/Comment: ">' + linkname + '</a>');
+						-->
+                    </script>
+
+                    <!-- End of Javascript -->
+            </p>
+            <!-- Copyright information. Date range should reflect the time that the site has been up. -->
+            <p>
+                Copyright &copy; UC Regents Davis campus, 2005-06. All Rights Reserved.</p>
         </div>
     </div>
+    <!-- </div>******************** End footer ******************** -->
+    <%--    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+
+    <script type="text/javascript">
+        var pageTracker = _gat._getTracker("UA-5512876-4");
+        pageTracker._trackPageview();
+    </script>--%>
 </body>
 </html>
