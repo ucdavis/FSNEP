@@ -1,39 +1,33 @@
 using System.Linq;
+using FSNEP.Core.Domain;
 using FSNEP.Tests.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UCDArch.Core.PersistanceSupport;
 using UCDArch.Data.NHibernate;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FSNEP.Core.Domain;
 
 namespace FSNEP.Tests.Repositories
 {
     [TestClass]
-    public class RecordRepositoryTests : RepositoryTestBase
+    public class TimeRecordRepositoryTests : RepositoryTestBase
     {
         private const int ValidYear = 2009;
         private const int ValidMonth = 6;
 
         [TestMethod]
-        public void CanSaveValidRecord()
+        public void CanSaveValidTimeRecord()
         {
-            var record = CreateValidRecord();
+            var record = new TimeRecord
+            {
+                Month = ValidMonth,
+                Year = ValidYear,
+                Salary = 200,
+                Status = Repository.OfType<Status>().Queryable.First(),
+                User = Repository.OfType<User>().Queryable.First()
+            };
 
-            Repository.OfType<Record>().EnsurePersistent(record);
+            Repository.OfType<TimeRecord>().EnsurePersistent(record);
 
             Assert.AreEqual(false, record.IsTransient());
-        }
-
-        private Record CreateValidRecord()
-        {
-            var record = new Record
-                             {
-                                 Month = ValidMonth,
-                                 Year = ValidYear,
-                                 Status = Repository.OfType<Status>().Queryable.First(),
-                                 User = Repository.OfType<User>().Queryable.First()
-                             };
-
-            return record;
         }
 
         protected override void LoadData()
@@ -41,7 +35,7 @@ namespace FSNEP.Tests.Repositories
             using (var ts = new TransactionScope())
             {
                 LoadStatus();
-         
+
                 ts.CommitTransaction();
             }
 
@@ -52,7 +46,7 @@ namespace FSNEP.Tests.Repositories
 
         public void LoadStatus()
         {
-            var status1 = new Status {Name = "S1"};
+            var status1 = new Status { Name = "S1" };
             var status2 = new Status { Name = "S2" };
 
             var statusRepository = Repository.OfType<Status>();
@@ -60,6 +54,5 @@ namespace FSNEP.Tests.Repositories
             statusRepository.EnsurePersistent(status1);
             statusRepository.EnsurePersistent(status2);
         }
-
     }
 }

@@ -13,6 +13,11 @@
 
     <many-to-one name="User" class="User"></many-to-one>
     <many-to-one name="Status" class="Status"></many-to-one>
+
+    <joined-subclass name="TimeRecord" table="TimeRecords">
+      <key column="ID"></key>
+      <property name="Salary"></property>
+    </joined-subclass>
     
   </class>
 </hibernate-mapping>
