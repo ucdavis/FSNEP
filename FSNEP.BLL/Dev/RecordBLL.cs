@@ -1,4 +1,5 @@
 using System;
+using System.Security.Principal;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
@@ -15,7 +16,12 @@ namespace FSNEP.BLL.Dev
             _repository = repository;
         }
 
-        public bool HasAccess(string userName, T record)
+        public bool HasAccess(IPrincipal user, T record)
+        {
+            return record.User.UserName == user.Identity.Name;
+        }
+
+        public bool HasReviewAccess(IPrincipal user, T record)
         {
             throw new NotImplementedException();
         }

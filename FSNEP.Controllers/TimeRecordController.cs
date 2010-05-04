@@ -39,12 +39,10 @@ namespace FSNEP.Controllers
             var timeRecord = _timeRecordRepository.GetNullableByID(id);
 
             Check.Require(timeRecord != null, "Invalid time record indentifier");
-
-            var currentUser = ControllerContext.HttpContext.User.Identity.Name;
-
-            if (!_timeRecordBLL.HasAccess(currentUser, timeRecord))
+            
+            if (!_timeRecordBLL.HasAccess(CurrentUser, timeRecord))
             {
-                return RedirectToErrorPage(string.Format("{0} does not have access to this time record", currentUser));
+                return RedirectToErrorPage(string.Format("{0} does not have access to this time record", CurrentUser.Identity.Name));
             }
 
             if (!_timeRecordBLL.IsEditable(timeRecord))
@@ -65,9 +63,7 @@ namespace FSNEP.Controllers
 
             Check.Require(timeRecord != null, "Invalid time record indentifier");
 
-            var currentUser = ControllerContext.HttpContext.User.Identity.Name;
-
-            Check.Require(_timeRecordBLL.HasAccess(currentUser, timeRecord),
+            Check.Require(_timeRecordBLL.HasAccess(CurrentUser, timeRecord),
                           "Current user does not have access to this record");
 
             timeRecord.AddEntry(entry);//Add the entry to the time record

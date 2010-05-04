@@ -29,6 +29,7 @@ namespace FSNEP.Tests.Controllers
             MockRepository.GenerateStub<IRepository<TimeRecord>>();
         private readonly TimeRecord _timeRecord = CreateValidTimeRecord();
         private readonly IUserBLL _userBll = MockRepository.GenerateStub<IUserBLL>();
+        private readonly IPrincipal _principal = new MockPrincipal();
 
         /// <summary>
         /// Override this method to setup a controller that doesn't have an empty ctor
@@ -37,7 +38,7 @@ namespace FSNEP.Tests.Controllers
         {
             var timeRecordCalendarGenerator = new TimeRecordCalendarGenerator();
             _timeRecord.SetIdTo(1);
-            _timeRecordBll.Expect(a => a.HasAccess("UserName", _timeRecord)).Return(true).Repeat.Any();
+            _timeRecordBll.Expect(a => a.HasAccess(_principal, _timeRecord)).Return(true).Repeat.Any();
             _timeRecordBll.Expect(a => a.IsEditable(_timeRecord)).Return(true).Repeat.Any();
 
             var fakeContext =
@@ -115,8 +116,8 @@ namespace FSNEP.Tests.Controllers
         {
             var timeRecordEntry = CreateValidTimeRecordEntry();
             timeRecordEntry.SetIdTo(24);
-            IPrincipal userPrincipal = new MockPrincipal();
-            Controller.ControllerContext.HttpContext.User = userPrincipal;
+
+            Controller.ControllerContext.HttpContext.User = _principal;
 
             var timeRecord = _timeRecordRepository.GetNullableByID(1);
             _timeRecordRepository.AssertWasNotCalled(a => a.EnsurePersistent(timeRecord));
@@ -141,8 +142,8 @@ namespace FSNEP.Tests.Controllers
             {
                 var timeRecordEntry = CreateValidTimeRecordEntry();
                 timeRecordEntry.SetIdTo(24);
-                IPrincipal userPrincipal = new MockPrincipal();
-                Controller.ControllerContext.HttpContext.User = userPrincipal;
+                
+                Controller.ControllerContext.HttpContext.User = _principal;
 
                 _timeRecordRepository.AssertWasNotCalled(a => a.EnsurePersistent(_timeRecord));
                 result = Controller.AddEntry(invalidTimeRecordId, timeRecordEntry);
@@ -176,8 +177,8 @@ namespace FSNEP.Tests.Controllers
             {
                 var timeRecordEntry = CreateValidTimeRecordEntry();
                 timeRecordEntry.SetIdTo(24);
-                IPrincipal userPrincipal = new MockPrincipal();
-                Controller.ControllerContext.HttpContext.User = userPrincipal;
+                
+                Controller.ControllerContext.HttpContext.User = _principal;
                 timeRecord = CreateValidTimeRecord();
                 timeRecord.User = CreateValidUser("WrongOne");
                 timeRecord.SetIdTo(13);
@@ -210,8 +211,8 @@ namespace FSNEP.Tests.Controllers
                 var timeRecordEntry = CreateValidTimeRecordEntry();
                 timeRecordEntry.ActivityType = null; //makes this invalid
                 timeRecordEntry.SetIdTo(24);
-                IPrincipal userPrincipal = new MockPrincipal();
-                Controller.ControllerContext.HttpContext.User = userPrincipal;
+                
+                Controller.ControllerContext.HttpContext.User = _principal;
 
                 _timeRecordRepository.AssertWasNotCalled(a => a.EnsurePersistent(_timeRecord));
                 result = Controller.AddEntry(_timeRecord.Id, timeRecordEntry);
@@ -239,8 +240,8 @@ namespace FSNEP.Tests.Controllers
                 var timeRecordEntry = CreateValidTimeRecordEntry();
                 timeRecordEntry.Hours = 25; //makes this invalid
                 timeRecordEntry.SetIdTo(24);
-                IPrincipal userPrincipal = new MockPrincipal();
-                Controller.ControllerContext.HttpContext.User = userPrincipal;
+                
+                Controller.ControllerContext.HttpContext.User = _principal;
 
                 _timeRecordRepository.AssertWasNotCalled(a => a.EnsurePersistent(_timeRecord));
                 result = Controller.AddEntry(_timeRecord.Id, timeRecordEntry);
@@ -264,8 +265,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void GetTimeRecordEntryReturnsCorrectView()
         {
-            IPrincipal userPrincipal = new MockPrincipal();
-            Controller.ControllerContext.HttpContext.User = userPrincipal;
+            Controller.ControllerContext.HttpContext.User = _principal;
 
             var projects = MockProjectsForUser();
             _userBll.Expect(a => a.GetUser()).IgnoreArguments().Return(User).Repeat.AtLeastOnce();
@@ -314,8 +314,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void GetTimeRecordEntryRedirectsToHomeErrorWhenUserHasNoAccess()
         {
-            IPrincipal userPrincipal = new MockPrincipal();
-            Controller.ControllerContext.HttpContext.User = userPrincipal;
+            Controller.ControllerContext.HttpContext.User = _principal;
 
             MockProjectsForUser();
             _userBll.Expect(a => a.GetUser()).IgnoreArguments().Return(User).Repeat.AtLeastOnce();

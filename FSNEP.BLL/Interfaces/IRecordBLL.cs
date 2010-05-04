@@ -1,3 +1,4 @@
+using System.Security.Principal;
 using FSNEP.Core.Domain;
 
 namespace FSNEP.BLL.Interfaces
@@ -5,11 +6,19 @@ namespace FSNEP.BLL.Interfaces
     public interface IRecordBLL<T> where T : Record
     {
         /// <summary>
-        /// Any user has access to any time record
+        /// True if the user has access to the record
         /// </summary>
-        /// <returns></returns>
-        bool HasAccess(string userName, T record);
+        bool HasAccess(IPrincipal user, T record);
 
+        /// <summary>
+        /// True if the user can review this sheet.
+        /// This is if they own the record, are an admin, or the user's supervisor
+        /// </summary>
+        bool HasReviewAccess(IPrincipal user, T record);
+
+        /// <summary>
+        /// Returns true if the sheet is in an editable state
+        /// </summary>
         bool IsEditable(T record);
 
         /// <summary>

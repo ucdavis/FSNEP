@@ -1,20 +1,10 @@
-using System.Web.Mvc;
 using FSNEP.Controllers.Helpers.Attributes;
-using UCDArch.Core.PersistanceSupport;
 
 namespace FSNEP.Controllers
 {
     [HandleErrorWithELMAH]
-    public class SuperController : Controller
+    public class SuperController : UCDArch.Web.Controller.SuperController
     {
-        public IRepository Repository { get; set; } //General repository set through DI
 
-        private const string TempDataMessageKey = "Message";
-
-        public string Message
-        {
-            get { return TempData[TempDataMessageKey] as string; }
-            set { TempData[TempDataMessageKey] = value; }
-        }
     }
 }
