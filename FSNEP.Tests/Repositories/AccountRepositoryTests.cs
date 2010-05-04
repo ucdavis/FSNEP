@@ -12,6 +12,14 @@ namespace FSNEP.Tests.Repositories
     public class AccountRepositoryTests : RepositoryTestBase
     {
         private readonly IRepository<Account> _accountRepository = new Repository<Account>();
+        /// <summary>
+        /// 50 characters for Name
+        /// </summary>
+        public const string ValidValueName = "123456789 123456789 123456789 123456789 1234567890";
+        /// <summary>
+        /// 51 characters for Name
+        /// </summary>
+        private const string InvalidValueName = "123456789 123456789 123456789 123456789 123456789 1";
 
         //Don't load any data
         protected override void LoadData() { }
@@ -21,7 +29,7 @@ namespace FSNEP.Tests.Repositories
         {
             var accountCategory = new Account
               {
-                  Name = "123456789 123456789 123456789 123456789 1234567890",
+                  Name = ValidValueName,
                   IndirectCost = 0
               };
 
@@ -68,7 +76,7 @@ namespace FSNEP.Tests.Repositories
         {
             var accountCategory = new Account
             {
-                Name = "123456789 123456789 123456789 123456789 123456789 1",
+                Name = InvalidValueName,
                 IndirectCost = 0.15
             };
 
@@ -94,7 +102,7 @@ namespace FSNEP.Tests.Repositories
         {
             var accountCategory = new Account
             {
-                Name = "123456789 123456789 123456789 123456789 1234567890",
+                Name = ValidValueName,
                 IndirectCost = -0.15
             };
 
@@ -120,7 +128,7 @@ namespace FSNEP.Tests.Repositories
         {
             var accountCategory = new Account
               {
-                  Name = "123456789 123456789 123456789 123456789 1234567890",
+                  Name = ValidValueName,
                   IndirectCost = 0.300001
               };
 
