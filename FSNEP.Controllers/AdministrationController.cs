@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using FSNEP.BLL.Impl;
 using FSNEP.Core.Domain;
 
@@ -23,8 +22,11 @@ namespace FSNEP.Controllers
             var viewModel = new ModifyUserViewModel();
 
             //First get the lookups, like projects, fundtypes, and supervisors  
+            viewModel.Projects = new SelectList(UserBLL.GetAllProjectsByUser(), "ID", "Name");
+            viewModel.FundTypes = new SelectList(UserBLL.GetAvailableFundTypes(), "Name", "ID");
 
-            return View();
+
+            return View(viewModel);
         }
 
     }

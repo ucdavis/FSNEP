@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Abstractions\MessageGateway.cs" />
     <Compile Include="Abstractions\Providers.cs" />
+    <Compile Include="Abstractions\RoleNames.cs" />
     <Compile Include="Domain\Account.cs" />
     <Compile Include="Domain\ActivityType.cs" />
     <Compile Include="Domain\ExpenseSheet.cs" />
