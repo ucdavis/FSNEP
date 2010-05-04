@@ -59,8 +59,8 @@ namespace FSNEP.Tests.Controllers
         public void RoutingTimeRecordEntryMapsEntry()
         {
             const int id = 5;
-            "~/TimeRecord/TimeRecordEntry/5"
-                .ShouldMapTo<TimeRecordController>(a => a.TimeRecordEntry(id));
+            "~/TimeRecord/Entry/5"
+                .ShouldMapTo<TimeRecordController>(a => a.Entry(id));
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace FSNEP.Tests.Controllers
             var activityCategories = MockActivityCategories();
 
             var timeRecord = _timeRecordRepository.GetNullableByID(1);
-            var result = (ViewResult) Controller.TimeRecordEntry(timeRecord.Id);
+            var result = (ViewResult) Controller.Entry(timeRecord.Id);
             Assert.IsNotNull(result);
             Assert.IsTrue(result.ViewData.ModelState.IsValid);
             result.ViewData.ModelState.AssertErrorsAre(); //No errors  
@@ -346,7 +346,7 @@ namespace FSNEP.Tests.Controllers
             timeRecord.SetIdTo(13);
             _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
 
-            Controller.TimeRecordEntry(timeRecord.Id)
+            Controller.Entry(timeRecord.Id)
                 .AssertActionRedirect()
                 .ToAction<HomeController>(a => a.Error(string.Format("{0} does not have access to this time record", timeRecord.User.UserName)));
         }
@@ -360,7 +360,7 @@ namespace FSNEP.Tests.Controllers
         {
             try
             {
-                Controller.TimeRecordEntry(999);
+                Controller.Entry(999);
             }
             catch (Exception message)
             {
@@ -565,7 +565,7 @@ namespace FSNEP.Tests.Controllers
             //Assert.AreEqual(2, result.RouteValues["id"]);
             Controller.Current()
                 .AssertActionRedirect()
-                .ToAction<TimeRecordController>(a => a.TimeRecordEntry(2));
+                .ToAction<TimeRecordController>(a => a.Entry(2));
             
         }
 

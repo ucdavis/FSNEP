@@ -61,6 +61,15 @@ namespace FSNEP.Controllers {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No current cost share available.  You can view your cost share history here..
+        /// </summary>
+        internal static string NoCostShare {
+            get {
+                return ResourceManager.GetString("NoCostShare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No current time record available.  You can view your time record history here..
         /// </summary>
         internal static string NoTimeRecord {

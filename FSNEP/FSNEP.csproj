@@ -202,6 +202,7 @@
     <Content Include="Views\Account\ResetPassword.aspx" />
     <Content Include="Views\Account\ResetPasswordSuccess.aspx" />
     <Content Include="Views\Association\Projects.aspx" />
+    <Content Include="Views\CostShare\Entry.aspx" />
     <Content Include="Views\CostShare\History.aspx" />
     <Content Include="Views\Lookup\Accounts.aspx" />
     <Content Include="Views\Lookup\ActivityCategories.aspx" />

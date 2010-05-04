@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Security.Principal;
 using FSNEP.BLL.Interfaces;
 using FSNEP.Core.Domain;
@@ -32,7 +33,7 @@ namespace FSNEP.BLL.Dev
 
         public T GetCurrent(IPrincipal user)
         {
-            return _repository.OfType<T>().GetById(2);
+            return _repository.OfType<T>().Queryable.OrderBy(x=>x.Id).First();
         }
 
         public T GetCurrentRecord(IPrincipal user)

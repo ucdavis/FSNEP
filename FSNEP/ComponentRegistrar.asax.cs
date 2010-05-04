@@ -60,6 +60,7 @@ namespace FSNEP
             #if DEBUG
 
             container.AddComponent("devTimeRecordBLL", typeof(ITimeRecordBLL), typeof(DevTimeRecordBLL));
+            container.AddComponent("devCostShareBLL", typeof(ICostShareBLL), typeof(DevCostShareBLL));
 
             #endif
 

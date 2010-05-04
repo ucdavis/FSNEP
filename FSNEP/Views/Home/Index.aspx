@@ -20,7 +20,8 @@
     <h3>
         Cost Share</h3>
     <ul>
-        
+        <li>
+            <%=Html.ActionLink<CostShareController>(x => x.Current(), "Current Cost Share")%></li>
         <li><%=Html.ActionLink<CostShareController>(x => x.History(), "Cost Share History")%></li>
     </ul>
     <h3>

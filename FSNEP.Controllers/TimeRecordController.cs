@@ -51,16 +51,14 @@ namespace FSNEP.Controllers
             if (timeRecord == null)
             {
                 Message = Constants.NoTimeRecord;
-                //return RedirectToAction("History");
+                
                 return this.RedirectToAction(a => a.History());
             }
 
-            //return RedirectToAction("Entry", new {id = timeRecord.Id});            
-            return this.RedirectToAction(a => a.TimeRecordEntry(timeRecord.Id));
+            return this.RedirectToAction(a => a.Entry(timeRecord.Id));
         }
 
-        [ActionName("Entry")]
-        public ActionResult TimeRecordEntry(int id)
+        public ActionResult Entry(int id)
         {
             var timeRecord = _timeRecordRepository.GetNullableByID(id);
 
@@ -161,13 +159,6 @@ namespace FSNEP.Controllers
         {
             entryToUpdate.Comment = entry.Comment;
             entryToUpdate.Hours = entry.Hours;
-        }
-
-        private RedirectToRouteResult RedirectToErrorPage(string message)
-        {
-            Message = message;
-
-            return RedirectToAction("Error", "Home");
         }
     }
 
