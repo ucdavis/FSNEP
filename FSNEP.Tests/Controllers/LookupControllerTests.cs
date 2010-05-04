@@ -18,6 +18,10 @@ namespace FSNEP.Tests.Controllers
         /// 51 characters for Name
         /// </summary>
         public const string InvalidValueName = "123456789 123456789 123456789 123456789 123456789 1";
+        /// <summary>
+        /// The string that is returned by the validator for a name which exceeds 50 characters.
+        /// </summary>
+        public const string InvalidNameMessageTooLong = "Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).";
 
         #region Project Tests
         [TestMethod]
@@ -39,6 +43,8 @@ namespace FSNEP.Tests.Controllers
 
             Assert.AreEqual(true, newProject.IsActive, "The created project should be active");
             Assert.AreEqual("ValidProject", newProject.Name);
+            Assert.IsTrue(Controller.ModelState.IsValid);
+            Assert.AreEqual("Project Created Successfully", Controller.Message);
         }
 
         [TestMethod]
@@ -54,6 +60,10 @@ namespace FSNEP.Tests.Controllers
 
             projectRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newProject));//make sure we didn't call persist
+            GetErrorMessages(Controller.ModelState).Contains(InvalidNameMessageTooLong);
+            Assert.IsFalse(Controller.ModelState.IsValid);
+            Assert.IsTrue(Controller.Message.StartsWith("Project Creation Failed."));
+
         }
 
         [TestMethod]
@@ -79,6 +89,7 @@ namespace FSNEP.Tests.Controllers
             Controller.InactivateProject(invalidProjectId)
                 .AssertActionRedirect()
                 .ToAction<LookupController>(a => a.Projects());
+            Assert.AreEqual("Project Not Found", Controller.Message);
         }
 
         [TestMethod]
@@ -95,6 +106,7 @@ namespace FSNEP.Tests.Controllers
             
             Assert.AreEqual(false, activeProject.IsActive, "Project should have been inactivated");
             projectRepository.AssertWasCalled(a => a.EnsurePersistent(activeProject), a => a.Repeat.Once()); //Make sure we saved the change
+            Assert.AreEqual("Project Removed Successfully", Controller.Message);
         }
 
         //TODO: Review, do we need this test and is it done correctly? If Yes, add to the other lookup control tests.
@@ -115,6 +127,7 @@ namespace FSNEP.Tests.Controllers
 
             Assert.AreEqual(true, activeProject.IsActive, "Project should have not been inactivated");
             projectRepository.AssertWasNotCalled(a => a.EnsurePersistent(activeProject), a => a.Repeat.Once()); //Make sure we saved the change
+            Assert.AreEqual("Project Not Found", Controller.Message);
         }
 
         [TestMethod]
@@ -131,6 +144,7 @@ namespace FSNEP.Tests.Controllers
             Controller.InactivateProject(validProjectId)
                 .AssertActionRedirect()
                 .ToAction<LookupController>(a => a.Projects());
+            Assert.AreEqual("Project Removed Successfully", Controller.Message);
         }
 
         [TestMethod]
@@ -203,6 +217,8 @@ namespace FSNEP.Tests.Controllers
 
             Assert.AreEqual(true, newActivityType.IsActive, "The created activityType should be active");
             Assert.AreEqual("ValidActivityType", newActivityType.Name);
+            Assert.IsTrue(Controller.ModelState.IsValid);
+            Assert.AreEqual("Activity Type Created Successfully", Controller.Message);
         }
 
         /// <summary>
@@ -231,7 +247,11 @@ namespace FSNEP.Tests.Controllers
 
             activityTypeRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newActivityType));//make sure we didn't call persist
-
+            
+            GetErrorMessages(Controller.ModelState).AssertContains(InvalidNameMessageTooLong);
+            Assert.AreEqual(1, CountErrorMessages(Controller.ModelState), "Wrong number of error messages");
+            Assert.IsFalse(Controller.ModelState.IsValid);
+            Assert.IsTrue(Controller.Message.StartsWith("Activity Type Creation Failed."));
         }
 
         [TestMethod]
@@ -245,7 +265,8 @@ namespace FSNEP.Tests.Controllers
 
             Controller.CreateActivityType(new ActivityType(), validCategoryId)
                 .AssertActionRedirect()
-                .ToAction<LookupController>(a => a.ActivityTypes());
+                .ToAction<LookupController>(a => a.ActivityTypes());            
+            //Note: If we examine the ModelState for errors, we see them, but I think this is because this is a mock.
         }
 
         /// <summary>
@@ -264,6 +285,8 @@ namespace FSNEP.Tests.Controllers
             Controller.InactivateActivityType(invalidActivityTypeId)
                 .AssertActionRedirect()
                 .ToAction<LookupController>(a => a.ActivityTypes());
+            Assert.AreEqual("Activity Type Not Found", Controller.Message);
+
         }
 
         /// <summary>
@@ -283,6 +306,7 @@ namespace FSNEP.Tests.Controllers
 
             Assert.AreEqual(false, activeActivityType.IsActive, "ActivityType should have been inactivated");
             activityTypeRepository.AssertWasCalled(a => a.EnsurePersistent(activeActivityType), a => a.Repeat.Once()); //Make sure we saved the change
+            Assert.AreEqual("Activity Type Removed Successfully", Controller.Message);
         }
         
         /// <summary>
@@ -302,6 +326,7 @@ namespace FSNEP.Tests.Controllers
             Controller.InactivateActivityType(validActivityTypeId)
                 .AssertActionRedirect()
                 .ToAction<LookupController>(a => a.ActivityTypes());
+            Assert.AreEqual("Activity Type Removed Successfully", Controller.Message);
         }
 
         /// <summary>
@@ -404,6 +429,9 @@ namespace FSNEP.Tests.Controllers
 
             Assert.AreEqual(true, newAccount.IsActive, "The created Account should be active");
             Assert.AreEqual("ValidAccount", newAccount.Name);
+            //TODO: Do we want to add the following two asserts to other tests which complete successfully?
+            Assert.IsTrue(Controller.ModelState.IsValid);
+            Assert.AreEqual("Account Created Successfully", Controller.Message, "View message incorrect");
         }
 
         /// <summary>
@@ -422,6 +450,10 @@ namespace FSNEP.Tests.Controllers
 
             accountRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newAccount));//make sure we didn't call persist
+
+            GetErrorMessages(Controller.ModelState).AssertContains(InvalidNameMessageTooLong);
+            Assert.IsFalse(Controller.ModelState.IsValid);
+            Assert.AreEqual(1, CountErrorMessages(Controller.ModelState), "Wrong number of error messages");
         }
 
         /// <summary>
@@ -435,6 +467,7 @@ namespace FSNEP.Tests.Controllers
             Controller.CreateAccount(new Account())
                 .AssertActionRedirect()
                 .ToAction<LookupController>(a => a.Accounts());
+            //Note: This has validation Errors, but I think this is because it is a Mock.
         }
 
         /// <summary>
@@ -453,6 +486,8 @@ namespace FSNEP.Tests.Controllers
             Controller.InactivateAccount(invalidAccountId)
                 .AssertActionRedirect()
                 .ToAction<LookupController>(a => a.Accounts());
+            Assert.AreEqual("Account Not Found", Controller.Message);
+
         }
 
         /// <summary>
@@ -472,6 +507,7 @@ namespace FSNEP.Tests.Controllers
 
             Assert.AreEqual(false, activeAccount.IsActive, "Account should have been inactivated");
             accountRepository.AssertWasCalled(a => a.EnsurePersistent(activeAccount), a => a.Repeat.Once()); //Make sure we saved the change
+            Assert.AreEqual("Account Removed Successfully", Controller.Message);
         }
 
         /// <summary>
@@ -491,6 +527,7 @@ namespace FSNEP.Tests.Controllers
             Controller.InactivateAccount(validAccountId)
                 .AssertActionRedirect()
                 .ToAction<LookupController>(a => a.Accounts());
+            Assert.AreEqual("Account Removed Successfully", Controller.Message);
         }
 
         /// <summary>
@@ -570,6 +607,7 @@ namespace FSNEP.Tests.Controllers
 
             Assert.AreEqual(true, newActivityCategory.IsActive, "The created ActivityCategory should be active");
             Assert.AreEqual("ValidActivityCategory", newActivityCategory.Name);
+            Assert.AreEqual("Activity Category Created Successfully", Controller.Message);
         }
 
         /// <summary>
@@ -588,6 +626,9 @@ namespace FSNEP.Tests.Controllers
 
             activityCategoryRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newActivityCategory));//make sure we didn't call persist
+            GetErrorMessages(Controller.ModelState).Contains(InvalidNameMessageTooLong);
+            Assert.IsFalse(Controller.ModelState.IsValid);
+            Assert.IsTrue(Controller.Message.StartsWith("Activity Category Creation Failed."));
         }
 
         /// <summary>
@@ -632,6 +673,7 @@ namespace FSNEP.Tests.Controllers
             Controller.InactivateActivityCategory(invalidActivityCategoryId)
                 .AssertActionRedirect()
                 .ToAction<LookupController>(a => a.ActivityCategories(null));
+            Assert.AreEqual("Activity Category Not Found", Controller.Message);
         }
 
         /// <summary>
@@ -651,6 +693,7 @@ namespace FSNEP.Tests.Controllers
 
             Assert.AreEqual(false, activeActivityCategory.IsActive, "ActivityCategory should have been inactivated");
             activityCategoryRepository.AssertWasCalled(a => a.EnsurePersistent(activeActivityCategory), a => a.Repeat.Once()); //Make sure we saved the change
+            Assert.AreEqual("Activity Category Removed Successfully", Controller.Message);
         }
 
         /// <summary>
@@ -670,6 +713,7 @@ namespace FSNEP.Tests.Controllers
             Controller.InactivateActivityCategory(validActivityCategoryId)
                 .AssertActionRedirect()
                 .ToAction<LookupController>(a => a.ActivityCategories(null));
+            Assert.AreEqual("Activity Category Removed Successfully", Controller.Message);
         }
 
         /// <summary>
@@ -756,6 +800,8 @@ namespace FSNEP.Tests.Controllers
 
             Assert.AreEqual(true, newExpenseType.IsActive, "The created ExpenseType should be active");
             Assert.AreEqual("ValidExpenseType", newExpenseType.Name);
+            Assert.IsTrue(Controller.ModelState.IsValid);
+            Assert.AreEqual("Expense Type Created Successfully", Controller.Message);
         }
 
         /// <summary>
@@ -774,6 +820,9 @@ namespace FSNEP.Tests.Controllers
 
             expenseTypeRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newExpenseType));//make sure we didn't call persist
+            GetErrorMessages(Controller.ModelState).Contains(InvalidNameMessageTooLong);
+            Assert.IsFalse(Controller.ModelState.IsValid);
+            Assert.IsTrue(Controller.Message.StartsWith("Expense Type Creation Failed."));
         }
 
         /// <summary>
@@ -805,6 +854,7 @@ namespace FSNEP.Tests.Controllers
             Controller.InactivateExpenseType(invalidExpenseTypeId)
                 .AssertActionRedirect()
                 .ToAction<LookupController>(a => a.ExpenseTypes());
+            Assert.AreEqual("Expense Type Not Found", Controller.Message);
         }
 
         /// <summary>
@@ -824,6 +874,7 @@ namespace FSNEP.Tests.Controllers
 
             Assert.AreEqual(false, activeExpenseType.IsActive, "ExpenseType should have been inactivated");
             expenseTypeRepository.AssertWasCalled(a => a.EnsurePersistent(activeExpenseType), a => a.Repeat.Once()); //Make sure we saved the change
+            Assert.AreEqual("Expense Type Removed Successfully", Controller.Message);
         }
 
         /// <summary>
@@ -843,6 +894,7 @@ namespace FSNEP.Tests.Controllers
             Controller.InactivateExpenseType(validExpenseTypeId)
                 .AssertActionRedirect()
                 .ToAction<LookupController>(a => a.ExpenseTypes());
+            Assert.AreEqual("Expense Type Removed Successfully", Controller.Message);
         }
 
         /// <summary>
@@ -931,6 +983,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual(999, newHoursInMonth.Hours, "The newHoursInMonth should have 999 hours.");
             Assert.AreEqual(newYearMonthComposite, newHoursInMonth.ID, "YearMonthComposite should be the same.");            
             Assert.AreEqual(string.Format("{0:MMMM yyyy}: {1} Hrs", new DateTime(2009, 01, 1), 999), newHoursInMonth.ToString());
+            Assert.AreEqual("Hours In Month Created Successfully", Controller.Message);
         }
 
         /// <summary>
@@ -950,6 +1003,9 @@ namespace FSNEP.Tests.Controllers
 
             hoursInMonthRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newHoursInMonth));//make sure we didn't call persist
+            GetErrorMessages(Controller.ModelState).Contains("Hours: The value must fall within the range \"1\" (Inclusive) - \"0\" (Ignore).");
+            Assert.IsFalse(Controller.ModelState.IsValid);
+            Assert.IsTrue(Controller.Message.StartsWith("Hours In Month Creation Failed."));
         }
 
         /// <summary>
@@ -969,6 +1025,9 @@ namespace FSNEP.Tests.Controllers
 
             hoursInMonthRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newHoursInMonth));//make sure we didn't call persist
+            GetErrorMessages(Controller.ModelState).Contains("id: The year and month entered are not valid");
+            Assert.IsFalse(Controller.ModelState.IsValid);
+            Assert.IsTrue(Controller.Message.StartsWith("Hours In Month Creation Failed."));
         }
 
         /// <summary>
@@ -988,6 +1047,9 @@ namespace FSNEP.Tests.Controllers
 
             hoursInMonthRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newHoursInMonth));//make sure we didn't call persist
+            GetErrorMessages(Controller.ModelState).Contains("id: The year and month entered are not valid");
+            Assert.IsFalse(Controller.ModelState.IsValid);
+            Assert.IsTrue(Controller.Message.StartsWith("Hours In Month Creation Failed."));
         }
         #endregion HoursInMonth Tests
 
