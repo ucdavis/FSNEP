@@ -121,6 +121,12 @@ ul#navigation3 {
 #menu li.home {width: 5.5em;}
 #menu li a {width: 13em; height: 22px; padding: 9px 5px 0;  display: block;
           background: url(../Images/menu-bg.gif) left top; border-left: 1px solid #b9b9af; border-right: 1px solid #ebebe8;}
+          .home #menu li.home a, 
+          .time #menu li.time a, 
+          .cost #menu li.cost a, 
+          .super #menu li.super a, 
+          .admin #menu li.admin a, 
+          .reports #menu li.reports a, 
           #menu li a:hover {background-position: left bottom;}
 #menu li.home a {width: 4.5em;}
 #menu li a {text-decoration: none;}
