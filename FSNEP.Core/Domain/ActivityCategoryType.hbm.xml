@@ -10,7 +10,7 @@
     <property name="Name" column="Name" />
     <property name="IsActive" column="IsActive" />
 
-    <bag name="ActivityTypes" table="ActivityTypes" where="IsActive = 1" inverse="true" cascade="all-delete-orphan">
+    <bag name="ActivityTypes" table="ActivityTypes" where="IsActive = 1" inverse="true" cascade="all-delete-orphan" batch-size="10">
       <key column="CategoryID" />
       <one-to-many class="FSNEP.Core.Domain.ActivityType, FSNEP.Core" />
     </bag>
