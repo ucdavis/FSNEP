@@ -8,7 +8,7 @@
     <table>
         <tr>
             <td>
-                First Name:
+                <label>First Name:</label>
             </td>
             <td>
                 <%= Html.TextBoxFor(u=>u.User.FirstName) %>
@@ -19,7 +19,7 @@
         </tr>
         <tr>
             <td>
-                Last Name:
+                <label>Last Name:</label>
             </td>
             <td>
                 <%= Html.TextBoxFor(u=>u.User.LastName) %>
@@ -30,7 +30,7 @@
         </tr>
         <tr>
             <td>
-                Salary:
+                <label>Salary:</label>
             </td>
             <td>
                 <%= Html.TextBox("User.Salary", Model.User.Salary == 0 ? string.Empty : Model.User.Salary.ToString()) %>
@@ -41,7 +41,7 @@
         </tr>
         <tr>
             <td>
-                FTE:
+                <label>FTE:</label>
             </td>
             <td>
                 <%= Html.TextBoxFor(u=>u.User.FTE) %>
@@ -52,7 +52,7 @@
         </tr>
         <tr>
             <td>
-                Benefit Rate:
+                <label>Benefit Rate:</label>
             </td>
             <td>
                 <%= Html.TextBoxFor(u=>u.User.BenefitRate) %>
@@ -62,7 +62,7 @@
             </td>
         </tr>
         <tr>
-            <td>Active User?</td>
+            <td><label>Active User?</label></td>
             <td>
                 <%= Html.CheckBox("User.IsActive") %>
             </td>
@@ -70,7 +70,7 @@
         </tr>
         <tr>
             <td>
-                Supervisor:
+                <label>Supervisor:</label>
             </td>
             <td>
                 <%= this.Select("User.Supervisor")
@@ -85,7 +85,7 @@
         </tr>
         <tr>
             <td>
-                Projects:
+                <label>Projects:</label>
             </td>
             <td>
                 <%= this.MultiSelect("User.Projects").Options(Model.Projects, a=>a.Id, a=>a.Name).Selected(Model.User.Projects.Select(a=>a.Id)) %>
@@ -96,7 +96,7 @@
         </tr>
         <tr>
             <td>
-                Fund Types:
+                <label>Fund Types:</label>
             </td>
             <td>
                 <%= this.MultiSelect("User.FundTypes").Options(Model.FundTypes, a=>a.Id, a=>a.Name).Selected(Model.User.FundTypes.Select(a=>a.Id)) %>
@@ -115,7 +115,7 @@
     <table>
         <tr>
             <td>
-                Roles:
+                <label>Roles:</label>
             </td>
             <td>
                 <%= this.CheckBoxList("RoleList").Options(Model.AvailableRoles).Selected(Model.UserRoles) %>

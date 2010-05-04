@@ -212,8 +212,8 @@
             <p>
                 <%= this.TextBox("Edit_Hours").Class("required").Label("Hours")  %>
             </p>
-            <p>
-                <label for="Edit_Comment"></label>
+            <p><%--
+                <label for="Edit_Comment"></label>--%>
                 <%= this.TextArea("Edit_Comment").Columns(25).Label("Comments:")%>
             </p>
             <p>

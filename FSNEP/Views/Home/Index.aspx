@@ -5,10 +5,6 @@
     Home Page
 </asp:Content>
 <asp:Content ID="indexContent" ContentPlaceHolderID="mainContent" runat="server">
-    <h2>
-        Quick Links:</h2>
-        
-    <% Html.RenderPartial("UserPermissions"); %>
     
     <div class="menu-section timerecords">
     <h3>
@@ -67,4 +63,7 @@
             <%= Html.ActionLink<ReportController>(x=>x.TimeRecord(), "Time Record") %>
         </li>
     </ul></div>
+    <div class="menu-section">
+    <% Html.RenderPartial("UserPermissions"); %>
+    </div>
 </asp:Content>

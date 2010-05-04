@@ -18,8 +18,8 @@
         <legend>New User Info</legend>
         <table>
             <tr>
-                <td>
-                    Username:
+                <td><label>
+                    Username:</label>
                 </td>
                 <td>
                     <%= Html.TextBoxFor(u=>u.UserName) %>
@@ -29,8 +29,8 @@
                 </td>
             </tr>
             <tr>
-                <td>
-                    Email:
+                <td><label>
+                    Email:</label>
                 </td>
                 <td>
                     <%= Html.TextBoxFor(u=>u.Email) %>
@@ -40,8 +40,8 @@
                 </td>
             </tr>
             <tr>
-                <td>
-                    Question:
+                <td><label>
+                    Question:</label>
                 </td>
                 <td>
                     <%= Html.TextBoxFor(u=>u.Question) %>
@@ -51,8 +51,8 @@
                 </td>
             </tr>
             <tr>
-                <td>
-                    Answer:
+                <td><label>
+                    Answer:</label>
                 </td>
                 <td>
                     <%= Html.TextBoxFor(u=>u.Answer) %>

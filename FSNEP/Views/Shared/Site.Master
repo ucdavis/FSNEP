@@ -11,9 +11,9 @@
     <link href="../../Content/Print.css" rel="Stylesheet" type="text/css" media="print" />
     <script src="../../Scripts/css_browser_selector.js" type="text/javascript"></script>
     
-    <%--//TODO: Remove (if you want) in place of custom style sheets--%>
+    <%--//TODO: Remove (if you want) in place of custom style sheets
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" rel="Stylesheet" type="text/css" media="screen" />
-    <%= Html.Telerik().StyleSheetRegistrar()
+   --%> <%= Html.Telerik().StyleSheetRegistrar()
                      .DefaultGroup(group => group.Add("telerik.common.css")
                                                  .Add("telerik.vista.css")
                                                  .Combined(false)
@@ -53,7 +53,7 @@
             <a id="A1" href='<%= Url.Action("Index", "Home") %>' class="homebutton"><img id="Img1" src='<%= Url.Content("~/Images/bannertop.jpg") %>' alt="FSNEP Time Record/Cost Share Reporting" /></a>
         </div>
         <ul id="menu">
-            <!--<li><a id="A1" href='<%= Url.Action("Index", "Home") %>' class="homebutton">Home</a></li> -->
+            <li class="home"><a id="A1" href='<%= Url.Action("Index", "Home") %>'>Home</a></li>
             
             <% if (true /*Trish you can change this to true when working on the menu*/) Html.RenderAction("Menu", "Home"); %>
         </ul>

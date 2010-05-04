@@ -30,12 +30,12 @@
         
         <%= Html.ClientSideValidation<Record>() %>
         
+        <label for="ReviewComment">Comment:</label>
+        <p class="labelnote">[Note: Comment Required For Disapproval]</p>
+        <%= Html.TextArea("ReviewComment", string.Empty, 5, 60, null) %>
+        <br /><br />
         <input id="Approve" type="submit" value="Approve" />
         <input id="Disapprove" type="submit" value="Disapprove" />
-        <span>[Note: Comment Required For Disapproval]</span>
-        <br />
-        <label for="ReviewComment">Comment:</label>
-        <%= Html.TextArea("ReviewComment", string.Empty, 5, 60, null) %>
         
     <% } %>
 </div>
