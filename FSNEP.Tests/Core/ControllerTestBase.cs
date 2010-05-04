@@ -3,6 +3,7 @@ using MvcContrib.TestHelper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
 using System.Web.Mvc;
+using CAESArch.Core.DataInterfaces;
 
 namespace FSNEP.Tests.Core
 {
@@ -41,6 +42,11 @@ namespace FSNEP.Tests.Core
         protected static INonStaticGenericBLLBase<T, IdT> GetStubRepository<T, IdT>()
         {
             return MockRepository.GenerateStub<INonStaticGenericBLLBase<T, IdT>>();
+        }
+
+        protected IRepository<T> FakeRepository<T>()
+        {
+            return MockRepository.GenerateStub<IRepository<T>>();
         }
     }
 }
