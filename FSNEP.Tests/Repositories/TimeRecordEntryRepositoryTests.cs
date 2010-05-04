@@ -46,7 +46,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveValidTimeRecordEntry()
         {
-            var timerecordEntry = CreateValidTimerecordEntry();
+            var timerecordEntry = CreateValidTimeRecordEntry();
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
 
@@ -60,7 +60,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveValidTimeRecordEntryZeroHours()
         {
-            var timerecordEntry = CreateValidTimerecordEntry();
+            var timerecordEntry = CreateValidTimeRecordEntry();
             timerecordEntry.Hours = 0;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
@@ -73,7 +73,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveValidTimeRecordEntry24Hours()
         {
-            var timerecordEntry = CreateValidTimerecordEntry();
+            var timerecordEntry = CreateValidTimeRecordEntry();
             timerecordEntry.Hours = 24;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
@@ -86,7 +86,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveValidTimeRecordEntryDateOf1()
         {
-            var timerecordEntry = CreateValidTimerecordEntry();
+            var timerecordEntry = CreateValidTimeRecordEntry();
             timerecordEntry.Date = 1;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
@@ -99,7 +99,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveValidTimeRecordEntryDateOf31()
         {
-            var timerecordEntry = CreateValidTimerecordEntry();
+            var timerecordEntry = CreateValidTimeRecordEntry();
             timerecordEntry.Date = 31;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
@@ -112,7 +112,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveValidTimeRecordEntryNullAdjustmentDate()
         {
-            var timerecordEntry = CreateValidTimerecordEntry();
+            var timerecordEntry = CreateValidTimeRecordEntry();
             timerecordEntry.AdjustmentDate = null;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
@@ -125,7 +125,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveValidTimeRecordEntryValidAdjustmentDate()
         {
-            var timerecordEntry = CreateValidTimerecordEntry();
+            var timerecordEntry = CreateValidTimeRecordEntry();
             timerecordEntry.AdjustmentDate = DateTime.Now;
 
             Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
@@ -146,7 +146,7 @@ namespace FSNEP.Tests.Repositories
             TimeRecordEntry timerecordEntry = null;
             try
             {
-                timerecordEntry = CreateValidTimerecordEntry();
+                timerecordEntry = CreateValidTimeRecordEntry();
                 timerecordEntry.Date = 0;
                 Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
             }
@@ -174,7 +174,7 @@ namespace FSNEP.Tests.Repositories
             TimeRecordEntry timerecordEntry = null;
             try
             {
-                timerecordEntry = CreateValidTimerecordEntry();
+                timerecordEntry = CreateValidTimeRecordEntry();
                 timerecordEntry.Date = 32;
                 Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
             }
@@ -205,7 +205,7 @@ namespace FSNEP.Tests.Repositories
             TimeRecordEntry timerecordEntry = null;
             try
             {
-                timerecordEntry = CreateValidTimerecordEntry();
+                timerecordEntry = CreateValidTimeRecordEntry();
                 timerecordEntry.Hours = 24.01;
                 Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
             }
@@ -236,7 +236,7 @@ namespace FSNEP.Tests.Repositories
             TimeRecordEntry timerecordEntry = null;
             try
             {
-                timerecordEntry = CreateValidTimerecordEntry();
+                timerecordEntry = CreateValidTimeRecordEntry();
                 timerecordEntry.Record = null;
                 Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
             }
@@ -267,7 +267,7 @@ namespace FSNEP.Tests.Repositories
             TimeRecordEntry timerecordEntry = null;
             try
             {
-                timerecordEntry = CreateValidTimerecordEntry();
+                timerecordEntry = CreateValidTimeRecordEntry();
                 timerecordEntry.Comment = null;
                 Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
             }
@@ -296,7 +296,7 @@ namespace FSNEP.Tests.Repositories
             TimeRecordEntry timerecordEntry = null;
             try
             {
-                timerecordEntry = CreateValidTimerecordEntry();
+                timerecordEntry = CreateValidTimeRecordEntry();
                 timerecordEntry.Comment = string.Empty;
                 Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
             }
@@ -324,7 +324,7 @@ namespace FSNEP.Tests.Repositories
             TimeRecordEntry timerecordEntry = null;
             try
             {
-                timerecordEntry = CreateValidTimerecordEntry();
+                timerecordEntry = CreateValidTimeRecordEntry();
                 timerecordEntry.Comment = " ";
                 Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
             }
@@ -349,7 +349,7 @@ namespace FSNEP.Tests.Repositories
         /// Creates the valid timerecord entry.
         /// </summary>
         /// <returns></returns>
-        private TimeRecordEntry CreateValidTimerecordEntry()
+        private TimeRecordEntry CreateValidTimeRecordEntry()
         {
             return new TimeRecordEntry
                        {
