@@ -43,7 +43,7 @@
                          {
                              col.Add(cs =>
                                          {%>
-                                            <%=Html.ActionLink("Select", "Entry", new {id = cs.Id})%>
+                                            <%= Html.ActionLink<CostShareAuditController>(x=>x.Review(cs.Id), "Review") %>
                                             <%
                                          });
                              col.Add(x => x.User.FullName).Title("User");

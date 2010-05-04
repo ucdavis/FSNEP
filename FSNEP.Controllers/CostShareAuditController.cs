@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using FSNEP.Controllers.Helpers.Attributes;
 using FSNEP.Core.Domain;
 using UCDArch.Core.PersistanceSupport;
+using UCDArch.Core.Utils;
 
 namespace FSNEP.Controllers
 {
@@ -21,6 +23,35 @@ namespace FSNEP.Controllers
 
             return View(viewModel);
         }
+
+        public ActionResult Review(int id)
+        {
+            var costShare = Repository.OfType<CostShare>().GetNullableByID(id);
+
+            Check.Require(costShare != null);
+
+            var viewModel = CostShareAuditReviewViewModel.Create(Repository.OfType<CostShareEntry>(), costShare);
+
+            return View(viewModel);
+        }
+    }
+
+    public class CostShareAuditReviewViewModel
+    {
+        public static CostShareAuditReviewViewModel Create(IRepository<CostShareEntry> costShareEntryRepository, CostShare costShare)
+        {
+            var viewModel = new CostShareAuditReviewViewModel {CostShare = costShare};
+
+            var costShareEntries = costShareEntryRepository.Queryable.Where(x => x.Record.Id == costShare.Id);
+
+            viewModel.Entries = costShareEntries.ToList();
+            
+            return viewModel;
+        }
+
+        public IEnumerable<CostShareEntry> Entries { get; set; }
+
+        public CostShare CostShare { get; set; }
     }
 
     public class CostShareAuditHistoryViewModel

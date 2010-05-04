@@ -265,6 +265,7 @@
   <ItemGroup>
     <Content Include="Scripts\jquery.cascade.js" />
     <Content Include="Views\CostShareAudit\History.aspx" />
+    <Content Include="Views\CostShareAudit\Review.aspx" />
     <Content Include="Views\Home\SemiAnnualCertification.ascx" />
     <Content Include="Views\Report\TimeRecord.aspx" />
     <Content Include="Views\Supervisor\AssignDelegate.aspx" />
