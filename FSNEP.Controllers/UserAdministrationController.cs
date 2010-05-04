@@ -90,7 +90,7 @@ namespace FSNEP.Controllers
 
             ValidationHelper.TransferValidationMessagesTo(model.User, ModelState, "User"); //validate the user properties
 
-            CheckUserAssociations(model.User); //Make sure the associations are set
+            //CheckUserAssociations(model.User); //Make sure the associations are set//Done by users.cs now
 
             if (roleList == null || roleList.Count == 0)
                 ModelState.AddModelError("RoleList", "User must have at least one role");
@@ -274,7 +274,7 @@ namespace FSNEP.Controllers
 
             ValidationHelper.TransferValidationMessagesTo(userToUpdate, ModelState);
 
-            CheckUserAssociations(userToUpdate);
+            //CheckUserAssociations(userToUpdate); //Done by User.cs now
 
             if (roleList == null || roleList.Count == 0)
                 ModelState.AddModelError("RoleList", "User must have at least one role");
@@ -323,11 +323,12 @@ namespace FSNEP.Controllers
         /// <param name="user">The user instance to check</param>
         private void CheckUserAssociations(User user)
         {
-            if (user.Projects.Count == 0) 
-                ModelState.AddModelError("User.Projects", "You must select at least one project");
+            throw new NotImplementedException("This method is no longer needed because the validation is done with the users.cs");
+            //if (user.Projects.Count == 0) 
+            //    ModelState.AddModelError("User.Projects", "You must select at least one project");
 
-            if (user.FundTypes.Count == 0)
-                ModelState.AddModelError("User.FundTypes", "You must select at least one fund type");
+            //if (user.FundTypes.Count == 0)
+            //    ModelState.AddModelError("User.FundTypes", "You must select at least one fund type");
         }
 
         /// <summary>
