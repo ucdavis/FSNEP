@@ -480,7 +480,7 @@ namespace FSNEP.Tests.Controllers
             Controller.ControllerContext.HttpContext.User = _principal;
             var timeRecords = new List<TimeRecord>();
             FakeTimeRecords(timeRecords);
-            var result = Controller.History().AssertViewRendered().WithViewData<List<TimeRecord>>();
+            var result = Controller.History().AssertViewRendered().WithViewData<IEnumerable<TimeRecord>>().ToList();
             Assert.IsNotNull(result);
             for (int i = 0; i < 5; i++)
             {
