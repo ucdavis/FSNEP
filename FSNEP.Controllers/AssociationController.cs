@@ -20,8 +20,6 @@ namespace FSNEP.Controllers
             var viewModel = ProjectsAccountsViewModel.Create(Repository);
             viewModel.Project = project;
 
-            Message = "Message";
-
             return View(viewModel);
         }
 
@@ -37,12 +35,15 @@ namespace FSNEP.Controllers
             var project = Repository.OfType<Project>().GetByID(id);
 
             Check.Require(project != null, "Valid ProjectId not passed into Associate action");
-            
+   
             project.Accounts.Clear();
 
-            foreach (var accountID in accountIds)
+            if (accountIds != null)
             {
-                project.Accounts.Add(Repository.OfType<Account>().GetByID(accountID));
+                foreach (var accountID in accountIds)
+                {
+                    project.Accounts.Add(Repository.OfType<Account>().GetByID(accountID));
+                }
             }
 
             Repository.OfType<Project>().EnsurePersistent(project);
