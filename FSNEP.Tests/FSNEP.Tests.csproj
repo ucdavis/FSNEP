@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auditing\AuditInterceptorTests.cs" />
+    <Compile Include="Controllers\AssociationControllerTests.cs" />
     <Compile Include="Controllers\LookupControllerTests.cs" />
     <Compile Include="Controllers\UserAdministrationControllerTests.cs" />
     <Compile Include="Core\ContinuousIntegrationDeploymentHack.cs" />
