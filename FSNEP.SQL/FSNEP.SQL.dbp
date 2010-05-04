@@ -21,6 +21,8 @@ Begin DataProject = "FSNEP.SQL"
    Begin Folder = "Helpers"
       Script = "UpdateEmailAndUserNames.sql"
    End
+   Begin Folder = "Migration"
+   End
    Begin Folder = "Reporting"
       Script = "udf_QuarterTotalHours.sql"
       Script = "udf_SumOfExpensesByMonth.sql"
