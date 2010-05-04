@@ -6,6 +6,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <a name="Top"></a>
     <h1 align="center">
         UC-FSNEP Cost Sharing and Time Records Database<br />
         List of Activities and Descriptions</h1>
@@ -19,8 +20,7 @@
         <tr>
             <td colspan="3" width="10">
                 <strong><a name="DirectDelivery">
-                    <h2>
-                        Direct Delivery</h2>
+                    <h2>Direct Delivery</h2>
                 </a></strong>
             </td>
         </tr>
@@ -94,6 +94,11 @@
         <tr>
             <td colspan="3">
                 &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <a href="#Top">[Return to top]</a>
             </td>
         </tr>
         <tr>
@@ -178,6 +183,11 @@
         </tr>
         <tr>
             <td colspan="3">
+                <a href="#Top">[Return to top]</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
                 <strong><a name="Leave">
                     <h2>
                         Leave</h2>
@@ -192,6 +202,11 @@
             <td>
                 <ul>
                     <li>Vacation, sick, jury duty, holiday, etc.</li></ul>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <a href="#Top">[Return to top]</a>
             </td>
         </tr>
     </table>

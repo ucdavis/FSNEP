@@ -1,12 +1,12 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IEnumerable<FSNEP.Core.Domain.TimeRecord>>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
-	History
+	Time Record History
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2>History</h2>
+    <h2>Time Record History</h2>
     
     <%
         Html.Grid(Model)
