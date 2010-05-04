@@ -16,7 +16,7 @@ namespace FSNEP.Controllers
         public ActionResult History(int? projectId)
         {
             var viewModel = CostShareAuditHistoryViewModel.Create(Repository.OfType<Project>(),
-                                                                  Repository.OfType<Record>(), Repository.OfType<User>(),
+                                                                  Repository.OfType<CostShare>(), Repository.OfType<User>(),
                                                                   projectId);
 
             return View(viewModel);
@@ -25,7 +25,7 @@ namespace FSNEP.Controllers
 
     public class CostShareAuditHistoryViewModel
     {
-        public static CostShareAuditHistoryViewModel Create(IRepository<Project> projectRepository, IRepository<Record> recordRepository, IRepository<User> userRepository, int? projectId)
+        public static CostShareAuditHistoryViewModel Create(IRepository<Project> projectRepository, IRepository<CostShare> recordRepository, IRepository<User> userRepository, int? projectId)
         {
             var chosenProject = projectId.HasValue ? projectRepository.GetNullableByID(projectId.Value) : null;
 
@@ -45,7 +45,7 @@ namespace FSNEP.Controllers
             return viewModel;
         }
 
-        public IEnumerable<Record> Records { get; set; }
+        public IEnumerable<CostShare> Records { get; set; }
 
         public IEnumerable<Project> Projects { get; set; }
 

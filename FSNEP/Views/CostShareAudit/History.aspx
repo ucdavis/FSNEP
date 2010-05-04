@@ -28,4 +28,33 @@
             .FirstOption("--Select A Project--")
         %>
 
+    <% if (Model.Project != null)
+       { %>
+
+        <br /><br />
+        <div>
+
+        <%
+        Html.Grid(Model.Records)
+            .Name("CostShares")
+            .PrefixUrlParameters(false)
+            .Columns(col =>
+                         {
+                             col.Add(cs =>
+                                         {%>
+                                            <%=Html.ActionLink("Select", "Entry", new {id = cs.Id})%>
+                                            <%
+                                         });
+                             col.Add(x => x.User.FullName).Title("User");
+                             col.Add(x => x.MonthName).Title("Month");
+                             col.Add(x => x.Year);
+                             col.Add(x => x.Status.Name);
+                         })
+            .Render();
+        
+            %>
+
+        </div>
+
+    <% } %>
 </asp:Content>
