@@ -8,5 +8,8 @@ namespace FSNEP.Core.Domain
         [NotNullValidator]
         [StringLengthValidator(2, 2)]
         public virtual string Indicator { get; set; }
+
+        [NotNullValidator]
+        public virtual ActivityCategory ActivityCategory { get; set; }
     }
 }

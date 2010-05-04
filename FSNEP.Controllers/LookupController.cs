@@ -66,7 +66,9 @@ namespace FSNEP.Controllers
         public ActionResult CreateActivityType(ActivityType newActivityType, int activityCategoryId)
         {
             newActivityType.IsActive = true;
-
+            newActivityType.ActivityCategory =
+                ActivityTypeBLL.GetActivityCategoryRepository().GetNullableByID(activityCategoryId);
+            
             ValidationHelper<ActivityType>.Validate(newActivityType, ModelState);
 
             if (!ModelState.IsValid)
