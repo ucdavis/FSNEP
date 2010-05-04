@@ -312,7 +312,7 @@ namespace FSNEP.Tests.Controllers
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
             newUserModel.ViewData.ModelState.AssertErrorsAre("Supervisor: You must select a supervisor"); 
-        }
+        } 
         
         /// <summary>
         /// Creates a user with an empty Project List (The User didn't select one from the list).
@@ -1207,7 +1207,7 @@ namespace FSNEP.Tests.Controllers
 
         #endregion Modify valid changes saves for each type of value that can be modified.
 
-        #region Modify to invalid does not save and regirects back to the view
+        #region Modify to invalid does not save and redirects back to the view
         
 
         [TestMethod]
@@ -1273,7 +1273,7 @@ namespace FSNEP.Tests.Controllers
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
             newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
         }
-
+        [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithNullChangesLastName()
         {
             const string newInvalidValue = null;
@@ -1295,7 +1295,7 @@ namespace FSNEP.Tests.Controllers
                 "LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");            
         
         }
-
+        [TestMethod]
         public void ModifyExistingValidUserDoesNotSaveWithSpacesOnlyChangesLastName()
         {
             const string newInvalidValue = "   ";
@@ -1315,8 +1315,217 @@ namespace FSNEP.Tests.Controllers
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
             newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: Required"); 
         }
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithLessThanZeroChangesSalary()
+        {
+            const int newInvalidValue = -1;
 
-        #endregion
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.Salary = newInvalidValue; //Change it
+
+            Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.Salary, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Salary: Must be greater than zero"); 
+        }
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithZeroChangesSalary()
+        {
+            const int newInvalidValue = 0;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.Salary = newInvalidValue; //Change it
+
+            Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.Salary, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Salary: Must be greater than zero");
+        }
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithLessThanZeroChangesFte()
+        {
+            const double newInvalidValue = -0.0001;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.FTE = newInvalidValue; //Change it
+
+            Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.FTE, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive)."); 
+        }
+
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithZeroChangesFte()
+        {
+            const double newInvalidValue = 0;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.FTE = newInvalidValue; //Change it
+
+            Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.FTE, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
+
+        }
+
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithGreaterThanOneChangesFte()
+        {
+            const double newInvalidValue = 1.001;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.FTE = newInvalidValue; //Change it
+
+            Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.FTE, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
+
+        }
+
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithLessThanZeroChangesBenefitRate()
+        {
+            const double newInvalidValue = -1;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.BenefitRate = newInvalidValue; //Change it
+
+            Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.BenefitRate, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).");
+        }
+
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithGreaterThanTwoChangesBenefitRate()
+        {
+            const double newInvalidValue = 3;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.BenefitRate = newInvalidValue; //Change it
+
+            Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.BenefitRate, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).");
+        }
+
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithNullChangesSupervisor()
+        {
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.Supervisor = null; //Change it
+
+            Assert.AreNotEqual(null, userModelOriginal.User.Supervisor, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Supervisor: You must select a supervisor");
+        }
+
+
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithEmptyChangesFundTypes()
+        {
+            var emptyFundType = new List<FundType>();
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.FundTypes = emptyFundType; //Change it
+
+            Assert.AreNotEqual(emptyFundType, userModelOriginal.User.FundTypes, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("You must select at least one fund type");
+        }
+
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithEmptyChangesProjectss()
+        {
+            var emptyProject = new List<Project>();
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.Projects = emptyProject; //Change it
+
+            Assert.AreNotEqual(emptyProject, userModelOriginal.User.Projects, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("You must select at least one project");
+        }
+
+        #endregion Modify to invalid does not save and redirects back to the view
 
         #endregion Modify user tests
         #region Tests to ensure Mocking is working as expected. These could be removed.
