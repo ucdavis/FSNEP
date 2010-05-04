@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using CAESArch.BLL;
@@ -78,6 +79,7 @@ namespace FSNEP.Controllers
         public ActionResult Create(CreateUserViewModel model, Guid? supervisorId, IEnumerable<int> projectList,
                                        IEnumerable<int> fundTypeList, List<string> roleList)
         {
+
             var user = model.User;
             user.Supervisor = new User();
 
@@ -205,6 +207,47 @@ namespace FSNEP.Controllers
             var user = UserBLL.UserAuth.MembershipService.GetUser(id);
 
             return user == null ? this.RedirectToAction(a => a.Create()) : this.RedirectToAction(a => a.Modify(user.UserName));
+        }
+
+        public ActionResult Edit(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return this.RedirectToAction(a => a.Create());
+            }
+
+            var viewModel = new UserViewModel { User = UserBLL.GetUser(id) };
+
+            //If the user could not be found, redirect to creating a user
+            if (viewModel.User == null) return this.RedirectToAction(a => a.Create());
+
+            PopulateDefaultUserViewModel(viewModel);
+
+            //Now the user roles are the roles for the given id
+            viewModel.UserRoles = UserBLL.GetUserRoles(id);
+
+            return View(viewModel);
+        }
+
+        [AcceptPost]
+        public string Edit(UserViewModel userViewModel)
+        {
+            var result = new StringBuilder();
+
+            result.AppendFormat("Supervisor is {0}", userViewModel.User.Supervisor != null ? userViewModel.User.Supervisor.FullName : "Null" );
+            
+            result.AppendLine("<br/>");
+            result.AppendFormat("Supervisor is {0}", userViewModel.User.Supervisor);
+            
+            result.AppendLine("<br/>");
+            result.AppendFormat("Supervisor is {0}", userViewModel.User.Supervisor);
+            
+            result.AppendLine("<br/>");
+            result.AppendFormat("Supervisor is {0}", userViewModel.User.Supervisor);
+
+
+
+            return result.ToString();
         }
 
         /// <summary>

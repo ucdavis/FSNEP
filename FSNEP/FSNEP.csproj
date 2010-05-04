@@ -160,6 +160,7 @@
     <Content Include="Views\Lookup\HoursInMonths.aspx" />
     <Content Include="Views\Lookup\LookupsHeader.ascx" />
     <Content Include="Views\Lookup\Projects.aspx" />
+    <Content Include="Views\UserAdministration\Edit.aspx" />
     <Content Include="Views\UserAdministration\Create.aspx" />
     <Content Include="Views\UserAdministration\List.aspx" />
     <Content Include="Views\UserAdministration\Modify.aspx" />
