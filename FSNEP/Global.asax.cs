@@ -8,6 +8,7 @@ using NHibernate;
 using UCDArch.Data.NHibernate;
 using UCDArch.Web.IoC;
 using UCDArch.Web.ModelBinder;
+using UCDArch.Web.Validator;
 
 namespace FSNEP
 {
@@ -21,6 +22,8 @@ namespace FSNEP
             #if DEBUG
             HibernatingRhinos.NHibernate.Profiler.Appender.NHibernateProfiler.Initialize();
             #endif
+
+            xVal.ActiveRuleProviders.Providers.Add(new ValidatorRulesProvider());
 
             //Register the routes for this site
             new RouteConfigurator().RegisterRoutes();

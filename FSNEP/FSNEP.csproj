@@ -119,6 +119,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\UCDArch.Web.dll</HintPath>
     </Reference>
+    <Reference Include="xVal, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f8fbed92c68c4006, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuditInterceptor.cs" />
@@ -144,6 +145,7 @@
     <Content Include="Images\but_home2.gif" />
     <Content Include="Images\topbgfiller.gif" />
     <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\xVal.jquery.validate.js" />
     <Content Include="Views\Account\ChangePassword.aspx" />
     <Content Include="Views\Account\ChangePasswordSuccess.aspx" />
     <Content Include="Views\Account\ForgotPassword.aspx" />
