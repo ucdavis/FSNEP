@@ -11,9 +11,8 @@ namespace FSNEP.Core.Domain
         [NotNullValidator]
         [StringLengthValidator(50)]
         public virtual string FirstName { get; set; }
-        
-        [NotNullValidator]
-        [StringLengthValidator(50)]
+                
+        [StringLengthValidator(1,50)]
         [RequiredValidator]
         public virtual string LastName { get; set; }
 
