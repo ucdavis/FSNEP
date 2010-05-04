@@ -67,7 +67,7 @@ namespace FSNEP.Controllers
         public ActionResult Create()
         {
             var viewModel = CreateUserViewModel.Create(UserBLL);
-            viewModel.User = new User();
+            viewModel.User = new User { FTE = 1, IsActive = true }; //Default these two values
 
             return View(viewModel);
         }
