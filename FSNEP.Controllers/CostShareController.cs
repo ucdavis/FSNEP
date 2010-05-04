@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -11,11 +10,10 @@ using UCDArch.Core.Utils;
 using UCDArch.Web.Attributes;
 using MvcContrib;
 using UCDArch.Web.Helpers;
-using UCDArch.Web.Validator;
 
 namespace FSNEP.Controllers
 {
-    [Authorize]
+    [Authorize] //TODO: Authorize only for Cost Share users
     public class CostShareController : SuperController
     {
         private readonly IRepository<CostShare> _costShareRepository;
