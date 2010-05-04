@@ -14,3 +14,7 @@
                              col.Add(x => x.Comment);
                          })
         %>
+        
+<p class="record-totals">
+    Time Record Total Hours: <%= Html.Encode(Model.Sum(x=>x.Hours)) %>
+</p>

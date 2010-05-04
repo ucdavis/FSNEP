@@ -22,6 +22,10 @@
                      })
         .Render();
 %>
+
+<p class="record-totals">
+    Total Entry Amount: $<%= Html.Encode(Model.Where(x=>x.Exclude == false).Sum(x=>x.Amount)) %>
+</p>
         
 <% if (Model.Where(x => x.Exclude).Count() > 0) { %>
 
@@ -51,6 +55,9 @@
                              })
                 .Render();
     %>
+<p class="record-totals">
+    Total Excluded Entry Amount: $<%= Html.Encode(Model.Where(x=>x.Exclude).Sum(x=>x.Amount)) %>
+</p>    
 
 </div>
 
