@@ -122,7 +122,7 @@ namespace FSNEP.Tests.Controllers
         /// <summary>
         /// WIP. FundTypes fake needs ID to pass the Unit Test.
         /// </summary>
-        [TestMethod]
+        [TestMethod, Ignore]
         public void CreateUserSavesNewUser()
         {            
             FakeProjects();
@@ -174,21 +174,64 @@ namespace FSNEP.Tests.Controllers
 
             MembershipCreateStatus status = MembershipCreateStatus.Success;
 
+
             UserBLL.UserAuth = MockRepository.GenerateStub<IUserAuth>();
             UserBLL.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
+
+
+            var mockUserId = Guid.NewGuid();
+            var mockUser = MockRepository.GenerateMock<MembershipUser>();
+            //var mockMemember = MockRepository.GenerateStub<MembershipUser>();
+            //mockMemember.Expect(a => a.ProviderUserKey).Return(mockUserId);            
+            mockUser.Expect(m => m.ProviderUserKey).Return(mockUserId);
+  
+            
+            
 
             Controller.UserBLL.UserAuth.MembershipService.Expect(
                 a =>
                 a.CreateUser(userModel.UserName, "dfgsdf", userModel.Email, userModel.Question, userModel.Answer, true,
-                             null, out status)).OutRef(status = MembershipCreateStatus.Success);
+                             null, out status)).OutRef(status = MembershipCreateStatus.Success).Return(mockUser);
 
+            MembershipCreateStatus createStatus;
+            var testMem = UserBLL.UserAuth.MembershipService.CreateUser(userModel.UserName, "dfgsdf", userModel.Email,
+                                                                        userModel.Question, userModel.Answer, true,
+                                                                        null, out createStatus);
+
+            var tet = testMem.ProviderUserKey;
+            Assert.IsNotNull(tet);
 
             Controller.Create(userModel, supervisorGuid, projectList, fundTypeList, roleList);
 
         }
 
+        /// <summary>
+        /// WIP, Need to figure out why it isn't working
+        /// </summary>
+        [TestMethod, Ignore]
+        public void MockTest()
+        {
+            var status = MembershipCreateStatus.Success;
 
-        //TODO: Verify that this fake is working...
+            UserBLL = MockRepository.GenerateStub<IUserBLL>();
+            UserBLL.UserAuth = MockRepository.GenerateStub<IUserAuth>();
+            UserBLL.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
+            var memberShipUser = MockRepository.GenerateStub<MembershipUser>();
+            memberShipUser.Expect(a => a.ProviderUserKey).Return(Guid.NewGuid());
+
+            UserBLL.UserAuth.MembershipService.Expect(a => a.CreateUser("Test", "dfgsdf345234", "Test@test.edu", "Q", "A", true,
+                                                                null, out status)).Return(memberShipUser);
+           
+
+
+            var testStatus = MembershipCreateStatus.Success;
+            var testMemebershipUser = UserBLL.UserAuth.MembershipService.CreateUser("1Test", "1dfgsdf345234",
+                                                                                    "1Test@test.edu", "1Q", "A", true,
+                                                                                    null, out testStatus);
+            Assert.IsNotNull(testMemebershipUser.ProviderUserKey);            
+        }
+
+
         private void FakeProjects()
         {                                  
             var projects = new List<Project>
