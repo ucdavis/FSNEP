@@ -2,8 +2,10 @@
 using CAESArch.BLL;
 using CAESArch.BLL.Repositories;
 using CAESArch.Core.DataInterfaces;
+using CAESArch.Core.Utils;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core;
+using FSNEP.Tests.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FSNEP.Tests.Repositories
@@ -63,9 +65,13 @@ namespace FSNEP.Tests.Repositories
                     ts.CommitTransaction();
                 }
             }
-            catch (Exception message)
+            catch (Exception)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.Account could not be persisted\n\n\r\nValidation Errors: Name, The value cannot be null.\r\nName, The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<Account>.GetValidationResults(accountCategory).AsMessageList();
+                Assert.AreEqual(2, results.Count);
+                results.AssertContains("Name: The value cannot be null.");
+                results.AssertContains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.Account could not be persisted\n\n\r\nValidation Errors: Name, The value cannot be null.\r\nName, The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }
@@ -89,9 +95,12 @@ namespace FSNEP.Tests.Repositories
                     ts.CommitTransaction();
                 }
             }
-            catch (Exception message)
+            catch (Exception)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.Account could not be persisted\n\n\r\nValidation Errors: Name, The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<Account>.GetValidationResults(accountCategory).AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("Name: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.Account could not be persisted\n\n\r\nValidation Errors: Name, The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }
@@ -115,9 +124,12 @@ namespace FSNEP.Tests.Repositories
                     ts.CommitTransaction();
                 }
             }
-            catch (Exception message)
+            catch (Exception)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.Account could not be persisted\n\n\r\nValidation Errors: IndirectCost, The value must fall within the range \"0\" (Inclusive) - \"0.3\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<Account>.GetValidationResults(accountCategory).AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("IndirectCost: The value must fall within the range \"0\" (Inclusive) - \"0.3\" (Inclusive).");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.Account could not be persisted\n\n\r\nValidation Errors: IndirectCost, The value must fall within the range \"0\" (Inclusive) - \"0.3\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }
@@ -141,9 +153,12 @@ namespace FSNEP.Tests.Repositories
                     ts.CommitTransaction();
                 }
             }
-            catch (Exception message)
+            catch (Exception)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.Account could not be persisted\n\n\r\nValidation Errors: IndirectCost, The value must fall within the range \"0\" (Inclusive) - \"0.3\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<Account>.GetValidationResults(accountCategory).AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("IndirectCost: The value must fall within the range \"0\" (Inclusive) - \"0.3\" (Inclusive).");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.Account could not be persisted\n\n\r\nValidation Errors: IndirectCost, The value must fall within the range \"0\" (Inclusive) - \"0.3\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }

@@ -252,8 +252,10 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
                 Assert.AreEqual(2, results.Count);
-                Assert.IsTrue(results.Contains("FirstName: The value cannot be null."), "Expected the validation result to have \"FirstName: The value cannot be null.\"");
-                Assert.IsTrue(results.Contains("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive)."), "Expected the validation result to have \"FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\"");
+                results.AssertContains("FirstName: The value cannot be null.");
+                results.AssertContains("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
+                //Assert.IsTrue(results.Contains("FirstName: The value cannot be null."), "Expected the validation result to have \"FirstName: The value cannot be null.\"");
+                //Assert.IsTrue(results.Contains("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive)."), "Expected the validation result to have \"FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\"");
                 throw;
             }
         }
@@ -283,8 +285,8 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
-                Assert.AreEqual(1, results.Count);                
-                Assert.IsTrue(results.Contains("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive)."), "Expected the validation result to have \"FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).\"");
+                Assert.AreEqual(1, results.Count); 
+                results.AssertContains("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
                 throw;
             }
         }
@@ -316,7 +318,8 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                Assert.AreEqual(true, results.Contains("LastName: Required"), "Expected the validation result to have \"LastName: Required\"");    
+                results.AssertContains("LastName: Required");
+                //Assert.AreEqual(true, results.Contains("LastName: Required"), "Expected the validation result to have \"LastName: Required\"");    
                 throw;
             }
         }
@@ -347,8 +350,10 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
                 Assert.AreEqual(2, results.Count);
-                Assert.AreEqual(true, results.Contains("LastName: Required"), "Expected the validation result to have \"LastName: Required\"");
-                Assert.AreEqual(true, results.Contains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive)."), "Expected the validation result to have \"LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).\"");
+                results.AssertContains("LastName: Required");
+                results.AssertContains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
+                //Assert.AreEqual(true, results.Contains("LastName: Required"), "Expected the validation result to have \"LastName: Required\"");
+                //Assert.AreEqual(true, results.Contains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive)."), "Expected the validation result to have \"LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).\"");
                 throw;
             }
         }
@@ -377,8 +382,9 @@ namespace FSNEP.Tests.Repositories
             catch (Exception)
             {
                 var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
-                Assert.AreEqual(1, results.Count);                
-                Assert.AreEqual(true, results.Contains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive)."), "Expected the validation result to have \"LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).\"");
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
+                //Assert.AreEqual(true, results.Contains("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive)."), "Expected the validation result to have \"LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).\"");
                 throw;
             }
         }
@@ -430,7 +436,8 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                Assert.AreEqual(true, results.Contains("Supervisor: The value cannot be null."), "Expected the validation result to have \"Supervisor: The value cannot be null.\"");
+                results.AssertContains("Supervisor: The value cannot be null.");
+                //Assert.AreEqual(true, results.Contains("Supervisor: The value cannot be null."), "Expected the validation result to have \"Supervisor: The value cannot be null.\"");
                 throw;
             }
         }
@@ -462,7 +469,8 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                Assert.AreEqual(true, results.Contains("Salary: Must be greater than zero"), "Expected the validation result to have \"Salary: Must be greater than zero\"");
+                results.AssertContains("Salary: Must be greater than zero");
+                //Assert.AreEqual(true, results.Contains("Salary: Must be greater than zero"), "Expected the validation result to have \"Salary: Must be greater than zero\"");
                 throw;
             }
         }
@@ -488,9 +496,12 @@ namespace FSNEP.Tests.Repositories
             {
                 userBLL.EnsurePersistent(user, true);
             }
-            catch (Exception message)
+            catch (Exception)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: Salary, Must be greater than zero\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("Salary: Must be greater than zero");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: Salary, Must be greater than zero\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }
@@ -518,9 +529,12 @@ namespace FSNEP.Tests.Repositories
             {
                 userBLL.EnsurePersistent(user, true);
             }
-            catch (Exception message)
+            catch (Exception)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }
@@ -547,9 +561,12 @@ namespace FSNEP.Tests.Repositories
             {
                 userBLL.EnsurePersistent(user, true);
             }
-            catch (Exception message)
+            catch (Exception)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("BenefitRate: The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: BenefitRate, The value must fall within the range \"0\" (Inclusive) - \"2\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }
@@ -615,9 +632,12 @@ namespace FSNEP.Tests.Repositories
             {
                 userBLL.EnsurePersistent(user, true);
             }
-            catch (Exception message)
+            catch (Exception)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }
@@ -643,9 +663,12 @@ namespace FSNEP.Tests.Repositories
             {
                 userBLL.EnsurePersistent(user, true);
             }
-            catch (Exception message)
+            catch (Exception)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }
         }
@@ -671,9 +694,12 @@ namespace FSNEP.Tests.Repositories
             {
                 userBLL.EnsurePersistent(user, true);
             }
-            catch (Exception message)
+            catch (Exception)
             {
-                Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
+                var results = ValidateBusinessObject<User>.GetValidationResults(user).AsMessageList();
+                Assert.AreEqual(1, results.Count);
+                results.AssertContains("FTE: The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).");
+                //Assert.AreEqual("Object of type FSNEP.Core.Domain.User could not be persisted\n\n\r\nValidation Errors: FTE, The value must fall within the range \"0\" (Exclusive) - \"1\" (Inclusive).\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }          
         }
