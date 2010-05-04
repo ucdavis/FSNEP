@@ -18,6 +18,7 @@ namespace FSNEP.Tests.Controllers
         /// </summary>
         public const string InvalidValueName = "123456789 123456789 123456789 123456789 123456789 1";
 
+        #region Project Tests
         [TestMethod]
         public void CreateProjectSavesNewProject()
         {
@@ -151,7 +152,9 @@ namespace FSNEP.Tests.Controllers
             "~/Administration/Lookups/CreateProject"
                 .ShouldMapTo<LookupController>(a => a.CreateProject(null));
         }
+        #endregion Project Tests
 
+        #region ActivityType Tests
         /// <summary>
         /// Create ActivityType Saves New ActivityType
         /// </summary>
@@ -355,6 +358,173 @@ namespace FSNEP.Tests.Controllers
                 .ShouldMapTo<LookupController>(a => a.CreateActivityType(null,activityCategory));
             */
         }
+        #endregion ActivityType Tests
+
+        #region Account Tests
+        /// <summary>
+        /// Create Account Saves New Account
+        /// </summary>
+        [TestMethod]
+        public void CreateAccountSavesNewAccount()
+        {
+            var newAccount = new Account { Name = "ValidAccount" };
+
+            var accountRepository = FakeRepository<Account>();
+            accountRepository
+                .Expect(a => a.EnsurePersistent(Arg<Account>.Is.Anything))
+                .WhenCalled(a => newAccount = (Account)a.Arguments.First()); //set newAccount to the Account that was saved
+
+            Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository);
+
+            Controller.CreateAccount(newAccount);
+
+            accountRepository
+                .AssertWasCalled(a => a.EnsurePersistent(newAccount), a => a.Repeat.Once());//make sure we called persist
+
+            Assert.AreEqual(true, newAccount.IsActive, "The created Account should be active");
+            Assert.AreEqual("ValidAccount", newAccount.Name);
+        }
+
+        /// <summary>
+        /// Create Account Does Not Save Account With Long Name
+        /// </summary>
+        [TestMethod]
+        public void CreateAccountDoesNotSaveAccountWithLongName()
+        {
+            var newAccount = new Account { Name = InvalidValueName };
+
+            var accountRepository = FakeRepository<Account>();
+
+            Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository);
+
+            Controller.CreateAccount(newAccount);
+
+            accountRepository
+                .AssertWasNotCalled(a => a.EnsurePersistent(newAccount));//make sure we didn't call persist
+        }
+
+        /// <summary>
+        /// Create Account Redirects To Accounts
+        /// </summary>
+        [TestMethod]
+        public void CreateAccountRedirectsToAccounts()
+        {
+            Controller.Repository.Expect(a => a.OfType<Account>()).Return(FakeRepository<Account>());
+
+            Controller.CreateAccount(new Account())
+                .AssertActionRedirect()
+                .ToAction<LookupController>(a => a.Accounts());
+        }
+
+        /// <summary>
+        /// Inactivate Account Redirects On Invalid Account Id
+        /// </summary>
+        [TestMethod]
+        public void InactivateAccountRedirectsOnInvalidAccountId()
+        {
+            const int invalidAccountId = 42;
+
+            var accountRepository = FakeRepository<Account>();
+            accountRepository.Expect(a => a.GetNullableByID(invalidAccountId)).Return(null);
+
+            Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository);
+
+            Controller.InactivateAccount(invalidAccountId)
+                .AssertActionRedirect()
+                .ToAction<LookupController>(a => a.Accounts());
+        }
+
+        /// <summary>
+        /// Inactivate Account Persists Changes On Valid Account Id
+        /// </summary>
+        [TestMethod]
+        public void InactivateAccountPersistsChangesOnValidAccountId()
+        {
+            var activeAccount = new Account() { IsActive = true };
+
+            var accountRepository = FakeRepository<Account>();
+            accountRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(activeAccount);
+
+            Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository).Repeat.Any();
+
+            Controller.InactivateAccount(activeAccount.ID);
+
+            Assert.AreEqual(false, activeAccount.IsActive, "Account should have been inactivated");
+            accountRepository.AssertWasCalled(a => a.EnsurePersistent(activeAccount), a => a.Repeat.Once()); //Make sure we saved the change
+        }
+
+        /// <summary>
+        /// Inactivate Account Redirects On Valid Account Id
+        /// </summary>
+        [TestMethod]
+        public void InactivateAccountRedirectsOnValidAccountId()
+        {
+            const int validAccountId = 1;
+            var validAccount = new Account();
+
+            var accountRepository = FakeRepository<Account>();
+            accountRepository.Expect(a => a.GetNullableByID(validAccountId)).Return(validAccount);
+
+            Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository).Repeat.Any();
+
+            Controller.InactivateAccount(validAccountId)
+                .AssertActionRedirect()
+                .ToAction<LookupController>(a => a.Accounts());
+        }
+
+        /// <summary>
+        /// Accounts Gets Only Active Accounts
+        /// </summary>
+        [TestMethod]
+        public void AccountsGetsOnlyActiveAccounts()
+        {
+            //5 Accounts, 3 are active
+            var accounts =
+                new[] { new Account { IsActive = true }, new Account { IsActive = true }, new Account { IsActive = true }, new Account(), new Account() }.
+                    AsQueryable();
+
+            var accountRepository = FakeRepository<Account>();
+            accountRepository.Expect(a => a.Queryable).Return(accounts);
+
+            Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository);
+
+            var result = Controller.Accounts()
+                .AssertViewRendered()
+                .WithViewData<List<Account>>();
+
+            Assert.AreEqual(3, result.Count, "Should only get the three active accounts");
+        }
+
+        /// <summary>
+        /// Routing Accounts Gets All Accounts
+        /// </summary>
+        [TestMethod]
+        public void RoutingAccountsGetsAllAccounts()
+        {
+            "~/Administration/Lookups/Accounts"
+                .ShouldMapTo<LookupController>(a => a.Accounts());
+        }
+
+        /// <summary>
+        /// Routing InactivateAccount Calls Inactivate Account With Parameter
+        /// </summary>
+        [TestMethod]
+        public void RoutingInactivateAccountCallsInactivateAccountWithParameter()
+        {
+            "~/Administration/Lookups/InactivateAccount/10"
+                .ShouldMapTo<LookupController>(a => a.InactivateAccount(10));
+        }
+
+        /// <summary>
+        /// Routing CreateAccount Calls CreateAccount
+        /// </summary>
+        [TestMethod]
+        public void RoutingCreateAccountCallsCreateAccount()
+        {
+            "~/Administration/Lookups/CreateAccount"
+                .ShouldMapTo<LookupController>(a => a.CreateAccount(null));
+        }
+        #endregion Account Tests
 
         /// <summary>
         /// Fake a Queryable ActivityCategoryRepository.
