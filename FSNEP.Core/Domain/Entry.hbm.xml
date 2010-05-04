@@ -9,7 +9,7 @@
 
     <property name="Comment" />
 
-    <many-to-one name="Record" class="Record"></many-to-one>
+    <many-to-one name="Record" class="Record" column="RecordID"></many-to-one>
     
     <!--<joined-subclass name="TimeRecord" table="TimeRecords">
       <key column="ID"></key>
