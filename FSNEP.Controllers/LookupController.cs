@@ -67,7 +67,7 @@ namespace FSNEP.Controllers
 
             if (!ModelState.IsValid)
             {
-                Message = "User Creation Failed";
+                Message = "Project Creation Failed";
 
                 return this.RedirectToAction(a => a.Projects());
             }
@@ -80,7 +80,7 @@ namespace FSNEP.Controllers
                 ts.CommitTransaction();
             }
 
-            Message = "User Created Successfully";
+            Message = "Project Created Successfully";
 
             return this.RedirectToAction(a => a.Projects());
         }

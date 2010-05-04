@@ -6,7 +6,24 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
+    <h3><%= Html.Encode(TempData["Message"]) %></h3>
     <h2>Projects</h2>
+
+    <%using (Html.BeginForm("CreateProject", "Lookup")) { %>
+    
+    <fieldset>
+        <legend>New Project:</legend>
+        <p>
+            <%= this.TextBox("newProjectName").Label("Project Name: ")%>
+        </p>
+        <p>
+            <input type="submit" value="Add Project" />
+        </p>
+    </fieldset>
+    
+    <% } %>
+
+    <br />
 
     <table>
         <tr>
@@ -35,10 +52,6 @@
     <% } %>
 
     </table>
-
-    <p>
-        <%= Html.ActionLink("Create New", "Create") %>
-    </p>
 
 </asp:Content>
 
