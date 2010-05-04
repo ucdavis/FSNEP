@@ -327,11 +327,16 @@ namespace FSNEP.Tests.BLL
             Assert.IsNull(currentRecord);
         }
 
+        /// <summary>
+        /// Gets the current record returns correct record first by date order test1.
+        /// If this fails, it may be ok.
+        /// </summary>
         [TestMethod]
         public void GetCurrentRecordReturnsCorrectRecordFirstByDateOrderTest1()
         {
             FakeRecordsToCheck();
 
+            //We expect This one
             Records.Add(new Record
             {
                 Month = 12,
@@ -357,6 +362,9 @@ namespace FSNEP.Tests.BLL
             Assert.AreEqual("ReturnThisRecord", currentRecord.ReviewComment); //We expect This one
         }
 
+        /// <summary>
+        /// Gets the current record returns correct record first by date order test2.
+        /// </summary>
         [TestMethod]
         public void GetCurrentRecordReturnsCorrectRecordFirstByDateOrderTest2()
         {
@@ -509,7 +517,153 @@ namespace FSNEP.Tests.BLL
 
         #endregion GetCurrentSheetDate Tests
 
+        #region GetCurrent Tests
+
+        /// <summary>
+        /// Get current returns the existing record.
+        /// This is because the sheet date will be 2009/11 
+        /// </summary>
+        [TestMethod]
+        public void GetCurrentReturnsTheExistingRecord1()
+        {
+            //This should make the month comparison the same for the 2009/11 date in the record below.
+            var fakeDate = new DateTime(2009, 12, 01); 
+            SystemTime.Now = () => fakeDate;
+
+            FakeRecordsToCheck();
+
+            Records.Add(new Record
+            {
+                Month = 11,
+                Year = 2009,
+                User = CurrentUser,
+                Status = new Status { NameOption = Status.Option.Current },
+                ReviewComment = "ReturnThisRecord",
+                Entries = new List<Entry>()
+            });
+
+            var currentRecord = _recordBLL.GetCurrent(_principal);
+            Assert.IsNotNull(currentRecord);
+            Assert.AreEqual("ReturnThisRecord", currentRecord.ReviewComment);
+        }
+
+        /// <summary>
+        /// Get current returns the existing record.
+        /// This is because the sheet date will be 2009/10 
+        /// (The last day of the month 31, will allow a record to be created for the next month )
+        /// </summary>
+        [TestMethod]
+        public void GetCurrentReturnsTheExistingRecord2()
+        {
+            //This should make the month comparison less than the 2009/11 date in the record below.
+            var fakeDate = new DateTime(2009, 10, 31);
+            SystemTime.Now = () => fakeDate;
+
+            FakeRecordsToCheck();
+
+            Records.Add(new Record
+            {
+                Month = 11,
+                Year = 2009,
+                User = CurrentUser,
+                Status = new Status { NameOption = Status.Option.Current },
+                ReviewComment = "ReturnThisRecord",
+                Entries = new List<Entry>()
+            });
+
+            var currentRecord = _recordBLL.GetCurrent(_principal);
+            Assert.IsNotNull(currentRecord);
+            Assert.AreEqual("ReturnThisRecord", currentRecord.ReviewComment);
+        }
+
+        
+
+        /// <summary>
+        /// Gets the current creates and returns A new record.
+        /// Date has current month because "current date" is the 31st
+        /// </summary>
+        [TestMethod]
+        public void GetCurrentCreatesAndReturnsANewRecord1()
+        {
+            var fakeDate = new DateTime(2009, 10, 31);
+            SystemTime.Now = () => fakeDate;
+
+            FakeRecordsToCheck(); //No records for the current user.
+
+            FakeStatusQuery();
+            FakeUserQuery();
+            var recordTrackingRepository = MockRepository.GenerateStub<IRepository<RecordTracking>>();
+            _repository.Expect(a => a.OfType<RecordTracking>()).Return(recordTrackingRepository).Repeat.Any();
+
+            var currentRecord = _recordBLL.GetCurrent(_principal);
+            Assert.IsNotNull(currentRecord);
+            recordTrackingRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<RecordTracking>.Is.Anything));
+            _repository.OfType<Record>().AssertWasCalled(a => a.EnsurePersistent(Arg<Record>.Is.Anything));
+            Assert.AreEqual(CurrentUser, currentRecord.User);
+            Assert.AreEqual(Status.Option.Current, currentRecord.Status.NameOption);
+            Assert.AreEqual(10, currentRecord.Month);
+            Assert.AreEqual(2009, currentRecord.Year);
+        }
+
+
+        /// <summary>
+        /// Gets the current creates and returns A new record.
+        /// Date has previous month because "Current date" is less than the 30th
+        /// </summary>
+        [TestMethod]
+        public void GetCurrentCreatesAndReturnsANewRecord2()
+        {
+            var fakeDate = new DateTime(2009, 10, 25);
+            SystemTime.Now = () => fakeDate;
+
+            FakeRecordsToCheck(); //No records for the current user.
+
+            FakeStatusQuery();
+            FakeUserQuery();
+            var recordTrackingRepository = MockRepository.GenerateStub<IRepository<RecordTracking>>();
+            _repository.Expect(a => a.OfType<RecordTracking>()).Return(recordTrackingRepository).Repeat.Any();
+
+            var currentRecord = _recordBLL.GetCurrent(_principal);
+            Assert.IsNotNull(currentRecord);
+            recordTrackingRepository.AssertWasCalled(a => a.EnsurePersistent(Arg<RecordTracking>.Is.Anything));
+            _repository.OfType<Record>().AssertWasCalled(a => a.EnsurePersistent(Arg<Record>.Is.Anything));
+            Assert.AreEqual(CurrentUser, currentRecord.User);
+            Assert.AreEqual(Status.Option.Current, currentRecord.Status.NameOption);
+            Assert.AreEqual(09, currentRecord.Month);
+            Assert.AreEqual(2009, currentRecord.Year);
+        }
+
+        //TODO: Test When Sheet exists.
+
+        #endregion GetCurrent Tests
+
         #region Helper Methods
+
+        private void FakeUserQuery()
+        {
+            var nonCurrentUser = CreateValidUser();
+            nonCurrentUser.UserName = "NonCurrent";
+            var userRepository = MockRepository.GenerateStub<IRepository<User>>();
+            var users = new List<User> {CurrentUser, nonCurrentUser};
+            _repository.Expect(a => a.OfType<User>()).Return(userRepository).Repeat.Any();
+            userRepository.Expect(a => a.Queryable).Return(users.AsQueryable()).Repeat.Any();
+        }
+
+        private void FakeStatusQuery()
+        {
+            var status = new List<Status>
+                             {
+                                 new Status {NameOption = Status.Option.Current},
+                                 new Status {NameOption = Status.Option.Approved},
+                                 new Status {NameOption = Status.Option.Disapproved},
+                                 new Status {NameOption = Status.Option.PendingReview}
+                             };
+
+
+            var statusRepository = MockRepository.GenerateStub<IRepository<Status>>();
+            _repository.Expect(a => a.OfType<Status>()).Return(statusRepository).Repeat.Any();
+            statusRepository.Expect(a => a.Queryable).Return(status.AsQueryable()).Repeat.Any();
+        }
 
         private void FakeRecordsToCheck()
         {
