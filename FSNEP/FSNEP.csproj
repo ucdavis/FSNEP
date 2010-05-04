@@ -213,6 +213,7 @@
     <Content Include="Views\Lookup\HoursInMonths.aspx" />
     <Content Include="Views\Lookup\LookupsHeader.ascx" />
     <Content Include="Views\Lookup\Projects.aspx" />
+    <Content Include="Views\Report\CostShare.aspx" />
     <Content Include="Views\Shared\CostShareEntryList.ascx" />
     <Content Include="Views\Shared\TimeRecordEntryList.ascx" />
     <Content Include="Views\Supervisor\ApproveOrDeny.ascx" />
@@ -280,7 +281,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>60398</DevelopmentServerPort>
+          <DevelopmentServerPort>56725</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

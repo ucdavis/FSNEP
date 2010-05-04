@@ -53,16 +53,20 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult CostShare(Project project, int year)
+        public ActionResult CostShare(int projectId, int year)
         {
-            var user = _userBLL.GetUser();
+            var project = Repository.OfType<Project>().GetNullableByID(projectId);
 
-            //Make sure the project is valid for this user
-            if(user.Projects.Contains(project) == false)
+            Check.Require(project != null);
+
+            var projects = _userBLL.GetAllProjectsByUser(Repository.OfType<Project>());
+
+            //Make sure given project in the list of all projects for this user
+            if (projects.Where(x => x.Id == project.Id).Count() == 0)
             {
                 return new HttpUnauthorizedResult();
             }
-
+            
             return _reportBLL.GenerateCostShare(project, year, ReportType.Excel).ToFileResult("CostShare.xls");
         }
     }
