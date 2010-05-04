@@ -33,7 +33,7 @@ namespace FSNEP.Controllers
         }
 
         [AcceptPost]
-        public ActionResult InactivateActivityCategories(int activityCategoryId)
+        public ActionResult InactivateActivityCategory(int activityCategoryId)
         {
             //get the account
             var activityCategory = ActivityTypeBLL.GetActivityCategoryRepository().GetNullableByID(activityCategoryId);
