@@ -46,24 +46,6 @@ namespace FSNEP.Controllers
         }
 
         /// <summary>
-        /// TODO: Remove this testing method
-        /// </summary>
-        [Transaction]
-        public ActionResult DeleteUser(string id)
-        {
-            //This only works with tester accounts
-            if (id.StartsWith("tester"))
-            {
-                var user = UserBLL.GetUser(id);
-
-                UserBLL.Remove(user);
-
-                UserBLL.UserAuth.MembershipService.DeleteUser(id);
-            }
-            return this.RedirectToAction<HomeController>(a => a.Index());
-        }
-
-        /// <summary>
         /// Create the User View Model
         /// </summary>
         /// <returns>CreateUserViewModel</returns>
