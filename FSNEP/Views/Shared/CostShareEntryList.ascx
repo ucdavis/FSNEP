@@ -35,6 +35,7 @@
                 .Columns(col =>
                              {
                                  col.Add(x => x.Amount);
+                                 col.Add(x => x.ExcludeReason);
                                  col.Add(x => x.ExpenseType.Name).Title("Expense Type");
                                  col.Add(x =>
                                              {%>
