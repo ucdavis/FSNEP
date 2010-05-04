@@ -32,7 +32,7 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult Associate(int id, int[] accountIds)
         {
-            var project = Repository.OfType<Project>().GetById(id);
+            var project = Repository.OfType<Project>().GetNullableByID(id);
 
             Check.Require(project != null, "Valid ProjectId not passed into Associate action");
    
@@ -40,9 +40,9 @@ namespace FSNEP.Controllers
 
             if (accountIds != null)
             {
-                foreach (var accountID in accountIds)
+                foreach (var accountId in accountIds)
                 {
-                    project.Accounts.Add(Repository.OfType<Account>().GetById(accountID));
+                    project.Accounts.Add(Repository.OfType<Account>().GetById(accountId));
                 }
             }
 
@@ -50,7 +50,7 @@ namespace FSNEP.Controllers
 
             Message = "Accounts successfully associated";
 
-            return RedirectToAction("Projects");
+            return RedirectToAction("Projects", "Association");
         }
     }
 

@@ -1,9 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using FSNEP.Controllers;
 using FSNEP.Core.Domain;
-using FSNEP.Tests.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
@@ -69,15 +69,51 @@ namespace FSNEP.Tests.Controllers
             {
                 accountIds[i] = viewModel.Accounts[i].Id;
             }
-            //TODO: Figure out why commented out doesn't work.
-            //Controller.Associate(project.Id, accountIds)
-            //    .AssertActionRedirect()
-            //    .ToAction<AssociationController>(a => a.Projects());
-            Controller.Associate(project.Id, accountIds);
-            Assert.AreEqual("Accounts successfully associated", Controller.Message);
 
+            Controller.Associate(project.Id, accountIds)
+                .AssertActionRedirect()
+                .ToAction<AssociationController>(a => a.Projects(null));
+            Controller.Repository.OfType<Project>()
+                .AssertWasCalled(a => a.EnsurePersistent(project), a => a.Repeat.Once());
+
+            Assert.AreEqual("Accounts successfully associated", Controller.Message);
         }
 
+        /// <summary>
+        /// Associates the does not save project and account associations when project id is invalid.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void AssociateDoesNotSaveProjectAndAccountAssociationsWhenProjectIdIsInvalid()
+        {
+            Project project = null;
+            try
+            {
+                project = new Project { IsActive = true, Name = "Project2" };
+                project.SetIdTo(1);
+                FakeProjects(project);
+                FakeAccounts();
+                var result = (ViewResult)Controller.Projects(project.Id);
+                var viewModel = (ProjectsAccountsViewModel)result.ViewData.Model;
+
+                var accountIds = new int[3];
+                for (var i = 0; i < 3; i++)
+                {
+                    accountIds[i] = viewModel.Accounts[i].Id;
+                }
+
+                Controller.Associate(999, accountIds) //Invalid Project ID
+                    .AssertActionRedirect()
+                    .ToAction<AssociationController>(a => a.Projects(null));                
+            }
+            catch (Exception message)
+            {
+                Assert.AreEqual("Valid ProjectId not passed into Associate action", message.Message);
+                Controller.Repository.OfType<Project>()
+                    .AssertWasNotCalled(a => a.EnsurePersistent(project), a => a.Repeat.Once());
+                throw;
+            }
+        }
 
 
 
