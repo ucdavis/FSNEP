@@ -26,6 +26,21 @@ namespace FSNEP.Tests.Controllers
             }
         }
 
+        /// <summary>
+        /// Homes controller error.
+        /// </summary>
+        [TestMethod]
+        public void HomeControllerError()
+        {
+            var controller = new HomeController();
+            var result = controller.Error("This is a test error!") as ViewResult;
+            Assert.IsNotNull(result);
+            if (result != null)
+            {
+                Assert.AreEqual("This is a test error!", result.MasterName);
+            }
+        }
+
         [TestMethod]
         public void About()
         {
