@@ -386,6 +386,49 @@ namespace FSNEP.Tests.Controllers
                 Assert.AreEqual("Precondition failed.", ex.Message);
                 throw;
             }  
+        } 
+
+        [TestMethod]
+        public void CostShareWithParametersAndInvalidProjectIdReturnsHttpUnauthorizedResult()
+        {
+            var projects = new List<Project>();
+            for (int i = 0; i < 5; i++)
+            {
+                projects.Add(CreateValidEntities.Project(i + 1));
+                projects[i].SetIdTo(i + 1);
+            }
+
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(_projectRepository).Repeat.Twice();
+            _userBLL.Expect(a => a.GetAllProjectsByUser(_projectRepository)).Return(projects.AsQueryable()).Repeat.Once();
+
+            var diffProject = CreateValidEntities.Project(6);
+            diffProject.SetIdTo(6);
+            _projectRepository.Expect(a => a.GetNullableByID(6)).Return(diffProject).Repeat.Once();
+
+            Controller.CostShare(diffProject.Id, 2009)
+                .AssertResultIs<HttpUnauthorizedResult>();
+        }
+
+        [TestMethod]
+        public void CostShareWithParametersAndInvalidProjectIdReturnsFileResult()
+        {
+            var projects = new List<Project>();
+            for (int i = 0; i < 5; i++)
+            {
+                projects.Add(CreateValidEntities.Project(i + 1));
+                projects[i].SetIdTo(i + 1);
+            }
+
+            Controller.Repository.Expect(a => a.OfType<Project>()).Return(_projectRepository).Repeat.Twice();
+            _userBLL.Expect(a => a.GetAllProjectsByUser(_projectRepository)).Return(projects.AsQueryable()).Repeat.Once();
+
+            _projectRepository.Expect(a => a.GetNullableByID(2)).Return(projects[1]).Repeat.Once();
+
+            _reportBLL.Expect(a => a.GenerateCostShare(projects[1], 2009, ReportType.Excel))
+                .Return(new ReportResult(new byte[1], "contentType")).Repeat.Once();
+
+            Controller.CostShare(projects[1].Id, 2009)
+                .AssertResultIs<FileContentResult>();
         }
         
         
