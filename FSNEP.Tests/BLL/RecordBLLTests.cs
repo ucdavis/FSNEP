@@ -199,10 +199,10 @@ namespace FSNEP.Tests.BLL
         }
 
         /// <summary>
-        /// Determines whether [has review access returns fasle if current user is not users supervisor in record].
+        /// Determines whether [has review access returns false if current user is not users supervisor in record].
         /// </summary>
         [TestMethod]
-        public void HasReviewAccessReturnsFasleIfCurrentUserIsNotUsersSupervisorInRecord()
+        public void HasReviewAccessReturnsFalseIfCurrentUserIsNotUsersSupervisorInRecord()
         {
             var newUser = CreateValidUser();
             newUser.UserName = "NewUser";
@@ -215,6 +215,31 @@ namespace FSNEP.Tests.BLL
             Assert.IsFalse(_recordBLL.HasReviewAccess(_principal, record));
         }
 
+        #region Task 587 Delegate Tests
+
+
+        /// <summary>
+        /// Tests that has review acccess returns true if record's user's supervisor's delegate is current user.
+        /// </summary>
+        [TestMethod]
+        public void TestHasReviewAcccessReturnsTrueIfRecordsUsersSupervisorsDelegateIsCurrentUser()
+        {
+            var supervisor = CreateValidUser();
+            supervisor.UserName = "Super";
+            supervisor.Delegate = CurrentUser;
+
+            var newUser = CreateValidUser();
+            newUser.UserName = "NewUser";
+            newUser.Supervisor = supervisor;
+
+            //var record = new Record { User = newUser }; //We are not passing the current user, but this use has the current user as a supervisor.
+            var record = CreateValidEntities.Record(null);
+            record.User = newUser;
+            
+            Assert.IsTrue(_recordBLL.HasReviewAccess(_principal, record));
+        }
+
+        #endregion Task 587 Delegate Tests
         
 
         #endregion HasReviewAccess Tests
@@ -1195,6 +1220,31 @@ namespace FSNEP.Tests.BLL
             _principal.Expect(a => a.IsInRole(RoleNames.RoleAdmin)).Return(false).Repeat.Once();
             Assert.IsFalse(_costShareBLL.HasReviewAccess(_principal, record));
         }
+
+        #region Delegate Tests task 587
+
+        /// <summary>
+        /// Tests the has review acccess returns true if cost share's user's supervisor's delegate is current user.
+        /// </summary>
+        [TestMethod]
+        public void TestHasReviewAcccessReturnsTrueIfCostSharesUsersSupervisorsDelegateIsCurrentUser()
+        {
+            var supervisor = CreateValidUser();
+            supervisor.UserName = "Super";
+            supervisor.Delegate = CurrentUser;
+
+            var newUser = CreateValidUser();
+            newUser.UserName = "NewUser";
+            newUser.Supervisor = supervisor;
+
+            //var record = new Record { User = newUser }; //We are not passing the current user, but this use has the current user as a supervisor.
+            var costShare = CreateValidEntities.CostShare(null);
+            costShare.User = newUser;
+
+            Assert.IsTrue(_recordBLL.HasReviewAccess(_principal, costShare));
+        }
+        
+        #endregion Delegate Tests task 587
 
         #endregion HasReviewAccess Tests
 
