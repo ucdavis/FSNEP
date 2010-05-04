@@ -22,8 +22,7 @@ namespace FSNEP.Controllers
         {
             var viewModel = new ModifyUserViewModel();
 
-            //First get the lookups, like projects, fundtypes, and supervisors
-            var current = UserBLL.UserAuth.UserContext.Identity.Name;
+            //First get the lookups, like projects, fundtypes, and supervisors  
 
             return View();
         }

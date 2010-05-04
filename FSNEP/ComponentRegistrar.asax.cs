@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Security.Principal;
 using Castle.Windsor;
 using FSNEP.BLL.Impl;
 using FSNEP.Core.Abstractions;
@@ -13,6 +14,8 @@ namespace FSNEP
 
             container.AddComponent("membershipService", typeof(IMembershipService), typeof(AccountMembershipService));
             container.AddComponent("formsAuth", typeof(IFormsAuthentication), typeof(FormsAuthenticationService));
+
+            container.AddComponent("principal", typeof (IPrincipal), typeof (WebPrincipal));
 
             AddBLLClassesTo(container);
         }
