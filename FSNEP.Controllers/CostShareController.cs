@@ -28,7 +28,7 @@ namespace FSNEP.Controllers
             _userBLL = userBLL;
         }
 
-        [HandleTransactionManually]
+        [HandleTransactionsManually]
         public ActionResult History()
         {
             var recordHistory =

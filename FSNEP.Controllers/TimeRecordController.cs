@@ -33,7 +33,7 @@ namespace FSNEP.Controllers
             _timeRecordCalendarGenerator = timeRecordCalendarGenerator;
         }
 
-        [HandleTransactionManually]
+        [HandleTransactionsManually]
         public ActionResult History()
         {
             var recordHistory =
