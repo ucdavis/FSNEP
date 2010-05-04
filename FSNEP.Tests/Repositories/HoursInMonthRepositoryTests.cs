@@ -13,13 +13,22 @@ namespace FSNEP.Tests.Repositories
     {
         private readonly IRepository<HoursInMonth> _hoursInMonthRepository = new Repository<HoursInMonth>();
 
+        /// <summary>
+        /// Valid Hours
+        /// </summary>
+        public const int ValidValueHours = 100;
+        /// <summary>
+        /// Invalid Hours
+        /// </summary>
+        public const int InvalidValueHours = 0;
+
         //Don't load any data
         protected override void LoadData() { }
 
         [TestMethod]
         public void CanSaveCompleteAndValidHoursInMonth()
         {
-            var hoursInMonth = new HoursInMonth(2009, 09) {Hours = 100};
+            var hoursInMonth = new HoursInMonth(2009, 09) {Hours = ValidValueHours};
 
             using (var ts = new TransactionScope())
             {
@@ -35,7 +44,7 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void HoursInMonthDoesNotSaveWithZeroHours()
         {
-            var hoursInMonth = new HoursInMonth(2009, 09) { Hours = 0 };
+            var hoursInMonth = new HoursInMonth(2009, 09) { Hours = InvalidValueHours };
 
             try
             {

@@ -15,6 +15,14 @@ namespace FSNEP.Tests.Repositories
     public class FundTypeRepositoryTests : RepositoryTestBase
     {
         private readonly IRepository<FundType> _fundTypeRepository = new Repository<FundType>();
+        /// <summary>
+        /// 50 characters for Name
+        /// </summary>
+        public const string ValidValueName = "123456789 123456789 123456789 123456789 1234567890";
+        /// <summary>
+        /// 51 characters for Name
+        /// </summary>
+        public const string InvalidValueName = "123456789 123456789 123456789 123456789 123456789 1";
 
         //Don't load any data
         protected override void LoadData() { }
@@ -22,7 +30,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveCompleteAndValidFundType()
         {
-            var fundType = new FundType { Name = "123456789 123456789 123456789 123456789 1234567890" };
+            var fundType = new FundType { Name = ValidValueName };
 
             using (var ts = new TransactionScope())
             {
@@ -60,7 +68,7 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void FundTypeDoesNotSaveWithNameGreaterThan50Characters()
         {
-            var fundType = new FundType { Name = "123456789 123456789 123456789 123456789 123456789 1" };
+            var fundType = new FundType { Name = InvalidValueName };
 
             try
             {

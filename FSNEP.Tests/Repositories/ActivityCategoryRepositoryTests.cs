@@ -12,6 +12,14 @@ namespace FSNEP.Tests.Repositories
     public class ActivityCategoryRepositoryTests : RepositoryTestBase
     {
         private readonly IRepository<ActivityCategory> _activityCategoryRepository = new Repository<ActivityCategory>();
+        /// <summary>
+        /// 50 characters for Name
+        /// </summary>
+        public const string ValidValueName = "123456789 123456789 123456789 123456789 1234567890";
+        /// <summary>
+        /// 51 characters for Name
+        /// </summary>
+        private const string InvalidValueName = "123456789 123456789 123456789 123456789 123456789 1";
 
         //Don't load any data
         protected override void LoadData() { }
@@ -19,7 +27,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveCompleteAndValidActivityCategory()
         {
-            var activityCategory = new ActivityCategory { Name = "123456789 123456789 123456789 123456789 1234567890" };
+            var activityCategory = new ActivityCategory { Name = ValidValueName };
 
             using (var ts = new TransactionScope())
             {
@@ -57,7 +65,7 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void ActivityCategoryDoesNotSaveWithNameGreaterThan50Characters()
         {
-            var activityCategory = new ActivityCategory { Name = "123456789 123456789 123456789 123456789 123456789 1" };
+            var activityCategory = new ActivityCategory { Name = InvalidValueName };
 
             try
             {

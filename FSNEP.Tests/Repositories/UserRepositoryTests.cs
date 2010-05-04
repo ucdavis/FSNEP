@@ -18,6 +18,23 @@ namespace FSNEP.Tests.Repositories
     {
         public IUserBLL UserBLL { get; set; }
 
+        /// <summary>
+        /// Valid name, 50 characters long
+        /// </summary>
+        public const string ValidValueName = "123456789 123456789 123456789 123456789 1234567890";
+        /// <summary>
+        /// Invalid name, 51 characters long
+        /// </summary>
+        public const string InvalidValueName = "123456789 123456789 123456789 123456789 123456789 1";
+        /// <summary>
+        /// Valid Salary
+        /// </summary>
+        public const int ValidValueSalary = 1;
+        /// <summary>
+        /// Valid FTE
+        /// </summary>
+        public const int ValidValueFte = 1;
+
         public UserRepositoryTests()
         {
             var userAuth = MockRepository.GenerateStub<IUserAuth>();
@@ -205,17 +222,17 @@ namespace FSNEP.Tests.Repositories
             Assert.AreEqual(UserIds.Count - 1, usersWithoutInactiveUser.Count(), "Should return all users except for the inactivated user");
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod] 
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithOnlySpacesInLastName()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
+                FirstName = ValidValueName,
                 LastName = " ",
-                Salary = 1,
-                FTE = 1,
+                Salary = ValidValueSalary,
+                FTE = ValidValueFte,
                 IsActive = true,                
             };
             user.Supervisor = user; //I'm my own supervisor
@@ -233,17 +250,17 @@ namespace FSNEP.Tests.Repositories
             }
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithNullLastName()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
+                FirstName = ValidValueName,
                 LastName = null,
-                Salary = 1,
-                FTE = 1,
+                Salary = ValidValueSalary,
+                FTE = ValidValueFte,
                 IsActive = true,
             };
             user.Supervisor = user; //I'm my own supervisor
@@ -261,17 +278,17 @@ namespace FSNEP.Tests.Repositories
             }
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithLastNameLongerThan50Characters()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
-                LastName = "123456789 123456789 123456789 123456789 123456789 1",
-                Salary = 1,
-                FTE = 1,
+                FirstName = ValidValueName,
+                LastName = InvalidValueName,
+                Salary = ValidValueSalary,
+                FTE = ValidValueFte,
                 IsActive = true,
             };
             user.Supervisor = user; //I'm my own supervisor
@@ -289,16 +306,16 @@ namespace FSNEP.Tests.Repositories
             }
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         public void UserSavesWithLastName1CharacterLong()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
+                FirstName = ValidValueName,
                 LastName = "1",
-                Salary = 1,
-                FTE = 1,
+                Salary = ValidValueSalary,
+                FTE = ValidValueFte,
                 IsActive = true,
             };
             user.Supervisor = user; //I'm my own supervisor
@@ -308,17 +325,17 @@ namespace FSNEP.Tests.Repositories
             userBLL.EnsurePersistent(user, true);            
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod] 
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithNullSupervisor()
         {
             var userBLL = new UserBLL(null);
             var user = new User
                {
-                   FirstName = "FName",
-                   LastName = "LName",
-                   Salary = 1,
-                   FTE = 1,
+                   FirstName = ValidValueName,
+                   LastName = ValidValueName,
+                   Salary = ValidValueSalary,
+                   FTE = ValidValueFte,
                    IsActive = true,
                    Supervisor = null,
                };
@@ -336,17 +353,17 @@ namespace FSNEP.Tests.Repositories
             }
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithSalaryZero()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
-                LastName = "LName",
+                FirstName = ValidValueName,
+                LastName = ValidValueName,
                 Salary = 0,
-                FTE = 1,
+                FTE = ValidValueFte,
                 IsActive = true,
             };
             user.Supervisor = user; //I'm my own supervisor
@@ -364,17 +381,17 @@ namespace FSNEP.Tests.Repositories
             }
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithSalaryLessThanZero()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
-                LastName = "LName",
+                FirstName = ValidValueName,
+                LastName = ValidValueName,
                 Salary = -1,
-                FTE = 1,
+                FTE = ValidValueFte,
                 IsActive = true,
             };
             user.Supervisor = user; //I'm my own supervisor
@@ -392,18 +409,18 @@ namespace FSNEP.Tests.Repositories
             }
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithBenifitRateLessThanZero()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
-                LastName = "LName", 
-                Salary = 1,
+                FirstName = ValidValueName,
+                LastName = ValidValueName, 
+                Salary = ValidValueSalary,
                 BenefitRate = -1,
-                FTE = 1,
+                FTE = ValidValueFte,
                 IsActive = true,
             };
             user.Supervisor = user; //I'm my own supervisor
@@ -421,18 +438,18 @@ namespace FSNEP.Tests.Repositories
             }
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithBenifitRateGreaterThan2()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
-                LastName = "LName",
-                Salary = 1,
+                FirstName = ValidValueName,
+                LastName = ValidValueName,
+                Salary = ValidValueSalary,
                 BenefitRate = 2.00001,
-                FTE = 1,
+                FTE = ValidValueFte,
                 IsActive = true,
             };
             user.Supervisor = user; //I'm my own supervisor
@@ -450,17 +467,17 @@ namespace FSNEP.Tests.Repositories
             }
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         public void UserSavesWithBenifitRateOfZero()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
-                LastName = "LName",
-                Salary = 1,
+                FirstName = ValidValueName,
+                LastName = ValidValueName,
+                Salary = ValidValueSalary,
                 BenefitRate = 0,
-                FTE = 1,
+                FTE = ValidValueFte,
                 IsActive = true,
             };
             user.Supervisor = user; //I'm my own supervisor
@@ -470,17 +487,17 @@ namespace FSNEP.Tests.Repositories
             userBLL.EnsurePersistent(user, true);            
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         public void UserSavesWithBenifitRateOf2()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
-                LastName = "LName",
-                Salary = 1,
+                FirstName = ValidValueName,
+                LastName = ValidValueName,
+                Salary = ValidValueSalary,
                 BenefitRate = 2,
-                FTE = 1,
+                FTE = ValidValueFte,
                 IsActive = true,
             };
             user.Supervisor = user; //I'm my own supervisor
@@ -490,17 +507,16 @@ namespace FSNEP.Tests.Repositories
             userBLL.EnsurePersistent(user, true);
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithFteLessThanZero()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
-                LastName = "LName",
-                Salary = 1,
-                BenefitRate = 1,
+                FirstName = ValidValueName,
+                LastName = ValidValueName,
+                Salary = ValidValueSalary,
                 FTE = -1,
                 IsActive = true,
             };
@@ -519,17 +535,16 @@ namespace FSNEP.Tests.Repositories
             }
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithFteGreaterThan1()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
-                LastName = "LName",
-                Salary = 1,
-                BenefitRate = 1,
+                FirstName = ValidValueName,
+                LastName = ValidValueName,
+                Salary = ValidValueSalary,
                 FTE = 1.0009,
                 IsActive = true,
             };
@@ -548,17 +563,16 @@ namespace FSNEP.Tests.Repositories
             }
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void UserDoesNotSaveWithFteOfZero()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
-                LastName = "LName",
-                Salary = 1,
-                BenefitRate = 1,
+                FirstName = ValidValueName,
+                LastName = ValidValueName,
+                Salary = ValidValueSalary,
                 FTE = 0,
                 IsActive = true,
             };
@@ -577,16 +591,15 @@ namespace FSNEP.Tests.Repositories
             }          
         }
 
-        [TestMethod] //TODO:Review
+        [TestMethod]
         public void UserSavesWithFteBetweenzeroAnd1()
         {
             var userBLL = new UserBLL(null);
             var user = new User
             {
-                FirstName = "FName",
-                LastName = "LName",
-                Salary = 1,
-                BenefitRate = 1,
+                FirstName = ValidValueName,
+                LastName = ValidValueName,
+                Salary = ValidValueSalary,
                 FTE = 0.00001,
                 IsActive = true,
             };

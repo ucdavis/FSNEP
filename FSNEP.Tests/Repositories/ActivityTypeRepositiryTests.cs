@@ -14,13 +14,26 @@ namespace FSNEP.Tests.Repositories
         private readonly IRepository<ActivityType> _activityTypeRepository = new Repository<ActivityType>();        
         private ActivityCategory ActivityCategory { get; set; }
 
+        /// <summary>
+        /// 50 characters for Name
+        /// </summary>
+        public const string ValidValueName = "123456789 123456789 123456789 123456789 1234567890";
+        /// <summary>
+        /// 51 characters for Name
+        /// </summary>
+        public const string InvalidValueName = "123456789 123456789 123456789 123456789 123456789 1";
+        /// <summary>
+        /// 2 characters for Indicator
+        /// </summary>
+        public const string ValidValueIndicator = "12";
+
 
         //Only Load ActivityCategory Data
         protected override void LoadData()
         {
             var activityCategoryRepository = new Repository<ActivityCategory>();
 
-            ActivityCategory = new ActivityCategory { Name = "123456789 123456789 123456789 123456789 1234567890" };
+            ActivityCategory = new ActivityCategory { Name = ValidValueName };
             using (var ts = new TransactionScope())
             {
                 activityCategoryRepository.EnsurePersistent(ActivityCategory);
@@ -37,9 +50,30 @@ namespace FSNEP.Tests.Repositories
             var activityType = new ActivityType
                {
                    ActivityCategory = ActivityCategory,
-                   Indicator = "12",
-                   Name = "123456789 123456789 123456789 123456789 1234567890"
+                   Indicator = ValidValueIndicator,
+                   Name = ValidValueName
                };
+
+            using (var ts = new TransactionScope())
+            {
+                _activityTypeRepository.EnsurePersistent(activityType);
+
+                ts.CommitTransaction();
+            }
+
+            Assert.AreEqual(false, activityType.IsTransient());
+        }
+
+        [TestMethod]
+        public void CanSaveWithSpacesOnlyInIndicator()
+        {
+            //TODO: Review. The indicator here allows 2 spaces, but the UI doesn't appear to allow it. Do we want to add the Required Validator?
+            var activityType = new ActivityType
+            {
+                ActivityCategory = ActivityCategory,
+                Indicator = "  ",
+                Name = ValidValueName
+            };
 
             using (var ts = new TransactionScope())
             {
@@ -58,7 +92,7 @@ namespace FSNEP.Tests.Repositories
             var activityType = new ActivityType
             {
                 ActivityCategory = ActivityCategory,
-                Indicator = "12",
+                Indicator = ValidValueIndicator,
                 Name = null
             };
 
@@ -85,8 +119,8 @@ namespace FSNEP.Tests.Repositories
             var activityType = new ActivityType
             {
                 ActivityCategory = ActivityCategory,
-                Indicator = "12",
-                Name = "123456789 123456789 123456789 123456789 123456789 1"
+                Indicator = ValidValueIndicator,
+                Name = InvalidValueName
             };
 
             try
@@ -113,7 +147,7 @@ namespace FSNEP.Tests.Repositories
             {
                 ActivityCategory = ActivityCategory,
                 Indicator = null,
-                Name = "123456789 123456789 123456789 123456789 123456789"
+                Name = ValidValueName
             };
 
             try
@@ -136,11 +170,12 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void ActivityTypeDoesNotSaveWithIndicatorWith1Character()
         {
+            //Invalid Indicator
             var activityType = new ActivityType
             {
                 ActivityCategory = ActivityCategory,
                 Indicator = "1",
-                Name = "123456789 123456789 123456789 123456789 123456789"
+                Name = ValidValueName
             };
 
             try
@@ -163,11 +198,12 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void ActivityTypeDoesNotSaveWithIndicatorWithGreaterThan2Characters()
         {
+            //Invalid Indicator
             var activityType = new ActivityType
             {
                 ActivityCategory = ActivityCategory,
                 Indicator = "123",
-                Name = "123456789 123456789 123456789 123456789 123456789"
+                Name = ValidValueName
             };
 
             try
@@ -189,13 +225,12 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void ActivityTypeDoesNotSaveWithNullActivityCategory()
-        {
-            //TODO: Review. The indicator here allows 2 spaces, but the UI doesn't appear to allow it. Do we want to add the Required Validator?
+        {            
             var activityType = new ActivityType
             {
                 ActivityCategory = null,
-                Indicator = "  ",
-                Name = "123456789 123456789 123456789 123456789 123456789"
+                Indicator = ValidValueIndicator,
+                Name = ValidValueName
             };
 
             try

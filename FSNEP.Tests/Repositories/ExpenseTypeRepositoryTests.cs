@@ -12,6 +12,14 @@ namespace FSNEP.Tests.Repositories
     public class ExpenseTypeRepositoryTests : RepositoryTestBase 
     {
         private readonly IRepository<ExpenseType> _expenseTypeRepository = new Repository<ExpenseType>();
+        /// <summary>
+        /// 50 characters for Name
+        /// </summary>
+        public const string ValidValueName = "123456789 123456789 123456789 123456789 1234567890";
+        /// <summary>
+        /// 51 characters for Name
+        /// </summary>
+        public const string InvalidValueName = "123456789 123456789 123456789 123456789 123456789 1";
 
         //Don't load any data
         protected override void LoadData() { }
@@ -19,7 +27,7 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void CanSaveCompleteAndValidExpenseType()
         {
-            var expenseType = new ExpenseType { Name = "123456789 123456789 123456789 123456789 1234567890" };
+            var expenseType = new ExpenseType { Name = ValidValueName };
 
             using (var ts = new TransactionScope())
             {
@@ -57,7 +65,7 @@ namespace FSNEP.Tests.Repositories
         [ExpectedException(typeof(ApplicationException))]
         public void ExpenseTypeDoesNotSaveWithNameGreaterThan50Characters()
         {
-            var expenseType = new ExpenseType { Name = "123456789 123456789 123456789 123456789 123456789 1" };
+            var expenseType = new ExpenseType { Name = InvalidValueName };
 
             try
             {
