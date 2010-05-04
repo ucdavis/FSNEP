@@ -6,12 +6,24 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
+    <script type="text/javascript">
+        $(function() {
+            $("#dlUserJump").change(function() {
+                //Jump to the user chosen
+                var userId = $(this).val();
+
+                window.location = '<%= Url.Action("ModifyById") %>/' + userId;
+            });
+        });
+    </script>
+
     <h2>ListUsers</h2>
 
     <h3><%= Html.Encode(TempData["Message"]) %></h3>
 
     <p>
-        Jump to User: <%= Html.DropDownList("dlUserJump", new SelectList(Model, "ID", "FullNameLastFirst", "--Search--"))%> [TODO]
+        Jump to User: 
+            <%= this.Select("dlUserJump").Options(Model, a=>a.Id, a=>a.FullNameLastFirst).FirstOption("--Search--") %>
     </p>
     
     <table>
