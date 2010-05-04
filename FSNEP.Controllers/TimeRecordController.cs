@@ -11,6 +11,7 @@ using UCDArch.Core.Utils;
 using FSNEP.Core.Domain;
 using UCDArch.Web.ActionResults;
 using UCDArch.Web.Attributes;
+using MvcContrib;
 
 namespace FSNEP.Controllers
 {
@@ -49,10 +50,12 @@ namespace FSNEP.Controllers
             if (timeRecord == null)
             {
                 Message = Constants.NoTimeRecord;
-                return RedirectToAction("History");
+                //return RedirectToAction("History");
+                return this.RedirectToAction(a => a.History());
             }
 
-            return RedirectToAction("Entry", new {id = timeRecord.Id});
+            //return RedirectToAction("Entry", new {id = timeRecord.Id});            
+            return this.RedirectToAction(a => a.TimeRecordEntry(timeRecord.Id));
         }
 
         [ActionName("Entry")]
