@@ -62,6 +62,7 @@
     <Compile Include="Dev\DevCostShareBLL.cs" />
     <Compile Include="Dev\DevRecordBLL.cs" />
     <Compile Include="Dev\DevTimeRecordBLL.cs" />
+    <Compile Include="Dev\ReportBLL.cs" />
     <Compile Include="Interfaces\ICostShareBLL.cs" />
     <Compile Include="Dev\RecordBLL.cs" />
     <Compile Include="Impl\GenericBLL.cs" />

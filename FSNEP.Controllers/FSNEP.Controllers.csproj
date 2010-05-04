@@ -91,6 +91,7 @@
     </Compile>
     <Compile Include="CostShareController.cs" />
     <Compile Include="LookupController.cs" />
+    <Compile Include="ReportController.cs" />
     <Compile Include="SupervisorController.cs" />
     <Compile Include="TimeRecordController.cs" />
     <Compile Include="UserAdministrationController.cs" />
