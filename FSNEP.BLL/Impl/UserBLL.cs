@@ -21,6 +21,9 @@ namespace FSNEP.BLL.Impl
         List<string> GetAllRoles();
         IEnumerable<string> GetCurrentRoles();
         IEnumerable<string> GetUserRoles(string username);
+        void AddUserToRoles(string name, List<string> roleList);
+        IQueryable<User> GetSubordinates(User user);
+        void SetRoles(string username, List<string> roleList);
     }
 
     public class UserBLL : GenericBLL<User,Guid>, IUserBLL
@@ -108,6 +111,30 @@ namespace FSNEP.BLL.Impl
         public IEnumerable<string> GetUserRoles(string username)
         {
             return UserAuth.RoleProvider.GetRolesForUser(username);
+        }
+
+        public void AddUserToRoles(string name, List<string> roleList)
+        {
+            UserAuth.RoleProvider.AddUsersToRoles(new[] {name}, roleList.ToArray());
+        }
+
+        public IQueryable<User> GetSubordinates(User user)
+        {
+            //Get all users who have the current user as a supervisor
+            return Repository.Queryable.Where(u => u.Supervisor.ID == user.ID);
+        }
+
+        public void SetRoles(string username, List<string> roleList)
+        {
+            Check.Require(roleList.Count > 0, "User must have at least one role");
+
+            var existingRoles = GetUserRoles(username);
+
+            //first remove the roles they currently have
+            if (existingRoles.Count() > 0) UserAuth.RoleProvider.RemoveUsersFromRoles(new[] {username}, existingRoles.ToArray() );
+
+            //now add in their new roles
+            UserAuth.RoleProvider.AddUsersToRoles(new[] {username}, roleList.ToArray());
         }
     }
 }

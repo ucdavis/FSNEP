@@ -76,14 +76,14 @@ namespace FSNEP.Controllers
 
             ValidationHelper<User>.Validate(user, ModelState, "User"); //validate the user properties
 
+            if (roleList == null) ModelState.AddModelError("RoleList", "User must have at least one role");
+
             if (!ModelState.IsValid)
             {
                 return CreateUser();
             }
 
             PopulateUserProperties(user, supervisorId, projectList, fundTypeList);
-
-            if (roleList == null) roleList = new List<string>();
 
             EnsureProperRoles(roleList, user);
 
@@ -98,7 +98,7 @@ namespace FSNEP.Controllers
 
             if (createStatus == MembershipCreateStatus.Success)
             {
-                //Assign the roles
+                UserBLL.AddUserToRoles(model.UserName, roleList);
             }
             else
             {
@@ -174,6 +174,8 @@ namespace FSNEP.Controllers
 
             ValidationHelper<User>.Validate(user, ModelState, "User");
 
+            if (roleList == null) ModelState.AddModelError("RoleList", "User must have at least one role");
+
             if (!ModelState.IsValid)
             {
                 return ModifyUser(id);
@@ -185,6 +187,15 @@ namespace FSNEP.Controllers
 
             EnsureProperRoles(roleList, user);
 
+            // If the user has subordinates, make sure they have supervisor role
+            if (UserBLL.GetSubordinates(user).Count() > 0 && !roleList.Contains(RoleNames.RoleSupervisor))
+            {
+                roleList.Add(RoleNames.RoleSupervisor);
+            }
+ 
+            //Now reconcile the user's roles
+            UserBLL.SetRoles(id, roleList);
+            
             //We have a valid viewstate, so save the changes
             using (var ts = new TransactionScope())
             {
