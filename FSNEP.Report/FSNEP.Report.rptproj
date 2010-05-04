@@ -12,6 +12,10 @@
       <Name>IndividualActivityRecord.rdl</Name>
       <FullPath>IndividualActivityRecord.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>CostShare.rdl</Name>
+      <FullPath>CostShare.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
