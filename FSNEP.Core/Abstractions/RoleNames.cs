@@ -8,6 +8,8 @@
         public static readonly string RoleAdmin = "State Office";
         public static readonly string RoleNonSalary = "NonPayrollCostShareExpenses";
         public static readonly string RoleProjectAdmin = "ProjectAdmin";
+        public static readonly string RoleDelegateSupervisor = "DelegateSupervisor";
+
         #endregion
     }
 }

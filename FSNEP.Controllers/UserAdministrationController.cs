@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using FSNEP.BLL.Impl;
@@ -459,7 +459,7 @@ namespace FSNEP.Controllers
                                     Supervisors = userBLL.GetSupervisors().OrderBy(a => a.LastName).ToList(),
                                     Projects = userBLL.GetAllProjectsByUser(repository.OfType<Project>()).OrderBy(a => a.Name).ToList(),
                                     FundTypes = userBLL.GetAvailableFundTypes(repository.OfType<FundType>()).OrderBy(a => a.Name).ToList(),
-                                    AvailableRoles = userBLL.GetAllRoles()
+                                    AvailableRoles = userBLL.GetVisibleRoles()
                                 };
 
             return viewModel;

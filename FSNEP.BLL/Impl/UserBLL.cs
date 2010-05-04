@@ -18,7 +18,7 @@ namespace FSNEP.BLL.Impl
         IQueryable<User> GetSupervisors();
         User GetUser();
         User GetUser(string username);
-        List<string> GetAllRoles();
+        List<string> GetVisibleRoles();
         IEnumerable<string> GetCurrentRoles();
         IEnumerable<string> GetUserRoles(string username);
         void AddUserToRoles(string name, List<string> roleList);
@@ -117,7 +117,7 @@ namespace FSNEP.BLL.Impl
             return GetById((Guid)member.ProviderUserKey);
         }
 
-        public List<string> GetAllRoles()
+        public List<string> GetVisibleRoles()
         {
             var roleList = new List<string>(UserAuth.RoleProvider.GetAllRoles());
 
@@ -125,6 +125,9 @@ namespace FSNEP.BLL.Impl
             {
                 roleList.Remove(RoleNames.RoleAdmin);
             }
+
+            //Remove the role of delegate supervisor since it is not assignable
+            roleList.Remove(RoleNames.RoleDelegateSupervisor);
 
             return roleList;
         }
