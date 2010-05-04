@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using FSNEP.BLL.Impl;
+using FSNEP.Controllers.Helpers;
 using FSNEP.Core.Domain;
 using System.Linq;
 using MvcContrib.Attributes;
 using System;
+using MvcContrib.UI.Html;
 
 namespace FSNEP.Controllers
 {
@@ -42,14 +44,14 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult ModifyUser(string id, User user, Guid? supervisorId, List<Project> projects)
         {
+            user = new User();
+
+            ValidationHelper<User>.Validate(user, ModelState);
+
+            
             //Look for errors
             if (!supervisorId.HasValue)
                 ModelState.AddModelError("SupervisorID", "You must select a supervisor");
-
-            if (string.IsNullOrEmpty(user.FirstName))
-            {
-                ModelState.AddModelError("FirstName", "First Name Required");
-            }
 
             return ModifyUser(id);
         }
