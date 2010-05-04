@@ -18,7 +18,7 @@ namespace FSNEP.Tests.BLL
     {
         private IRecordBLL<Record> _recordBLL;
         private IRepository _repository;
-        private readonly IPrincipal _principal = new MockPrincipal();
+        private IPrincipal _principal = MockRepository.GenerateStub<MockPrincipal>();
         private List<Record> Records { get; set; }
 
         private User CurrentUser { get; set; }
@@ -32,6 +32,8 @@ namespace FSNEP.Tests.BLL
             CurrentUser = CreateValidUser();
             CurrentUser.UserName = "CurrentUser";
         }
+
+        #region IsEditable Tests
 
         [TestMethod]
         public void IsEditableReturnsTrueIfStatusIsCurrent()
@@ -96,6 +98,109 @@ namespace FSNEP.Tests.BLL
 
             Assert.AreEqual(false, editable);
         }
+        #endregion IsEditable Tests
+
+        #region HasAccess Tests
+
+        /// <summary>
+        /// Determines whether [has access returns true if record has same name as current user].
+        /// </summary>
+        [TestMethod]
+        public void HasAccessReturnsTrueIfRecordHasSameNameAsCurrentUser()
+        {
+            var record = new Record {User = CurrentUser};
+            Assert.IsTrue(_recordBLL.HasAccess(_principal, record));
+        }
+
+        /// <summary>
+        /// Determines whether [has access returns false if record has different name as current user].
+        /// </summary>
+        [TestMethod]
+        public void HasAccessReturnsFalseIfRecordHasDifferentNameAsCurrentUser()
+        {
+            FakeRecordsToCheck();
+            Assert.IsFalse(_recordBLL.HasAccess(_principal, Records[1]));
+        }
+
+        /// <summary>
+        /// Determines whether [has access throws exception if record is null].
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void HasAccessThrowsExceptionIfRecordIsNull()
+        {
+            try
+            {
+                Assert.IsFalse(_recordBLL.HasAccess(_principal, null));
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(message);
+                Assert.AreEqual("Precondition failed.", message.Message);
+                throw;
+            }
+            
+        }
+
+        #endregion HasAccess Tests
+
+        #region HasReviewAccess Tests
+
+        /// <summary>
+        /// Determines whether [has review access returns true if current user is in role admin].
+        /// </summary>
+        [TestMethod]
+        public void HasReviewAccessReturnsTrueIfCurrentUserIsInRoleAdmin()
+        {
+            FakeRecordsToCheck(); //None of these have the Current user.
+            _principal.Expect(a => a.IsInRole(RoleNames.RoleAdmin)).Return(true).Repeat.Once();
+            Assert.IsTrue(_recordBLL.HasReviewAccess(_principal, Records[1]));
+        }
+
+        /// <summary>
+        /// Determines whether [has review access returns true if current user is in record].
+        /// </summary>
+        [TestMethod]
+        public void HasReviewAccessReturnsTrueIfCurrentUserIsInRecord()
+        {
+            var record = new Record { User = CurrentUser };
+            _principal.Expect(a => a.IsInRole(RoleNames.RoleAdmin)).Return(false).Repeat.Once();
+            Assert.IsTrue(_recordBLL.HasReviewAccess(_principal, record));
+        }
+
+        /// <summary>
+        /// Determines whether [has review access returns true if current user is users supervisor in record].
+        /// </summary>
+        [TestMethod]
+        public void HasReviewAccessReturnsTrueIfCurrentUserIsUsersSupervisorInRecord()
+        {
+            var newUser = CreateValidUser();
+            newUser.UserName = "NewUser";
+            newUser.Supervisor = CurrentUser;
+
+            var record = new Record { User = newUser }; //We are not passing the current user, but this use has the current user as a supervisor.
+            _principal.Expect(a => a.IsInRole(RoleNames.RoleAdmin)).Return(false).Repeat.Once();
+            Assert.IsTrue(_recordBLL.HasReviewAccess(_principal, record));
+        }
+
+        /// <summary>
+        /// Determines whether [has review access returns fasle if current user is not users supervisor in record].
+        /// </summary>
+        [TestMethod]
+        public void HasReviewAccessReturnsFasleIfCurrentUserIsNotUsersSupervisorInRecord()
+        {
+            var newUser = CreateValidUser();
+            newUser.UserName = "NewUser";
+            newUser.Supervisor = CreateValidUser();
+
+            var record = new Record { User = newUser }; //We are not passing the current user, but this use has the current user as a supervisor.
+            _principal.Expect(a => a.IsInRole(RoleNames.RoleAdmin)).Return(false).Repeat.Once();
+            Assert.IsFalse(_recordBLL.HasReviewAccess(_principal, record));
+        }
+
+        
+
+        #endregion HasReviewAccess Tests
 
         #region GetCurrentRecord Tests
 
@@ -492,7 +597,7 @@ namespace FSNEP.Tests.BLL
 
         #endregion Helper Methods
 
-        #region mocks
+        #region Mocks
         /// <summary>
         /// Mock the Identity. Used for getting the current user name
         /// </summary>
@@ -543,35 +648,35 @@ namespace FSNEP.Tests.BLL
                 }
             }
 
-            public bool IsInRole(string role)
+            public virtual bool IsInRole(string role)
             {
                 return false;
             }
         }
 
-        /// <summary>
-        /// Mock the HttpContext. Used for getting the current user name
-        /// </summary>
-        public class MockHttpContext : HttpContextBase
-        {
-            private IPrincipal _user;
+        ///// <summary>
+        ///// Mock the HttpContext. Used for getting the current user name
+        ///// </summary>
+        //public class MockHttpContext : HttpContextBase
+        //{
+        //    private IPrincipal _user;
 
-            public override IPrincipal User
-            {
-                get
-                {
-                    if (_user == null)
-                    {
-                        _user = new MockPrincipal();
-                    }
-                    return _user;
-                }
-                set
-                {
-                    _user = value;
-                }
-            }
-        }
-        #endregion
+        //    public override IPrincipal User
+        //    {
+        //        get
+        //        {
+        //            if (_user == null)
+        //            {
+        //                _user = new MockPrincipal(false);
+        //            }
+        //            return _user;
+        //        }
+        //        set
+        //        {
+        //            _user = value;
+        //        }
+        //    }
+        //}
+        #endregion Mocks
     }
 }
