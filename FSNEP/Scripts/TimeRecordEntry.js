@@ -17,7 +17,11 @@ $(function() {
     $(".EditCalendarEntry").live('click', function() {
         var clicked = $(this);
 
+        var id = GetIdFromElement(clicked, ElementType.Edit);
+
         DisplayMessage("You clicked on the edit entry for id " + GetIdFromElement(clicked, ElementType.Edit));
+
+        EditEntry(id);
     });
 
     $(".DeleteCalendarEntry").live('click', function() {
@@ -25,15 +29,13 @@ $(function() {
 
         var id = GetIdFromElement(clicked, ElementType.Delete);
 
-        RemoveEntry(id);
-
         DisplayMessage("You clicked on the delete entry for id " + GetIdFromElement(clicked, ElementType.Delete));
+
+        RemoveEntry(id);
     });
 
     $("#formAddEntry").submit(function() {
         //hijax the form post and do it ajax style
-        var valid = $(this).valid();
-
         if ($(this).valid()) {  //validate the form
 
             var data = GatherAddEntryData();
@@ -48,6 +50,22 @@ $(function() {
                 },
                 'json'
             );
+        }
+        else {
+            alert("Entry not valid -- check your values");
+        }
+
+        return false;
+    });
+
+    $("#formEditEntry").submit(function() {
+        if ($(this).valid()) {
+            //gather add entry data
+            //post the change
+            //update UI
+        }
+        else {
+            alert("Entry not valid -- check your values");
         }
 
         return false;
@@ -115,6 +133,23 @@ function AddEntry(id) {
     addRecordDay.val(id);
     
     OpenDialog(addEntryDiv, null, "Add Entry", null);
+}
+
+function EditEntry(entryId) {
+    var editEntryDiv = $("#dialogTimeRecordEdit");
+
+    $.getJSON(
+        Services.GetEntry,
+        { entryId: entryId },
+        EditEntryLoaded,
+        'json'
+    );
+
+    OpenDialog(editEntryDiv, null, "Edit Entry", null);
+}
+
+function EditEntryLoaded(result) {
+    LogMessage("Edit Entry Loaded", result);
 }
 
 function OpenDialog(dialog /*The dialog DIV JQuery object*/, buttons /*Button collection */, title, onClose) {

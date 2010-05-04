@@ -91,6 +91,43 @@ namespace FSNEP.Controllers
             entryRepository.Remove(entry);
         }
 
+        [AcceptPost]
+        [Transaction]
+        public void EditEntry(int entryId, TimeRecordEntry entry)
+        {
+            var entryRepository = Repository.OfType<TimeRecordEntry>();
+
+            var entryToUpdate = entryRepository.GetNullableByID(entryId);
+
+            Check.Require(entryToUpdate != null, "Entry not found");
+
+            TransferValuesTo(entryToUpdate, entry);
+
+            Check.Require(entryToUpdate.IsValid(), "Entry is not valid");
+
+            entryRepository.EnsurePersistent(entryToUpdate);
+        }
+
+        [Transaction]
+        public JsonNetResult GetEntry(int entryId)
+        {
+            var entry = Repository.OfType<TimeRecordEntry>().GetNullableByID(entryId);
+
+            Check.Require(entry != null, "Entry not found");
+
+            return new JsonNetResult(entry);
+        }
+
+        /// <summary>
+        /// Transfer the new values from the given entry to the entry to update.
+        /// Currently you can only update the comment and hours
+        /// </summary>
+        private static void TransferValuesTo(TimeRecordEntry entryToUpdate, TimeRecordEntry entry)
+        {
+            entryToUpdate.Comment = entry.Comment;
+            entryToUpdate.Hours = entry.Hours;
+        }
+
         private RedirectToRouteResult RedirectToErrorPage(string message)
         {
             Message = message;

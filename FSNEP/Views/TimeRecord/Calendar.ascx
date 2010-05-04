@@ -3,8 +3,9 @@
 <script type="text/javascript">
     var Services = {
         AddEntry: '<%= Url.Action("AddEntry", "TimeRecord", new {recordId=Model.TimeRecord.Id}) %>',
-        Edit: "/Edit",
+        Edit: '<%= Url.Action("EditEntry", "TimeRecord") %>',
         RemoveEntry: '<%= Url.Action("RemoveEntry", "TimeRecord") %>',
+        GetEntry: '<%= Url.Action("GetEntry", "TimeRecord") %>',
         GetAccountsForProject: '<%= Url.Action("GetAccountsForProject", "Association") %>'
     }
 </script>
@@ -114,6 +115,43 @@
         </p>
         <p>
             <input type="submit" value="Save!" />
+        </p>
+        
+    </fieldset>
+    </form>
+</div>
+
+<div id="dialogTimeRecordEdit" class="TimeRecordEditDialog" title="Edit Entry">
+    <%= Html.ClientSideValidation<FSNEP.Core.Domain.TimeRecordEntry>("Edit") %>
+    <%= Html.ClientSideValidation<FSNEP.Core.Domain.Entry>("Edit") %>
+    <form id="formEditEntry" method="post" action="<%= Url.Action("EditEntry", "TimeRecord") %>">
+    <fieldset>
+        <legend>Entry Information</legend>
+        <p>
+            <label for="Edit_ActivityType">Activity Type:</label>
+            <span id="Edit_ActivityType"></span>
+        </p>
+        <p>
+            <label for="Edit_FundType">Fund Type:</label>
+            <span id="Edit_FundType"></span>
+        </p>
+        <p>
+            <label for="Edit_Project">Project:</label>
+            <span id="Edit_Project"></span>
+        </p>
+        <p>
+            <label for="Edit_Account">Account:</label>
+            <span id="Edit_Account"></span>
+        </p>
+        <p>
+            <%= this.TextBox("Edit_Hours").Class("required").Label("Hours")  %>
+        </p>
+        <p>
+            <label for="Edit_Comment"></label>
+            <%= this.TextArea("Edit_Comment").Columns(25).Class("required").Label("Comments:")%>
+        </p>
+        <p>
+            <input type="submit" value="Update!" />
         </p>
         
     </fieldset>
