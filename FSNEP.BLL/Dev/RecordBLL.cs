@@ -38,6 +38,13 @@ namespace FSNEP.BLL.Dev
                 return true; //Supervisor can review the record
             }
 
+            var supervisorDelegate = record.User.Supervisor.Delegate;
+
+            if (supervisorDelegate != null && supervisorDelegate.UserName == user.Identity.Name)
+            {
+                return true; //Supervisor's delegate can review the record as well
+            }
+
             return false; //Default deny
         }
 

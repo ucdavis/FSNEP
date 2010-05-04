@@ -15,7 +15,7 @@ namespace FSNEP.BLL.Interfaces
         /// <summary>
         /// True if the user can review this sheet.
         /// This is if they are the user's supervisor or 
-        /// TODO: A delegate of the supervisor can also access it
+        /// A delegate of the supervisor can also access it
         /// </summary>
         bool HasReviewAccess(IPrincipal user, T record);
 
