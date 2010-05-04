@@ -148,6 +148,15 @@ namespace FSNEP.Controllers
             return this.RedirectToAction<HomeController>(a => a.Index());
         }
 
+        public ActionResult ModifyUserById(Guid? id)
+        {
+            if (id== null) return this.RedirectToAction(a => a.CreateUser());
+
+            var user = UserBLL.UserAuth.MembershipService.GetUser(id);
+
+            return user == null ? this.RedirectToAction(a => a.CreateUser()) : this.RedirectToAction(a => a.ModifyUser(user.UserName));
+        }
+
         /// <summary>
         /// Returns the user object indentified by the given userid.  If there is no user, return just the other information needed for creating a new user.
         /// </summary>

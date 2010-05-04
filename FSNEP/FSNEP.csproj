@@ -146,6 +146,7 @@
     <Content Include="Views\Account\ResetPassword.aspx" />
     <Content Include="Views\Account\ResetPasswordSuccess.aspx" />
     <Content Include="Views\Administration\CreateUser.aspx" />
+    <Content Include="Views\Administration\ListUsers.aspx" />
     <Content Include="Views\Administration\ModifyUser.aspx" />
     <Content Include="Views\Administration\UserInformation.ascx" />
     <Content Include="Web.config" />
