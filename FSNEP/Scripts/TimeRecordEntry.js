@@ -40,7 +40,7 @@ $(function() {
 
             var data = GatherAddEntryData();
             var serviceUrl = Services.AddEntry;
-
+            
             $.post(
                 serviceUrl,
                 data,
@@ -49,11 +49,11 @@ $(function() {
                     DisplayMessage("New Entry Added with id = " + result.id);
 
                     $("#dialogTimeRecordEntry").dialog("close");
+
+                    UpdateAddEntryUI(result.id, $("#addRecordDay").val(), data.Hours);
                 },
                 'json'
             );
-
-            //updated UI
         }
         else {
             alert("Entry not valid -- check your values");
@@ -68,7 +68,7 @@ $(function() {
             var serviceUrl = Services.EditEntry;
 
             //update UI
-            $("#editEntry" + data.EntryId).html(data.Hours + " HRS");
+            $("#editEntry" + data.EntryId).html(data.Hours + " HRS ");
             $("#entryHours" + data.EntryId).val(data.Hours);
 
             $.post(
@@ -92,6 +92,44 @@ $(function() {
 
     $("#Project").change(function() { PopulateAccounts(this); });
 });
+
+function UpdateAddEntryUI(id, date, hours) {
+    var newEntry = $('<tr>')
+            .attr('id', 'Entry' + id)
+            .append(
+                $('<td>')
+                .append(
+                    $('<span>')
+                    .addClass('editEntry')
+                    .append(
+                        $('<a>')
+                        .addClass('EditCalendarEntry')
+                        .attr('href', 'javascript:;')
+                        .attr('id', 'editEntry' + id)
+                        .html(hours + ' HRS ')
+                    )
+                )
+                .append(
+                    $('<span>')
+                    .addClass('deleteEntry')
+                    .append(
+                        $('<a>')
+                        .addClass('DeleteCalendarEntry')
+                        .attr('href', 'javascript:;')
+                        .attr('id', 'deleteEntry' + id)
+                        .html('X')
+                    )
+                )
+                .append(
+                    $('<input type="hidden" />')
+                    .attr('id', 'entryHours' + id)
+                    .val(hours)
+                )
+            );
+
+    //Append to the tbody
+    $("#entriesFor" + date).append(newEntry);
+}
 
 function RemoveEntry(entryId) {
 
