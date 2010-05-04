@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C50E9962-0BC1-455F-B41C-6566DFD3389E}</ProjectGuid>
     <ProjectTypeGuids>{603c0e0b-db56-11dc-be95-000d561079b0};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -270,6 +270,7 @@
   <ItemGroup>
     <Content Include="Content\jquery.jgrowl.css" />
     <Content Include="Images\add.gif" />
+    <Content Include="Images\back.png" />
     <Content Include="Images\bannertop.jpg" />
     <Content Include="Images\bottomgradient.jpg" />
     <Content Include="Images\but_home.gif" />
@@ -283,6 +284,7 @@
     <Content Include="Images\menu-time.png" />
     <Content Include="Images\topbgfiller.gif" />
     <Content Include="Images\x.gif" />
+    <Content Include="Scripts\css_browser_selector.js" />
     <Content Include="Scripts\jquery.cascade.js" />
     <Content Include="Scripts\jquery.jgrowl.min.js" />
     <Content Include="Views\Audit\CostShareEntryAuditList.ascx" />
@@ -323,9 +325,6 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

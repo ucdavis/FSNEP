@@ -70,7 +70,7 @@
     <input type="submit" value="Create User" />
     
      <% } %>
-    <p>
+    <p class="backnav">
         <%=Html.ActionLink("Back to List", "List", "UserAdministration") %>
     </p>
 </asp:Content>

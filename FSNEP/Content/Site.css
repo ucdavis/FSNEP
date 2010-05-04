@@ -12,6 +12,7 @@ body {
 	
 #skipnav {display: none;}
 #header x {margin: 0 0 0 -25px;}
+#header {height: 106px;}
 #main {min-width: 840px; padding-bottom: 75px; margin: 0 60px;}
 #page_content {margin-left: -25px;}
 
@@ -40,6 +41,8 @@ img {border: 0px none;}
 td {vertical-align: top;}
 
 h1, h2, h3 {margin-bottom: 0px;}
+
+.backnav {margin: 2em 0; font-size: .9em; font-style: italic; background: url(../Images/back.png) no-repeat 0 2px; padding-left: 19px;}
 
 
 
@@ -280,6 +283,8 @@ table.ui-datepicker-calendar td {text-align: center;}
 .ui-datepicker-header {background: #fff; -moz-border-radius: 18px; -webkit-border-radius: 18px;	padding: 1px 5px;}
 .ui-datepicker-year {}
 
+#dialogTimeRecordAdjustment .savebtn {margin-left: 175px;}
+
 
 
 /* ----------------- */
@@ -287,11 +292,11 @@ table.ui-datepicker-calendar td {text-align: center;}
 /* ----------------- */
 
 #welcome {
-    float:right; 
-    font-size:12px; 
-    font-weight:bold; 
-    margin:5px 50px 0 0;
-    width: 250px;
+    float: right; 
+    font-size: 12px; 
+    font-weight: bold; 
+    margin: 10px 106px 0 0;
+    width: 450px;
     text-align: right;
 }
 

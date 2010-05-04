@@ -2,7 +2,7 @@
 <%@ Import Namespace="FSNEP.Core.Domain"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
-	TimeRecord
+	Time Record Report
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">

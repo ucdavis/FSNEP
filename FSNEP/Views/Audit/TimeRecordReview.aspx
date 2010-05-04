@@ -10,7 +10,7 @@
 
     <% Html.RenderPartial("TimeRecordEntryList", Model.Entries); %>
 
-    <%= Html.ActionLink("Back to Time Record List", "TimeRecordHistory", "Audit") %>
+    <span class="backnav"><%= Html.ActionLink("Back to Time Record List", "TimeRecordHistory", "Audit") %></span>
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="AdditionalScripts" runat="server">

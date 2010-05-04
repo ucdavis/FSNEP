@@ -11,7 +11,7 @@
     <% Html.RenderPartial("CostShareEntryList", Model.CostShareEntries); %>
         
     <br />
-    <div>
+    <div class="backnav">
         <%= Html.ActionLink<CostShareController>(x=>x.History(), "Back to Cost Share History") %>
     </div>    
 

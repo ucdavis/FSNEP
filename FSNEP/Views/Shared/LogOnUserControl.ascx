@@ -2,13 +2,13 @@
 <%
     if (Request.IsAuthenticated) {
 %>
-        Welcome <b><%= Html.Encode(Page.User.Identity.Name) %></b>!
-        [ <%= Html.ActionLink("Log Off", "LogOff", "Account") %> <%= Html.ActionLink("Chg Pass", "ChangePassword", "Account") %> ]
+        Welcome <b><%= Html.Encode(Page.User.Identity.Name) %></b>! — 
+        <%= Html.ActionLink("Log out", "LogOff", "Account") %> | <%= Html.ActionLink("Change your password", "ChangePassword", "Account") %>
 <%
     }
     else {
 %> 
-        [ <%= Html.ActionLink("Log On", "LogOn", "Account") %> ]
+        | <%= Html.ActionLink("Log in", "LogOn", "Account") %> |
 <%
     }
 %>

@@ -13,7 +13,7 @@
 
     <% Html.RenderPartial("ApproveOrDeny", Model.Record); %>
     
-    <div>
+    <div class="backnav">
         <%= Html.ActionLink<SupervisorController>(x=>x.TimeRecordList(), "Back to Time Record Review List") %>
     </div>
 

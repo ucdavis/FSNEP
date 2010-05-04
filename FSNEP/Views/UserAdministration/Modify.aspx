@@ -25,7 +25,7 @@
         
     <% } %>
 
-    <div>
+    <div class="backnav">
         <%=Html.ActionLink("Back to List", "List", "UserAdministration") %>
     </div>
 

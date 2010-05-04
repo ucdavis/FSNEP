@@ -101,7 +101,7 @@
     <%= Html.ClientSideValidation<FSNEP.Core.Domain.Entry>() %>
     <form id="formAddEntry" method="post" action="<%= Url.Action("AddEntry", "TimeRecord") %>">
     <input id="addRecordDay" type="hidden" />
-    <fieldset>
+    <fieldset><a name="entryinfo">&nbsp;</a>
         <legend>Entry Information</legend>
         <p>
             <%= this.TextBox("Hours").Class("required").Label("Hours:") %>
@@ -170,7 +170,7 @@
         <p>
             <%= this.TextArea("Adjust_Comment").Columns(25).Class("required").Label("Comments:")%>
         </p>
-        <p>
+        <p class="savebtn">
             <input type="submit" value="Save!" />
         </p>
         
@@ -189,7 +189,7 @@
         <%= Html.ClientSideValidation<FSNEP.Core.Domain.Entry>("Edit") %>
         <form id="formEditEntry" method="post" action="<%= Url.Action("EditEntry", "TimeRecord") %>">
         <input id="Edit_EntryId" type="hidden" />
-        <fieldset>
+        <fieldset><a name="adjustment">&nbsp;</a>
             <legend>Entry Information</legend>
             <p>
                 <label for="Edit_ActivityType">Activity Type:</label>
