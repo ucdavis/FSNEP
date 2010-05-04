@@ -50,6 +50,13 @@ namespace FSNEP.BLL.Dev
             return false;
         }
 
+        public virtual bool CanApproveOrDeny(T record)
+        {
+            Check.Require(record != null);
+
+            return record.Status.NameOption == Status.Option.PendingReview;
+        }
+
         public T GetCurrent(IPrincipal user)
         {
             //Get the current record for the user.

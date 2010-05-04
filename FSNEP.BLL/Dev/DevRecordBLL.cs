@@ -41,6 +41,11 @@ namespace FSNEP.BLL.Dev
             return false;
         }
 
+        public bool CanApproveOrDeny(T record)
+        {
+            return true;
+        }
+
         public T GetCurrent(IPrincipal user)
         {
             return _repository.OfType<T>().Queryable.OrderBy(x=>x.Id).First();

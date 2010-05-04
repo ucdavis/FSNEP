@@ -41,6 +41,7 @@ namespace FSNEP.Controllers
             }
 
             var viewModel = ReviewViewModel<CostShare, CostShareEntry>.Create(Repository.OfType<CostShareEntry>(),
+                                                                              _costShareBLL,
                                                                               costShare);
 
             return View(viewModel);
@@ -67,7 +68,9 @@ namespace FSNEP.Controllers
             }
 
             var viewModel = ReviewViewModel<TimeRecord, TimeRecordEntry>.Create(Repository.OfType<TimeRecordEntry>(),
-                                                                              timeRecord);
+                                                                                _timeRecordBLL,
+                                                                                timeRecord);
+
 
             return View(viewModel);
         }
@@ -75,7 +78,7 @@ namespace FSNEP.Controllers
 
     public class ReviewViewModel<T,TEnT> where TEnT : Entry where T : Record
     {
-        public static ReviewViewModel<T,TEnT> Create(IRepository<TEnT> entryRepository, T record)
+        public static ReviewViewModel<T,TEnT> Create(IRepository<TEnT> entryRepository, IRecordBLL<T> recordBLL, T record)
         {
             var viewModel = new ReviewViewModel<T,TEnT>
                                 {
@@ -83,7 +86,8 @@ namespace FSNEP.Controllers
                                     Entries = entryRepository
                                         .Queryable
                                         .Where(x => x.Record.Id == record.Id)
-                                        .ToList()
+                                        .ToList(),
+                                    CanBeApprovedOrDenied = recordBLL.CanApproveOrDeny(record)
                                 };
 
             return viewModel;
@@ -91,5 +95,6 @@ namespace FSNEP.Controllers
 
         public T Record { get; set; }
         public IEnumerable<TEnT> Entries { get; set; }
+        public bool CanBeApprovedOrDenied { get; set; }
     }
 }
