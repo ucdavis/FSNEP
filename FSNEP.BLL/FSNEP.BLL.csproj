@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dev\DevRecordBLL.cs" />
     <Compile Include="Dev\DevTimeRecordBLL.cs" />
     <Compile Include="Impl\GenericBLL.cs" />
     <Compile Include="Impl\UserAuth.cs" />
