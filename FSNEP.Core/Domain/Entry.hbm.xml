@@ -22,7 +22,7 @@
       <property name="AdjustmentDate"></property>
       <many-to-one name="ActivityType" class="ActivityType" column="ActivityTypeID" outer-join="true"></many-to-one>
     </joined-subclass>
-
+    
     <joined-subclass name="CostShareEntry" table="CostShareRecordEntries">
       <key column="ID"></key>
       <property name="Amount" column="ExpenseAmount"></property>
