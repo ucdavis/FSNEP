@@ -75,27 +75,37 @@
 </div>
 
 <div id="dialogTimeRecordEntry" class="TimeRecordEntryDialog" title="Add Entry">
+    <%= Html.ClientSideValidation<FSNEP.Core.Domain.TimeRecordEntry>() %>
+    <form id="formAddEntry" method="post" action="<%= Url.Action("AddEntry", "TimeRecord") %>">
     <input id="addRecordDay" type="hidden" />
     <fieldset>
         <legend>Entry Information</legend>
         <p>
-            <%= this.TextBox("hours").Label("Hours:") %>
+            <%= this.TextBox("Hours").Class("required").Label("Hours:") %>
         </p>
         <p>
             <label for="activityType">Activity Type:</label>
             <% Html.RenderPartial("ActivityTypeSelect", Model.ActivityCategories); %>
         </p>
         <p>
-            <%= this.Select("fundType").Options(Model.FundTypes, f=>f.Id, f=>f.Name).Label("Fund Type:").Disabled(Model.FundTypes.Count() == 1) %>
+            <%= this.Select("FundType").Options(Model.FundTypes, f=>f.Id, f=>f.Name).Label("Fund Type:").Class("required").Disabled(Model.FundTypes.Count() == 1) %>
         </p>
         <p>
-            <%= this.Select("project").Options(Model.Projects, p=>p.Id, p=>p.Name).Label("Project:").Disabled(Model.Projects.Count() == 1) %>
+            <%= this.Select("Aroject").Options(Model.Projects, p=>p.Id, p=>p.Name).Label("Project:").Class("required").Disabled(Model.Projects.Count() == 1) %>
         </p>
         <p>
-            <%= this.Select("account").Options(new[] {"Select An Account"}).Label("Account:").Disabled(true) %>
+            <label for="Account" id="Account_Label">Account:</label>
+            <select class="required" id="Account" name="Account">
+                <option value="">Select An Account</option>
+            </select>
         </p>
         <p>
             <%= this.TextArea("comments").Columns(25).Label("Comments:")%>
         </p>
+        <p>
+            <input type="submit" value="Save!" />
+        </p>
+        
     </fieldset>
+    </form>
 </div>

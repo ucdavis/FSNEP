@@ -10,7 +10,7 @@ $(function() {
         DisplayMessage("You clicked on the add entry for day " + id);
 
         AddEntry(id);
-        
+
     });
 
     $(".EditCalendarEntry").live('click', function() {
@@ -23,6 +23,11 @@ $(function() {
         var clicked = $(this);
 
         DisplayMessage("You clicked on the delete entry for id " + GetIdFromElement(clicked, ElementType.Delete));
+    });
+
+    $("#formAddEntry").submit(function() {
+        //hijax the form post and do it ajax style
+        return false;
     });
 });
 
