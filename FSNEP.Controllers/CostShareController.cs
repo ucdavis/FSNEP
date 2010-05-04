@@ -77,6 +77,7 @@ namespace FSNEP.Controllers
 
         [AcceptPost]
         [Transaction]
+        [ValidateAntiForgeryToken]
         public ActionResult Entry(int id, CostShareEntry entry)
         {
             var costShare = _costShareRepository.GetNullableByID(id);
@@ -111,17 +112,20 @@ namespace FSNEP.Controllers
 
         [AcceptPost]
         [Transaction]
-        public ActionResult RemoveEntry(int id, int entryId)
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveEntry(int entryId)
         {
             var entryRepository = Repository.OfType<CostShareEntry>();
 
             var entry = entryRepository.GetById(entryId);
 
+            var parentRecordId = entry.Record.Id;
+
             entryRepository.Remove(entry);
 
             Message = "Cost Share Entry Removed";
 
-            return this.RedirectToAction(x => x.Entry(id));
+            return this.RedirectToAction(x => x.Entry(parentRecordId));
         }
     }
 

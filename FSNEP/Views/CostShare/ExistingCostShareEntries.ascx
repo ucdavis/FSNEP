@@ -6,6 +6,14 @@
        .PrefixUrlParameters(false)
        .Columns(col =>
                     {
+                        col.Add(entry =>
+                                    {%>
+                                        <form method="post" action="<%=Url.Action("RemoveEntry", new {entryId = entry.Id})%>">
+                                            <%=Html.AntiForgeryToken()%>
+                                            <input type="submit" value="Remove" />
+                                        </form>
+                                        <%
+                                    });
                         col.Add(x => x.Amount);
                         col.Add(x => x.ExpenseType.Name);
                         col.Add(x => x.Project.Name);
