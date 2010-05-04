@@ -18,6 +18,10 @@ namespace FSNEP.Tests.Repositories
     {
         public IUserBLL UserBLL { get; set; }
         private User Supervisor { get; set;}
+        private Project NewProject { get; set; }
+        private User ProjAdmin { get; set; }
+        private User[] Peons { get; set;}
+
 
         #region Init
         public UserBllRepositoryTests()
@@ -246,55 +250,25 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void GetAllUsersForAUserWithRoleProjectAdmin()
         {
-            Project newProject = null;
-            User projAdmin = null;
-            var peons = new User[2];
-
-            //Create a project that is not linked to any other users in the repository.
-            using (var ts = new TransactionScope())
-            {
-                newProject = CreateValidProject(10);
-                Repository.OfType<Project>().EnsurePersistent(newProject);
-                ts.CommitTransaction();
-            }
-            //Create 3 users that are only linked to the newly created project
-            using (var ts = new TransactionScope())
-            {
-                //Create the project admin
-                projAdmin = CreateValidUser(10);
-                projAdmin.Projects.Add(newProject);
-                projAdmin.UserName = "ProjAdmin";
-                projAdmin.Supervisor = Supervisor;
-                Repository.OfType<User>().EnsurePersistent(projAdmin);
-
-                //Create the two users working on that project
-                peons[0] = CreateValidUser(11);
-                peons[0].Projects.Add(newProject);
-                peons[0].Supervisor = Supervisor;
-                Repository.OfType<User>().EnsurePersistent(peons[0]);
-                peons[1] = CreateValidUser(12);
-                peons[1].Projects.Add(newProject);
-                peons[1].Supervisor = Supervisor;
-                Repository.OfType<User>().EnsurePersistent(peons[1]);
-
-                ts.CommitTransaction();
-            }
-
+            Peons = new User[2];
+            SetupDataForGetAllUsersTests();
 
             UserBLL.UserAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleProjectAdmin)).Return(true).Repeat.Any();
             UserBLL.UserAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleAdmin)).Return(false).Repeat.Any();
             UserBLL.UserAuth.Expect(a => a.CurrentUserName).Return("ProjAdmin").Repeat.Any();
-            UserBLL.UserAuth.Expect(a => a.GetUser("ProjAdmin")).Return(new FakeMembershipUser(projAdmin.Id)).Repeat.Any();
+            UserBLL.UserAuth.Expect(a => a.GetUser("ProjAdmin")).Return(new FakeMembershipUser(ProjAdmin.Id)).Repeat.Any();
 
 
             var usersLinkedToMyprojects = UserBLL.GetAllUsers().ToList();
             Assert.IsNotNull(usersLinkedToMyprojects);
             Assert.AreEqual(3, usersLinkedToMyprojects.Count);
-            Assert.IsTrue(usersLinkedToMyprojects.Contains(projAdmin));
-            Assert.IsTrue(usersLinkedToMyprojects.Contains(peons[0]));
-            Assert.IsTrue(usersLinkedToMyprojects.Contains(peons[1]));
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(ProjAdmin));
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(Peons[0]));
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(Peons[1]));
 
         }
+
+        
 
         /// <summary>
         /// GetAllUsers For A User With RoleAdmin
@@ -303,53 +277,21 @@ namespace FSNEP.Tests.Repositories
         [TestMethod]
         public void GetAllUsersForAUserWithRoleAdmin()
         {
-            Project newProject = null;
-            User projAdmin = null;
-            var peons = new User[2];
-
-            //Create a project that is not linked to any other users in the repository.
-            using (var ts = new TransactionScope())
-            {
-                newProject = CreateValidProject(10);
-                Repository.OfType<Project>().EnsurePersistent(newProject);
-                ts.CommitTransaction();
-            }
-            //Create 3 users that are only linked to the newly created project
-            using (var ts = new TransactionScope())
-            {
-                //Create the project admin
-                projAdmin = CreateValidUser(10);
-                projAdmin.Projects.Add(newProject);
-                projAdmin.UserName = "ProjAdmin";
-                projAdmin.Supervisor = Supervisor;
-                Repository.OfType<User>().EnsurePersistent(projAdmin);
-
-                //Create the two users working on that project
-                peons[0] = CreateValidUser(11);
-                peons[0].Projects.Add(newProject);
-                peons[0].Supervisor = Supervisor;
-                Repository.OfType<User>().EnsurePersistent(peons[0]);
-                peons[1] = CreateValidUser(12);
-                peons[1].Projects.Add(newProject);
-                peons[1].Supervisor = Supervisor;
-                Repository.OfType<User>().EnsurePersistent(peons[1]);
-
-                ts.CommitTransaction();
-            }
-
+            Peons = new User[2];
+            SetupDataForGetAllUsersTests();
 
             UserBLL.UserAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleProjectAdmin)).Return(false).Repeat.Any();
             UserBLL.UserAuth.Expect(a => a.IsCurrentUserInRole(RoleNames.RoleAdmin)).Return(true).Repeat.Any();
             UserBLL.UserAuth.Expect(a => a.CurrentUserName).Return("ProjAdmin").Repeat.Any();
-            UserBLL.UserAuth.Expect(a => a.GetUser("ProjAdmin")).Return(new FakeMembershipUser(projAdmin.Id)).Repeat.Any();
+            UserBLL.UserAuth.Expect(a => a.GetUser("ProjAdmin")).Return(new FakeMembershipUser(ProjAdmin.Id)).Repeat.Any();
 
 
             var usersLinkedToMyprojects = UserBLL.GetAllUsers().ToList();
             Assert.IsNotNull(usersLinkedToMyprojects);
             Assert.AreEqual(UserIds.Count, usersLinkedToMyprojects.Count, "All users should have been retrieved"); //Should be 8, but if more are added to the load data, this will let it pass without changing a hard coded value.
-            Assert.IsTrue(usersLinkedToMyprojects.Contains(projAdmin));
-            Assert.IsTrue(usersLinkedToMyprojects.Contains(peons[0]));
-            Assert.IsTrue(usersLinkedToMyprojects.Contains(peons[1]));
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(ProjAdmin));
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(Peons[0]));
+            Assert.IsTrue(usersLinkedToMyprojects.Contains(Peons[1]));
             Assert.IsTrue(usersLinkedToMyprojects.Contains(Supervisor)); //It has more, this is just a sample
         }
 
@@ -403,7 +345,45 @@ namespace FSNEP.Tests.Repositories
             }
             project.Accounts = new List<Account>();
             return project;
-        }   
+        }
+
+        /// <summary>
+        /// Setup Data For GetAllUsers Tests
+        /// Create a new project
+        /// Create 3 new users, one of which will have it's role faked.
+        /// </summary>
+        private void SetupDataForGetAllUsersTests()
+        {
+            //Create a project that is not linked to any other users in the repository.
+            using (var ts = new TransactionScope())
+            {
+                NewProject = CreateValidProject(10);
+                Repository.OfType<Project>().EnsurePersistent(NewProject);
+                ts.CommitTransaction();
+            }
+            //Create 3 users that are only linked to the newly created project
+            using (var ts = new TransactionScope())
+            {
+                //Create the project admin
+                ProjAdmin = CreateValidUser(10);
+                ProjAdmin.Projects.Add(NewProject);
+                ProjAdmin.UserName = "ProjAdmin";
+                ProjAdmin.Supervisor = Supervisor;
+                Repository.OfType<User>().EnsurePersistent(ProjAdmin);
+
+                //Create the two users working on that project
+                Peons[0] = CreateValidUser(11);
+                Peons[0].Projects.Add(NewProject);
+                Peons[0].Supervisor = Supervisor;
+                Repository.OfType<User>().EnsurePersistent(Peons[0]);
+                Peons[1] = CreateValidUser(12);
+                Peons[1].Projects.Add(NewProject);
+                Peons[1].Supervisor = Supervisor;
+                Repository.OfType<User>().EnsurePersistent(Peons[1]);
+
+                ts.CommitTransaction();
+            }
+        }
         #endregion Helper Methods
     }
 }
