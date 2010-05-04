@@ -270,6 +270,7 @@
     <Content Include="Views\Report\TimeRecord.aspx" />
     <Content Include="Views\Supervisor\AssignDelegate.aspx" />
     <Content Include="Views\Supervisor\RemoveDelegate.aspx" />
+    <Content Include="Views\TimeRecord\ListOfActivitiesAndDescriptions.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

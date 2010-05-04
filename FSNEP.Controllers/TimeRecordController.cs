@@ -198,6 +198,11 @@ namespace FSNEP.Controllers
             return RedirectToAction("History");
         }
 
+        public ViewResult ListOfActivitiesAndDescriptions()
+        {
+            return View();
+        }
+
         /// <summary>
         /// Transfer the new values from the given entry to the entry to update.
         /// Currently you can only update the comment, hours, and activity type

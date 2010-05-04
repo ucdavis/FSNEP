@@ -9,8 +9,21 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2><%= Html.Encode(string.Format("Time Record for {0}", Model.TimeRecord.Date.ToString("MMMM yyyy"))) %></h2>
+    <div style="margin: 0pt auto; width: 400px; color: rgb(24, 75, 93); font-size: 24px; font-weight: bold; text-align: center;">
+        <span id="ctl00_ContentPlaceHolder1_lblCalendarInfo">
+            <%= Html.Encode(string.Format("Time Record for {0}", Model.TimeRecord.Date.ToString("MMMM yyyy"))) %>
+        </span>
+    </div>
+    
+    <br />
             
+    <div style="margin: 0pt auto; width: 300px; color: rgb(24, 75, 93); font-size: 12px;
+        font-weight: bold; text-align: center;">
+        <%= Html.ActionLink("[Click to View Activity Type Definitions]", "ListOfActivitiesAndDescriptions", null, new { target = "_blank" })%>
+    </div>
+    
+    <br />
+    
     <% Html.RenderPartial("Calendar"); %>
     
     <div id="SubmitRecord">
