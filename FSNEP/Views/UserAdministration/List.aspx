@@ -8,6 +8,8 @@
 
     <h2>ListUsers</h2>
 
+    <h3><%= Html.Encode(TempData["Message"]) %></h3>
+
     <p>
         Jump to User: <%= Html.DropDownList("dlUserJump", new SelectList(Model, "ID", "FullNameLastFirst", "--Search--"))%> [TODO]
     </p>
