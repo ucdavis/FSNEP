@@ -31,11 +31,28 @@ namespace FSNEP.Tests.Controllers
         private readonly User _currentUser = CreateValidEntities.User(null);
         private readonly IPrincipal _principal = new MockPrincipal();
 
+        #region Init
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CostShareControllerTests"/> class.
+        /// </summary>
+        public CostShareControllerTests()
+        {
+            Controller.ControllerContext.HttpContext.User = _principal;
+        }
+        
         protected override void SetupController()
-        {            
-            //public CostShareController(IRepository<CostShare> costShareRepository, ICostShareBLL costShareBLL, IUserBLL userBLL)
+        {
+
+            var fakeContext =
+                MockRepository.GenerateStub<IDbContext>();
+            
+            _costShareRepository.Expect(a => a.DbContext).Return(fakeContext).Repeat.Any();
+
             CreateController(_costShareRepository, _costShareBLL, _userBll);
         }
+        #endregion Init
+        
 
         #region Routing Tests
 
@@ -116,7 +133,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void HistoryReturnsExpectedData()
         {
-            Controller.ControllerContext.HttpContext.User = _principal;
+            //Controller.ControllerContext.HttpContext.User = _principal;
             FakeCostShareRecords();
 
             var result = Controller.History()
@@ -145,7 +162,7 @@ namespace FSNEP.Tests.Controllers
         [TestMethod]
         public void CostShareControllerCurrentWillRedirectToHistoryWithNiceMessageWhenGetCurrentReturnsNull()
         {
-            Controller.ControllerContext.HttpContext.User = _principal;
+            //Controller.ControllerContext.HttpContext.User = _principal;
 
             _costShareBLL.Expect(a => a.GetCurrent(_principal)).Return(null).Repeat.Once();
 
@@ -162,7 +179,7 @@ namespace FSNEP.Tests.Controllers
         public void CostShareControllerCurrentWillRedirectToEntryWhenGetCurrentReturnsCostShareRecord()
         {
             const int id = 5;
-            Controller.ControllerContext.HttpContext.User = _principal;
+            //Controller.ControllerContext.HttpContext.User = _principal;
             var costShare = CreateValidEntities.CostShare(null);
             costShare.User = _currentUser;
             costShare.SetIdTo(id);
@@ -177,6 +194,9 @@ namespace FSNEP.Tests.Controllers
 
         #region Review Tests
 
+        /// <summary>
+        /// Cost share controller review throws exception when invalid id is used.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
         public void CostShareControllerReviewThrowsExceptionWhenInvalidIdIsUsed()
@@ -194,10 +214,13 @@ namespace FSNEP.Tests.Controllers
             }
         }
 
+        /// <summary>
+        /// Cost share controller review redircts when no access.
+        /// </summary>
         [TestMethod]
         public void CostShareControllerReviewRedirctsWhenNoAccess()
         {
-            Controller.ControllerContext.HttpContext.User = _principal;
+            //Controller.ControllerContext.HttpContext.User = _principal;
 
             const int id = 5;
             var costShare = CreateValidEntities.CostShare(null);
@@ -215,10 +238,13 @@ namespace FSNEP.Tests.Controllers
                 Controller.Message);
         }
 
+        /// <summary>
+        /// Cost share controller review returns view when has access.
+        /// </summary>
         [TestMethod]
         public void CostShareControllerReviewReturnsViewWhenHasAccess()
         {
-            Controller.ControllerContext.HttpContext.User = _principal;
+            //Controller.ControllerContext.HttpContext.User = _principal;
 
             const int id = 5;
             var costShare = CreateValidEntities.CostShare(null);
@@ -249,6 +275,9 @@ namespace FSNEP.Tests.Controllers
 
         #region Entry Tests
 
+        /// <summary>
+        /// Cost share controller entry throws exception when invalid id is used.
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
         public void CostShareControllerEntryThrowsExceptionWhenInvalidIdIsUsed()
@@ -266,10 +295,13 @@ namespace FSNEP.Tests.Controllers
             }
         }
 
+        /// <summary>
+        /// Cost share controller entry redircts when no access.
+        /// </summary>
         [TestMethod]
         public void CostShareControllerEntryRedirctsWhenNoAccess()
         {
-            Controller.ControllerContext.HttpContext.User = _principal;
+            //Controller.ControllerContext.HttpContext.User = _principal;
 
             const int id = 5;
             var costShare = CreateValidEntities.CostShare(null);
@@ -288,10 +320,13 @@ namespace FSNEP.Tests.Controllers
         }
 
 
+        /// <summary>
+        /// Cost share controller entry redircts when is not editable.
+        /// </summary>
         [TestMethod]
         public void CostShareControllerEntryRedirctsWhenIsNotEditable()
         {
-            Controller.ControllerContext.HttpContext.User = _principal;
+            //Controller.ControllerContext.HttpContext.User = _principal;
 
             const int id = 5;
             var costShare = CreateValidEntities.CostShare(null);
@@ -308,10 +343,13 @@ namespace FSNEP.Tests.Controllers
                 .ToAction<CostShareController>(a => a.Review(id));
         }
 
+        /// <summary>
+        /// Cost share controller entry when has access and is editable.
+        /// </summary>
         [TestMethod]
         public void CostShareControllerEntryWhenHasAccessAndIsEditable()
         {
-            Controller.ControllerContext.HttpContext.User = _principal;
+            //Controller.ControllerContext.HttpContext.User = _principal;
 
             const int id = 5;
             var costShare = CreateValidEntities.CostShare(null);
@@ -339,9 +377,240 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual(4, result.Projects.Count());
         }
 
-        
+
+        /// <summary>
+        /// Cost share entry with parameters with invalid id throws exception.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void CostShareEntryWithParametersWithInvalidIdThrowsException()
+        {
+            try
+            {
+                const int invalidId = 5;
+                _costShareRepository.Expect(a => a.GetNullableByID(invalidId)).Return(null).Repeat.Once();
+                var costShareEntry = CreateValidEntities.CostShareEntry(null);
+                Controller.Entry(invalidId, costShareEntry);
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(message);
+                Assert.AreEqual("Invalid cost share indentifier", message.Message);
+                throw;
+            }           
+        }
+
+        /// <summary>
+        /// Cost share entry with parameters with no access throws exception.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void CostShareEntryWithParametersWithNoAccessThrowsException()
+        {
+            try
+            {
+                const int validId = 5;
+                var costShare = CreateValidEntities.CostShare(null);
+                costShare.SetIdTo(validId);
+                _costShareRepository.Expect(a => a.GetNullableByID(validId)).Return(costShare).Repeat.Once();
+                _costShareBLL.Expect(a => a.HasAccess(_principal, costShare)).Return(false).Repeat.Once();
+                var costShareEntry = CreateValidEntities.CostShareEntry(null);
+                Controller.Entry(validId, costShareEntry);
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(message);
+                Assert.AreEqual("Current user does not have access to this record", message.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// CostShareEntry With Parameters With Validation Errors Null CostShareEntry ExpenseType
+        /// </summary>
+        [TestMethod]
+        public void CostShareEntryWithParametersWithValidationErrorsNullCostShareEntryExpenseType()
+        {
+            const int validId = 5;
+            var costShare = CreateValidEntities.CostShare(null);
+            costShare.SetIdTo(validId);
+            _costShareRepository.Expect(a => a.GetNullableByID(validId)).Return(costShare).Repeat.Once();
+            _costShareBLL.Expect(a => a.HasAccess(_principal, costShare)).Return(true).Repeat.Any();
+
+            Assert.AreEqual(0, costShare.Entries.Count);
+
+            FakeCostShareEntryRecords(costShare);
+            FakeProjects();
+            FakeFundTypes();
+            FakeExpenses();
+
+
+            var costShareEntry = CreateValidEntities.CostShareEntry(null);
+            costShareEntry.ExpenseType = null;
+            var result = Controller.Entry(validId, costShareEntry)
+                .AssertViewRendered()
+                .WithViewData<CostShareEntryViewModel>();
+
+            Assert.AreEqual(0, costShare.Entries.Count); //Still no Entries added because it was invalid.
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(4, result.CostShareEntries.Count());
+            Assert.AreEqual(4, result.ExpenseTypes.Count());
+            Assert.AreEqual(5, result.FundTypes.Count());
+            Assert.AreEqual(4, result.Projects.Count());
+
+            Controller.ModelState.AssertErrorsAre("ExpenseType: may not be empty");
+
+        }
+
+        /// <summary>
+        /// Cost share entry with parameters with no validation errors redirects to entry.
+        /// </summary>
+        [TestMethod]
+        public void CostShareEntryWithParametersWithNoValidationErrorsRedirectsToEntry()
+        {
+            const int validId = 5;
+            var costShare = CreateValidEntities.CostShare(null);
+            costShare.SetIdTo(validId);
+            _costShareRepository.Expect(a => a.GetNullableByID(validId)).Return(costShare).Repeat.Once();
+            _costShareBLL.Expect(a => a.HasAccess(_principal, costShare)).Return(true).Repeat.Any();
+
+            Assert.AreEqual(0, costShare.Entries.Count);
+
+            FakeCostShareEntryRecords(costShare);
+            FakeProjects();
+            FakeFundTypes();
+            FakeExpenses();
+
+
+            var costShareEntry = CreateValidEntities.CostShareEntry(null);
+            Controller.Entry(validId, costShareEntry)
+                .AssertActionRedirect()
+                .ToAction<CostShareController>(a => a.Entry(validId));
+                
+            _costShareRepository.AssertWasCalled(a => a.EnsurePersistent(costShare), a => a.Repeat.Once());
+
+            Assert.AreEqual(1, costShare.Entries.Count); //Entries added because it was valid.
+            Assert.AreEqual("Cost Share Entry Added", Controller.Message);
+        }
 
         #endregion Entry Tests
+
+        #region RemoveEntry Tests
+
+        /// <summary>
+        /// Remove entry redirects to entry with parent id.
+        /// </summary>
+        [TestMethod]
+        public void RemoveEntryRedirectsToEntryWithParentId()
+        {
+            const int validId = 5;
+            var costShare = CreateValidEntities.CostShare(null);
+            costShare.SetIdTo(validId);
+
+            FakeCostShareEntryRecords(costShare);
+            FakeProjects();
+            FakeFundTypes();
+            FakeExpenses();
+
+            var recordRepository = FakeRepository<Record>();
+            Controller.Repository.Expect(a => a.OfType<Record>()).Return(recordRepository);
+
+
+            foreach (var costShareEntry in Controller.Repository.OfType<CostShareEntry>().Queryable.Where(a => a.Record.Id == costShare.Id).OrderBy(a => a.Record.Id))
+            {
+                costShare.AddEntry(costShareEntry);
+            }
+
+            Assert.AreEqual(4, costShare.Entries.Count);
+            var entryId = costShare.Entries[2].Id;
+
+            Controller.Repository.OfType<CostShareEntry>()
+                .Expect(a => a.GetById(entryId))
+                .Return((CostShareEntry)costShare.Entries[2])
+                .Repeat.Once();
+
+            Controller.RemoveEntry(entryId)
+                .AssertActionRedirect()
+                .ToAction<CostShareController>(a => a.Entry(costShare.Id));
+
+            recordRepository.AssertWasCalled(a => a.EnsurePersistent(costShare), a => a.Repeat.Once());
+
+
+            Assert.AreEqual(3, costShare.Entries.Count());
+            Assert.AreEqual("Cost Share Entry Removed", Controller.Message);
+        }
+
+        #endregion RemoveEntry Tests
+
+        #region Submit Tests
+
+        /// <summary>
+        /// Costs the share submit with invalid id throws exception.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void CostShareSubmitWithInvalidIdThrowsException()
+        {
+            try
+            {
+                const int invalidId = 5;
+                _costShareRepository.Expect(a => a.GetNullableByID(invalidId)).Return(null).Repeat.Once();
+                Controller.Submit(invalidId);
+            }
+            catch (Exception message)
+            {
+                Assert.IsNotNull(message);
+                Assert.AreEqual("Invalid cost share indentifier", message.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Cost share submit with no access redirects to error page.
+        /// </summary>
+        [TestMethod]
+        public void CostShareSubmitNoAccessRedirectsToErrorPage()
+        {
+            const int id = 5;
+            var costShare = CreateValidEntities.CostShare(null);
+            costShare.User = _currentUser;
+            costShare.SetIdTo(id);
+
+            _costShareRepository.Expect(a => a.GetNullableByID(id)).Return(costShare).Repeat.Once();
+            _costShareBLL.Expect(a => a.HasAccess(_principal, costShare)).Return(false).Repeat.Once();
+
+            Controller.Submit(id)
+                .AssertActionRedirect()
+                .ToAction<HomeController>(a => a.Error(string.Format("{0} does not have access to submit this cost share", costShare.User.UserName)));
+
+            Assert.AreEqual(string.Format("{0} does not have access to submit this cost share", costShare.User.UserName),
+                Controller.Message);
+        }
+
+        /// <summary>
+        /// Cost share submit with access redirects to history.
+        /// </summary>
+        [TestMethod]
+        public void CostShareSubmitWithAccessRedirectsToHistory()
+        {
+            const int id = 5;
+            var costShare = CreateValidEntities.CostShare(null);
+            costShare.User = _currentUser;
+            costShare.SetIdTo(id);
+
+            _costShareRepository.Expect(a => a.GetNullableByID(id)).Return(costShare).Repeat.Once();
+            _costShareBLL.Expect(a => a.HasAccess(_principal, costShare)).Return(true).Repeat.Once();
+
+            Controller.Submit(id)
+                .AssertActionRedirect()
+                .ToAction<CostShareController>(a => a.History());
+
+            Assert.AreEqual(string.Format("Cost Share for {0:MMMM yyyy} Submitted Successfully", costShare.Date),
+                Controller.Message);
+        }
+
+        #endregion Submit Tests
 
         #region Helper Methods
 
