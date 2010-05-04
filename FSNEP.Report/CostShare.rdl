@@ -33,6 +33,574 @@
         </QueryParameters>
       </Query>
     </DataSet>
+    <DataSet Name="TimeSheetData">
+      <Fields>
+        <Field Name="firstname">
+          <DataField>firstname</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="lastname">
+          <DataField>lastname</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FundType">
+          <DataField>FundType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="OctoberHours">
+          <DataField>OctoberHours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="OctoberFTE">
+          <DataField>OctoberFTE</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="OctoberPay">
+          <DataField>OctoberPay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="OctoberBenefits">
+          <DataField>OctoberBenefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="OctoberTotal">
+          <DataField>OctoberTotal</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="octoberTotalIndr">
+          <DataField>octoberTotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="NovemberHours">
+          <DataField>NovemberHours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="NovemberFTE">
+          <DataField>NovemberFTE</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="NovemberPay">
+          <DataField>NovemberPay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="NovemberBenefits">
+          <DataField>NovemberBenefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="NovemberTotal">
+          <DataField>NovemberTotal</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="novemberTotalIndr">
+          <DataField>novemberTotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="DecemberHours">
+          <DataField>DecemberHours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="DecemberFTE">
+          <DataField>DecemberFTE</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="DecemberPay">
+          <DataField>DecemberPay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="DecemberBenefits">
+          <DataField>DecemberBenefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="DecemberTotal">
+          <DataField>DecemberTotal</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="DecemberTotalIndr">
+          <DataField>DecemberTotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q1Hours">
+          <DataField>Q1Hours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q1fte">
+          <DataField>Q1fte</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q1pay">
+          <DataField>Q1pay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q1benefits">
+          <DataField>Q1benefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q1total">
+          <DataField>Q1total</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q1TotalIndr">
+          <DataField>Q1TotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JanuaryHours">
+          <DataField>JanuaryHours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JanuaryFTE">
+          <DataField>JanuaryFTE</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JanuaryPay">
+          <DataField>JanuaryPay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JanuaryBenefits">
+          <DataField>JanuaryBenefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JanuaryTotal">
+          <DataField>JanuaryTotal</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JanuaryTotalIndr">
+          <DataField>JanuaryTotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="FebruaryHours">
+          <DataField>FebruaryHours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="FebruaryFTE">
+          <DataField>FebruaryFTE</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="FebruaryPay">
+          <DataField>FebruaryPay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="FebruaryBenefits">
+          <DataField>FebruaryBenefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="FebruaryTotal">
+          <DataField>FebruaryTotal</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="FebruaryTotalIndr">
+          <DataField>FebruaryTotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MarchHours">
+          <DataField>MarchHours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MarchFTE">
+          <DataField>MarchFTE</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MarchPay">
+          <DataField>MarchPay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MarchBenefits">
+          <DataField>MarchBenefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MarchTotal">
+          <DataField>MarchTotal</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MarchTotalIndr">
+          <DataField>MarchTotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q2Hours">
+          <DataField>Q2Hours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q2fte">
+          <DataField>Q2fte</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q2pay">
+          <DataField>Q2pay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q2benefits">
+          <DataField>Q2benefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q2total">
+          <DataField>Q2total</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q2TotalIndr">
+          <DataField>Q2TotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AprilHours">
+          <DataField>AprilHours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AprilFTE">
+          <DataField>AprilFTE</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AprilPay">
+          <DataField>AprilPay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AprilBenefits">
+          <DataField>AprilBenefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AprilTotal">
+          <DataField>AprilTotal</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AprilTotalIndr">
+          <DataField>AprilTotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MayHours">
+          <DataField>MayHours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MayFTE">
+          <DataField>MayFTE</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MayPay">
+          <DataField>MayPay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MayBenefits">
+          <DataField>MayBenefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MayTotal">
+          <DataField>MayTotal</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MayTotalIndr">
+          <DataField>MayTotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JuneHours">
+          <DataField>JuneHours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JuneFTE">
+          <DataField>JuneFTE</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JunePay">
+          <DataField>JunePay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JuneBenefits">
+          <DataField>JuneBenefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JuneTotal">
+          <DataField>JuneTotal</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JuneTotalIndr">
+          <DataField>JuneTotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q3Hours">
+          <DataField>Q3Hours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q3fte">
+          <DataField>Q3fte</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q3pay">
+          <DataField>Q3pay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q3benefits">
+          <DataField>Q3benefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q3total">
+          <DataField>Q3total</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q3TotalIndr">
+          <DataField>Q3TotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JulyHours">
+          <DataField>JulyHours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JulyFTE">
+          <DataField>JulyFTE</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JulyPay">
+          <DataField>JulyPay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JulyBenefits">
+          <DataField>JulyBenefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JulyTotal">
+          <DataField>JulyTotal</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JulyTotalIndr">
+          <DataField>JulyTotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AugustHours">
+          <DataField>AugustHours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AugustFTE">
+          <DataField>AugustFTE</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AugustPay">
+          <DataField>AugustPay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AugustBenefits">
+          <DataField>AugustBenefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AugustTotal">
+          <DataField>AugustTotal</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AugustTotalIndr">
+          <DataField>AugustTotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="SeptemberHours">
+          <DataField>SeptemberHours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="SeptemberFTE">
+          <DataField>SeptemberFTE</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="SeptemberPay">
+          <DataField>SeptemberPay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="SeptemberBenefits">
+          <DataField>SeptemberBenefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="SeptemberTotal">
+          <DataField>SeptemberTotal</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="SeptemberTotalIndr">
+          <DataField>SeptemberTotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q4Hours">
+          <DataField>Q4Hours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q4fte">
+          <DataField>Q4fte</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q4pay">
+          <DataField>Q4pay</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q4benefits">
+          <DataField>Q4benefits</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q4total">
+          <DataField>Q4total</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q4TotalIndr">
+          <DataField>Q4TotalIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="FinalHours">
+          <DataField>FinalHours</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>FSNEP</DataSourceName>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>usp_GenerateTimeCostShare</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@year">
+            <Value>=Parameters!year.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@projectid">
+            <Value>=Parameters!projectid.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+    </DataSet>
+    <DataSet Name="ExpenseSheetData">
+      <Fields>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="OctoberAmount">
+          <DataField>OctoberAmount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="OctoberAmountIndr">
+          <DataField>OctoberAmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="NovemberAmount">
+          <DataField>NovemberAmount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="NovemberAmountIndr">
+          <DataField>NovemberAmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="DecemberAmount">
+          <DataField>DecemberAmount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="DecemberAmountIndr">
+          <DataField>DecemberAmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q1Amount">
+          <DataField>Q1Amount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q1AmountIndr">
+          <DataField>Q1AmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JanuaryAmount">
+          <DataField>JanuaryAmount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JanuaryAmountIndr">
+          <DataField>JanuaryAmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="FebruaryAmount">
+          <DataField>FebruaryAmount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="FebruaryAmountIndr">
+          <DataField>FebruaryAmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MarchAmount">
+          <DataField>MarchAmount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MarchAmountIndr">
+          <DataField>MarchAmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q2Amount">
+          <DataField>Q2Amount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q2AmountIndr">
+          <DataField>Q2AmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AprilAmount">
+          <DataField>AprilAmount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AprilAmountIndr">
+          <DataField>AprilAmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MayAmount">
+          <DataField>MayAmount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MayAmountIndr">
+          <DataField>MayAmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JuneAmount">
+          <DataField>JuneAmount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JuneAmountIndr">
+          <DataField>JuneAmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q3Amount">
+          <DataField>Q3Amount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q3AmountIndr">
+          <DataField>Q3AmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JulyAmount">
+          <DataField>JulyAmount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="JulyAmountIndr">
+          <DataField>JulyAmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AugustAmount">
+          <DataField>AugustAmount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AugustAmountIndr">
+          <DataField>AugustAmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="SeptemberAmount">
+          <DataField>SeptemberAmount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="SeptemberAmountIndr">
+          <DataField>SeptemberAmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q4Amount">
+          <DataField>Q4Amount</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Q4AmountIndr">
+          <DataField>Q4AmountIndr</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>FSNEP</DataSourceName>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>usp_GenerateExpenseCostShare</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@year">
+            <Value>=Parameters!year.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@projectid">
+            <Value>=Parameters!projectid.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+    </DataSet>
   </DataSets>
   <Body>
     <Height>2in</Height>
@@ -42,6 +610,10 @@
     <ReportParameter Name="ProjectID">
       <DataType>String</DataType>
       <Prompt>Project ID</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="year">
+      <DataType>Integer</DataType>
+      <Prompt>year</Prompt>
     </ReportParameter>
   </ReportParameters>
   <Width>6.5in</Width>
