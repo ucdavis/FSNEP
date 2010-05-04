@@ -34,13 +34,14 @@ namespace FSNEP.Controllers
             _timeRecordCalendarGenerator = timeRecordCalendarGenerator;
         }
 
+        [HandleTransactionManually]
         public ActionResult History()
         {
             var recordHistory =
                 _timeRecordRepository.Queryable.Where(x => x.User.UserName == CurrentUser.Identity.Name).
                     OrderByDescending(x => x.Year).ThenByDescending(x => x.Month);
 
-            return View(recordHistory.ToList());
+            return View(recordHistory);
         }
 
         public ActionResult Current()
