@@ -1,5 +1,31 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<IEnumerable<FSNEP.Core.Domain.CostShareEntry>>" %>
 
+<script type="text/javascript">
+    $(function() {
+        $('.Exclude').click(function() {
+            var dialog = $('#dialogExcludeEntry');
+            
+
+            OpenDialog(dialog, null, "Exclude Entry", null);
+        });
+    });
+
+    function OpenDialog(dialog /*The dialog DIV JQuery object*/, buttons /*Button collection */, title, onClose) {
+        dialog.dialog("destroy"); //Reset the dialog to its initial state
+        dialog.dialog({
+            autoOpen: true,
+            closeOnEscape: false,
+            width: 400,
+            //height: 600,
+            modal: false,
+            title: title,
+            buttons: buttons,
+            //show: 'fold',
+            close: onClose
+        });
+    }
+</script>
+
 <%
     Html.Grid(Model)
         .DisplayAlternateMessageWhen(Model.Count() == 0, "No Cost Share Entries Found")
@@ -23,3 +49,14 @@
                      })
         .Render();
         %>
+
+<div id="dialogExcludeEntry" class="EntryExcludeDialog" title="Exclude Entry" style="display:none">
+    <span style="display: none;" id="spanLoadingEntryDetails">
+        <br/>
+        <img alt="" src="../Images/mozilla_blu.gif"/> 
+        Loading ...
+    </span>
+    <div id="divEntryDetails">
+        Lorem ipsum
+    </div>
+</div>
