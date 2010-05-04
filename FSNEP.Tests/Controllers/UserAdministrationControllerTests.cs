@@ -133,37 +133,19 @@ namespace FSNEP.Tests.Controllers
 
             FakeProjects();
             FakeFundTypes();
-
-            #region Supervisor User
-
-            var supervisor = new User
-             {
-                 FirstName = validValueName,
-                 LastName = validValueName,
-                 Salary = validValueSalary,
-                 FTE = validValueFte,
-                 IsActive = true,                
-             };
-            var supervisorId = Guid.NewGuid();
-            supervisor.Supervisor = supervisor; //Supervior is own Supervisor.
-            supervisor.SetUserID(supervisorId);            
-            UserBLL.Expect(a => a.GetByID(supervisorId)).Return(supervisor).Repeat.Any();            
-
-            #endregion Supervisor User
-
-
-            #region newUser
             
+            var supervisor = FakeSupervisor();
 
+            #region newUser            
             var newUser = new User
-                              {
-                                  FirstName = validValueName,
-                                  LastName = validValueName,
-                                  Salary = validValueSalary,
-                                  FTE = validValueFte,
-                                  IsActive = true,
-                                  Supervisor = supervisor,
-                              };
+              {
+                  FirstName = validValueName,
+                  LastName = validValueName,
+                  Salary = validValueSalary,
+                  FTE = validValueFte,
+                  IsActive = true,
+                  Supervisor = supervisor,
+              };
 
             var userId = Guid.NewGuid();
             newUser.SetUserID(userId);
@@ -172,16 +154,15 @@ namespace FSNEP.Tests.Controllers
             #region Parameters needed for the Create Method
             var projectList = new List<int>();
             var fundTypeList = new List<int>();
-            var roleList = new List<string>();
-            #endregion Parameters needed for the Create Method
+            var roleList = new List<string>();            
 
-            projectList.Add(2); //Need to be zero
+            projectList.Add(2); //Need to match at least 1 value from FakeProjects
             projectList.Add(3);
             fundTypeList.Add(4);
             fundTypeList.Add(5);
             roleList.Add("Supervisor");
             roleList.Add("Timesheet User");
-
+            #endregion Parameters needed for the Create Method
 
             var userModel = new CreateUserViewModel
             {
@@ -192,61 +173,73 @@ namespace FSNEP.Tests.Controllers
                 Email = "test@test.edu"
             };
 
+            MockMethods(userModel);
             
+            //Call the method that the UI would use to create the new user.
+            Controller.Create(userModel, supervisor.ID, projectList, fundTypeList, roleList);
 
-           
-            //UserBLL.UserAuth = MockRepository.GenerateStub<IUserAuth>();
-            //UserBLL.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
-
-
-            //var mockUserId = Guid.NewGuid();
-            //var mockUser = MockRepository.GenerateMock<MembershipUser>();
-            ////var mockMemember = MockRepository.GenerateStub<MembershipUser>();
-            ////mockMemember.Expect(a => a.ProviderUserKey).Return(mockUserId);            
-            //mockUser.Expect(m => m.ProviderUserKey).Return(mockUserId);
-  
-            
-            
-
-            //Controller.UserBLL.UserAuth.MembershipService.Expect(
-            //    a =>
-            //    a.CreateUser(userModel.UserName, "1212dfgsdf", userModel.Email, userModel.Question, userModel.Answer, true,
-            //                 null, out status)).OutRef(status = MembershipCreateStatus.Success).Return(mockUser);
-
-            //MembershipCreateStatus createStatus;
-            //var testMem = UserBLL.UserAuth.MembershipService.CreateUser(userModel.UserName, "dfgsdf", userModel.Email,
-            //                                                            userModel.Question, userModel.Answer, true,
-            //                                                            null, out createStatus);
-
-            //var tet = testMem.ProviderUserKey;
-            //Assert.IsNotNull(tet);
-
-            MembershipCreateStatus createStatus;
-            var mockGuid = Guid.NewGuid();
-            //UserBLL = MockRepository.GenerateStub<IUserBLL>();
+        }
+       
+        /// <summary>
+        /// Mocks for the Create method.
+        /// This needs the User and Supervisor to be populated in the userModel
+        /// </summary>
+        /// <param name="userModel"></param>
+        private void MockMethods(CreateUserViewModel userModel)
+        {
             UserBLL.UserAuth = MockRepository.GenerateStub<IUserAuth>();
             UserBLL.UserAuth.MembershipService = MockRepository.GenerateStub<IMembershipService>();
+
+            MembershipCreateStatus createStatus;
+            var mockGuid = Guid.NewGuid();                                    
             var memberShipUser = MockRepository.GenerateStub<MembershipUser>();
 
-            //If Repeat.any() isn't used, it will return the Guid only once, which means if you debug and inspect the value, it will be null the next time it is looked at.
-            memberShipUser.Expect(a => a.ProviderUserKey).IgnoreArguments().Return(mockGuid).Repeat.Any();
-            memberShipUser.Email = "test@test.edu";
-            UserBLL.UserAuth.MembershipService.Expect(a => a.GetUser(supervisorId)).IgnoreArguments().Return(memberShipUser).Repeat.Any();
+            #region Mocks for the supervisor            
+            //We don't need to ignore arguments for this one because we are only doing it for a specific Supervior ID.
+            UserBLL.UserAuth.MembershipService.Expect(a => a.GetUser(userModel.User.Supervisor.ID)).Return(memberShipUser).Repeat.Any();
+            memberShipUser.Email = "test@test.edu"; //Email for the Supervisor. If we need a different email for a user, this would need to be changed.
 
+            UserBLL.Expect(a => a.GetByID(userModel.User.Supervisor.ID)).Return(userModel.User.Supervisor).Repeat.Any();
+            #endregion Mocks for the supervisor
+
+            #region Mocks for the Create method
             //If IgnoreArguments is not used, the params don't match and it isn't mocked.
             UserBLL.UserAuth.MembershipService.Expect(a => a.CreateUser(userModel.UserName, "jaskidjflkajsdlf$#12", userModel.Email, userModel.Question, userModel.Answer, true,
                                                                 null, out createStatus)).OutRef(createStatus = MembershipCreateStatus.Success).Return(memberShipUser);
+            //If Repeat.any() isn't used, it will return the Guid only once, which means if you debug and inspect the value, it will be null the next time it is looked at.
+            memberShipUser.Expect(a => a.ProviderUserKey).IgnoreArguments().Return(mockGuid).Repeat.Any();
 
+            Controller.MessageGateway.Expect(a => a.SendMessageToNewUser(userModel.User, "ignore", "ignore", "ignore", "ignore")).IgnoreArguments().Repeat.Any();
+            #endregion Mocks for the Create method
+            
+            #region Mocks for the URL methods (In Create)
             Controller.Url = MockRepository.GenerateStub<UrlHelper>(Controller.ControllerContext.RequestContext);
 
             Controller.Url.RequestContext.HttpContext.Request.Expect(a => a.Url).Return(new Uri("http://sample.com")).
                             Repeat.Any();
+            #endregion Mocks for the URL methods (In Create)
 
+        }
 
-            Controller.MessageGateway.Expect(a => a.SendMessageToNewUser(newUser, "ignore", "ignore", "ignore", "ignore")).IgnoreArguments().Repeat.Any();
+        /// <summary>
+        /// Fake a Supervisor to use for a new user.
+        /// </summary>
+        /// <returns></returns>
+        private static User FakeSupervisor()
+        {
+            var supervisor = new User
+            {
+                FirstName = "FName",
+                LastName = "LName",
+                Salary = 1,
+                FTE = 1,
+                IsActive = true,
+            };
+            var supervisorId = Guid.NewGuid();
+            supervisor.Supervisor = supervisor; //Supervior is own Supervisor.
+            supervisor.SetUserID(supervisorId);
 
-            Controller.Create(userModel, supervisorId, projectList, fundTypeList, roleList);
-
+            return supervisor;
         }
 
         /// <summary>
