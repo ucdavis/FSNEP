@@ -147,6 +147,7 @@
     <Content Include="Views\Account\ResetPasswordSuccess.aspx" />
     <Content Include="Views\Lookup\Accounts.aspx" />
     <Content Include="Views\Lookup\ActivityCategories.aspx" />
+    <Content Include="Views\Lookup\ActivityTypes.aspx" />
     <Content Include="Views\Lookup\ExpenseTypes.aspx" />
     <Content Include="Views\Lookup\Projects.aspx" />
     <Content Include="Views\UserAdministration\Create.aspx" />

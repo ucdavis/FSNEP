@@ -9,7 +9,8 @@
 
     <property name="Name" column="Name" />
     <property name="Indicator" column="Indicator" />
-
+    <property name="IsActive" column="IsActive" />
+    
     <many-to-one name="ActivityCategory" column="CategoryID" class="FSNEP.Core.Domain.ActivityCategory, FSNEP.Core"></many-to-one>
 
   </class>
