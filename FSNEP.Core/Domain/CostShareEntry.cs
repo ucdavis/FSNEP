@@ -16,5 +16,10 @@ namespace FSNEP.Core.Domain
         [Required]
         [Length(128)]
         public virtual string Description { get; set; }
+
+        public virtual bool Exclude { get; set; }
+
+        [Length(256)]
+        public virtual string ExcludeReason { get; set; }
     }
 }
