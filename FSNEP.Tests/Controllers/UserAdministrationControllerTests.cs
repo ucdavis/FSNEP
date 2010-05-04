@@ -127,6 +127,8 @@ namespace FSNEP.Tests.Controllers
         }
         #endregion Routing Tests
 
+        #region Create user tests
+
         #region First Name Validation Tests
         /// <summary>
         /// Create User Saves New user
@@ -188,310 +190,7 @@ namespace FSNEP.Tests.Controllers
         }
 
 
-        #region Modify valid changes saves for each type of value that can be modified.
-
-        /// <summary>
-        /// Modifies the first name of the existing valid user saves valid changes.
-        /// </summary>
-        [TestMethod]
-        public void ModifyExistingValidUserSavesValidChangesFirstName()
-        {
-            const string newValidValue = "NewFirstName";
-
-            CreateUserViewModel userModelOriginal = CreateValidUserModel();
-            CreateAndAttachProjectsToUser(userModelOriginal);
-            CreateAndAttachFundTypesToUser(userModelOriginal, false);
-
-            MockModifySpecificMethods(userModelOriginal);
-
-            var newUser = CopySpecificUserFields(userModelOriginal);
-
-            newUser.FirstName = newValidValue; //Change it
-
-            Assert.AreNotEqual(newValidValue, userModelOriginal.User.FirstName, "Value was changed before we expected it to be.");
-
-            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
-                .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
-            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
-            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
-            Assert.AreEqual(newValidValue, userModelOriginal.User.FirstName, "Value was not changed in the modify method.");
-        }
-
-        /// <summary>
-        /// Modifies the last name of the existing valid user saves valid changes.
-        /// </summary>
-        [TestMethod]
-        public void ModifyExistingValidUserSavesValidChangesLastName()
-        {
-            const string newValidValue = "NewLastName";
-
-            CreateUserViewModel userModelOriginal = CreateValidUserModel();
-            CreateAndAttachProjectsToUser(userModelOriginal);
-            CreateAndAttachFundTypesToUser(userModelOriginal, false);            
-
-            MockModifySpecificMethods(userModelOriginal);
-
-            var newUser = CopySpecificUserFields(userModelOriginal);
-
-            newUser.LastName = newValidValue; //Change it
-
-            Assert.AreNotEqual(newValidValue, userModelOriginal.User.LastName, "Value was changed before we expected it to be.");
-
-            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
-                .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
-            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
-            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
-            Assert.AreEqual(newValidValue, userModelOriginal.User.LastName, "Value was not changed in the modify method.");
-        }
-
-        /// <summary>
-        /// Modifies the salary of the existing valid user saves valid changes.
-        /// </summary>
-        [TestMethod]
-        public void ModifyExistingValidUserSavesValidChangesSalary()
-        {
-            const int newValidValue = 200000;
-
-            CreateUserViewModel userModelOriginal = CreateValidUserModel();
-            CreateAndAttachProjectsToUser(userModelOriginal);
-            CreateAndAttachFundTypesToUser(userModelOriginal, false);
-
-            MockModifySpecificMethods(userModelOriginal);
-
-            var newUser = CopySpecificUserFields(userModelOriginal);
-
-            newUser.Salary = newValidValue; //Change it
-
-            Assert.AreNotEqual(newValidValue, userModelOriginal.User.Salary, "Value was changed before we expected it to be.");
-
-            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
-                .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
-            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
-            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
-            Assert.AreEqual(newValidValue, userModelOriginal.User.Salary, "Value was not changed in the modify method.");
-        }
-
-        /// <summary>
-        /// Modifies FTE of the existing valid user saves valid changes.
-        /// </summary>
-        [TestMethod]
-        public void ModifyExistingValidUserSavesValidChangesFte()
-        {
-            const double newValidValue = 0.5;
-
-            CreateUserViewModel userModelOriginal = CreateValidUserModel();
-            CreateAndAttachProjectsToUser(userModelOriginal);
-            CreateAndAttachFundTypesToUser(userModelOriginal, false);
-
-            MockModifySpecificMethods(userModelOriginal);
-
-            var newUser = CopySpecificUserFields(userModelOriginal);
-
-            newUser.FTE = newValidValue; //Change it
-
-            Assert.AreNotEqual(newValidValue, userModelOriginal.User.FTE, "Value was changed before we expected it to be.");
-
-            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
-                .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
-            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
-            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
-            Assert.AreEqual(newValidValue, userModelOriginal.User.FTE, "Value was not changed in the modify method.");
-        }
-
-        /// <summary>
-        /// Modifies benefit rate of the existing valid user saves valid changes .
-        /// </summary>
-        [TestMethod]
-        public void ModifyExistingValidUserSavesValidChangesBenefitRate()
-        {
-            const double newValidValue = 1.5;
-
-            CreateUserViewModel userModelOriginal = CreateValidUserModel();
-            CreateAndAttachProjectsToUser(userModelOriginal);
-            CreateAndAttachFundTypesToUser(userModelOriginal, false);
-
-            MockModifySpecificMethods(userModelOriginal);
-
-            var newUser = CopySpecificUserFields(userModelOriginal);
-
-            newUser.BenefitRate = newValidValue; //Change it
-
-            Assert.AreNotEqual(newValidValue, userModelOriginal.User.BenefitRate, "Value was changed before we expected it to be.");
-
-            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
-                .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
-            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
-            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
-            Assert.AreEqual(newValidValue, userModelOriginal.User.BenefitRate, "Value was not changed in the modify method.");
-        }
-
-        /// <summary>
-        /// Modifies "is active" of the existing valid user saves valid changes.
-        /// </summary>
-        [TestMethod]
-        public void ModifyExistingValidUserSavesValidChangesIsActive()
-        {
-            const bool newValidValue = false;
-
-            CreateUserViewModel userModelOriginal = CreateValidUserModel();
-            CreateAndAttachProjectsToUser(userModelOriginal);
-            CreateAndAttachFundTypesToUser(userModelOriginal, false);
-
-            MockModifySpecificMethods(userModelOriginal);
-
-            var newUser = CopySpecificUserFields(userModelOriginal);
-
-            newUser.IsActive = newValidValue; //Change it
-
-            Assert.AreNotEqual(newValidValue, userModelOriginal.User.IsActive, "Value was changed before we expected it to be.");
-
-            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
-                .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
-            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
-            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
-            Assert.AreEqual(newValidValue, userModelOriginal.User.IsActive, "Value was not changed in the modify method.");
-        }
-
-        /// <summary>
-        /// Modifies the supervisor of the existing valid user saves valid changes.
-        /// </summary>
-        [TestMethod]
-        public void ModifyExistingValidUserSavesValidChangesSupervisor()
-        {
-            var newFakeSupervisor = FakeSupervisor();
-
-            CreateUserViewModel userModelOriginal = CreateValidUserModel();
-            CreateAndAttachProjectsToUser(userModelOriginal);
-            CreateAndAttachFundTypesToUser(userModelOriginal, false);
-
-            MockModifySpecificMethods(userModelOriginal);
-
-            var newUser = CopySpecificUserFields(userModelOriginal);
-
-            newUser.Supervisor = newFakeSupervisor; //Change it
-
-            Assert.AreNotEqual(newFakeSupervisor, userModelOriginal.User.Supervisor, "Value was changed before we expected it to be.");
-
-            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
-                .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
-            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
-            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
-            Assert.AreEqual(newFakeSupervisor, userModelOriginal.User.Supervisor, "Value was not changed in the modify method.");
-        }
-
-        /// <summary>
-        /// Modifies the existing valid user saves valid changes to fund types.
-        /// </summary>
-        [TestMethod]
-        public void ModifyExistingValidUserSavesValidChangesFundTypes()
-        {
-            //Based on CreateValidUserModel, this will deselect 2 fund types.
-            var fundTypes = new List<FundType>
-                                {
-                                    new FundType {Name = "Name2"}
-                                };
-            fundTypes[0].SetIdTo(5);
-
-
-            CreateUserViewModel userModelOriginal = CreateValidUserModel();
-            CreateAndAttachProjectsToUser(userModelOriginal);
-            CreateAndAttachFundTypesToUser(userModelOriginal, false);
-
-            MockModifySpecificMethods(userModelOriginal);
-
-            var newUser = CopySpecificUserFields(userModelOriginal);
-
-            newUser.FundTypes = fundTypes; //Change it
-
-            Assert.AreNotEqual(fundTypes, userModelOriginal.User.IsActive, "Value was changed before we expected it to be.");
-
-            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
-                .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
-            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
-            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
-            Assert.AreEqual(fundTypes, userModelOriginal.User.FundTypes, "Value was not changed in the modify method.");
-        }
-
-        /// <summary>
-        /// Modifies the existing valid user saves valid changes to projects.
-        /// </summary>
-        [TestMethod]
-        public void ModifyExistingValidUserSavesValidChangesProjects()
-        {
-            var projects = new List<Project>
-                               {
-                                   new Project{Name = "Name2", IsActive = true}
-                               };
-            projects[0].SetIdTo(3);
-
-            CreateUserViewModel userModelOriginal = CreateValidUserModel();
-            CreateAndAttachProjectsToUser(userModelOriginal);
-            CreateAndAttachFundTypesToUser(userModelOriginal, false);
-
-            MockModifySpecificMethods(userModelOriginal);
-
-            var newUser = CopySpecificUserFields(userModelOriginal);
-
-            newUser.Projects = projects; //Change it
-
-            Assert.AreNotEqual(projects, userModelOriginal.User.Projects, "Value was changed before we expected it to be.");
-
-            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
-                .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
-            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
-            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
-            Assert.AreEqual(projects, userModelOriginal.User.Projects, "Value was not changed in the modify method.");
-        }
-
-        [TestMethod, Ignore]
-        public void ModifyExistingValidUserSavesValidChangesRoles()
-        {
-            var newRoles = new List<string> { "Timesheet User", "ProjectAdmin" };
-
-            CreateUserViewModel userModelOriginal = CreateValidUserModel();
-            userModelOriginal.UserRoles = CreateListOfRoles();
-            CreateAndAttachProjectsToUser(userModelOriginal);
-            CreateAndAttachFundTypesToUser(userModelOriginal, false);
-
-            MockModifySpecificMethods(userModelOriginal);
-            MockModifySetRoles(userModelOriginal.UserName,newRoles);
-
-            var newUser = CopySpecificUserFields(userModelOriginal);         
-
-            Assert.AreNotEqual(newRoles, userModelOriginal.UserRoles, "Value was changed before we expected it to be.");
-
-            Controller.Modify(newUser, newRoles, userModelOriginal.UserName)
-                .AssertActionRedirect()
-                .ToAction<UserAdministrationController>(a => a.List());
-            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
-            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
-            Assert.AreEqual(newRoles, userModelOriginal.UserRoles, "Value was not changed in the modify method.");
-        }
-
-
-        /// <summary>
-        /// Mocks the modify set roles.
-        /// </summary>
-        /// <param name="userName">ID/UserName.</param>
-        /// <param name="newRoles">The new roles.</param>
-        private void MockModifySetRoles(string userName, List<string> newRoles)
-        {
-            //TODO: Figure out how to get this to work.
-            UserBll.Expect(a => a.SetRoles(userName, newRoles)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-
-
-        }
-
-        #endregion Modify valid changes saves for each type of value that can be modified.
+  
 
         /// <summary>
         /// Creates a user with a valid first name of spaces.
@@ -1238,7 +937,388 @@ namespace FSNEP.Tests.Controllers
             newUserModel.ViewData.ModelState.AssertErrorsAre("Email: Must be a valid email address");        
         }
         #endregion Email Tests
+        #endregion Create user tests
 
+        #region Modify user tests
+        #region Modify valid changes saves for each type of value that can be modified.
+
+        /// <summary>
+        /// Modifies the first name of the existing valid user saves valid changes.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesFirstName()
+        {
+            const string newValidValue = "NewFirstName";
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.FirstName = newValidValue; //Change it
+
+            Assert.AreNotEqual(newValidValue, userModelOriginal.User.FirstName, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newValidValue, userModelOriginal.User.FirstName, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies the last name of the existing valid user saves valid changes.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesLastName()
+        {
+            const string newValidValue = "NewLastName";
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.LastName = newValidValue; //Change it
+
+            Assert.AreNotEqual(newValidValue, userModelOriginal.User.LastName, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newValidValue, userModelOriginal.User.LastName, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies the salary of the existing valid user saves valid changes.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesSalary()
+        {
+            const int newValidValue = 200000;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.Salary = newValidValue; //Change it
+
+            Assert.AreNotEqual(newValidValue, userModelOriginal.User.Salary, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newValidValue, userModelOriginal.User.Salary, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies FTE of the existing valid user saves valid changes.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesFte()
+        {
+            const double newValidValue = 0.5;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.FTE = newValidValue; //Change it
+
+            Assert.AreNotEqual(newValidValue, userModelOriginal.User.FTE, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newValidValue, userModelOriginal.User.FTE, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies benefit rate of the existing valid user saves valid changes .
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesBenefitRate()
+        {
+            const double newValidValue = 1.5;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.BenefitRate = newValidValue; //Change it
+
+            Assert.AreNotEqual(newValidValue, userModelOriginal.User.BenefitRate, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newValidValue, userModelOriginal.User.BenefitRate, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies "is active" of the existing valid user saves valid changes.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesIsActive()
+        {
+            const bool newValidValue = false;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.IsActive = newValidValue; //Change it
+
+            Assert.AreNotEqual(newValidValue, userModelOriginal.User.IsActive, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newValidValue, userModelOriginal.User.IsActive, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies the supervisor of the existing valid user saves valid changes.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesSupervisor()
+        {
+            var newFakeSupervisor = FakeSupervisor();
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.Supervisor = newFakeSupervisor; //Change it
+
+            Assert.AreNotEqual(newFakeSupervisor, userModelOriginal.User.Supervisor, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(newFakeSupervisor, userModelOriginal.User.Supervisor, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies the existing valid user saves valid changes to fund types.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesFundTypes()
+        {
+            //Based on CreateValidUserModel, this will deselect 2 fund types.
+            var fundTypes = new List<FundType>
+                                {
+                                    new FundType {Name = "Name2"}
+                                };
+            fundTypes[0].SetIdTo(5);
+
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.FundTypes = fundTypes; //Change it
+
+            Assert.AreNotEqual(fundTypes, userModelOriginal.User.IsActive, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(fundTypes, userModelOriginal.User.FundTypes, "Value was not changed in the modify method.");
+        }
+
+        /// <summary>
+        /// Modifies the existing valid user saves valid changes to projects.
+        /// </summary>
+        [TestMethod]
+        public void ModifyExistingValidUserSavesValidChangesProjects()
+        {
+            var projects = new List<Project>
+                               {
+                                   new Project{Name = "Name2", IsActive = true}
+                               };
+            projects[0].SetIdTo(3);
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.Projects = projects; //Change it
+
+            Assert.AreNotEqual(projects, userModelOriginal.User.Projects, "Value was changed before we expected it to be.");
+
+            Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName)
+                .AssertActionRedirect()
+                .ToAction<UserAdministrationController>(a => a.List());
+            Assert.AreEqual("ValidUserName modified successfully", Controller.Message);
+            Assert.IsTrue(Controller.ViewData.ModelState.IsValid);
+            Assert.AreEqual(projects, userModelOriginal.User.Projects, "Value was not changed in the modify method.");
+        }
+
+
+        #endregion Modify valid changes saves for each type of value that can be modified.
+
+        #region Modify to invalid does not save and regirects back to the view
+        
+
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithTooLongChangesFirstName()
+        {
+            const string newInvalidValue = "123456789 123456789 123456789 123456789 12345678901";
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.FirstName = newInvalidValue; //Change it
+
+            Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.FirstName, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
+        }
+
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithNullChangesFirstName()
+        {
+            const string newInvalidValue = null;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.FirstName = newInvalidValue; //Change it
+
+            Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.FirstName, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("FirstName: The value cannot be null.",
+                "FirstName: The length of the value must fall within the range \"0\" (Ignore) - \"50\" (Inclusive).");
+        }
+
+        [TestMethod]
+        public void ModifyExistingValidUserDoesNotSaveWithtooLongChangesLastName()
+        {
+            const string newInvalidValue = "123456789 123456789 123456789 123456789 12345678901";
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.LastName = newInvalidValue; //Change it
+
+            Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.LastName, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");
+        }
+
+        public void ModifyExistingValidUserDoesNotSaveWithNullChangesLastName()
+        {
+            const string newInvalidValue = null;
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.LastName = newInvalidValue; //Change it
+
+            Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.LastName, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: Required",
+                "LastName: The length of the value must fall within the range \"1\" (Inclusive) - \"50\" (Inclusive).");            
+        
+        }
+
+        public void ModifyExistingValidUserDoesNotSaveWithSpacesOnlyChangesLastName()
+        {
+            const string newInvalidValue = "   ";
+
+            CreateUserViewModel userModelOriginal = CreateValidUserModel();
+            CreateAndAttachProjectsToUser(userModelOriginal);
+            CreateAndAttachFundTypesToUser(userModelOriginal, false);
+
+            MockModifySpecificMethods(userModelOriginal);
+
+            var newUser = CopySpecificUserFields(userModelOriginal);
+
+            newUser.LastName = newInvalidValue; //Change it
+
+            Assert.AreNotEqual(newInvalidValue, userModelOriginal.User.LastName, "Value was changed before we expected it to be.");
+
+            var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
+            newUserModel.ViewData.ModelState.AssertErrorsAre("LastName: Required"); 
+        }
+
+        #endregion
+
+        #endregion Modify user tests
         #region Tests to ensure Mocking is working as expected. These could be removed.
         /// <summary>
         /// This demonstrates the mock of the CreateUser.
