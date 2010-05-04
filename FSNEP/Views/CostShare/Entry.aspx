@@ -69,7 +69,7 @@
                 <%= this.TextBox("Entry.Description").Label("Expense Description:")%>
             </p>
             <p>
-                <%= this.FileUpload("PostedFile").Label("Expense Recepit (PDF):") %>
+                <%= this.FileUpload("PostedFile").Class("required").Label("Expense Receipt (PDF):") %>
             </p>
             <p>
                 <%= this.Select("Entry.FundType")
