@@ -37,7 +37,7 @@
                         var entryRow = $('#entry' + result.EntryId);
 
                         entryRow.addClass('excluded');
-                        entryRow.fadeTo('slow', .15);
+                        entryRow.fadeTo('slow', .5);
                     },
                     'json'
                 );
@@ -79,9 +79,12 @@
         .Name("CostShareEntries")
         .Columns(col =>
                      {
-                         col.Add(x =>
+                         col.Add(x => 
                                      { %>
-                                        <a class="Exclude" id="Exclude<%= x.Id %>" href="#">Exclude</a>
+                                        <% if (x.Exclude == false)
+                                           { %>
+                                        <a class="exclude" id="Exclude<%= x.Id %>" href="#">Exclude</a>
+                                        <% } %>
                                      <%});
                          col.Add(x => x.Amount);
                          col.Add(x => x.ExpenseType.Name).Title("Expense Type");

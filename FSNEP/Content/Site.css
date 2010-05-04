@@ -475,3 +475,11 @@ ul#navigation3 {
     font-weight: bold;
     color: #ff0000;
 }
+
+/* -- Cost Share Audits -- */
+.excluded
+{
+    text-decoration: line-through;
+    filter:alpha(opacity=50);
+    opacity: .5;
+}
