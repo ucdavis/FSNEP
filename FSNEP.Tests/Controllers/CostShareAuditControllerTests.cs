@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using FSNEP.Controllers;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core.Extensions;
@@ -145,18 +147,31 @@ namespace FSNEP.Tests.Controllers
                 .AssertViewRendered()
                 .WithViewData<CostShareAuditReviewViewModel>();
             Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Entries.Count());
+            var costShareEntriesFound = result.Entries.OrderBy(a => a.Comment).ToList();
+            Assert.AreEqual("Comment3", costShareEntriesFound[0].Comment);
+            Assert.AreEqual("Comment4", costShareEntriesFound[1].Comment);
         }
-
         
-
-
         /// <summary>
         /// Tests the cost share audit review throws exception when cost share not found.
         /// </summary>
         [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
         public void TestCostShareAuditReviewThrowsExceptionWhenCostShareNotFound()
         {
-            
+            try
+            {
+                CostShareRepository.Expect(a => a.GetNullableByID(9)).Return(null).Repeat.Once();
+                var result = Controller.Review(9)
+                .AssertViewRendered()
+                .WithViewData<CostShareAuditReviewViewModel>();
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Precondition failed.", ex.Message);
+                throw;
+            }
         }
         
 
@@ -165,7 +180,160 @@ namespace FSNEP.Tests.Controllers
 
         #region Exclude Tests
 
-        
+        /// <summary>
+        /// Tests the cost share audit exclude saves.
+        /// </summary>
+        [TestMethod]
+        public void TestCostShareAuditExcludeSaves()
+        {
+            FakeProjects();
+            FakeUsers();
+            FakeCostShareRecords();
+            FakeCostShareEntryRecords();
+
+            Assert.IsFalse(CostShareEntryRecords[2].Exclude);
+            Assert.AreNotEqual("Because", CostShareEntryRecords[2].ExcludeReason);
+
+            var result = Controller.Exclude(3, "Because");
+            CostShareEntryRepository.AssertWasCalled(a => a.EnsurePersistent(CostShareEntryRecords[2]));
+            Assert.IsNotNull(result);
+            Assert.AreEqual("{ Success = True, EntryId = 3 }", result.Data.ToString());
+            Assert.IsTrue(CostShareEntryRecords[2].Exclude);
+            Assert.AreEqual("Because", CostShareEntryRecords[2].ExcludeReason);                
+        }
+
+
+        /// <summary>
+        /// Tests the cost share audit exclude throws exception when cost share entry record not found.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void TestCostShareAuditExcludeThrowsExceptionWhenCostShareEntryRecordNotFound()
+        {
+            try
+            {
+                CostShareEntryRepository.Expect(a => a.GetNullableByID(9)).Return(null).Repeat.Once();
+                Controller.Exclude(9, "Because");
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Invalid Entry Identifier", ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Tests the cost share audit exclude throws exception when exclude reason is null.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void TestCostShareAuditExcludeThrowsExceptionWhenExcludeReasonIsNull()
+        {
+            try
+            {
+                FakeProjects();
+                FakeUsers();
+                FakeCostShareRecords();
+                FakeCostShareEntryRecords();
+
+                Assert.IsFalse(CostShareEntryRecords[2].Exclude);
+                Assert.AreNotEqual("Because", CostShareEntryRecords[2].ExcludeReason);
+
+                Controller.Exclude(3, null);
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Exclude Reason is required", ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Tests the cost share audit exclude throws exception when exclude reason is empty.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void TestCostShareAuditExcludeThrowsExceptionWhenExcludeReasonIsEmpty()
+        {
+            try
+            {
+                FakeProjects();
+                FakeUsers();
+                FakeCostShareRecords();
+                FakeCostShareEntryRecords();
+
+                Assert.IsFalse(CostShareEntryRecords[2].Exclude);
+                Assert.AreNotEqual("Because", CostShareEntryRecords[2].ExcludeReason);
+
+                Controller.Exclude(3, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Exclude Reason is required", ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Tests the cost share audit exclude throws exception when exclude reason is spaces only.      
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UCDArch.Core.Utils.PreconditionException))]
+        public void TestCostShareAuditExcludeThrowsExceptionWhenExcludeReasonIsSpacesOnly()
+        {
+            //TODO: Fix in Controller or Change test so this is valid.
+            try
+            {
+                FakeProjects();
+                FakeUsers();
+                FakeCostShareRecords();
+                FakeCostShareEntryRecords();
+
+                Assert.IsFalse(CostShareEntryRecords[2].Exclude);
+                Assert.AreNotEqual("Because", CostShareEntryRecords[2].ExcludeReason);
+
+                var result = Controller.Exclude(3, " ");
+                CostShareEntryRepository.AssertWasCalled(a => a.EnsurePersistent(CostShareEntryRecords[2]));
+                Assert.IsNotNull(result);
+                Assert.AreEqual("{ Success = True, EntryId = 3 }", result.Data.ToString());
+                Assert.IsTrue(CostShareEntryRecords[2].Exclude);
+                Assert.AreEqual(" ", CostShareEntryRecords[2].ExcludeReason); 
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Exclude Reason is required", ex.Message);
+                throw;
+            }
+        }
+
+
+        /// <summary>
+        /// Tests the cost share audit exclude does not save when exclude reason is too long.
+        /// </summary>
+        [TestMethod]
+        public void TestCostShareAuditExcludeDoesNotSaveWhenExcludeReasonIsTooLong()
+        {
+            //TODO: Fix in controller or remove test.
+            FakeProjects();
+            FakeUsers();
+            FakeCostShareRecords();
+            FakeCostShareEntryRecords();
+
+            var sb = new StringBuilder();
+            for (int i = 0; i < 25; i++)
+            {
+                sb.Append("1234567890");
+            }
+            sb.Append("1234567");
+            Assert.AreEqual(257, sb.ToString().Length);
+
+            Assert.IsFalse(CostShareEntryRecords[2].Exclude);
+            Assert.AreNotEqual(sb.ToString(), CostShareEntryRecords[2].ExcludeReason);
+
+            var result = Controller.Exclude(3, sb.ToString());
+            CostShareEntryRepository.AssertWasNotCalled(a => a.EnsurePersistent(CostShareEntryRecords[2]));
+            Assert.Inconclusive("If this test passes to here, extra validation must be done to make sure errors are generated.");
+        }
 
         #endregion Exclude Tests
 
@@ -229,13 +397,13 @@ namespace FSNEP.Tests.Controllers
                 CostShareEntryRecords.Add(CreateValidEntities.CostShareEntry(i+1));
                 CostShareEntryRecords[i].SetIdTo(i + 1);                
             }
-            //CostShareEntryRecords[2].Record = CostShareRecords[2];
-            //CostShareEntryRecords[3].Record = CostShareRecords[2];
+
             CostShareRecords[2].AddEntry(CostShareEntryRecords[2]);
             CostShareRecords[2].AddEntry(CostShareEntryRecords[3]);
             CostShareRecords[4].AddEntry(CostShareEntryRecords[5]);
 
             CostShareEntryRepository.Expect(a => a.Queryable).Return(CostShareEntryRecords.AsQueryable()).Repeat.Any();
+            CostShareEntryRepository.Expect(a => a.GetNullableByID(3)).Return(CostShareEntryRecords[2]).Repeat.Any();
         }
 
         #endregion Helper Methods
