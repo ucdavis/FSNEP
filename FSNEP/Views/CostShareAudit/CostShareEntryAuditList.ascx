@@ -2,13 +2,47 @@
 
 <script type="text/javascript">
     $(function() {
-        $('.Exclude').click(function() {
+        $('.Exclude').click(function(event) {
             var dialog = $('#dialogExcludeEntry');
-            
+
+            //Set the Id of the entry to be modified
+            var idStr = $(this).attr('id');
+            id = idStr.toString().substring("Exclude".length, idStr.length);
+            $("#id").val(id);
 
             OpenDialog(dialog, null, "Exclude Entry", null);
+
+            event.preventDefault();
+        });
+
+        $("#cancel").click(function() {
+            $('#ExcludeReason').val(""); //clear out the text
+
+            var dialog = $('#dialogExcludeEntry');
+
+            dialog.dialog("close");
+        });
+
+        $('form').submit(function(event) {
+            if ($(this).valid()) {
+                var data = GatherExcludeEntryData();
+
+                console.dir(data);
+            }
+
+            event.preventDefault();
         });
     });
+
+    function GatherExcludeEntryData() {
+        var __RequestVerificationToken = $("input:hidden[name=__RequestVerificationToken]").val();
+        var id = $('#id').val();
+        var ExcludeReason = $("#ExcludeReason").val();
+
+        var data = { id: id, ExcludeReason: ExcludeReason, __RequestVerificationToken: __RequestVerificationToken };
+
+        return data;
+    }
 
     function OpenDialog(dialog /*The dialog DIV JQuery object*/, buttons /*Button collection */, title, onClose) {
         dialog.dialog("destroy"); //Reset the dialog to its initial state
@@ -57,6 +91,18 @@
         Loading ...
     </span>
     <div id="divEntryDetails">
-        Lorem ipsum
+        <% using (Html.BeginForm()) { %>
+            <%= Html.AntiForgeryToken() %>
+            <%= Html.Hidden("id") %>
+    
+        Reason for Entry Exclusion: 
+        <%= this.TextArea("ExcludeReason").Class("required") %>
+        
+        <div>
+            <input type="submit" value="Exclude" />
+            <input id="cancel" class="cancel" type="button" value="Cancel" />
+        </div>
+        
+        <% } %>
     </div>
 </div>
