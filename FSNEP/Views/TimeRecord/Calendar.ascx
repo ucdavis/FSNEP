@@ -83,7 +83,7 @@
         
         <ul id="AdjustmentEntries">
             <% foreach (var adjustmentEntry in Model.AdjustmentEntries) { %>
-            <li>
+            <li id="AdjustmentEntry<%= adjustmentEntry.Id %>">
                 <%= Html.Encode(
                         string.Format("{0} HRS, {1}, {2}, {3}, {4}", 
                             adjustmentEntry.Hours, 
@@ -92,6 +92,9 @@
                             adjustmentEntry.ActivityType.Name, 
                             adjustmentEntry.Account.Name)) 
                 %>
+                <span class="deleteAdjustmentEntry">
+                    <a href="javascript:;" id='deleteAdjustmentEntry<%= adjustmentEntry.Id %>' class="DeleteAdjustmentEntry">X</a>
+                </span>
             </li>
             <% } %>
         </ul>

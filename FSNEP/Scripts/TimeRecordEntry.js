@@ -19,7 +19,7 @@ $(function() {
 
         var id = GetIdFromElement(clicked, ElementType.Edit);
 
-        DisplayMessage("You clicked on the edit entry for id " + GetIdFromElement(clicked, ElementType.Edit));
+        DisplayMessage("You clicked on the edit entry for id " + id);
 
         EditEntry(id);
     });
@@ -29,9 +29,19 @@ $(function() {
 
         var id = GetIdFromElement(clicked, ElementType.Delete);
 
-        DisplayMessage("You clicked on the delete entry for id " + GetIdFromElement(clicked, ElementType.Delete));
+        DisplayMessage("You clicked on the delete entry for id " + id);
 
         RemoveEntry(id);
+    });
+
+    $(".DeleteAdjustmentEntry").live('click', function() {
+        var clicked = $(this);
+
+        var id = GetIdFromElement(clicked, ElementType.DeleteAdjustment);
+
+        DisplayMessage("You clicked on the delete adjustment entry for id " + id);
+
+        RemoveAdjustmentEntry(id);
     });
 
     $("#formAddEntry").submit(function() {
@@ -144,6 +154,23 @@ function RemoveEntry(entryId) {
         data,
         function() {
             DisplayMessage("Entry with Id " + entryId + " removed");
+        }
+    );
+}
+
+function RemoveAdjustmentEntry(entryId) {
+
+    var data = { entryId: entryId, __RequestVerificationToken: __RequestVerificationToken };
+
+    var entryRow = $("#AdjustmentEntry" + entryId);
+
+    entryRow.fadeOut();
+
+    $.post(
+        Services.RemoveEntry,
+        data,
+        function() {
+            DisplayMessage("Adjustment Entry with Id " + entryId + " removed");
         }
     );
 }
@@ -304,5 +331,6 @@ function GetIdFromElement(el, elementType) {
 var ElementType = {
     Add: "addEntry",
     Edit: "editEntry",
-    Delete: "deleteEntry"
+    Delete: "deleteEntry",
+    DeleteAdjustment: "deleteAdjustmentEntry"
 }
