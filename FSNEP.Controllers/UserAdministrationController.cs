@@ -64,6 +64,10 @@ namespace FSNEP.Controllers
             return this.RedirectToAction<HomeController>(a => a.Index());
         }
 
+        /// <summary>
+        /// Create the User View Model
+        /// </summary>
+        /// <returns>CreateUserViewModel</returns>
         public ActionResult Create()
         {
             var viewModel = CreateUserViewModel.Create(UserBLL);
@@ -72,6 +76,12 @@ namespace FSNEP.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// Create the user from the "Create User View Model" and try to persist it
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="roleList">List of roles for this user. May be added to by code.</param>
+        /// <returns>Either the user view model on failure or the list of users on success</returns>
         [AcceptPost]
         public ActionResult Create(CreateUserViewModel model, List<string> roleList)
         {
@@ -248,6 +258,13 @@ namespace FSNEP.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// Attempt to persist the user changes
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="roleList">List of roles for the user. May be added to by code.</param>
+        /// <param name="id">UserName/ID</param>
+        /// <returns>Either the user view model on failure or the list of users on success</returns>
         [AcceptPost]
         public ActionResult Modify(User user, List<string> roleList, string id)
         {
@@ -266,6 +283,7 @@ namespace FSNEP.Controllers
             {
                 var viewModel = UserViewModel.Create(UserBLL);
                 viewModel.User = userToUpdate;
+                viewModel.UserRoles = roleList; //Prevent the roles from being cleared out with an error
 
                 return View(viewModel);
             }
@@ -285,7 +303,7 @@ namespace FSNEP.Controllers
                     ts.CommitTransaction();
                 }
 
-                Message = string.Format("{0} modified successfully", id);
+                Message = string.Format("{0} Modified Successfully", id);
 
                 return this.RedirectToAction(a => a.List());
             }
