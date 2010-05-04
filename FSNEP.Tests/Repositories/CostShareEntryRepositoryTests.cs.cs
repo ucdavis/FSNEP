@@ -229,6 +229,45 @@ namespace FSNEP.Tests.Repositories
             Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
         }
 
+        [TestMethod]
+        public void CostShareEntrySavesWithNullComment()
+        {
+            //TODO: Update validation to allow test to pass (Task 509)
+            Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
+            var costShareEntry = CreateValidCostShareEntry(null);
+            costShareEntry.Comment = null;
+            Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
+            Assert.AreEqual(false, costShareEntry.IsTransient());
+            Assert.IsTrue(costShareEntry.IsValid());
+            Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
+        }
+
+        [TestMethod]
+        public void CostShareEntrySavesWithEmptyComment()
+        {
+            //TODO: Update validation to allow test to pass (Task 509)
+            Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
+            var costShareEntry = CreateValidCostShareEntry(null);
+            costShareEntry.Comment = string.Empty;
+            Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
+            Assert.AreEqual(false, costShareEntry.IsTransient());
+            Assert.IsTrue(costShareEntry.IsValid());
+            Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
+        }
+
+        [TestMethod]
+        public void CostShareEntrySavesWithSpacesOnlyComment()
+        {
+            //TODO: Update validation to allow test to pass (Task 509)
+            Repository.OfType<CostShareEntry>().DbContext.BeginTransaction();
+            var costShareEntry = CreateValidCostShareEntry(null);
+            costShareEntry.Comment = " ";
+            Repository.OfType<CostShareEntry>().EnsurePersistent(costShareEntry);
+            Assert.AreEqual(false, costShareEntry.IsTransient());
+            Assert.IsTrue(costShareEntry.IsValid());
+            Repository.OfType<CostShareEntry>().DbContext.CommitTransaction();
+        }
+
         #endregion Comment Tests
 
         #endregion Valid Data Tests
@@ -522,7 +561,7 @@ namespace FSNEP.Tests.Repositories
         /// <summary>
         /// Cost share entry with null comment does not save.
         /// </summary>
-        [TestMethod]
+        [TestMethod, Ignore] //Task 509, Test no longer valid
         [ExpectedException(typeof(ApplicationException))]
         public void CostShareEntryWithNullCommentDoesNotSave()
         {
@@ -552,7 +591,7 @@ namespace FSNEP.Tests.Repositories
         /// <summary>
         /// Cost share entry with empty comment does not save.
         /// </summary>
-        [TestMethod]
+        [TestMethod, Ignore] //Task 509, Test no longer valid
         [ExpectedException(typeof(ApplicationException))]
         public void CostShareEntryWithEmptyCommentDoesNotSave()
         {
@@ -582,7 +621,7 @@ namespace FSNEP.Tests.Repositories
         /// <summary>
         /// Cost share entry with spaces only in coment does not save.
         /// </summary>
-        [TestMethod]
+        [TestMethod, Ignore] //Task 509, Test no longer valid
         [ExpectedException(typeof(ApplicationException))]
         public void CostShareEntryWithSpacesOnlyCommentDoesNotSave()
         {

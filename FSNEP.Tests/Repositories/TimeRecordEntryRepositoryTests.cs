@@ -132,6 +132,42 @@ namespace FSNEP.Tests.Repositories
 
             Assert.AreEqual(false, timerecordEntry.IsTransient());
         }
+
+        [TestMethod]
+        public void CanSaveValidTimeRecordEntryWithNullComment()
+        {
+            //TODO: Update validation to allow test to pass (Task 509)
+            var timerecordEntry = CreateValidTimeRecordEntry();
+            timerecordEntry.Comment = null;
+
+            Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
+
+            Assert.AreEqual(false, timerecordEntry.IsTransient());
+        }
+
+        [TestMethod]
+        public void CanSaveValidTimeRecordEntryWithEmptyComment()
+        {
+            //TODO: Update validation to allow test to pass (Task 509)
+            var timerecordEntry = CreateValidTimeRecordEntry();
+            timerecordEntry.Comment = string.Empty;
+
+            Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
+
+            Assert.AreEqual(false, timerecordEntry.IsTransient());
+        }
+
+        [TestMethod]
+        public void CanSaveValidTimeRecordEntryWithSpacesOnlyComment()
+        {
+            //TODO: Update validation to allow test to pass (Task 509)
+            var timerecordEntry = CreateValidTimeRecordEntry();
+            timerecordEntry.Comment = " ";
+
+            Repository.OfType<TimeRecordEntry>().EnsurePersistent(timerecordEntry);
+
+            Assert.AreEqual(false, timerecordEntry.IsTransient());
+        }
         #endregion Valid Time record Entry Tests
 
 
@@ -260,7 +296,7 @@ namespace FSNEP.Tests.Repositories
         /// <summary>
         /// Time record entry does not save with null comment.
         /// </summary>
-        [TestMethod]
+        [TestMethod, Ignore] //Task 509, Test no longer valid
         [ExpectedException(typeof(ApplicationException))]
         public void TimeRecordEntryDoesNotSaveWithNullComment()
         {
@@ -289,7 +325,7 @@ namespace FSNEP.Tests.Repositories
         /// <summary>
         /// Time record entry does not save with empty comment.
         /// </summary>
-        [TestMethod]
+        [TestMethod, Ignore] //Task 509, Test no longer valid
         [ExpectedException(typeof(ApplicationException))]
         public void TimeRecordEntryDoesNotSaveWithEmptyComment()
         {
@@ -317,7 +353,7 @@ namespace FSNEP.Tests.Repositories
         /// <summary>
         /// Time record entry does not save with spaces only in comment.
         /// </summary>
-        [TestMethod]
+        [TestMethod, Ignore] //Task 509, Test no longer valid
         [ExpectedException(typeof(ApplicationException))]
         public void TimeRecordEntryDoesNotSaveWithSpacesOnlyComment()
         {
