@@ -55,6 +55,7 @@
         
         <fieldset>
             <legend>New Cost Share Entry</legend>
+            <span class="left">
             <p>
                 <%= this.TextBox("Entry.Amount").Label("Amount ($):") %>
             </p>
@@ -70,7 +71,8 @@
             </p>
             <p>
                 <%= this.FileUpload("PostedFile").Class("required").Label("Expense Receipt (PDF):") %>
-            </p>
+            </p></span>
+            <span class="right">
             <p>
                 <%= this.Select("Entry.FundType")
                     .Label("Fund Type:")
@@ -86,15 +88,13 @@
                 %>
             </p>
             <p>
-                <label for="Entry_Account" id="Account_Label">
-                    Account:</label>
-                <select id="Entry_Account" name="Entry.Account" disabled="disabled">
-                    <option value="">Select An Account</option>
+                <label for="Entry_Account" id="Account_Label">Account:</label>
+                <select id="Entry_Account" name="Entry.Account" disabled="disabled"><option value="">Select An Account</option>
                 </select>
             </p>
             <p>
                 <%= this.TextArea("Entry.Comment").Label("Comment:")%>
-            </p>
+            </p></span>
             <p>
                 <input type="submit" value="Add Expense" />
             </p>

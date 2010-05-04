@@ -27,7 +27,6 @@
 <span>Friday</span>
 <span>Saturday</span>
 </div>
-
 <div class="calendarDiv">
     <% foreach (var day in Model.CalendarDays)
        {%>
@@ -35,9 +34,6 @@
         string className = day.IsActive ? "ActiveDay" : "InactiveDay";
     %>
     <div id="day<%= dayId %>" class="calendarStyle <%= className %>">
-        <div class="calendarDate <%= day.IsCurrent ? "CurrentDay" : string.Empty %>">
-            <%= Html.Encode(day.Day) %>
-        </div>
         
         <% if (day.IsActive)
            { %>
@@ -46,6 +42,10 @@
             <img src="../../Images/add.gif" alt="+" />
         </a>
         <% } %>
+        
+        <div class="calendarDate <%= day.IsCurrent ? "CurrentDay" : string.Empty %>">
+            <%= Html.Encode(day.Day) %>
+        </div>
         <table>
             <tbody id='entriesFor<%= dayId %>'>
                 <%
@@ -53,14 +53,8 @@
                     {%>
                 <tr id='Entry<%= entry.Id %>'>
                     <td>
-                        <span class="editEntry">
-                            <a id='editEntry<%= entry.Id %>' href="javascript:;" class="EditCalendarEntry">
-                                <%= Html.Encode(string.Format("{0} HRS", entry.Hours)) %>
-                            </a>
-                        </span>
-                        <span class="deleteEntry">
-                            <a href="javascript:;" id='deleteEntry<%= entry.Id %>' class="DeleteCalendarEntry"><img src="../../Images/x.gif" alt="X" /></a>
-                        </span>
+                        <span class="editEntry"><a id='editEntry<%= entry.Id %>' href="javascript:;" class="EditCalendarEntry"><%= Html.Encode(string.Format("{0} HRS", entry.Hours)) %></a></span>&nbsp;
+                        <span class="deleteEntry"><a href="javascript:;" id='deleteEntry<%= entry.Id %>' class="DeleteCalendarEntry"><img src="../../Images/x.gif" alt="x" /></a></span>
                         <input type="hidden" id="entryHours<%= entry.Id %>" value="<%= entry.Hours %>" />
                     </td>
                 </tr>
@@ -71,13 +65,13 @@
     </div>
     <% } %>
 </div>
-
+<div class="clear space">&nbsp;</div>
 <div class="TimeRecordOptionsBox clear">
     <div class="TimeRecordTotals">
-        TimeRecord Totals: <span id="timeSheetHours"><%= Html.Encode(Model.TotalHours) %></span> Hour(s)
+        <h3>Time Record Totals:</h3> <span id="timeSheetHours"><%= Html.Encode(Model.TotalHours) %></span> Hour(s)
     </div>
     <div class="TimeRecordTarget">
-        Target Hours For Month: <%= Html.Encode(Model.TimeRecord.TargetHours) %> Hour(s)
+        <h3>Target Hours For Month:</h3> <%= Html.Encode(Model.TimeRecord.TargetHours) %> Hour(s)
     </div>
     <div class="TimeRecordAdjustment">
         
@@ -91,15 +85,13 @@
                             adjustmentEntry.FundType.Name, 
                             adjustmentEntry.ActivityType.Name, 
                             adjustmentEntry.Account.Name)) 
-                %>
-                <span class="deleteAdjustmentEntry">
-                    <a href="javascript:;" id='deleteAdjustmentEntry<%= adjustmentEntry.Id %>' class="DeleteAdjustmentEntry">X</a>
-                </span>
+                %>&nbsp;
+                <span class="deleteAdjustmentEntry"><a href="javascript:;" id='deleteAdjustmentEntry<%= adjustmentEntry.Id %>' class="DeleteAdjustmentEntry"><img src="../../Images/x.gif" alt="x" /></a></span>
             </li>
             <% } %>
         </ul>
         
-        <a href="javascript:;" id="AddAdjustmentEntry">Add Adjustment [TODO]</a>
+        <a href="javascript:;" id="AddAdjustmentEntry"><img src="../../Images/add.gif" alt="+" /> Add Adjustment [TODO]</a>
     </div>
 </div>
 

@@ -50,10 +50,10 @@
             Skip directly to: <a href="#nav">Navigation for this section</a> | <a href="#content">
                 Main page content</a></div>
         <div id="header">
-            <img id="Img1" src='<%= Url.Content("~/Images/bannertop.jpg") %>' alt="FSNEP Time Record/Cost Share Reporting" />
+            <a id="A1" href='<%= Url.Action("Index", "Home") %>' class="homebutton"><img id="Img1" src='<%= Url.Content("~/Images/bannertop.jpg") %>' alt="FSNEP Time Record/Cost Share Reporting" /></a>
         </div>
         <ul id="menu">
-            <li><a id="A1" href='<%= Url.Action("Index", "Home") %>' class="homebutton">Home</a></li>
+            <!--<li><a id="A1" href='<%= Url.Action("Index", "Home") %>' class="homebutton">Home</a></li> -->
             
             <% if (true /*Trish you can change this to true when working on the menu*/) Html.RenderAction("Menu", "Home"); %>
         </ul>

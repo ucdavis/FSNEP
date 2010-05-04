@@ -30,7 +30,7 @@
         <% using (Html.BeginForm("Submit", "TimeRecord", new {id = Model.TimeRecord.Id})) { %>
             <%= Html.AntiForgeryToken() %>
         
-            <input type="submit" value="Submit Final" />
+            <input class="submitFinal" type="submit" value="Submit Final" />
         
         <% } %>
     </div>
