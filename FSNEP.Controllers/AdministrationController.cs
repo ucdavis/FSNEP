@@ -10,6 +10,7 @@ using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
 using MvcContrib.Attributes;
 using MvcContrib;
 using System;
+using System.Web.Security;
 
 namespace FSNEP.Controllers
 {
@@ -36,17 +37,49 @@ namespace FSNEP.Controllers
         [AcceptPost]
         public ActionResult CreateUser(CreateUserViewModel model, Guid? supervisorId, IEnumerable<int> projectList, IEnumerable<int> fundTypeList)
         {
+            var user = model.User;
+            user.Supervisor = new User();
+
             ValidationHelper<CreateUserViewModel>.Validate(model, ModelState); //Validate the create user properties
             
-            ValidationHelper<User>.Validate(model.User, ModelState, "User"); //validate the user properties
+            CheckUserProperties(supervisorId, projectList, fundTypeList); //Make sure the associations are set
 
-            CheckUserProperties(supervisorId, projectList, fundTypeList);
+            ValidationHelper<User>.Validate(user, ModelState, "User"); //validate the user properties
 
             if (!ModelState.IsValid)
             {
                 return CreateUser();
             }
-            
+
+            PopulateUserProperties(user, supervisorId, projectList, fundTypeList);
+
+            MembershipCreateStatus createStatus;
+
+            //Create the user
+            MembershipUser membershipUser = UserBLL.UserAuth.MembershipService.CreateUser(model.UserName, "PASSWORD",
+                                                                                          model.Email, model.Question,
+                                                                                          model.Answer, true, null,
+                                                                                          out createStatus);
+
+            if (createStatus == MembershipCreateStatus.Success)
+            {
+                //Assign the roles
+            }
+            else
+            {
+                ModelState.AddModelError("UserName", "Username already exists");
+                return CreateUser();
+            }
+
+            user.SetUserID((Guid) membershipUser.ProviderUserKey);
+
+            Guid newUserToken = Guid.NewGuid();
+
+            //save the user
+
+            //TODO: Remove this test
+            UserBLL.UserAuth.MembershipService.DeleteUser(model.UserName);
+
             return CreateUser();
         }
 
@@ -78,9 +111,9 @@ namespace FSNEP.Controllers
             var user = UserBLL.GetUser(id);
             UpdateModel(user, "User"); //Update the user from the data entered in the form
 
-            ValidationHelper<User>.Validate(user, ModelState, "User");
-
             CheckUserProperties(supervisorId, projectList, fundTypeList);
+
+            ValidationHelper<User>.Validate(user, ModelState, "User");
 
             if (!ModelState.IsValid)
             {

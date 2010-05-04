@@ -95,6 +95,8 @@ namespace FSNEP.Core.Abstractions
         MembershipCreateStatus CreateUser(string userName, string password, string email);
         bool ChangePassword(string userName, string oldPassword, string newPassword);
         MembershipUser GetUser(string username);
+        MembershipUser CreateUser(string userName, string password, string email, string question, string answer, bool isApproved, object providerUserKey, out MembershipCreateStatus status);
+        void DeleteUser(string username);
     }
 
     public class WebPrincipal : IPrincipal
@@ -109,9 +111,7 @@ namespace FSNEP.Core.Abstractions
             get { return HttpContext.Current.User.Identity; }
         }
     }
-
-
-
+    
     public class AccountMembershipService : IMembershipService
     {
         private MembershipProvider _provider;
@@ -144,6 +144,16 @@ namespace FSNEP.Core.Abstractions
             MembershipCreateStatus status;
             _provider.CreateUser(userName, password, email, null, null, true, null, out status);
             return status;
+        }
+
+        public MembershipUser CreateUser(string userName, string password, string email, string question, string answer, bool isApproved, object providerUserKey, out MembershipCreateStatus status)
+        {
+            return _provider.CreateUser(userName, password, email, question, answer, isApproved, providerUserKey, out status);
+        }
+
+        public void DeleteUser(string username)
+        {
+            _provider.DeleteUser(username, true);
         }
 
         public bool ChangePassword(string userName, string oldPassword, string newPassword)
