@@ -160,7 +160,7 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = Controller;
 
             // Act
-            ViewResult result = (ViewResult)controller.ChangePassword("currentPassword", "newPassword", "otherPassword");
+            var result = (ViewResult)controller.ChangePassword("currentPassword", "newPassword", "otherPassword");
 
             // Assert
             Assert.AreEqual(6, result.ViewData["PasswordLength"]);
@@ -174,7 +174,7 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = Controller;
 
             // Act
-            ViewResult result = (ViewResult)controller.ChangePassword("currentPassword", null, null);
+            var result = (ViewResult)controller.ChangePassword("currentPassword", null, null);
 
             // Assert
             Assert.AreEqual(6, result.ViewData["PasswordLength"]);
@@ -188,7 +188,7 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = Controller;
 
             // Act
-            ViewResult result = (ViewResult)controller.ChangePassword("currentPassword", "12345", "12345");
+            var result = (ViewResult)controller.ChangePassword("currentPassword", "12345", "12345");
 
             // Assert
             Assert.AreEqual(6, result.ViewData["PasswordLength"]);
@@ -202,7 +202,7 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = Controller;
 
             // Act
-            ViewResult result = (ViewResult)controller.ChangePassword("oldPass", "badPass", "badPass");
+            var result = (ViewResult)controller.ChangePassword("oldPass", "badPass", "badPass");
 
             // Assert
             Assert.AreEqual(6, result.ViewData["PasswordLength"]);
@@ -216,7 +216,7 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = Controller;
 
             // Act
-            ViewResult result = (ViewResult)controller.ChangePasswordSuccess();
+            var result = (ViewResult)controller.ChangePasswordSuccess();
 
             // Assert
             Assert.IsNotNull(result);
@@ -229,10 +229,60 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = Controller;
 
             // Act
-            ViewResult result = (ViewResult)controller.LogOn();
+            var result = (ViewResult)controller.LogOn();
 
             // Assert
             Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Routing LogOn Calls LogOn
+        /// </summary>
+        [TestMethod]
+        public void RoutingLogOnCallsLogOn()
+        {
+            "~/Account/LogOn"
+                .ShouldMapTo<AccountController>(a => a.LogOn());
+        }
+
+        /// <summary>
+        /// Routing LogOff Calls LogOff
+        /// </summary>
+        [TestMethod]
+        public void RoutingLogOffCallsLogOff()
+        {
+            "~/Account/LogOff"
+                .ShouldMapTo<AccountController>(a => a.LogOff());
+        }
+
+        /// <summary>
+        /// Routing ForgotPassoword Calls ForgotPassword
+        /// </summary>
+        [TestMethod]
+        public void RoutingForgotPassowordCallsForgotPassword()
+        {
+            "~/Account/ForgotPassword"
+                .ShouldMapTo<AccountController>(a => a.ForgotPassword());
+        }
+
+        /// <summary>
+        /// Routing ChangePassword Calls ChangePassword
+        /// </summary>
+        [TestMethod]
+        public void RoutingChangePasswordCallsChangePassword()
+        {
+            "~/Account/ChangePassword"
+                .ShouldMapTo<AccountController>(a => a.ChangePassword());
+        }
+
+        /// <summary>
+        /// Routing ChangePasswordSuccess Calls ChangePasswordSuccess
+        /// </summary>
+        [TestMethod]
+        public void RoutingChangePasswordSuccessCallsChangePasswordSuccess()
+        {
+            "~/Account/ChangePasswordSuccess"
+                .ShouldMapTo<AccountController>(a => a.ChangePasswordSuccess());
         }
 
         [TestMethod]
@@ -242,7 +292,7 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = Controller;
 
             // Act
-            RedirectToRouteResult result = (RedirectToRouteResult)controller.LogOn("someUser", "goodPass", true, null);
+            var result = (RedirectToRouteResult)controller.LogOn("someUser", "goodPass", true, null);
 
             // Assert
             Assert.AreEqual("Home", result.RouteValues["controller"]);
@@ -256,7 +306,7 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = Controller;
 
             // Act
-            RedirectResult result = (RedirectResult)controller.LogOn("someUser", "goodPass", false, "someUrl");
+            var result = (RedirectResult)controller.LogOn("someUser", "goodPass", false, "someUrl");
 
             // Assert
             Assert.AreEqual("someUrl", result.Url);
@@ -269,7 +319,7 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = Controller;
 
             // Act
-            ViewResult result = (ViewResult)controller.LogOn("username", "", true, null);
+            var result = (ViewResult)controller.LogOn("username", "", true, null);
 
             // Assert
             Assert.AreEqual("You must specify a password.", result.ViewData.ModelState["password"].Errors[0].ErrorMessage);
@@ -282,7 +332,7 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = Controller;
 
             // Act
-            ViewResult result = (ViewResult)controller.LogOn("", "somePass", false, null);
+            var result = (ViewResult)controller.LogOn("", "somePass", false, null);
 
             // Assert
             Assert.AreEqual("You must specify a username.", result.ViewData.ModelState["username"].Errors[0].ErrorMessage);
@@ -295,7 +345,7 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = Controller;
 
             // Act
-            ViewResult result = (ViewResult)controller.LogOn("someUser", "badPass", true, null);
+            var result = (ViewResult)controller.LogOn("someUser", "badPass", true, null);
 
             // Assert
             Assert.AreEqual("The username or password provided is incorrect.", result.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
@@ -308,7 +358,7 @@ namespace FSNEP.Tests.Controllers
             AccountController controller = Controller;
 
             // Act
-            RedirectToRouteResult result = (RedirectToRouteResult)controller.LogOff();
+            var result = (RedirectToRouteResult)controller.LogOff();
 
             // Assert
             Assert.AreEqual("Home", result.RouteValues["controller"]);
