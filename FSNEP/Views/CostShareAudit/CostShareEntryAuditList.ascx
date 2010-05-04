@@ -51,7 +51,7 @@
             closeOnEscape: false,
             width: 400,
             //height: 600,
-            modal: false,
+            modal: true,
             title: title,
             buttons: buttons,
             //show: 'fold',
