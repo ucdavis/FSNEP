@@ -345,6 +345,22 @@ namespace FSNEP.Controllers
             }
         }
 
+        [AdminOnly]
+        public RedirectToRouteResult ResetPassword(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                var currentUser = Membership.GetUser(id);
+                var newPassword = currentUser.ResetPassword();
+
+                MessageGateway.SendResetPasswordMessage(currentUser.Email, currentUser.UserName, newPassword);
+
+                Message = "Password Reset for " + id;
+            }
+
+            return this.RedirectToAction(x => x.List(null));
+        }
+
         private static void TransferValuesTo(User userToUpdate, User user)
         {
             userToUpdate.FirstName = user.FirstName;

@@ -235,11 +235,7 @@ namespace FSNEP.Controllers
             }
 
             //We have a valid password, email the user, then redirect
-            MessageService.SendMessage(
-                member.Email,
-                "Password Reset",
-                string.Format(
-                    @"Please return to the site and log in using the following information.{0}User Name: {1}{0}Password: {2}", Environment.NewLine, member.UserName, newPassword));
+            MessageService.SendResetPasswordMessage(member.Email, member.UserName, newPassword);
 
             return this.RedirectToAction(a => a.ResetPasswordSuccess());
         }

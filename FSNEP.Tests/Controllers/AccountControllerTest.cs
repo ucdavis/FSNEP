@@ -759,6 +759,11 @@ namespace FSNEP.Tests.Controllers
             {
                 
             }
+
+            public void SendResetPasswordMessage(string email, string userName, string newPassword)
+            {
+                
+            }
         }
 
         public class MockFormsAuthenticationService : IFormsAuthentication

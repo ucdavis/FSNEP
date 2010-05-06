@@ -11,7 +11,7 @@ namespace FSNEP.Core.Abstractions
     {
         void SendMessage(string to, string subject, string body);
         void SendMessageToNewUser(User user, string username, string userEmail, string supervisorEmail, string newUserTokenPath);
-
+        
         /// <summary>
         /// Notifies the user of the end review status of their timesheet
         /// </summary>
@@ -21,6 +21,8 @@ namespace FSNEP.Core.Abstractions
         /// Notifies the supervisor of a newly submitted timesheet 
         /// </summary>
         void SendSupervisorNotificationMessage(Record record);
+
+        void SendResetPasswordMessage(string email, string userName, string newPassword);
     }
 
     public class MessageGateway : IMessageGateway
@@ -61,6 +63,15 @@ namespace FSNEP.Core.Abstractions
             body.AppendLine("System Administrator");
 
             SendMessage(record.User.Supervisor.Email, "FSNEP Time/Expense Sheet", body.ToString());
+        }
+
+        public void SendResetPasswordMessage(string email, string userName, string newPassword)
+        {
+            SendMessage(
+                email,
+                "Password Reset",
+                string.Format(
+                    @"Please return to the site and log in using the following information.{0}User Name: {1}{0}Password: {2}", Environment.NewLine, userName, newPassword));
         }
 
         /// <summary>
