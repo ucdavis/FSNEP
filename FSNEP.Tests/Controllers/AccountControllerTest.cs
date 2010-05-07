@@ -120,7 +120,7 @@ namespace FSNEP.Tests.Controllers
 
             controller.ResetPassword("validUser", "validAnswer");
 
-            messageGateway.AssertWasCalled(a=>a.SendMessage("","",""), a=>a.IgnoreArguments()); //Verify the message gateway was called
+            messageGateway.AssertWasCalled(a=>a.SendResetPasswordMessage("", "", ""), a=>a.IgnoreArguments()); //Verify the message gateway was called
         }
 
         [TestMethod]

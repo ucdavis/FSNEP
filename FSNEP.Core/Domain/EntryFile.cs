@@ -21,7 +21,7 @@ namespace FSNEP.Core.Domain
         public virtual string ContentType { get; set; }
 
         [Required]
-        [Length(50)]
+        [Length(512, Message = "File Name Must Be Less Than 512 Characters Long")]
         [Pattern(@"^.+\.(pdf)$", RegexOptions.IgnoreCase, "File must be a PDF")]
         public virtual string Name { get; set; }
 
