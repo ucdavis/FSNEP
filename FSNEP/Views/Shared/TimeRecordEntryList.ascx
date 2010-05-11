@@ -1,6 +1,6 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<IEnumerable<FSNEP.Core.Domain.TimeRecordEntry>>" %>
 
-<%= Html.Grid(Model)
+<%= Html.Grid(Model.OrderBy(x=>x.Date))
             .DisplayAlternateMessageWhen(Model.Count() == 0, "No Time Record Entries Found")
             .Name("TimeRecordEntries")
             .Columns(col=>
