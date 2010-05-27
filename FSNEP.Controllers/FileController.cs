@@ -1,5 +1,6 @@
 using System.Web.Mvc;
 using FSNEP.BLL.Interfaces;
+using FSNEP.Core.Abstractions;
 using FSNEP.Core.Domain;
 using UCDArch.Core.Utils;
 using UCDArch.Core.PersistanceSupport;
@@ -27,7 +28,7 @@ namespace FSNEP.Controllers
 
             Check.Require(costShare != null, "Invalid cost share identifier");
 
-            if (!_costShareBLL.HasAccess(CurrentUser, costShare) && !_costShareBLL.HasReviewAccess(CurrentUser, costShare))
+            if (!_costShareBLL.HasAccess(CurrentUser, costShare) && !_costShareBLL.HasReviewAccess(CurrentUser, costShare) && !User.IsInRole(RoleNames.RoleAdmin))
             {
                 return RedirectToErrorPage(string.Format("{0} does not have access to review this cost share", CurrentUser.Identity.Name));
             }
