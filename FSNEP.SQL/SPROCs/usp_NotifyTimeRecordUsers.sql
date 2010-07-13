@@ -20,6 +20,12 @@ SET @nowMinusOneMonth = (SELECT DATEADD(month, -1, GETDATE()) as PrevMonth)
 SET @previousMonthInt = (SELECT DATEPART(month, @nowMinusOneMonth))
 SET @previousYearInt = (SELECT DATEPART(year, @nowMinusOneMonth))
 
+IF (@dayInt <> 7)
+BEGIN
+	print 'Only notify time record users on the 7th of each month'
+	RETURN
+END
+
 SELECT @previousMonthInt, @previousYearInt
 
 DECLARE @MailList CURSOR

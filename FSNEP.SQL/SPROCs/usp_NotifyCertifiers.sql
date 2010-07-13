@@ -9,6 +9,15 @@ CREATE Procedure usp_NotifyCertifiers
 
 AS
 
+DECLARE @dayInt int
+SET @dayInt = (SELECT DATEPART(DAY, GETDATE()))
+
+IF (@dayInt <> 10)
+BEGIN
+	print 'Only notify certifiers on the 10th of each month'
+	RETURN
+END
+
 --Get all 'certifiers' (supervisor or delegate if available) who have any pending review records
 
 DECLARE @MailList CURSOR
