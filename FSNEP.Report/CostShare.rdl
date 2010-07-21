@@ -15511,7 +15511,22 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=Sum(Fields!Q1Amount.Value, "ExpenseSheetData")+Sum(Fields!Q2Amount.Value, "ExpenseSheetData")+Sum(Fields!Q3Amount.Value, "ExpenseSheetData")+Sum(Fields!Q4Amount.Value, "ExpenseSheetData")+Sum(Fields!Q1total.Value, "TimeSheetData")+Sum(Fields!Q2total.Value, "TimeSheetData")+Sum(Fields!Q3total.Value, "TimeSheetData")+Sum(Fields!Q4total.Value, "TimeSheetData")</Value>
+                <Value>=Sum(Fields!Q1Amount.Value, "ExpenseSheetData")
++Sum(Fields!Q2Amount.Value, "ExpenseSheetData")
++Sum(Fields!Q3Amount.Value, "ExpenseSheetData")
++Sum(Fields!Q4Amount.Value, "ExpenseSheetData")
++Sum(Fields!Q1AmountIndr.Value, "ExpenseSheetData")
++Sum(Fields!Q2AmountIndr.Value, "ExpenseSheetData")
++Sum(Fields!Q3AmountIndr.Value, "ExpenseSheetData")
++Sum(Fields!Q4AmountIndr.Value, "ExpenseSheetData")
++Sum(Fields!Q1total.Value, "TimeSheetData")
++Sum(Fields!Q2total.Value, "TimeSheetData")
++Sum(Fields!Q3total.Value, "TimeSheetData")
++Sum(Fields!Q4total.Value, "TimeSheetData")
++Sum(Fields!Q1TotalIndr.Value, "TimeSheetData")
++Sum(Fields!Q2TotalIndr.Value, "TimeSheetData")
++Sum(Fields!Q3TotalIndr.Value, "TimeSheetData")
++Sum(Fields!Q4TotalIndr.Value, "TimeSheetData")</Value>
                 <Style>
                   <Format>C</Format>
                 </Style>
