@@ -31,7 +31,7 @@
             <%= this.TextBox("name").Label("Account Name: ").MaxLength(50).Class("required") %>
         </p>
         <p>
-            <%= this.TextBox("indirectCostPercent").Label("Indirect Cost %: ").MaxLength(2).Class("required digits") %>
+            <%= this.TextBox("indirectCostPercent").Label("Indirect Cost %: ").MaxLength(5).Class("required") %>
         </p>
         <p>
             <input type="submit" value="Add Account" />
