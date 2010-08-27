@@ -179,7 +179,7 @@ function UpdateAddEntryUI(id, date, hours) {
                         .append(
                             $('<img>')
                             .attr('alt', 'x')
-                            .attr('src', '/Images/x.gif')
+                            .attr('src', imageBase + 'x.gif')
                         )
                     )
                 )

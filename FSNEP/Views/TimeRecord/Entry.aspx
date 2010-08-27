@@ -6,6 +6,9 @@
 <asp:Content ContentPlaceHolderID="AdditionalScripts" runat="server">
     <link type="text/css" href="<%= Url.Css("jquery.jgrowl.css") %>" rel="Stylesheet" />
     <script src='<%= Url.Content("~/Scripts/jquery.jgrowl.min.js") %>' type="text/javascript"></script>
+    <script type="text/javascript">
+        var imageBase = '<%= Url.Image("") %>';
+    </script>
     <script src='<%= Url.Content("~/Scripts/TimeRecordEntry.js") %>' type="text/javascript"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
