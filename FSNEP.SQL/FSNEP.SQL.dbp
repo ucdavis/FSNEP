@@ -7,6 +7,11 @@ Begin DataProject = "FSNEP.SQL"
    SccAuxPath = "SAK"
    SccProvider = "SAK"
    Begin DBRefFolder = "Database References"
+      Begin DBRefNode = "donbot.FSNEP2.dbo"
+         ConnectStr = "Data Source=donbot;Initial Catalog=FSNEP2;Integrated Security=True"
+         Provider = "{91510608-8809-4020-8897-FBA057E22D54}"
+         Colorizer = 6
+      End
       Begin DBRefNode = "terry.FSNEP2.dbo"
          ConnectStr = "Data Source=terry;Initial Catalog=FSNEP2;Integrated Security=True"
          Provider = "{91510608-8809-4020-8897-FBA057E22D54}"
