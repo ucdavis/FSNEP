@@ -69,7 +69,7 @@ This is a reminder that your electronically certified FSNEP time record is due o
 If you have any questions regarding this message, or about time records in general, please contact your State Office analyst:
 
 Corinne Gould ( cgould@ucdavis.edu ) or
-Susan Padgett ( sdpadgett@ucdavis.edu ) or
+Jennifer Quigley (quigley@caes.ucdavis.edu ) or
 Yolanda Cortez (yCortez@ucdavis.edu ).
 
 FSNEP Online Record System
