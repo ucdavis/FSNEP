@@ -102,6 +102,7 @@
       <DependentUpon>Constants.resx</DependentUpon>
     </Compile>
     <Compile Include="CostShareController.cs" />
+    <Compile Include="ErrorController.cs" />
     <Compile Include="FileController.cs" />
     <Compile Include="Helpers\Attributes\AuthorizationAttributes.cs" />
     <Compile Include="Helpers\Attributes\MenuLocationFilter.cs" />

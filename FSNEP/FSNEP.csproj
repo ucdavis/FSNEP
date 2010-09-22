@@ -313,6 +313,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ConnectionStrings-Prod.config" />
+    <Content Include="Views\Error\Index.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
