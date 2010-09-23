@@ -9,6 +9,7 @@ using RepositoryTestBase = FSNEP.Tests.Core.RepositoryTestBase;
 
 namespace FSNEP.Tests.Repositories
 {
+    [TestClass]
     public abstract class AbstractRepositoryEntryTests<T> : RepositoryTestBase where T : Entry
     {
         #region Init
