@@ -49,6 +49,7 @@ WHERE     (aspnet_Roles.RoleName = N'Timesheet User') AND (Users.IsActive = 1)
 								  Status ON Status.ID = Rec.StatusID INNER JOIN
 								  TimeRecords ON Rec.ID = TimeRecords.ID
 			WHERE     (Rec.Month = @previousMonthInt) AND (Rec.Year = @previousYearInt)
+						AND (Status.Name = 'PendingReview' OR Status.Name = 'Approved') --Only submitted if status on of thesez
 		)
 
 OPEN @MailList
