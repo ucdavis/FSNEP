@@ -17,7 +17,7 @@ namespace FSNEP.Controllers
         {
             Project project = null;
 
-            if (id.HasValue) project = Repository.OfType<Project>().GetNullableByID(id.Value);
+            if (id.HasValue) project = Repository.OfType<Project>().GetNullableById(id.Value);
 
             var viewModel = ProjectsAccountsViewModel.Create(Repository);
             viewModel.Project = project;
@@ -34,7 +34,7 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult Associate(int id, int[] accountIds)
         {
-            var project = Repository.OfType<Project>().GetNullableByID(id);
+            var project = Repository.OfType<Project>().GetNullableById(id);
 
             Check.Require(project != null, "Valid ProjectId not passed into Associate action");
    
@@ -44,7 +44,7 @@ namespace FSNEP.Controllers
             {
                 foreach (var accountId in accountIds)
                 {
-                    project.Accounts.Add(Repository.OfType<Account>().GetByID(accountId));
+                    project.Accounts.Add(Repository.OfType<Account>().GetById(accountId));
                 }
             }
 

@@ -60,7 +60,7 @@ namespace FSNEP.Controllers
 
         public ActionResult Review(int id)
         {
-            var timeRecord = _timeRecordRepository.GetNullableByID(id);
+            var timeRecord = _timeRecordRepository.GetNullableById(id);
 
             Check.Require(timeRecord != null, "Invalid cost share identifier");
 
@@ -76,7 +76,7 @@ namespace FSNEP.Controllers
 
         public ActionResult Entry(int id)
         {
-            var timeRecord = _timeRecordRepository.GetNullableByID(id);
+            var timeRecord = _timeRecordRepository.GetNullableById(id);
 
             Check.Require(timeRecord != null, "Invalid time record identifier");
             
@@ -95,11 +95,11 @@ namespace FSNEP.Controllers
             return View(viewModel);
         }
 
-        [AcceptPost]
+        [HttpPost]
         [Transaction]
         public JsonNetResult AddEntry(int recordId, TimeRecordEntry entry)
         {
-            var timeRecord = _timeRecordRepository.GetNullableByID(recordId);
+            var timeRecord = _timeRecordRepository.GetNullableById(recordId);
 
             Check.Require(timeRecord != null, "Invalid time record identifier");
 
@@ -119,13 +119,13 @@ namespace FSNEP.Controllers
             return new JsonNetResult(modificationResult);
         }
 
-        [AcceptPost]
+        [HttpPost]
         [Transaction]
         public JsonNetResult RemoveEntry(int entryId)
         {
             var entryRepository = Repository.OfType<TimeRecordEntry>();
 
-            var entry = entryRepository.GetByID(entryId);
+            var entry = entryRepository.GetById(entryId);
 
             entryRepository.Remove(entry);
 
@@ -134,13 +134,13 @@ namespace FSNEP.Controllers
             return new JsonNetResult(modificationResult);
         }
 
-        [AcceptPost]
+        [HttpPost]
         [Transaction]
         public JsonNetResult EditEntry(int entryId, TimeRecordEntry entry)
         {
             var entryRepository = Repository.OfType<TimeRecordEntry>();
 
-            var entryToUpdate = entryRepository.GetNullableByID(entryId);
+            var entryToUpdate = entryRepository.GetNullableById(entryId);
 
             Check.Require(entryToUpdate != null, "Entry not found");
 
@@ -160,7 +160,7 @@ namespace FSNEP.Controllers
         [Transaction]
         public JsonNetResult GetEntry(int entryId)
         {
-            var entry = Repository.OfType<TimeRecordEntry>().GetNullableByID(entryId);
+            var entry = Repository.OfType<TimeRecordEntry>().GetNullableById(entryId);
 
             Check.Require(entry != null, "Entry not found");
 
@@ -178,12 +178,12 @@ namespace FSNEP.Controllers
             return new JsonNetResult(result);
         }
 
-        [AcceptPost]
+        [HttpPost]
         [Transaction]
         [ValidateAntiForgeryToken]
         public ActionResult Submit(int id)
         {
-            var timeRecord = _timeRecordRepository.GetNullableByID(id);
+            var timeRecord = _timeRecordRepository.GetNullableById(id);
 
             Check.Require(timeRecord != null, "Invalid time record identifier");
 

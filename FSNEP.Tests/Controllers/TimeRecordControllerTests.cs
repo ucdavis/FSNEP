@@ -44,7 +44,7 @@ namespace FSNEP.Tests.Controllers
             var fakeContext =
                 MockRepository.GenerateStub<IDbContext>();
 
-            _timeRecordRepository.Expect(a => a.GetNullableByID(_timeRecord.Id)).Return(_timeRecord).Repeat.Any();
+            _timeRecordRepository.Expect(a => a.GetNullableById(_timeRecord.Id)).Return(_timeRecord).Repeat.Any();
             _timeRecordRepository.Expect(a => a.DbContext).Return(fakeContext).Repeat.Any();
 
             CreateController(_timeRecordBll, _timeRecordRepository, _userBll, timeRecordCalendarGenerator);
@@ -138,7 +138,7 @@ namespace FSNEP.Tests.Controllers
 
             Controller.ControllerContext.HttpContext.User = _principal;
 
-            var timeRecord = _timeRecordRepository.GetNullableByID(1);
+            var timeRecord = _timeRecordRepository.GetNullableById(1);
             _timeRecordRepository.AssertWasNotCalled(a => a.EnsurePersistent(timeRecord));
 
             var result = Controller.AddEntry(timeRecord.Id, timeRecordEntry);
@@ -205,7 +205,7 @@ namespace FSNEP.Tests.Controllers
                 timeRecord = CreateValidTimeRecord();
                 timeRecord.User = CreateValidUser("WrongOne");
                 timeRecord.SetIdTo(13);
-                _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+                _timeRecordRepository.Expect(a => a.GetNullableById(timeRecord.Id)).Return(timeRecord).Repeat.Once();
 
                 _timeRecordRepository.AssertWasNotCalled(a => a.EnsurePersistent(timeRecord));
                 result = Controller.AddEntry(timeRecord.Id, timeRecordEntry);
@@ -297,7 +297,7 @@ namespace FSNEP.Tests.Controllers
             var activityCategories = MockActivityCategories();
             MockAdjustmentEntries();
 
-            var timeRecord = _timeRecordRepository.GetNullableByID(1);
+            var timeRecord = _timeRecordRepository.GetNullableById(1);
             var result = (ViewResult) Controller.Entry(timeRecord.Id);
             Assert.IsNotNull(result);
             Assert.IsTrue(result.ViewData.ModelState.IsValid);
@@ -350,7 +350,7 @@ namespace FSNEP.Tests.Controllers
             var timeRecord = CreateValidTimeRecord();
             timeRecord.User = CreateValidUser("WrongOne");
             timeRecord.SetIdTo(13);
-            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+            _timeRecordRepository.Expect(a => a.GetNullableById(timeRecord.Id)).Return(timeRecord).Repeat.Once();
 
             Controller.Entry(timeRecord.Id)
                 .AssertActionRedirect()
@@ -397,7 +397,7 @@ namespace FSNEP.Tests.Controllers
             timeRecordEntry.SetIdTo(12);
             timeRecordEntryRepository.EnsurePersistent(timeRecordEntry);
 
-            timeRecordEntryRepository.Expect(a => a.GetNullableByID(timeRecordEntry.Id)).Return(timeRecordEntry).Repeat.
+            timeRecordEntryRepository.Expect(a => a.GetNullableById(timeRecordEntry.Id)).Return(timeRecordEntry).Repeat.
                 Once();
 
             var result = Controller.GetEntry(timeRecordEntry.Id);
@@ -457,7 +457,7 @@ namespace FSNEP.Tests.Controllers
             timeRecordEntryToUpdate.Date = 10;
             timeRecordEntryToUpdate.SetIdTo(14);
 
-            timeRecordEntryRepository.Expect(a => a.GetNullableByID(timeRecordEntryToUpdate.Id)).Return(timeRecordEntryToUpdate).Repeat.
+            timeRecordEntryRepository.Expect(a => a.GetNullableById(timeRecordEntryToUpdate.Id)).Return(timeRecordEntryToUpdate).Repeat.
                 Once();
 
             Controller.EditEntry(timeRecordEntryToUpdate.Id, timeRecordEntry);

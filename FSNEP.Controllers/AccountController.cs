@@ -101,7 +101,7 @@ namespace FSNEP.Controllers
         /// <summary>
         /// Allows a new user to change their password and question/answer given a valid token
         /// </summary>
-        [AcceptPost]
+        [HttpPost]
         [Transaction]
         [BypassAntiForgeryToken]
         public ActionResult NewUser(Guid? id, NewUserViewModel viewModel)
@@ -169,7 +169,7 @@ namespace FSNEP.Controllers
             return View();
         }
 
-        [AcceptPost]
+        [HttpPost]
         [BypassAntiForgeryToken]
         public ActionResult ForgotPassword(string id)
         {
@@ -199,7 +199,7 @@ namespace FSNEP.Controllers
             return View();
         }
 
-        [AcceptPost]
+        [HttpPost]
         [BypassAntiForgeryToken]
         public ActionResult ResetPassword(string id, string passwordAnswer)
         {

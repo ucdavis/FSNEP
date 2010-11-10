@@ -12,7 +12,7 @@ namespace FSNEP.Controllers
         [Transaction]
         public ActionResult GetAccountsForProject(int id)
         {
-            var project = Repository.OfType<Project>().GetNullableByID(id);
+            var project = Repository.OfType<Project>().GetNullableById(id);
 
             Check.Require(project != null);
 

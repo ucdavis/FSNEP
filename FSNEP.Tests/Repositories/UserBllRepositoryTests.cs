@@ -72,7 +72,7 @@ namespace FSNEP.Tests.Repositories
             Supervisor = CreateValidUser(1);
             Supervisor.Supervisor = Supervisor;
             Supervisor.UserName = "Supervisor1";
-            Supervisor.Projects.Add(Repository.OfType<Project>().GetByID(1));
+            Supervisor.Projects.Add(Repository.OfType<Project>().GetById(1));
             Repository.OfType<User>().EnsurePersistent(Supervisor);
 
             for (int i = 0; i < 4; i++)
@@ -83,16 +83,16 @@ namespace FSNEP.Tests.Repositories
 
             //Now set individual projects for each user
 
-            users[0].Projects.Add(Repository.OfType<Project>().GetByID(1));
-            users[0].Projects.Add(Repository.OfType<Project>().GetByID(2)); //Inactive
-            users[0].Projects.Add(Repository.OfType<Project>().GetByID(3));
-            users[0].Projects.Add(Repository.OfType<Project>().GetByID(4));
+            users[0].Projects.Add(Repository.OfType<Project>().GetById(1));
+            users[0].Projects.Add(Repository.OfType<Project>().GetById(2)); //Inactive
+            users[0].Projects.Add(Repository.OfType<Project>().GetById(3));
+            users[0].Projects.Add(Repository.OfType<Project>().GetById(4));
 
-            users[1].Projects.Add(Repository.OfType<Project>().GetByID(1));
-            users[1].Projects.Add(Repository.OfType<Project>().GetByID(6));
+            users[1].Projects.Add(Repository.OfType<Project>().GetById(1));
+            users[1].Projects.Add(Repository.OfType<Project>().GetById(6));
 
-            users[2].Projects.Add(Repository.OfType<Project>().GetByID(2)); //Inactive
-            users[2].Projects.Add(Repository.OfType<Project>().GetByID(5)); //Inactive
+            users[2].Projects.Add(Repository.OfType<Project>().GetById(2)); //Inactive
+            users[2].Projects.Add(Repository.OfType<Project>().GetById(5)); //Inactive
 
             users[3].Projects = Repository.OfType<Project>().GetAll();
 
@@ -132,13 +132,13 @@ namespace FSNEP.Tests.Repositories
             var projects = UserBLL.GetAllProjectsByUser(Repository.OfType<Project>()).ToList();
             Assert.IsNotNull(projects);
             Assert.AreEqual(5, projects.Count());
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(1)));
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(2))); //Inactive
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(3)));
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(4)));
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(5))); //Inactive
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(6)));
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(7)));
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(1)));
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(2))); //Inactive
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(3)));
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(4)));
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(5))); //Inactive
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(6)));
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(7)));
         }
 
         /// <summary>
@@ -156,15 +156,15 @@ namespace FSNEP.Tests.Repositories
             var projects = UserBLL.GetAllProjectsByUser(Repository.OfType<Project>()).ToList();
             Assert.IsNotNull(projects);
             Assert.AreEqual(3, projects.Count());
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(1)));
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(2))); //Inactive
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(3)));
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(4)));
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(1)));
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(2))); //Inactive
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(3)));
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(4)));
             
             //Doesn't Have these
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(5))); //Inactive
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(6)));
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(7)));
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(5))); //Inactive
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(6)));
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(7)));
         }
 
         /// <summary>
@@ -182,15 +182,15 @@ namespace FSNEP.Tests.Repositories
             var projects = UserBLL.GetAllProjectsByUser(Repository.OfType<Project>()).ToList();
             Assert.IsNotNull(projects);
             Assert.AreEqual(2, projects.Count());
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(1)));
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(6)));           
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(1)));
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(6)));           
 
             //Doesn't Have these
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(2))); //Inactive
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(3)));
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(4)));
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(5))); //Inactive
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(7)));
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(2))); //Inactive
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(3)));
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(4)));
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(5))); //Inactive
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(7)));
         }
 
         // 4) Normal user linked to 2 inactive projects
@@ -230,13 +230,13 @@ namespace FSNEP.Tests.Repositories
             var projects = UserBLL.GetAllProjectsByUser(Repository.OfType<Project>()).ToList();
             Assert.IsNotNull(projects);
             Assert.AreEqual(5, projects.Count());
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(1)));            
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(2))); //Inactive
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(3)));
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(4)));
-            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetByID(5))); //Inactive
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(6)));
-            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetByID(7)));
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(1)));            
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(2))); //Inactive
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(3)));
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(4)));
+            Assert.IsFalse(projects.Contains(Repository.OfType<Project>().GetById(5))); //Inactive
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(6)));
+            Assert.IsTrue(projects.Contains(Repository.OfType<Project>().GetById(7)));
         }
 
         #endregion GetAllProjectsByUser Tests

@@ -36,7 +36,7 @@ namespace FSNEP.Controllers
 
         public ActionResult TimeRecordReview(int id)
         {
-            var timeRecord = Repository.OfType<TimeRecord>().GetNullableByID(id);
+            var timeRecord = Repository.OfType<TimeRecord>().GetNullableById(id);
 
             Check.Require(timeRecord != null);
 
@@ -47,7 +47,7 @@ namespace FSNEP.Controllers
 
         public ActionResult CostShareReview(int id)
         {
-            var costShare = Repository.OfType<CostShare>().GetNullableByID(id);
+            var costShare = Repository.OfType<CostShare>().GetNullableById(id);
 
             Check.Require(costShare != null);
 
@@ -58,12 +58,12 @@ namespace FSNEP.Controllers
 
 
 
-        [AcceptPost]
+        [HttpPost]
         public JsonResult CostShareExclude(int id, string excludeReason)
         {
             var costShareEntryRepository = Repository.OfType<CostShareEntry>();
 
-            var costShareEntry = costShareEntryRepository.GetNullableByID(id);
+            var costShareEntry = costShareEntryRepository.GetNullableById(id);
 
             Check.Require(costShareEntry != null, "Invalid Entry Identifier");
 
@@ -91,7 +91,7 @@ namespace FSNEP.Controllers
     {
         public static AuditHistoryViewModel<T> Create(IRepository<Project> projectRepository, IRepository<T> recordRepository, IRepository<User> userRepository, int? projectId)
         {
-            var chosenProject = projectId.HasValue ? projectRepository.GetNullableByID(projectId.Value) : null;
+            var chosenProject = projectId.HasValue ? projectRepository.GetNullableById(projectId.Value) : null;
 
             var projects = projectRepository.Queryable.Where(x => x.IsActive).OrderBy(x => x.Name).ToList();
 

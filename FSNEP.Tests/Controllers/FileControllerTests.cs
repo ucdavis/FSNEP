@@ -80,11 +80,11 @@ namespace FSNEP.Tests.Controllers
             var costShareEntries = new List<CostShareEntry>();
             FakeCostShareEntries(costShareEntries, 3);
             costShareEntries[0].Record.SetIdTo(2);
-            CostShareEntryRepository.Expect(a => a.GetNullableByID(1)).Return(costShareEntries[0]).Repeat.Once();
+            CostShareEntryRepository.Expect(a => a.GetNullableById(1)).Return(costShareEntries[0]).Repeat.Once();
 
             var costShareRecords = new List<CostShare>();
             FakeCostShareRecords(costShareRecords, 3);
-            _costShareRepository.Expect(a => a.GetNullableByID(2)).Return(costShareRecords[1]).Repeat.Once();
+            _costShareRepository.Expect(a => a.GetNullableById(2)).Return(costShareRecords[1]).Repeat.Once();
 
             _costShareBLL.Expect(a => a.HasReviewAccess(_principal, costShareRecords[1])).Return(hasReviewAccess).Repeat.Once();
 
@@ -104,12 +104,12 @@ namespace FSNEP.Tests.Controllers
             var costShareEntries = new List<CostShareEntry>();
             FakeCostShareEntries(costShareEntries, 3);
             costShareEntries[0].Record.SetIdTo(2);
-            CostShareEntryRepository.Expect(a => a.GetNullableByID(1)).Return(costShareEntries[0]).Repeat.Once();
+            CostShareEntryRepository.Expect(a => a.GetNullableById(1)).Return(costShareEntries[0]).Repeat.Once();
 
             var costShareRecords = new List<CostShare>();
             FakeCostShareRecords(costShareRecords, 3);
             costShareRecords[1].User = _currentUser;
-            _costShareRepository.Expect(a => a.GetNullableByID(2)).Return(costShareRecords[1]).Repeat.Once();
+            _costShareRepository.Expect(a => a.GetNullableById(2)).Return(costShareRecords[1]).Repeat.Once();
 
             _costShareBLL.Expect(a => a.HasAccess(_principal, costShareRecords[1])).Return(hasAccess).Repeat.Once();
 
@@ -131,7 +131,7 @@ namespace FSNEP.Tests.Controllers
         { 
             try
             {
-                CostShareEntryRepository.Expect(a => a.GetNullableByID(1)).Return(null).Repeat.Once();
+                CostShareEntryRepository.Expect(a => a.GetNullableById(1)).Return(null).Repeat.Once();
                 Controller.ViewEntryFile(1);
             }
             catch (Exception ex)
@@ -153,9 +153,9 @@ namespace FSNEP.Tests.Controllers
                 var costShareEntries = new List<CostShareEntry>();
                 FakeCostShareEntries(costShareEntries, 3);
                 costShareEntries[0].Record.SetIdTo(2);
-                CostShareEntryRepository.Expect(a => a.GetNullableByID(1)).Return(costShareEntries[0]).Repeat.Once();
+                CostShareEntryRepository.Expect(a => a.GetNullableById(1)).Return(costShareEntries[0]).Repeat.Once();
 
-                _costShareRepository.Expect(a => a.GetNullableByID(2)).Return(null).Repeat.Once();
+                _costShareRepository.Expect(a => a.GetNullableById(2)).Return(null).Repeat.Once();
 
                 Controller.ViewEntryFile(1);
             }

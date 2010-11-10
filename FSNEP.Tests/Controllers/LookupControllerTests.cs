@@ -94,7 +94,7 @@ namespace FSNEP.Tests.Controllers
             const int invalidProjectId = 42;
 
             var projectRepository = FakeRepository<Project>();
-            projectRepository.Expect(a => a.GetNullableByID(invalidProjectId)).Return(null);
+            projectRepository.Expect(a => a.GetNullableById(invalidProjectId)).Return(null);
 
             Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository);
 
@@ -113,7 +113,7 @@ namespace FSNEP.Tests.Controllers
             var activeProject = new Project {IsActive = true};
             
             var projectRepository = FakeRepository<Project>();
-            projectRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(activeProject);
+            projectRepository.Expect(a => a.GetNullableById(1)).IgnoreArguments().Return(activeProject);
             
             Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
 
@@ -133,7 +133,7 @@ namespace FSNEP.Tests.Controllers
             var activeProject = new Project { IsActive = true };
 
             var projectRepository = FakeRepository<Project>();
-            projectRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(null);
+            projectRepository.Expect(a => a.GetNullableById(1)).IgnoreArguments().Return(null);
 
             Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
 
@@ -154,7 +154,7 @@ namespace FSNEP.Tests.Controllers
             var validProject = new Project();
 
             var projectRepository = FakeRepository<Project>();
-            projectRepository.Expect(a => a.GetNullableByID(validProjectId)).Return(validProject);
+            projectRepository.Expect(a => a.GetNullableById(validProjectId)).Return(validProject);
             
             Controller.Repository.Expect(a => a.OfType<Project>()).Return(projectRepository).Repeat.Any();
 
@@ -344,7 +344,7 @@ namespace FSNEP.Tests.Controllers
             const int invalidActivityTypeId = 42;
 
             var activityTypeRepository = FakeRepository<ActivityType>();
-            activityTypeRepository.Expect(a => a.GetNullableByID(invalidActivityTypeId)).Return(null);
+            activityTypeRepository.Expect(a => a.GetNullableById(invalidActivityTypeId)).Return(null);
 
             Controller.Repository.Expect(a => a.OfType<ActivityType>()).Return(activityTypeRepository);
 
@@ -364,7 +364,7 @@ namespace FSNEP.Tests.Controllers
             var activeActivityType = new ActivityType { IsActive = true };
 
             var activityTypeRepository = FakeRepository<ActivityType>();
-            activityTypeRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(activeActivityType);
+            activityTypeRepository.Expect(a => a.GetNullableById(1)).IgnoreArguments().Return(activeActivityType);
 
             Controller.Repository.Expect(a => a.OfType<ActivityType>()).Return(activityTypeRepository).Repeat.Any();
 
@@ -384,7 +384,7 @@ namespace FSNEP.Tests.Controllers
             var activeActivityType = new ActivityType { IsActive = true };
 
             var activityTypeRepository = FakeRepository<ActivityType>();
-            activityTypeRepository.Expect(a => a.GetNullableByID(42)).IgnoreArguments().Return(null);
+            activityTypeRepository.Expect(a => a.GetNullableById(42)).IgnoreArguments().Return(null);
 
             Controller.Repository.Expect(a => a.OfType<ActivityType>()).Return(activityTypeRepository).Repeat.Any();
 
@@ -405,7 +405,7 @@ namespace FSNEP.Tests.Controllers
             var validActivityType = new ActivityType();
 
             var activityTypeRepository = FakeRepository<ActivityType>();
-            activityTypeRepository.Expect(a => a.GetNullableByID(validActivityTypeId)).Return(validActivityType);
+            activityTypeRepository.Expect(a => a.GetNullableById(validActivityTypeId)).Return(validActivityType);
 
             Controller.Repository.Expect(a => a.OfType<ActivityType>()).Return(activityTypeRepository).Repeat.Any();
 
@@ -565,7 +565,7 @@ namespace FSNEP.Tests.Controllers
             const int invalidAccountId = 42;
 
             var accountRepository = FakeRepository<Account>();
-            accountRepository.Expect(a => a.GetNullableByID(invalidAccountId)).Return(null);
+            accountRepository.Expect(a => a.GetNullableById(invalidAccountId)).Return(null);
 
             Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository);
 
@@ -585,7 +585,7 @@ namespace FSNEP.Tests.Controllers
             var activeAccount = new Account { IsActive = true };
 
             var accountRepository = FakeRepository<Account>();
-            accountRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(activeAccount);
+            accountRepository.Expect(a => a.GetNullableById(1)).IgnoreArguments().Return(activeAccount);
 
             Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository).Repeat.Any();
 
@@ -605,7 +605,7 @@ namespace FSNEP.Tests.Controllers
             var activeAccount = new Account { IsActive = true };
 
             var accountRepository = FakeRepository<Account>();
-            accountRepository.Expect(a => a.GetNullableByID(42)).IgnoreArguments().Return(null);
+            accountRepository.Expect(a => a.GetNullableById(42)).IgnoreArguments().Return(null);
 
             Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository).Repeat.Any();
 
@@ -626,7 +626,7 @@ namespace FSNEP.Tests.Controllers
             var validAccount = new Account();
 
             var accountRepository = FakeRepository<Account>();
-            accountRepository.Expect(a => a.GetNullableByID(validAccountId)).Return(validAccount);
+            accountRepository.Expect(a => a.GetNullableById(validAccountId)).Return(validAccount);
 
             Controller.Repository.Expect(a => a.OfType<Account>()).Return(accountRepository).Repeat.Any();
 
@@ -772,7 +772,7 @@ namespace FSNEP.Tests.Controllers
             const int invalidActivityCategoryId = 42;
 
             var activityCategoryRepository = FakeRepository<ActivityCategory>();
-            activityCategoryRepository.Expect(a => a.GetNullableByID(invalidActivityCategoryId)).Return(null);
+            activityCategoryRepository.Expect(a => a.GetNullableById(invalidActivityCategoryId)).Return(null);
 
             Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository);
 
@@ -791,7 +791,7 @@ namespace FSNEP.Tests.Controllers
             var activeActivityCategory = new ActivityCategory { IsActive = true };
 
             var activityCategoryRepository = FakeRepository<ActivityCategory>();
-            activityCategoryRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(activeActivityCategory);
+            activityCategoryRepository.Expect(a => a.GetNullableById(1)).IgnoreArguments().Return(activeActivityCategory);
 
             Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository).Repeat.Any();
 
@@ -811,7 +811,7 @@ namespace FSNEP.Tests.Controllers
             var activeActivityCategory = new ActivityCategory { IsActive = true };
 
             var activityCategoryRepository = FakeRepository<ActivityCategory>();
-            activityCategoryRepository.Expect(a => a.GetNullableByID(42)).IgnoreArguments().Return(null);
+            activityCategoryRepository.Expect(a => a.GetNullableById(42)).IgnoreArguments().Return(null);
 
             Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository).Repeat.Any();
 
@@ -832,7 +832,7 @@ namespace FSNEP.Tests.Controllers
             var validActivityCategory = new ActivityCategory();
 
             var activityCategoryRepository = FakeRepository<ActivityCategory>();
-            activityCategoryRepository.Expect(a => a.GetNullableByID(validActivityCategoryId)).Return(validActivityCategory);
+            activityCategoryRepository.Expect(a => a.GetNullableById(validActivityCategoryId)).Return(validActivityCategory);
 
             Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(activityCategoryRepository).Repeat.Any();
 
@@ -973,7 +973,7 @@ namespace FSNEP.Tests.Controllers
             const int invalidExpenseTypeId = 42;
 
             var expenseTypeRepository = FakeRepository<ExpenseType>();
-            expenseTypeRepository.Expect(a => a.GetNullableByID(invalidExpenseTypeId)).Return(null);
+            expenseTypeRepository.Expect(a => a.GetNullableById(invalidExpenseTypeId)).Return(null);
 
             Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository);
 
@@ -992,7 +992,7 @@ namespace FSNEP.Tests.Controllers
             var activeExpenseType = new ExpenseType { IsActive = true };
 
             var expenseTypeRepository = FakeRepository<ExpenseType>();
-            expenseTypeRepository.Expect(a => a.GetNullableByID(1)).IgnoreArguments().Return(activeExpenseType);
+            expenseTypeRepository.Expect(a => a.GetNullableById(1)).IgnoreArguments().Return(activeExpenseType);
 
             Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository).Repeat.Any();
 
@@ -1013,7 +1013,7 @@ namespace FSNEP.Tests.Controllers
             var activeExpenseType = new ExpenseType { IsActive = true };
 
             var expenseTypeRepository = FakeRepository<ExpenseType>();
-            expenseTypeRepository.Expect(a => a.GetNullableByID(42)).IgnoreArguments().Return(null);
+            expenseTypeRepository.Expect(a => a.GetNullableById(42)).IgnoreArguments().Return(null);
 
             Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository).Repeat.Any();
 
@@ -1034,7 +1034,7 @@ namespace FSNEP.Tests.Controllers
             var validExpenseType = new ExpenseType();
 
             var expenseTypeRepository = FakeRepository<ExpenseType>();
-            expenseTypeRepository.Expect(a => a.GetNullableByID(validExpenseTypeId)).Return(validExpenseType);
+            expenseTypeRepository.Expect(a => a.GetNullableById(validExpenseTypeId)).Return(validExpenseType);
 
             Controller.Repository.Expect(a => a.OfType<ExpenseType>()).Return(expenseTypeRepository).Repeat.Any();
 
@@ -1225,7 +1225,7 @@ namespace FSNEP.Tests.Controllers
             //CreateActivityType calls GetNullableById for ActivityCategory
             var validActivityCategory = new ActivityCategory{Name = "ValidCategory"};
             var validActivityCategoryRepository = FakeRepository<ActivityCategory>();
-            validActivityCategoryRepository.Expect(a => a.GetNullableByID(validCategoryId)).Return(validActivityCategory);
+            validActivityCategoryRepository.Expect(a => a.GetNullableById(validCategoryId)).Return(validActivityCategory);
             Controller.Repository.Expect(a => a.OfType<ActivityCategory>()).Return(validActivityCategoryRepository).Repeat.Any();
            
         }

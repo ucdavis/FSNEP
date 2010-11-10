@@ -13,8 +13,11 @@
     
     <%--//TODO: Remove (if you want) in place of custom style sheets
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" rel="Stylesheet" type="text/css" media="screen" />
-   --%> <%= Html.Telerik().StyleSheetRegistrar()
-                     .DefaultGroup(group => group.Add("telerik.common.css")
+   --%> 
+   
+   <%= Html.Telerik().StyleSheetRegistrar()
+                            .DefaultGroup(group => group.DefaultPath("~/Content/2009.3.1103.0/")
+                                                .Add("telerik.common.css")
                                                  .Add("telerik.vista.css")
                                                  .Combined(false)
                                   )

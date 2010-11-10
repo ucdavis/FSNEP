@@ -55,7 +55,7 @@ namespace FSNEP.Controllers
 
         public ActionResult Review(int id)
         {
-            var costShare = _costShareRepository.GetNullableByID(id);
+            var costShare = _costShareRepository.GetNullableById(id);
 
             Check.Require(costShare != null, "Invalid cost share identifier");
 
@@ -71,7 +71,7 @@ namespace FSNEP.Controllers
 
         public ActionResult Entry(int id)
         {
-            var costShare = _costShareRepository.GetNullableByID(id);
+            var costShare = _costShareRepository.GetNullableById(id);
 
             Check.Require(costShare != null, "Invalid cost share identifier");
 
@@ -92,12 +92,12 @@ namespace FSNEP.Controllers
             return View(viewModel);
         }
 
-        [AcceptPost]
+        [HttpPost]
         [Transaction]
         [ValidateAntiForgeryToken]
         public ActionResult Entry(int id, CostShareEntry entry, HttpPostedFileBase postedFile)
         {
-            var costShare = _costShareRepository.GetNullableByID(id);
+            var costShare = _costShareRepository.GetNullableById(id);
             
             Check.Require(costShare != null, "Invalid cost share identifier");
 
@@ -143,14 +143,14 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(x => x.Entry(id));
         }
 
-        [AcceptPost]
+        [HttpPost]
         [Transaction]
         [ValidateAntiForgeryToken]
         public ActionResult RemoveEntry(int entryId)
         {
             var entryRepository = Repository.OfType<CostShareEntry>();
 
-            var entry = entryRepository.GetByID(entryId);
+            var entry = entryRepository.GetById(entryId);
 
             var parentRecord = entry.Record;
 
@@ -163,12 +163,12 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(x => x.Entry(parentRecord.Id));
         }
 
-        [AcceptPost]
+        [HttpPost]
         [Transaction]
         [ValidateAntiForgeryToken]
         public ActionResult Submit(int id)
         {
-            var costShare = _costShareRepository.GetNullableByID(id);
+            var costShare = _costShareRepository.GetNullableById(id);
 
             Check.Require(costShare != null, "Invalid cost share identifier");
 

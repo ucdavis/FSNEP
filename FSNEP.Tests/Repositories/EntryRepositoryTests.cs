@@ -33,7 +33,7 @@ namespace FSNEP.Tests.Repositories
             const int recordId = 1;
             const string entryComment = "CanSaveValidEntryThenRetrieveInParentRecord test";
 
-            var record = recordRepository.GetByID(recordId);
+            var record = recordRepository.GetById(recordId);
             
             var entry = CreateValidEntry();
             entry.Comment = entryComment;
@@ -45,7 +45,7 @@ namespace FSNEP.Tests.Repositories
             NHibernateSessionManager.Instance.GetSession().Flush();
 
             //We saved an entry to the record id=recordId
-            var newRecord = recordRepository.GetByID(recordId);
+            var newRecord = recordRepository.GetById(recordId);
 
             Assert.AreEqual(1, newRecord.Entries.Count);
             Assert.AreEqual(entryComment, newRecord.Entries[0].Comment);

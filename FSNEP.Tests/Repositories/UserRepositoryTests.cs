@@ -56,12 +56,12 @@ namespace FSNEP.Tests.Repositories
             UserBLL.UserAuth.Expect(a => a.CurrentUserName).Return("currentuser");
             UserBLL.UserAuth.Expect(a => a.GetUser("currentuser")).Return(new FakeMembershipUser(UserIds[0])); //Current user is the first user
 
-            var project1 = projectRepository.GetByID(1);
-            var project2 = projectRepository.GetByID(2);
-            var project3 = projectRepository.GetByID(3);
-            var project4 = projectRepository.GetByID(4);
+            var project1 = projectRepository.GetById(1);
+            var project2 = projectRepository.GetById(2);
+            var project3 = projectRepository.GetById(3);
+            var project4 = projectRepository.GetById(4);
 
-            var currentUser = UserBLL.GetByID(UserIds[0]);
+            var currentUser = UserBLL.GetById(UserIds[0]);
 
             //The current user gets projects 1 and 3
             currentUser.Projects.Add(project1);
@@ -75,7 +75,7 @@ namespace FSNEP.Tests.Repositories
 
                 for (int i = 1; i < UserIds.Count; i++)
                 {
-                    var user = UserBLL.GetByID(UserIds[i]);
+                    var user = UserBLL.GetById(UserIds[i]);
 
                     if (i == 1) user.Projects.Add(project1); //selected
                     if (i == 2) user.Projects.Add(project2); //not selected
@@ -123,7 +123,7 @@ namespace FSNEP.Tests.Repositories
             var project1 = projectRepository.Queryable.Where(p => p.Id == 1).Single();
             var project2 = projectRepository.Queryable.Where(p => p.Id == 2).Single();
 
-            var currentUser = UserBLL.GetByID(UserIds[0]);
+            var currentUser = UserBLL.GetById(UserIds[0]);
             currentUser.Projects.Add(project1);
 
             using (var ts = new TransactionScope())
@@ -132,7 +132,7 @@ namespace FSNEP.Tests.Repositories
 
                 for (int i = 1; i < UserIds.Count; i++)
                 {
-                    var user = UserBLL.GetByID(UserIds[i]);
+                    var user = UserBLL.GetById(UserIds[i]);
 
                     if (i%2 == 0)
                     {
@@ -171,7 +171,7 @@ namespace FSNEP.Tests.Repositories
             {
                 foreach (var userId in UserIds)
                 {
-                    var currentUser = UserBLL.GetByID(userId);
+                    var currentUser = UserBLL.GetById(userId);
 
                     currentUser.Projects.Add(project1);
 
@@ -217,7 +217,7 @@ namespace FSNEP.Tests.Repositories
             //Make one user inactive
             using (var ts = new TransactionScope())
             {
-                var user = UserBLL.GetByID(UserIds[0]);
+                var user = UserBLL.GetById(UserIds[0]);
                 user.IsActive = false;
 
                 UserBLL.EnsurePersistent(user);

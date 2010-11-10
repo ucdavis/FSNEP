@@ -32,7 +32,7 @@ namespace FSNEP.Controllers
         /// </remarks>
         public ActionResult PrintOwnTimeRecord(int id)
         {
-            var record = Repository.OfType<TimeRecord>().GetNullableByID(id);
+            var record = Repository.OfType<TimeRecord>().GetNullableById(id);
 
             Check.Require(record != null, "Record not found");
 
@@ -49,7 +49,7 @@ namespace FSNEP.Controllers
         /// </summary>
         public ActionResult DisplayViewableTimeRecord(int id)
         {
-            var record = Repository.OfType<TimeRecord>().GetNullableByID(id);
+            var record = Repository.OfType<TimeRecord>().GetNullableById(id);
 
             Check.Require(record != null, "Record not found");
 
@@ -75,7 +75,7 @@ namespace FSNEP.Controllers
             return View(users);
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult TimeRecord(int recordId)
         {
             return DisplayViewableTimeRecord(recordId);
@@ -105,10 +105,10 @@ namespace FSNEP.Controllers
             return View(projects);
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult CostShare(int projectId, int year)
         {
-            var project = Repository.OfType<Project>().GetNullableByID(projectId);
+            var project = Repository.OfType<Project>().GetNullableById(projectId);
 
             Check.Require(project != null);
 

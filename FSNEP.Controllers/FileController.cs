@@ -20,11 +20,11 @@ namespace FSNEP.Controllers
 
         public ActionResult ViewEntryFile(int entryId)
         {
-            var entry = Repository.OfType<CostShareEntry>().GetNullableByID(entryId);
+            var entry = Repository.OfType<CostShareEntry>().GetNullableById(entryId);
 
             Check.Require(entry != null, "Invalid entry identifier");
 
-            var costShare = _costShareRepository.GetNullableByID(entry.Record.Id);
+            var costShare = _costShareRepository.GetNullableById(entry.Record.Id);
 
             Check.Require(costShare != null, "Invalid cost share identifier");
 

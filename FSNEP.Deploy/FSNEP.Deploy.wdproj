@@ -1,19 +1,20 @@
-﻿<!-- 
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
   Microsoft Visual Studio 2008 Web Deployment Project 
   http://go.microsoft.com/fwlink/?LinkID=104956
 
 -->
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>10.0.30319</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{47302392-C69F-4DDC-B22E-A9DB11801B24}</ProjectGuid>
     <SourceWebPhysicalPath>..\FSNEP</SourceWebPhysicalPath>
     <SourceWebProject>{C50E9962-0BC1-455F-B41C-6566DFD3389E}|FSNEP\FSNEP.csproj</SourceWebProject>
     <SourceWebVirtualPath>/FSNEP.csproj</SourceWebVirtualPath>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -43,6 +44,10 @@
     <UseWebConfigReplacement>true</UseWebConfigReplacement>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FSNEP\FSNEP.csproj">
+      <Project>{C50E9962-0BC1-455F-B41C-6566DFD3389E}</Project>
+      <Name>FSNEP</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
     <WebConfigReplacementFiles Include="AppSettings-Test.config">
@@ -60,7 +65,7 @@
       <Section>connectionStrings</Section>
     </WebConfigReplacementFiles>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WebDeployment\v9.0\Microsoft.WebDeployment.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WebDeployment\v10.0\Microsoft.WebDeployment.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.WebDeployment.targets.
   <Target Name="BeforeBuild">

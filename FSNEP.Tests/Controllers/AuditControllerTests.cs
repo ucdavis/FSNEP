@@ -140,7 +140,7 @@ namespace FSNEP.Tests.Controllers
             FakeCostShareRecords();
             FakeCostShareEntryRecords();
 
-            CostShareRepository.Expect(a => a.GetNullableByID(costShareId)).Return(CostShareRecords[2]).Repeat.Any();
+            CostShareRepository.Expect(a => a.GetNullableById(costShareId)).Return(CostShareRecords[2]).Repeat.Any();
 
             var result = Controller.CostShareReview(costShareId)
                 .AssertViewRendered()
@@ -161,7 +161,7 @@ namespace FSNEP.Tests.Controllers
         {
             try
             {
-                CostShareRepository.Expect(a => a.GetNullableByID(9)).Return(null).Repeat.Once();
+                CostShareRepository.Expect(a => a.GetNullableById(9)).Return(null).Repeat.Once();
                 var result = Controller.CostShareReview(9)
                 .AssertViewRendered()
                 .WithViewData<CostShareAuditReviewViewModel>();
@@ -211,7 +211,7 @@ namespace FSNEP.Tests.Controllers
         {
             try
             {
-                CostShareEntryRepository.Expect(a => a.GetNullableByID(9)).Return(null).Repeat.Once();
+                CostShareEntryRepository.Expect(a => a.GetNullableById(9)).Return(null).Repeat.Once();
                 Controller.CostShareExclude(9, "Because");
             }
             catch (Exception ex)
@@ -354,7 +354,7 @@ namespace FSNEP.Tests.Controllers
                 Projects[i].SetIdTo(i + 1);
             }
             ProjectRepository.Expect(a => a.Queryable).Return(Projects.AsQueryable()).Repeat.Any();
-            ProjectRepository.Expect(a => a.GetNullableByID(5)).Return(Projects[4]).Repeat.Any();
+            ProjectRepository.Expect(a => a.GetNullableById(5)).Return(Projects[4]).Repeat.Any();
         }
 
         /// <summary>
@@ -407,7 +407,7 @@ namespace FSNEP.Tests.Controllers
             CostShareRecords[4].AddEntry(CostShareEntryRecords[5]);
 
             CostShareEntryRepository.Expect(a => a.Queryable).Return(CostShareEntryRecords.AsQueryable()).Repeat.Any();
-            CostShareEntryRepository.Expect(a => a.GetNullableByID(3)).Return(CostShareEntryRecords[2]).Repeat.Any();
+            CostShareEntryRepository.Expect(a => a.GetNullableById(3)).Return(CostShareEntryRecords[2]).Repeat.Any();
         }
 
         #endregion Helper Methods

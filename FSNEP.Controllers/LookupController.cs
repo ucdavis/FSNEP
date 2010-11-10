@@ -22,7 +22,7 @@ namespace FSNEP.Controllers
             return View(activeActivityTypes);
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult InactivateActivityType(int id)
         {
             InactivateEntity<ActivityType>(id, "Activity Type");
@@ -30,10 +30,10 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(a => a.ActivityTypes());
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult CreateActivityType(ActivityType newActivityType, int activityCategoryId)
         {
-            newActivityType.ActivityCategory = Repository.OfType<ActivityCategory>().GetNullableByID(activityCategoryId);
+            newActivityType.ActivityCategory = Repository.OfType<ActivityCategory>().GetNullableById(activityCategoryId);
 
             CreateEntity<ActivityType, int>(newActivityType, "Activity Type");
             
@@ -49,7 +49,7 @@ namespace FSNEP.Controllers
             return View(activeActivityCategories);
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult InactivateActivityCategory(int id)
         {
             InactivateEntity<ActivityCategory>(id, "Activity Category");
@@ -57,7 +57,7 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(a => a.ActivityCategories(null));
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult CreateActivityCategory(ActivityCategory newActivityCategory, string returnTo)
         {
             CreateEntity<ActivityCategory, int>(newActivityCategory, "Activity Category");
@@ -74,7 +74,7 @@ namespace FSNEP.Controllers
             return View(activeExpenseTypes);
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult InactivateExpenseType(int id)
         {
             InactivateEntity<ExpenseType>(id, "Expense Type");
@@ -82,7 +82,7 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(a => a.ExpenseTypes());
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult CreateExpenseType(ExpenseType newExpenseType)
         {
             CreateEntity<ExpenseType, int>(newExpenseType, "Expense Type");
@@ -99,7 +99,7 @@ namespace FSNEP.Controllers
             return View(activeAccounts);
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult InactivateAccount(int id)
         {
             InactivateEntity<Account>(id, "Account");
@@ -107,7 +107,7 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(a => a.Accounts());
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult CreateAccount(Account newAccount)
         {
             CreateEntity<Account, int>(newAccount, "Account");
@@ -123,7 +123,7 @@ namespace FSNEP.Controllers
             return View(hoursInMonths);
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult CreateHoursInMonth(HoursInMonth newHoursInMonth, YearMonthComposite hoursInMonthId)
         {
             var hoursInMonth = new HoursInMonth(hoursInMonthId.Year, hoursInMonthId.Month) { Hours = newHoursInMonth.Hours };
@@ -144,7 +144,7 @@ namespace FSNEP.Controllers
             return View(activeProjects);
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult InactivateProject(int id)
         {
             InactivateEntity<Project>(id, "Project");
@@ -152,7 +152,7 @@ namespace FSNEP.Controllers
             return this.RedirectToAction(a => a.Projects());
         }
 
-        [AcceptPost]
+        [HttpPost]
         public ActionResult CreateProject(Project newProject)
         {
             CreateEntity<Project, int>(newProject, "Project");
@@ -183,7 +183,7 @@ namespace FSNEP.Controllers
 
         private void InactivateEntity<T>(int id, string type) where T : LookupObject
         {
-            var entity = Repository.OfType<T>().GetNullableByID(id);
+            var entity = Repository.OfType<T>().GetNullableById(id);
 
             if (Equals(entity, default(T)))
             {

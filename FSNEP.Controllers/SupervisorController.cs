@@ -38,7 +38,7 @@ namespace FSNEP.Controllers
 
         public ActionResult CostShareReview(int id)
         {
-            var costShare = Repository.OfType<CostShare>().GetNullableByID(id);
+            var costShare = Repository.OfType<CostShare>().GetNullableById(id);
 
             Check.Require(costShare != null);
 
@@ -65,7 +65,7 @@ namespace FSNEP.Controllers
 
         public ActionResult TimeRecordReview(int id)
         {
-            var timeRecord = Repository.OfType<TimeRecord>().GetNullableByID(id);
+            var timeRecord = Repository.OfType<TimeRecord>().GetNullableById(id);
 
             Check.Require(timeRecord != null);
 
@@ -86,7 +86,7 @@ namespace FSNEP.Controllers
 
         public ActionResult ApproveOrDenyRecord(int id, string reviewComment, bool approved)
         {
-            var record = Repository.OfType<Record>().GetNullableByID(id);
+            var record = Repository.OfType<Record>().GetNullableById(id);
             
             Check.Require(record != null, "Invalid record identifier");
 
@@ -149,11 +149,11 @@ namespace FSNEP.Controllers
             return View(users);
         }
 
-        [AcceptPost]
+        [HttpPost]
         [DirectSupervisorsOnly]
         public ActionResult AssignDelegate(Guid userId)
         {
-            var userToAssign = _userBLL.GetNullableByID(userId);
+            var userToAssign = _userBLL.GetNullableById(userId);
 
             Check.Require(userToAssign != null);
 
@@ -173,16 +173,16 @@ namespace FSNEP.Controllers
                 _userBLL.Queryable.Where(x => x.UserName == CurrentUser.Identity.Name && x.Delegate != null).Select(
                 x => x.Delegate.Id).Single();
             
-            var delegateUser = _userBLL.GetNullableByID(delegateUserId);
+            var delegateUser = _userBLL.GetNullableById(delegateUserId);
             
             return View(delegateUser);
         }
 
-        [AcceptPost]
+        [HttpPost]
         [DirectSupervisorsOnly]
         public ActionResult RemoveDelegate(Guid userId)
         {
-            var userToRemove = _userBLL.GetNullableByID(userId);
+            var userToRemove = _userBLL.GetNullableById(userId);
 
             Check.Require(userToRemove != null);
 

@@ -1,0 +1,10 @@
+DBRefFolders found in your dbp file
+Connect String: Data Source=donbot;Initial Catalog=FSNEP2;Integrated Security=True
+Provider: Microsoft SQL Server
+
+Connect String: Data Source=terry;Initial Catalog=FSNEP2;Integrated Security=True
+Provider: Microsoft SQL Server
+
+Connect String: Data Source=vogel;Initial Catalog=FSNEPv2;Integrated Security=True
+Provider: Microsoft SQL Server
+

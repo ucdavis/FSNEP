@@ -64,7 +64,7 @@ namespace FSNEP.Controllers
         /// <param name="model"></param>
         /// <param name="roleList">List of roles for this user. May be added to by code.</param>
         /// <returns>Either the user view model on failure or the list of users on success</returns>
-        [AcceptPost]
+        [HttpPost]
         public ActionResult Create(CreateUserViewModel model, List<string> roleList)
         {
             model.User.UserName = model.UserName; //transfer the username & email to the user class
@@ -294,7 +294,7 @@ namespace FSNEP.Controllers
         /// <param name="roleList">List of roles for the user. May be added to by code.</param>
         /// <param name="id">UserName/ID</param>
         /// <returns>Either the user view model on failure or the list of users on success</returns>
-        [AcceptPost]
+        [HttpPost]
         [Transaction]
         public ActionResult Modify(User user, List<string> roleList, string id)
         {
@@ -416,7 +416,7 @@ namespace FSNEP.Controllers
         {
             var users = filterProjectId == null
                             ? userBLL.GetAllUsers()
-                            : userBLL.GetAllUsers().Where(x => x.Projects.Contains(projectRepository.GetByID(filterProjectId.Value)));
+                            : userBLL.GetAllUsers().Where(x => x.Projects.Contains(projectRepository.GetById(filterProjectId.Value)));
 
             var viewModel = new UserListViewModel
                                 {

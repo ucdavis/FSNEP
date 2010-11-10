@@ -134,7 +134,7 @@ namespace FSNEP.Tests.Controllers
             var timeRecord = CreateValidEntities.TimeRecord(null);
             timeRecord.User = _currentUser;
             timeRecord.SetIdTo(5);
-            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+            _timeRecordRepository.Expect(a => a.GetNullableById(timeRecord.Id)).Return(timeRecord).Repeat.Once();
 
             //We do not care about the comparison that HasAccess is doing in the BLL
             _timeRecordBLL.Expect(a => a.HasAccess(_principal, timeRecord)).Return(false).Repeat.Once();
@@ -148,7 +148,7 @@ namespace FSNEP.Tests.Controllers
             var timeRecord = CreateValidEntities.TimeRecord(null);
             timeRecord.User = _currentUser;
             timeRecord.SetIdTo(5);
-            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+            _timeRecordRepository.Expect(a => a.GetNullableById(timeRecord.Id)).Return(timeRecord).Repeat.Once();
 
             //We do not care about the comparison that HasAccess is doing in the BLL
             _timeRecordBLL.Expect(a => a.HasAccess(_principal, timeRecord)).Return(true).Repeat.Once();
@@ -183,7 +183,7 @@ namespace FSNEP.Tests.Controllers
             var timeRecord = CreateValidEntities.TimeRecord(null);
             timeRecord.User = _currentUser;
             timeRecord.SetIdTo(5);
-            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+            _timeRecordRepository.Expect(a => a.GetNullableById(timeRecord.Id)).Return(timeRecord).Repeat.Once();
 
             var emptyUsers = new List<User>();
 
@@ -199,7 +199,7 @@ namespace FSNEP.Tests.Controllers
             var timeRecord = CreateValidEntities.TimeRecord(null);
             timeRecord.User = _currentUser;
             timeRecord.SetIdTo(5);
-            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+            _timeRecordRepository.Expect(a => a.GetNullableById(timeRecord.Id)).Return(timeRecord).Repeat.Once();
 
             var users = new List<User>();
             for (int i = 0; i < 5; i++)
@@ -218,7 +218,7 @@ namespace FSNEP.Tests.Controllers
             var timeRecord = CreateValidEntities.TimeRecord(null);
             timeRecord.User = _currentUser;
             timeRecord.SetIdTo(5);
-            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+            _timeRecordRepository.Expect(a => a.GetNullableById(timeRecord.Id)).Return(timeRecord).Repeat.Once();
 
             var users = new List<User>();
             for (int i = 0; i < 5; i++)
@@ -261,7 +261,7 @@ namespace FSNEP.Tests.Controllers
             var timeRecord = CreateValidEntities.TimeRecord(null);
             timeRecord.User = _currentUser;
             timeRecord.SetIdTo(5);
-            _timeRecordRepository.Expect(a => a.GetNullableByID(timeRecord.Id)).Return(timeRecord).Repeat.Once();
+            _timeRecordRepository.Expect(a => a.GetNullableById(timeRecord.Id)).Return(timeRecord).Repeat.Once();
 
             var users = new List<User>();
             for (int i = 0; i < 5; i++)
@@ -377,7 +377,7 @@ namespace FSNEP.Tests.Controllers
             try
             {
                 Controller.Repository.Expect(a => a.OfType<Project>()).Return(_projectRepository).Repeat.Once();
-                _projectRepository.Expect(a => a.GetNullableByID(5)).Return(null).Repeat.Once();
+                _projectRepository.Expect(a => a.GetNullableById(5)).Return(null).Repeat.Once();
                 Controller.CostShare(5, 2009);
             }
             catch (Exception ex)
@@ -402,7 +402,7 @@ namespace FSNEP.Tests.Controllers
 
             var diffProject = CreateValidEntities.Project(6);
             diffProject.SetIdTo(6);
-            _projectRepository.Expect(a => a.GetNullableByID(6)).Return(diffProject).Repeat.Once();
+            _projectRepository.Expect(a => a.GetNullableById(6)).Return(diffProject).Repeat.Once();
 
             Controller.CostShare(diffProject.Id, 2009)
                 .AssertResultIs<HttpUnauthorizedResult>();
@@ -421,7 +421,7 @@ namespace FSNEP.Tests.Controllers
             Controller.Repository.Expect(a => a.OfType<Project>()).Return(_projectRepository).Repeat.Twice();
             _userBLL.Expect(a => a.GetAllProjectsByUser(_projectRepository)).Return(projects.AsQueryable()).Repeat.Once();
 
-            _projectRepository.Expect(a => a.GetNullableByID(2)).Return(projects[1]).Repeat.Once();
+            _projectRepository.Expect(a => a.GetNullableById(2)).Return(projects[1]).Repeat.Once();
 
             _reportBLL.Expect(a => a.GenerateCostShare(projects[1], 2009, ReportType.Excel))
                 .Return(new ReportResult(new byte[1], "contentType")).Repeat.Once();
