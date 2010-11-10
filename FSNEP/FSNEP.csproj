@@ -215,6 +215,8 @@
     <Content Include="Scripts\xVal.jquery.validate.js" />
     <Content Include="Views\Account\ChangePassword.aspx" />
     <Content Include="Views\Account\ChangePasswordSuccess.aspx" />
+    <Content Include="Views\Account\ChangeQuestionAnswer.aspx" />
+    <Content Include="Views\Account\ChangeQuestionAnswerSuccess.aspx" />
     <Content Include="Views\Account\ForgotPassword.aspx" />
     <Content Include="Views\Account\LogOn.aspx" />
     <Content Include="Views\Account\NewUser.aspx" />

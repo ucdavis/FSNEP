@@ -32,7 +32,8 @@
                     <input type="submit" value="Log On" />
                 </p>
                 <p>
-                    <%= Html.ActionLink("Forgot Password?", "ForgotPassword") %>
+                    <%= Html.ActionLink("Forgot Password?", "ForgotPassword") %><br />
+                    <%= Html.ActionLink("Change Question/Answer", "ChangeQuestionAnswer") %>
                 </p>
             </fieldset>
         </div>

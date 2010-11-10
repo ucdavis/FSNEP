@@ -293,6 +293,31 @@ namespace FSNEP.Controllers
             return View();
         }
 
+        public ActionResult ChangeQuestionAnswer()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [BypassAntiForgeryToken]
+        public ActionResult ChangeQuestionAnswer(string username, string password, string newQuestion, string newAnswer)
+        {
+            if (MembershipService.ChangePasswordQuestionAndAnswer(username, password, newQuestion, newAnswer))
+            {
+                return RedirectToAction("ChangeQuestionAnswerSuccess");
+            }
+            else
+            {
+                ModelState.AddModelError("_FORM", "The username or password provided is incorrect.");
+                return View();
+            }
+        }
+
+        public ViewResult ChangeQuestionAnswerSuccess()
+        {
+            return View();
+        }
+
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (filterContext.HttpContext.User.Identity is WindowsIdentity)
