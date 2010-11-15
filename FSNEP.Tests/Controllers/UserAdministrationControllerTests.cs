@@ -311,7 +311,7 @@ namespace FSNEP.Tests.Controllers
             userModel.User.Supervisor = null;
 
             var newUserModel = (ViewResult)Controller.Create(userModel, CreateListOfRoles());
-            newUserModel.ViewData.ModelState.AssertErrorsAre("Supervisor: may not be empty"); 
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Supervisor: may not be null"); 
         } 
         
         /// <summary>
@@ -1520,7 +1520,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreNotEqual(null, userModelOriginal.User.Supervisor, "Value was changed before we expected it to be.");
 
             var newUserModel = (ViewResult)Controller.Modify(newUser, CreateListOfRoles(), userModelOriginal.UserName);
-            newUserModel.ViewData.ModelState.AssertErrorsAre("Supervisor: may not be empty");
+            newUserModel.ViewData.ModelState.AssertErrorsAre("Supervisor: may not be null");
         }
 
 

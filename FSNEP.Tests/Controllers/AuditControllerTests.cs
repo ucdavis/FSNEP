@@ -5,6 +5,7 @@ using System.Text;
 using FSNEP.Controllers;
 using FSNEP.Core.Domain;
 using FSNEP.Tests.Core.Helpers;
+using FSNEP.Tests.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
@@ -57,7 +58,7 @@ namespace FSNEP.Tests.Controllers
         public void TestRoutingCostShareAuditHistoryMapsToHistory()
         {
             const int id = 5;
-            "~/Administration/Audit/CostShareHistory/5".ShouldMapTo<AuditController>(a => a.CostShareHistory(id));
+            "~/Administration/Audit/CostShareHistory/5".ShouldMapTo<AuditController>(a => a.CostShareHistory(id), true);
         }
 
         /// <summary>

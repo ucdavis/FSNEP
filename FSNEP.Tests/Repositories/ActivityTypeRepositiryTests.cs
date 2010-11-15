@@ -274,7 +274,7 @@ namespace FSNEP.Tests.Repositories
             {
                 var results = activityType.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("ActivityCategory: may not be empty");
+                results.AssertContains("ActivityCategory: may not be null");
                 //Assert.AreEqual("Object of type FSNEP.Core.Domain.ActivityType could not be persisted\n\n\r\nValidation Errors: ActivityCategory, The value cannot be null.\r\n", message.Message, "Expected Exception Not encountered");
                 throw;
             }

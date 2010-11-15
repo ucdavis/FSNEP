@@ -216,7 +216,7 @@ namespace FSNEP.Tests.Repositories
             {
                 Assert.IsNotNull(entry);
                 var results = entry.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("Record: may not be empty");
+                results.AssertErrorsAre("Record: may not be null");
                 Assert.IsTrue(entry.IsTransient());
                 Assert.IsFalse(entry.IsValid());
                 throw;
@@ -270,7 +270,7 @@ namespace FSNEP.Tests.Repositories
             {
                 Assert.IsNotNull(entry);
                 var results = entry.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("Project: may not be empty");
+                results.AssertErrorsAre("Project: may not be null");
                 Assert.IsTrue(entry.IsTransient());
                 Assert.IsFalse(entry.IsValid());
                 throw;
@@ -323,7 +323,7 @@ namespace FSNEP.Tests.Repositories
             {
                 Assert.IsNotNull(entry);
                 var results = entry.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("FundType: may not be empty");
+                results.AssertErrorsAre("FundType: may not be null");
                 Assert.IsTrue(entry.IsTransient());
                 Assert.IsFalse(entry.IsValid());
                 throw;
@@ -376,7 +376,7 @@ namespace FSNEP.Tests.Repositories
             {
                 Assert.IsNotNull(entry);
                 var results = entry.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("Account: may not be empty");
+                results.AssertErrorsAre("Account: may not be null");
                 Assert.IsTrue(entry.IsTransient());
                 Assert.IsFalse(entry.IsValid());
                 throw;

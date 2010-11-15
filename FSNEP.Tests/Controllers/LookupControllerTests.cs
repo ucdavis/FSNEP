@@ -312,7 +312,7 @@ namespace FSNEP.Tests.Controllers
             activityTypeRepository
                 .AssertWasNotCalled(a => a.EnsurePersistent(newActivityType));//make sure we didn't call persist
 
-            Controller.ModelState.AssertErrorsAre("ActivityCategory: may not be empty");
+            Controller.ModelState.AssertErrorsAre("ActivityCategory: may not be null");
             Assert.IsFalse(Controller.ModelState.IsValid);
             Assert.IsTrue(Controller.Message.StartsWith("Activity Type Creation Failed."));
         }

@@ -382,7 +382,7 @@ namespace FSNEP.Tests.Repositories
 
                 var results = user.ValidationResults().AsMessageList();
                 Assert.AreEqual(1, results.Count);
-                results.AssertContains("Supervisor: may not be empty");
+                results.AssertContains("Supervisor: may not be null");
   
                 throw;
             }

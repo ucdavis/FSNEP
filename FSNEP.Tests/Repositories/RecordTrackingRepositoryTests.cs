@@ -223,7 +223,7 @@ namespace FSNEP.Tests.Repositories
                 if (recordTracking != null)
                 {
                     var results = recordTracking.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Record: may not be empty");
+                    results.AssertErrorsAre("Record: may not be null");
                     Assert.IsTrue(recordTracking.IsTransient());
                     Assert.IsFalse(recordTracking.IsValid());
                 }
@@ -256,7 +256,7 @@ namespace FSNEP.Tests.Repositories
                 if (recordTracking != null)
                 {
                     var results = recordTracking.ValidationResults().AsMessageList();
-                    results.AssertErrorsAre("Status: may not be empty");
+                    results.AssertErrorsAre("Status: may not be null");
                     Assert.IsTrue(recordTracking.IsTransient());
                     Assert.IsFalse(recordTracking.IsValid());
                 }

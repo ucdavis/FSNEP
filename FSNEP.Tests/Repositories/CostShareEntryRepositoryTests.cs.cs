@@ -138,7 +138,7 @@ namespace FSNEP.Tests.Repositories
                 Assert.IsNotNull(costShareEntry);
 
                 var results = costShareEntry.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("ExpenseType: may not be empty");
+                results.AssertErrorsAre("ExpenseType: may not be null");
                 Assert.IsTrue(costShareEntry.IsTransient());
                 Assert.IsFalse(costShareEntry.IsValid());
 
@@ -325,7 +325,7 @@ namespace FSNEP.Tests.Repositories
                 Assert.IsNotNull(costShareEntry);
 
                 var results = costShareEntry.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("Project: may not be empty");
+                results.AssertErrorsAre("Project: may not be null");
                 Assert.IsTrue(costShareEntry.IsTransient());
                 Assert.IsFalse(costShareEntry.IsValid());
 
@@ -386,7 +386,7 @@ namespace FSNEP.Tests.Repositories
                 Assert.IsNotNull(costShareEntry);
 
                 var results = costShareEntry.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("FundType: may not be empty");
+                results.AssertErrorsAre("FundType: may not be null");
                 Assert.IsTrue(costShareEntry.IsTransient());
                 Assert.IsFalse(costShareEntry.IsValid());
 
@@ -447,7 +447,7 @@ namespace FSNEP.Tests.Repositories
                 Assert.IsNotNull(costShareEntry);
 
                 var results = costShareEntry.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("Account: may not be empty");
+                results.AssertErrorsAre("Account: may not be null");
                 Assert.IsTrue(costShareEntry.IsTransient());
                 Assert.IsFalse(costShareEntry.IsValid());
 

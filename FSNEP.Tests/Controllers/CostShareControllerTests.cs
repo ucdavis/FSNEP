@@ -455,7 +455,7 @@ namespace FSNEP.Tests.Controllers
             Assert.AreEqual(5, result.FundTypes.Count());
             Assert.AreEqual(4, result.Projects.Count());
 
-            Controller.ModelState.AssertErrorsAre("ExpenseType: may not be empty");
+            Controller.ModelState.AssertErrorsAre("ExpenseType: may not be null");
 
         }
 

@@ -320,7 +320,7 @@ namespace FSNEP.Tests.Repositories
                 Assert.IsNotNull(timerecordEntry);
 
                 var results = timerecordEntry.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("ActivityType: may not be empty");
+                results.AssertErrorsAre("ActivityType: may not be null");
                 Assert.IsTrue(timerecordEntry.IsTransient());
                 Assert.IsFalse(timerecordEntry.IsValid());
 

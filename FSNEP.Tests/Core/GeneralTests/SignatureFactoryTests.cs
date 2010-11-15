@@ -248,7 +248,7 @@ namespace FSNEP.Tests.Core.GeneralTests
 
             Assert.IsNotNull(digitalSignature1);
             Assert.IsNotNull(digitalSignature2);
-            Assert.AreEqual("428219623324349591052503313511019625296103225112175371115122622622020212619317348152147",
+            Assert.AreEqual("191701971952492181116014625019653238248695116381742451886667202001012384128164",
                 digitalSignatureString1.ToString());
             Assert.AreEqual(digitalSignatureString1.ToString(), digitalSignatureString2.ToString());
         }
@@ -274,9 +274,9 @@ namespace FSNEP.Tests.Core.GeneralTests
             }
 
             Assert.IsNotNull(digitalSignature1);
-            Assert.AreEqual("17821853531221392261361281141522503515078216186892261362228618513410816617417613813142239",
+            Assert.AreEqual("17321017113125236189926719522410513886117835333193811626210370742611823923146155",
                 digitalSignatureString1.ToString());
-            Assert.AreEqual("14158016620032538717213242180239981082261818032652481215716532181606225556182",
+            Assert.AreEqual("191244167123246437717315314671581523922449149237165211133190136135291578731250242220165",
                             digitalSignatureString2.ToString());
 
             Assert.IsNotNull(digitalSignature2);
@@ -307,9 +307,9 @@ namespace FSNEP.Tests.Core.GeneralTests
 
             Assert.IsNotNull(digitalSignature1);
             Assert.IsNotNull(digitalSignature2);
-            Assert.AreEqual("428219623324349591052503313511019625296103225112175371115122622622020212619317348152147",
+            Assert.AreEqual("191701971952492181116014625019653238248695116381742451886667202001012384128164",
                 digitalSignatureString1.ToString());
-            Assert.AreEqual("43118244146922113233250122455315912525118692431652481784822391167816919813481514",
+            Assert.AreEqual("6818938332316116012042422491131488111620322144113911817796241247981701933533168",
                 digitalSignatureString2.ToString());
             Assert.AreNotEqual(digitalSignatureString1.ToString(), digitalSignatureString2.ToString());
         }

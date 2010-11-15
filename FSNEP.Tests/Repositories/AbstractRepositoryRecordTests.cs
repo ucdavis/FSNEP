@@ -399,7 +399,7 @@ namespace FSNEP.Tests.Repositories
             {
                 Assert.IsNotNull(record);
                 var results = record.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("User: may not be empty");
+                results.AssertErrorsAre("User: may not be null");
                 Assert.IsTrue(record.IsTransient());
                 Assert.IsFalse(record.IsValid());
 
@@ -429,7 +429,7 @@ namespace FSNEP.Tests.Repositories
             {
                 Assert.IsNotNull(record);
                 var results = record.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("Status: may not be empty");
+                results.AssertErrorsAre("Status: may not be null");
                 Assert.IsTrue(record.IsTransient());
                 Assert.IsFalse(record.IsValid());
 
@@ -523,7 +523,7 @@ namespace FSNEP.Tests.Repositories
             {
                 Assert.IsNotNull(record);
                 var results = record.ValidationResults().AsMessageList();
-                results.AssertErrorsAre("Entries: may not be empty");
+                results.AssertErrorsAre("Entries: may not be null");
                 Assert.IsTrue(record.IsTransient());
                 Assert.IsFalse(record.IsValid());
 
