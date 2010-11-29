@@ -111,7 +111,7 @@ namespace FSNEP.Core.Abstractions
             body.Append(Environment.NewLine);
 
             body.AppendLine(
-                "Yolanda Cortez, ycortez@ucdavis.edu, 530-752-0711 Corinne Gould @ cgould@ucdavis.edu, 530-754-4934 Susan Padgett @ sdpadget@ucdavis.edu, 530-754-4137");
+                "Yolanda Cortez, ycortez@ucdavis.edu, 530-752-0711 Corinne Gould @ cgould@ucdavis.edu, 530-754-4934 Jennifer Quigley @ quigley@caes.ucdavis.edu, 530-754-4137");
 
             body.AppendLine(Environment.NewLine);
 
