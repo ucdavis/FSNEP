@@ -43,7 +43,7 @@
       <Name>Release</Name>
       <Platform>Win32</Platform>
       <Options>
-        <TargetServerURL>http://blotto.caesdo.caes.ucdavis.edu/reportserver</TargetServerURL>
+        <TargetServerURL>http://reports.caes.ucdavis.edu/reportserver</TargetServerURL>
         <TargetFolder>FSNEP2</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
       </Options>
@@ -51,7 +51,7 @@
     <Configuration>
       <Name>Test</Name>
       <Options>
-        <TargetServerURL>http://lou.caesdo.caes.ucdavis.edu/reportserver</TargetServerURL>
+        <TargetServerURL>http://testreports.caes.ucdavis.edu/reportserver</TargetServerURL>
         <TargetFolder>FSNEP2</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
       </Options>

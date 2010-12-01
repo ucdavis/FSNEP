@@ -468,7 +468,7 @@ ORDER BY Date</CommandText>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!ActivityName.Value + IIf(Fields!Comment.Value.ToString().Length = 0, "", " (" + Fields!Comment.Value + ")")</Value>
+                              <Value>=Fields!ActivityName.Value + IIf(String.IsNullOrEmpty(Fields!Comment.Value), "", " (" + Fields!Comment.Value + ")")</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -500,6 +500,7 @@ ORDER BY Date</CommandText>
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
