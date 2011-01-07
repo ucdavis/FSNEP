@@ -375,6 +375,8 @@ function AddEntry(id) {
 
     var addRecordDay = $("#addRecordDay");
     addRecordDay.val(id);
+
+    $("#Comment").val(""); //Clear out the last comment
     
     OpenDialog(addEntryDiv, null, "Add Entry", null);
 }
