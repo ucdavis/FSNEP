@@ -12,9 +12,23 @@ namespace FSNEP.Core.Domain
         [NotNull]
         public virtual Record Record { get; set; }
 
+        private string _comment;
+
         [Length(256)]
         [JsonProperty]
-        public virtual string Comment { get; set; }
+        public virtual string Comment
+        {
+            get
+            {
+                return _comment;
+            }
+            set
+            {
+                _comment = value;
+
+                if (_comment == "null") _comment = null;
+            }
+        }
 
         [NotNull]
         public virtual Project Project { get; set; }
