@@ -44,11 +44,8 @@ BEGIN
 
 This is a reminder that your FSNEP Semi-Annual Certification record is due by the 15th of this month.  Please print and then complete the attached certification and obtain the necessary signatures and dates.  Send a PDF copy of the certification to your State Office Analyst by the 15th of the month.
 
-If you have any questions regarding this message, or about time records in general, please contact your State Office analyst:
+If you have any questions regarding this message, or about time records in general, please contact fsnep_support@ucdavis.edu.
 
-Corinne Gould ( cgould@ucdavis.edu ) or
-Jennifer Quigley (quigley@caes.ucdavis.edu ) or
-Yolanda Cortez (yCortez@ucdavis.edu ).
 '
 			
 			EXEC msdb.dbo.sp_send_dbmail

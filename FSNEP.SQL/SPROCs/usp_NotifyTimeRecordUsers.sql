@@ -67,11 +67,7 @@ WHILE (@@FETCH_STATUS = 0)
 
 This is a reminder that your electronically certified FSNEP time record is due on the 15th of this month.  Please access the FSNEP Online Time Record system to submit your time record.
 
-If you have any questions regarding this message, or about time records in general, please contact your State Office analyst:
-
-Corinne Gould ( cgould@ucdavis.edu ) or
-Jennifer Quigley (quigley@caes.ucdavis.edu ) or
-Yolanda Cortez (yCortez@ucdavis.edu ).
+If you have any questions regarding this message, or about time records in general, please contact fsnep_support@ucdavis.edu.
 
 FSNEP Online Record System
 
