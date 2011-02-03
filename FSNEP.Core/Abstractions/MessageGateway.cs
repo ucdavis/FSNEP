@@ -107,14 +107,9 @@ namespace FSNEP.Core.Abstractions
             body.AppendLine(Environment.NewLine);
 
 
-            body.AppendFormat("For questions or problems with the on-line system, please contact your FSNEP supervisor ({0}) or your State Office analyst:", supervisorEmail);
+            body.AppendFormat("For questions or problems with the on-line system, please contact your FSNEP supervisor ({0}) or fsnep_support@ucdavis.edu", supervisorEmail);
             body.Append(Environment.NewLine);
-
-            body.AppendLine(
-                "Yolanda Cortez, ycortez@ucdavis.edu, 530-752-0711 Corinne Gould @ cgould@ucdavis.edu, 530-754-4934 Jennifer Quigley @ quigley@caes.ucdavis.edu, 530-754-4137");
-
-            body.AppendLine(Environment.NewLine);
-
+            
             body.Append("Welcome again to FSNEP.");
             body.AppendLine(Environment.NewLine);
 

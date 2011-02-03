@@ -95,7 +95,7 @@
                     <script language="JavaScript" type="text/javascript">
 						<!--
                         linkname = ('Questions or comments?');
-                        emailaddress = ('cgo' + 'uld' + '@' + 'ucda' + 'vis.edu');
+                        emailaddress = ('fsnep_' + 'support' + '@' + 'ucda' + 'vis.edu');
                         document.write('<a href="mailto:' + emailaddress + '?subject=FSNEP Question/Comment: ">' + linkname + '</a>');
 						-->
                     </script>
