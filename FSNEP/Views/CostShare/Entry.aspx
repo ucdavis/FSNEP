@@ -94,15 +94,16 @@
             </p>
             <p>
                 <%= this.TextArea("Entry.Comment").Label("Comment:")%>
-            </p></span>
+            </p>
             <p>
                 <input type="submit" value="Save Cost Share Entry" />
             </p>
+            </span>
         </fieldset>
     
     <%
        }%>
-
+       
     <div id="ExistingEntries">
         <% Html.RenderPartial("ExistingCostShareEntries", Model.CostShareEntries); %>
     </div>
