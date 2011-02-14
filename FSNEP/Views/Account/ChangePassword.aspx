@@ -10,7 +10,8 @@
         Use the form below to change your password. 
     </p>
     <p>
-        New passwords are required to be a minimum of <%= Html.Encode(ViewData["PasswordLength"])%> characters in length.
+        New passwords are required to be a minimum of <%= Html.Encode(ViewData["PasswordLength"])%> characters in length
+        and contain at least one non-alphanumeric character (ex: !@#$%^&*()_+[]\';/.,).
     </p>
     <%= Html.ValidationSummary("Password change was unsuccessful. Please correct the errors and try again.")%>
 
