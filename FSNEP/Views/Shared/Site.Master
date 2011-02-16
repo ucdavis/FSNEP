@@ -7,9 +7,9 @@
     <title>
         <asp:ContentPlaceHolder ID="titleContent" runat="server" />
     </title>
-    <link href="../../Content/Site.css" rel="stylesheet" type="text/css" media="screen" />
-    <link href="../../Content/Print.css" rel="Stylesheet" type="text/css" media="print" />
-    <script src="../../Scripts/css_browser_selector.js" type="text/javascript"></script>
+    <link href="<%= Url.Content("~/Content/Site.css") %>" rel="stylesheet" type="text/css" media="screen" />
+    <link href="<%= Url.Content("~/Content/Print.css) %>" rel="Stylesheet" type="text/css" media="print" />
+    <script src="<%= Url.Content("~/Scripts/css_browser_selector.js") %>" type="text/javascript"></script>
     
     <%--//TODO: Remove (if you want) in place of custom style sheets
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" rel="Stylesheet" type="text/css" media="screen" />
