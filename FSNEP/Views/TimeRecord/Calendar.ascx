@@ -181,7 +181,7 @@
 <div id="dialogTimeRecordEdit" class="TimeRecordEditDialog" title="Edit Entry" style="display:none">
     <span style="display: none;" id="spanLoadingEntryDetails">
         <br/>
-        <img alt="" src="<%= Url.Image("mozilla_blu.gif") %>"/> 
+        <%--<img alt="" src="<%= Url.Image("mozilla_blu.gif") %>"/> --%>
         Loading ...
     </span>
     <div id="divEntryDetails">

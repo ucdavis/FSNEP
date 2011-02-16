@@ -4,7 +4,7 @@
     Entry
 </asp:Content>
 <asp:Content ContentPlaceHolderID="AdditionalScripts" runat="server">
-    <link type="text/css" href="<%= Url.Content("~/Content/jquery.jgrowl.css") %>" rel="Stylesheet" />
+    <%--<link type="text/css" href="<%= Url.Content("~/Content/jquery.jgrowl.css") %>" rel="Stylesheet" />--%>
     <script src='<%= Url.Content("~/Scripts/jquery.jgrowl.min.js") %>' type="text/javascript"></script>
     <script type="text/javascript">
         var imageBase = '<%= Url.Image("") %>';
