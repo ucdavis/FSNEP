@@ -4,20 +4,21 @@
  <script type="text/javascript">
     var approved;
 
-    $(function() {
+    $(function () {
         approved = $("#Approved");
 
-        $("#Approve").click(function() {
+        $("#Approve").click(function () {
             approved.val(true);
         });
 
-        $("#Disapprove").click(function() {
-            if ($("#ReviewComment").val().length == 0) {
+        $("#Disapprove").click(function () {
+            if ($("#ReviewComment").val()) {
+                approved.val(false);
+            }
+            else {
                 alert("Comment Required for Disapproval");
                 return false;
             }
-            
-            approved.val(false);
         });
     });
 </script>
