@@ -7,6 +7,7 @@ namespace FSNEP.Controllers
 {
     [HandleErrorWithELMAH]
     [MenuLocationFilter]
+    [Version(MajorVersion = 2)]
     public class ApplicationController : SuperController
     {
         protected RedirectToRouteResult RedirectToErrorPage(string message)
