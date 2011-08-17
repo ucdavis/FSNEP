@@ -1,0 +1,3 @@
+﻿ALTER TABLE [dbo].[Records]
+    ADD CONSTRAINT [FK_Sheets_Status] FOREIGN KEY ([StatusID]) REFERENCES [dbo].[Status] ([ID]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+

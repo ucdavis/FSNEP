@@ -1,0 +1,2 @@
+﻿CREATE USER [TestApp] FOR LOGIN [AESDEAN\TestApp];
+

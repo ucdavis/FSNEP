@@ -1,0 +1,3 @@
+﻿ALTER DATABASE [$(DatabaseName)]
+    ADD LOG FILE (NAME = [FSNEP2_log], FILENAME = 'E:\DB\FSNEP2_log.ldf', SIZE = 1792 KB, MAXSIZE = 2097152 MB, FILEGROWTH = 10 %);
+

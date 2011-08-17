@@ -1,0 +1,3 @@
+﻿ALTER TABLE [dbo].[Users]
+    ADD CONSTRAINT [FK_Users_FundTypes] FOREIGN KEY ([FundTypeID]) REFERENCES [dbo].[FundTypes] ([ID]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
