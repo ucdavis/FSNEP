@@ -59,39 +59,6 @@ EndProject
 Project("{2CFEAB61-6A3B-4EB8-B523-560B4BEEF521}") = "FSNEP.Deploy", "FSNEP.Deploy\FSNEP.Deploy.wdproj", "{47302392-C69F-4DDC-B22E-A9DB11801B24}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 10
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.caes.ucdavis.edu:8088/tfs/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = FSNEP.Tests\\FSNEP.Tests.csproj
-		SccProjectName1 = FSNEP.Tests
-		SccLocalPath1 = FSNEP.Tests
-		SccProjectUniqueName2 = FSNEP\\FSNEP.csproj
-		SccProjectName2 = FSNEP
-		SccLocalPath2 = FSNEP
-		SccProjectUniqueName3 = FSNEP.BLL\\FSNEP.BLL.csproj
-		SccProjectName3 = FSNEP.BLL
-		SccLocalPath3 = FSNEP.BLL
-		SccProjectUniqueName4 = FSNEP.Core\\FSNEP.Core.csproj
-		SccProjectName4 = FSNEP.Core
-		SccLocalPath4 = FSNEP.Core
-		SccProjectUniqueName5 = FSNEP.Data\\FSNEP.Data.csproj
-		SccProjectName5 = FSNEP.Data
-		SccLocalPath5 = FSNEP.Data
-		SccProjectUniqueName6 = FSNEP.Controllers\\FSNEP.Controllers.csproj
-		SccProjectName6 = FSNEP.Controllers
-		SccLocalPath6 = FSNEP.Controllers
-		SccProjectUniqueName7 = FSNEP.Report\\FSNEP.Report.rptproj
-		SccProjectName7 = FSNEP.Report
-		SccLocalPath7 = FSNEP.Report
-		SccProjectUniqueName8 = FSNEP.Deploy\\FSNEP.Deploy.wdproj
-		SccProjectName8 = FSNEP.Deploy
-		SccLocalPath8 = FSNEP.Deploy
-		SccProjectUniqueName9 = FSNEP.SQL\\FSNEP.SQL.dbproj
-		SccProjectName9 = FSNEP.SQL
-		SccLocalPath9 = FSNEP.SQL
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		DebugLocal|Any CPU = DebugLocal|Any CPU
