@@ -5,7 +5,7 @@
     <li>Time Record:
         <%= Model.IsTimeRecordUser %>
     </li>
-    <li>Cost Share:
+    <li>Local Support:
         <%= Model.IsCostShareUser %>
     </li>
     <li>Supervisor:

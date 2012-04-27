@@ -7,7 +7,7 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2><%= Html.Encode(string.Format("Reviewing {0}'s Cost Share for {1:MMMM yyyy}", Model.CostShare.User.FullName, Model.CostShare.Date)) %></h2>
+    <h2><%= Html.Encode(string.Format("Reviewing {0}'s Local Support for {1:MMMM yyyy}", Model.CostShare.User.FullName, Model.CostShare.Date)) %></h2>
     <span><%= Html.Mailto(string.Format("[Send An Email To {0}]", Model.CostShare.User.FullName), Model.CostShare.User.Email) %></span>
 
     <% if (Model.IsAccepted) %>
@@ -16,7 +16,7 @@
         <% Html.RenderPartial("CostShareEntryList", Model.Entries); %>
     
     <div class="backnav">
-        <%= Html.ActionLink<AuditController>(x=>x.CostShareHistory(null), "Back to Cost Share History") %>
+        <%= Html.ActionLink<AuditController>(x=>x.CostShareHistory(null), "Back to Local Support History") %>
     </div>
 
 </asp:Content>

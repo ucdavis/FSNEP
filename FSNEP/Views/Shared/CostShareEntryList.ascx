@@ -6,7 +6,7 @@
 
 <div class="excludedEntries">
 
-    <h3>Excluded Cost Share Entries</h3>
+    <h3>Excluded Local Support Entries</h3>
 
     <% Html.RenderPartial("CostShareEntriesDisplay", Model.Where(x => x.Exclude)); %>
     

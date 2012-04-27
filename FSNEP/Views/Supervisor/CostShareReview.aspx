@@ -14,7 +14,7 @@
     <% Html.RenderPartial("ApproveOrDeny", Model.Record); %>
     
     <div class="backnav">
-        <%= Html.ActionLink<SupervisorController>(x=>x.CostShareList(), "Back to Cost Share Review List") %>
+        <%= Html.ActionLink<SupervisorController>(x=>x.CostShareList(), "Back to Local Support Review List") %>
     </div>
 
 </asp:Content>

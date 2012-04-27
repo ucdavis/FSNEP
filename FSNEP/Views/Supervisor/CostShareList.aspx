@@ -2,12 +2,12 @@
 <%@ Import Namespace="Telerik.Web.Mvc.UI"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
-	Cost Share List
+	Local Support List
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2>Cost Share List</h2>
+    <h2>Local Support List</h2>
 
     <% 
         ViewData["ReviewAction"] = "CostShareReview";

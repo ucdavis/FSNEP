@@ -16,12 +16,12 @@
     <% if (Model.IsCostShareUser)
        { %>
     <li class="cost">
-        <%=Html.ActionLink<CostShareController>(x => x.Current(), "Cost Share")%>
+        <%=Html.ActionLink<CostShareController>(x => x.Current(), "Local Support")%>
         <ul id="CostShareMenu">
             <li>
-                <%=Html.ActionLink<CostShareController>(x => x.Current(), "Current Cost Share")%></li>
+                <%=Html.ActionLink<CostShareController>(x => x.Current(), "Current Local Support")%></li>
             <li>
-                <%=Html.ActionLink<CostShareController>(x => x.History(), "Cost Share History")%></li>
+                <%=Html.ActionLink<CostShareController>(x => x.History(), "Local Support History")%></li>
         </ul>
         <% } %>
     </li>
@@ -33,7 +33,7 @@
             <li>
                 <%= Html.ActionLink<SupervisorController>(x=>x.TimeRecordList(), "Time Record Review") %></li>
             <li>
-                <%= Html.ActionLink<SupervisorController>(x=>x.CostShareList(), "Cost Share Review") %></li>
+                <%= Html.ActionLink<SupervisorController>(x=>x.CostShareList(), "Local Support Review") %></li>
             <li>
                 <%= Html.ActionLink<SupervisorController>(x=>x.Delegate(), "Assign/Remove Delegates") %></li>
         </ul>
@@ -50,7 +50,7 @@
             <li>
                 <%=Html.ActionLink("User Admin", "List", "UserAdministration")%></li>
             <li>
-                <%=Html.ActionLink("Cost Share Audit", "CostShareHistory", "Audit") %>
+                <%=Html.ActionLink("Local Support Audit", "CostShareHistory", "Audit") %>
             </li>
             <li>
                 <%=Html.ActionLink("Time Record Audit", "TimeRecordHistory", "Audit") %>
@@ -63,7 +63,7 @@
         <%=Html.ActionLink<ReportController>(x => x.TimeRecord(), "Reports")%>
         <ul id="ReportsMenu">
             <li>
-                <%= Html.ActionLink("Cost Share", "CostShare", "Report") %>
+                <%= Html.ActionLink("Local Support", "CostShare", "Report") %>
             </li>
             <li>
                 <%= Html.ActionLink<ReportController>(x=>x.TimeRecord(), "Time Record") %>

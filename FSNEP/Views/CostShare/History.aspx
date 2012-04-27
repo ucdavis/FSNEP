@@ -1,12 +1,12 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IEnumerable<FSNEP.Core.Domain.CostShare>>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
-	Cost Share History
+	Local Support History
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2>Cost Share History</h2>
+    <h2>Local Support History</h2>
 
     <%
         Html.Grid(Model)

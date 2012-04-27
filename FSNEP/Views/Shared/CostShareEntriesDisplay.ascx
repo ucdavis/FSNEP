@@ -2,7 +2,7 @@
 
 <%
     Html.Grid(Model)
-        .DisplayAlternateMessageWhen(Model.Count() == 0, "No Cost Share Entries Found")
+        .DisplayAlternateMessageWhen(Model.Count() == 0, "No Local Support Entries Found")
         .Name("CostShareEntries")
         .Columns(col =>
                      {

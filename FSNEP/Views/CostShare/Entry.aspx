@@ -40,9 +40,9 @@
         }
     </script>
 
-    <h2><%= Html.Encode(string.Format("Cost Share for {0}", Model.CostShare.Date.ToString("MMMM yyyy"))) %></h2>
+    <h2><%= Html.Encode(string.Format("Local Support for {0}", Model.CostShare.Date.ToString("MMMM yyyy"))) %></h2>
     
-    <%= Html.ValidationSummary("Cost Share Entry was unsuccessful. Please correct the errors and try again.") %>
+    <%= Html.ValidationSummary("Local Support Entry was unsuccessful. Please correct the errors and try again.") %>
     <%= Html.ClientSideValidation<FSNEP.Core.Domain.CostShareEntry>("Entry") %>
     <%= Html.ClientSideValidation<FSNEP.Core.Domain.CostShareEntry>()
             .AddRule("PostedFile", new xVal.Rules.RegularExpressionRule(@"^.+\.(pdf)$", RegexOptions.IgnoreCase) { ErrorMessage = "File Must be a PDF" })
@@ -54,7 +54,7 @@
         <%= Html.Hidden("id", Model.CostShare.Id) %>
         
         <fieldset>
-            <legend>New Cost Share Entry</legend>
+            <legend>New Local Support Entry</legend>
             <span class="left">
             <p>
                 <%= this.TextBox("Entry.Amount").Label("Amount ($):") %>
@@ -96,7 +96,7 @@
                 <%= this.TextArea("Entry.Comment").Label("Comment:")%>
             </p>
             <p>
-                <input type="submit" value="Save Cost Share Entry" />
+                <input type="submit" value="Save Local Support Entry" />
             </p>
             </span>
         </fieldset>

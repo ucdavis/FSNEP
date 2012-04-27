@@ -2,7 +2,7 @@
 <%@ Import Namespace="FSNEP.Core.Domain"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
-	Cost Share Audit
+	Local Support Audit
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -21,7 +21,7 @@
         });
     </script>
 
-    <h2>Cost Share Audit</h2>
+    <h2>Local Support Audit</h2>
 
     Project: <%= this.Select("project")
             .Options(Model.Projects, x=>x.Id, x=>x.Name)

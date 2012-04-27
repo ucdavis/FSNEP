@@ -1,7 +1,7 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IEnumerable<FSNEP.Core.Domain.Project>>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="server">
-	Cost Share Report
+	Local Support Report
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -14,7 +14,7 @@
         });
     </script>
 
-    <h2>Cost Share Report</h2>
+    <h2>Local Support Report</h2>
 
     <% using(Html.BeginForm()) { %>
         <%= Html.AntiForgeryToken() %> 

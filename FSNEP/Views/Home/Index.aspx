@@ -24,7 +24,7 @@
     <div class="menu-section costshare">
     <h3>
         Local Support</h3>
-        <img src="<%= Url.Content("~/Images/menu-share.png") %>" alt="Cost Share" />
+        <img src="<%= Url.Content("~/Images/menu-share.png") %>" alt="Local Support" />
     <ul>
         <li>
             <%=Html.ActionLink<CostShareController>(x => x.Current(), "Current Local Support")%></li>
@@ -39,7 +39,7 @@
         <img src="<%= Url.Content("~/Images/menu-supe.png") %>" alt="Supervisor" />
     <ul>
         <li><%= Html.ActionLink<SupervisorController>(x=>x.TimeRecordList(), "Time Record Review") %></li>
-        <li><%= Html.ActionLink<SupervisorController>(x=>x.CostShareList(), "Cost Share Review") %></li>
+        <li><%= Html.ActionLink<SupervisorController>(x=>x.CostShareList(), "Local Support Review") %></li>
         <li><%= Html.ActionLink<SupervisorController>(x=>x.Delegate(), "Assign/Remove Delegates") %></li>
     </ul></div>
     <% } %>
@@ -57,7 +57,7 @@
         <li>
             <%=Html.ActionLink("User Admin", "List", "UserAdministration")%></li>
         <li>
-            <%=Html.ActionLink("Cost Share Audit", "CostShareHistory", "Audit") %>
+            <%=Html.ActionLink("Local Support Audit", "CostShareHistory", "Audit") %>
         </li>
         <li>
             <%=Html.ActionLink("Time Record Audit", "TimeRecordHistory", "Audit") %>
@@ -72,7 +72,7 @@
         <img src="<%= Url.Content("~/Images/menu-reports.png") %>" alt="Reports" />
     <ul>
         <li>
-            <%= Html.ActionLink("Cost Share", "CostShare", "Report") %>
+            <%= Html.ActionLink("Local Support", "CostShare", "Report") %>
         </li>
         <li>
             <%= Html.ActionLink<ReportController>(x=>x.TimeRecord(), "Time Record") %>
