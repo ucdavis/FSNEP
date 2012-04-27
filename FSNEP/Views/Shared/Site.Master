@@ -56,7 +56,9 @@
             Skip directly to: <a href="#nav">Navigation for this section</a> | <a href="#content">
                 Main page content</a></div>
         <div id="header">
-            <a id="A1" href='<%= Url.Action("Index", "Home") %>' class="homebutton"><img id="Img1" src='<%= Url.Content("~/Images/bannertop.jpg") %>' alt="FSNEP Time Record/Cost Share Reporting" /></a>
+            <a id="A1" href='<%= Url.Action("Index", "Home") %>' class="homebutton">
+                <img id="Img1" src='<%= Url.Content("~/Images/calfresh.jpg") %>' alt="UC CalFresh Nutrition Education" />
+            </a>
         </div>
         
         <div id="menu-section" class="<%= ViewData["MenuLocation"] %>">

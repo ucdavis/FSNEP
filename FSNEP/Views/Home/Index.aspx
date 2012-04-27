@@ -23,12 +23,12 @@
     <% if (Model.IsCostShareUser) { %>
     <div class="menu-section costshare">
     <h3>
-        Cost Share</h3>
+        Local Support</h3>
         <img src="<%= Url.Content("~/Images/menu-share.png") %>" alt="Cost Share" />
     <ul>
         <li>
-            <%=Html.ActionLink<CostShareController>(x => x.Current(), "Current Cost Share")%></li>
-        <li><%=Html.ActionLink<CostShareController>(x => x.History(), "Cost Share History")%></li>
+            <%=Html.ActionLink<CostShareController>(x => x.Current(), "Current Local Support")%></li>
+        <li><%=Html.ActionLink<CostShareController>(x => x.History(), "Local Support History")%></li>
     </ul>
     </div>
     <% } %>

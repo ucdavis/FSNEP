@@ -27,6 +27,10 @@ body {
 	clear: both;
 }
 
+.homebutton>img{
+    padding-top: 10px;
+}
+
 a:link {color:#1a4b5e;}
 a:visited {color:#1a4b5e;}
 a:hover {text-decoration:none;}
