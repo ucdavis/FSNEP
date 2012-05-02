@@ -120,7 +120,7 @@ namespace FSNEP.Controllers
                 return new HttpUnauthorizedResult();
             }
             
-            return _reportBLL.GenerateCostShare(project, year, ReportType.Excel).ToFileResult(string.Format("{0}CostShareReport.xls", year));
+            return _reportBLL.GenerateCostShare(project, year, ReportType.Excel).ToFileResult(string.Format("{0}LocalSupportReport.xls", year));
         }
     }
 }
