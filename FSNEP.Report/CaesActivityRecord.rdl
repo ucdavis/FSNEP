@@ -811,7 +811,7 @@ ORDER BY Date</CommandText>
     <DataSet Name="Users">
       <Query>
         <DataSourceName>TimeSheets</DataSourceName>
-        <CommandText>SELECT     UserId, FirstName, LastName, FirstName + ' ' + LastName AS FullName
+        <CommandText>SELECT     UserId, FirstName, LastName, LastName + ', ' + FirstName AS FullName
 FROM         Users
 WHERE     (IsActive = 1)
 ORDER BY LastName, FirstName</CommandText>
@@ -835,20 +835,68 @@ ORDER BY LastName, FirstName</CommandText>
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="Records">
+      <Query>
+        <DataSourceName>TimeSheets</DataSourceName>
+        <CommandText>SELECT     Records.ID, Records.Year, Records.Month, Records.UserId, 'Month ' + CONVERT(varchar, Records.Month) + ' of ' + CONVERT(varchar, Records.Year) 
+                      AS RecordDate
+FROM         TimeRecords INNER JOIN
+                      Records ON TimeRecords.ID = Records.ID
+ORDER BY Records.Year DESC, Records.Month DESC</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ID">
+          <DataField>ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Year">
+          <DataField>Year</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Month">
+          <DataField>Month</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="UserId">
+          <DataField>UserId</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="RecordDate">
+          <DataField>RecordDate</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Filters>
+        <Filter>
+          <FilterExpression>=Fields!UserId.Value</FilterExpression>
+          <Operator>Equal</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!UserId.Value</FilterValue>
+          </FilterValues>
+        </Filter>
+      </Filters>
+    </DataSet>
   </DataSets>
   <ReportParameters>
-    <ReportParameter Name="TimeRecordID">
-      <DataType>String</DataType>
-      <Prompt>Time Record ID</Prompt>
-    </ReportParameter>
     <ReportParameter Name="UserId">
       <DataType>String</DataType>
-      <Prompt>Person</Prompt>
+      <Prompt>User</Prompt>
       <ValidValues>
         <DataSetReference>
           <DataSetName>Users</DataSetName>
           <ValueField>UserId</ValueField>
           <LabelField>FullName</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="TimeRecordID">
+      <DataType>Integer</DataType>
+      <Prompt>Time Record ID</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Records</DataSetName>
+          <ValueField>ID</ValueField>
+          <LabelField>RecordDate</LabelField>
         </DataSetReference>
       </ValidValues>
     </ReportParameter>
