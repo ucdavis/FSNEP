@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "FSNEP.Report", "FSNEP.Report.rptproj", "{B9526A18-9138-40E7-B830-175D5B9FF031}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Default = Debug|Default
+		DebugLocal|Default = DebugLocal|Default
+		Release|Default = Release|Default
+		Test|Default = Test|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9526A18-9138-40E7-B830-175D5B9FF031}.Debug|Default.ActiveCfg = Debug
+		{B9526A18-9138-40E7-B830-175D5B9FF031}.Debug|Default.Build.0 = DebugLocal
+		{B9526A18-9138-40E7-B830-175D5B9FF031}.Debug|Default.Deploy.0 = DebugLocal
+		{B9526A18-9138-40E7-B830-175D5B9FF031}.DebugLocal|Default.ActiveCfg = DebugLocal
+		{B9526A18-9138-40E7-B830-175D5B9FF031}.DebugLocal|Default.Build.0 = DebugLocal
+		{B9526A18-9138-40E7-B830-175D5B9FF031}.DebugLocal|Default.Deploy.0 = DebugLocal
+		{B9526A18-9138-40E7-B830-175D5B9FF031}.Release|Default.ActiveCfg = Release
+		{B9526A18-9138-40E7-B830-175D5B9FF031}.Release|Default.Build.0 = Release
+		{B9526A18-9138-40E7-B830-175D5B9FF031}.Release|Default.Deploy.0 = Release
+		{B9526A18-9138-40E7-B830-175D5B9FF031}.Test|Default.ActiveCfg = Test
+		{B9526A18-9138-40E7-B830-175D5B9FF031}.Test|Default.Build.0 = Test
+		{B9526A18-9138-40E7-B830-175D5B9FF031}.Test|Default.Deploy.0 = Test
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
