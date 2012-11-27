@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Name>FSNEP2</Name>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="FSNEP2">
   <ConnectionProperties>
     <Extension>SQL</Extension>
-    <ConnectString>Data Source=donbot;Initial Catalog=FSNEP2</ConnectString>
+    <ConnectString>Data Source=donbot;Initial Catalog=TimeSheets</ConnectString>
     <IntegratedSecurity>true</IntegratedSecurity>
   </ConnectionProperties>
   <DataSourceID>951e1f11-b068-47d8-96c1-92ece1d57141</DataSourceID>

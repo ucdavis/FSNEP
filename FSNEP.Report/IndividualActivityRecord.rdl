@@ -1,87 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition">
-  <DataSources>
-    <DataSource Name="FSNEP2">
-      <DataSourceReference>FSNEP2</DataSourceReference>
-      <rd:DataSourceID>7ff55177-6626-4f0f-8461-2ed12584f4bf</rd:DataSourceID>
-      <rd:SecurityType>None</rd:SecurityType>
-    </DataSource>
-  </DataSources>
-  <DataSets>
-    <DataSet Name="TimeSheetEntries">
-      <Fields>
-        <Field Name="ActivityName">
-          <DataField>ActivityName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ProjectName">
-          <DataField>ProjectName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Date">
-          <DataField>Date</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Hours">
-          <DataField>Hours</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="Comment">
-          <DataField>Comment</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="FirstName">
-          <DataField>FirstName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="LastName">
-          <DataField>LastName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Month">
-          <DataField>Month</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Year">
-          <DataField>Year</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="StatusName">
-          <DataField>StatusName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>FSNEP2</DataSourceName>
-        <CommandText>SELECT     
-	ActivityTypes.Name AS ActivityName, 
-	Projects.Name AS ProjectName, 
-	TimeRecordEntries.Date, 
-	TimeRecordEntries.Hours, 
-	Entries.Comment, 
-    Users.FirstName, 
-    Users.LastName, 
-    Records.Month, 
-    Records.Year, 
-    Status.Name as StatusName
-FROM         Records INNER JOIN
-                      TimeRecords ON Records.ID = TimeRecords.ID INNER JOIN
-                      Users ON Records.UserId = Users.UserId INNER JOIN
-                      Entries ON Records.ID = Entries.RecordID INNER JOIN
-                      TimeRecordEntries ON TimeRecordEntries.ID = Entries.ID INNER JOIN
-                      ActivityTypes ON ActivityTypes.ID = TimeRecordEntries.ActivityTypeID INNER JOIN
-                      Projects ON Entries.ProjectID = Projects.ID INNER JOIN
-                      Status ON Records.StatusID = Status.ID
-WHERE     (TimeRecordEntries.AdjustmentDate IS NULL) AND (Records.ID = @TimeRecordID)
-ORDER BY Date</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@TimeRecordID">
-            <Value>=Parameters!TimeRecordID.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-      </Query>
-    </DataSet>
-  </DataSets>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
       <Textbox Name="textbox1">
@@ -91,7 +9,7 @@ ORDER BY Date</CommandText>
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>FSNEP Activity Record For Documentation</Value>
+                <Value>CAES Activity Record For Documentation</Value>
                 <Style>
                   <FontWeight>Bold</FontWeight>
                 </Style>
@@ -259,7 +177,7 @@ ORDER BY Date</CommandText>
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Committed State Share Hours:____________________ hours __________________ percent</Value>
+                <Value>Committed Hours:____________________ hours __________________ percent</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -518,7 +436,6 @@ ORDER BY Date</CommandText>
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
@@ -737,12 +654,6 @@ ORDER BY Date</CommandText>
     <Height>2.65625in</Height>
     <Style />
   </Body>
-  <ReportParameters>
-    <ReportParameter Name="TimeRecordID">
-      <DataType>String</DataType>
-      <Prompt>Time Record ID</Prompt>
-    </ReportParameter>
-  </ReportParameters>
   <Width>6.5in</Width>
   <Page>
     <PageFooter>
@@ -815,6 +726,95 @@ ORDER BY Date</CommandText>
     <BottomMargin>1in</BottomMargin>
     <Style />
   </Page>
-  <rd:ReportID>c970634a-8c8d-4129-a40e-4f662dc25b94</rd:ReportID>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="FSNEP2">
+      <DataSourceReference>FSNEP2</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>7ff55177-6626-4f0f-8461-2ed12584f4bf</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="TimeSheetEntries">
+      <Query>
+        <DataSourceName>FSNEP2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@TimeRecordID">
+            <Value>=Parameters!TimeRecordID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT     
+	ActivityTypes.Name AS ActivityName, 
+	Projects.Name AS ProjectName, 
+	TimeRecordEntries.Date, 
+	TimeRecordEntries.Hours, 
+	Entries.Comment, 
+    Users.FirstName, 
+    Users.LastName, 
+    Records.Month, 
+    Records.Year, 
+    Status.Name as StatusName
+FROM         Records INNER JOIN
+                      TimeRecords ON Records.ID = TimeRecords.ID INNER JOIN
+                      Users ON Records.UserId = Users.UserId INNER JOIN
+                      Entries ON Records.ID = Entries.RecordID INNER JOIN
+                      TimeRecordEntries ON TimeRecordEntries.ID = Entries.ID INNER JOIN
+                      ActivityTypes ON ActivityTypes.ID = TimeRecordEntries.ActivityTypeID INNER JOIN
+                      Projects ON Entries.ProjectID = Projects.ID INNER JOIN
+                      Status ON Records.StatusID = Status.ID
+WHERE     (TimeRecordEntries.AdjustmentDate IS NULL) AND (Records.ID = @TimeRecordID)
+ORDER BY Date</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ActivityName">
+          <DataField>ActivityName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ProjectName">
+          <DataField>ProjectName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Date">
+          <DataField>Date</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Hours">
+          <DataField>Hours</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Comment">
+          <DataField>Comment</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FirstName">
+          <DataField>FirstName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="LastName">
+          <DataField>LastName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Month">
+          <DataField>Month</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Year">
+          <DataField>Year</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="StatusName">
+          <DataField>StatusName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="TimeRecordID">
+      <DataType>String</DataType>
+      <Prompt>Time Record ID</Prompt>
+    </ReportParameter>
+  </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>c970634a-8c8d-4129-a40e-4f662dc25b94</rd:ReportID>
 </Report>
