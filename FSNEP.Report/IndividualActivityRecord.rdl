@@ -728,8 +728,8 @@
   </Page>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="FSNEP2">
-      <DataSourceReference>FSNEP2</DataSourceReference>
+    <DataSource Name="TimeSheets">
+      <DataSourceReference>TimeSheets</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>7ff55177-6626-4f0f-8461-2ed12584f4bf</rd:DataSourceID>
     </DataSource>
@@ -737,7 +737,7 @@
   <DataSets>
     <DataSet Name="TimeSheetEntries">
       <Query>
-        <DataSourceName>FSNEP2</DataSourceName>
+        <DataSourceName>TimeSheets</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@TimeRecordID">
             <Value>=Parameters!TimeRecordID.Value</Value>
