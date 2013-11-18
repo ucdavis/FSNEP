@@ -21,7 +21,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
             
-    <span class="notification-message">Please print out and sign your time records bi-weekly. <a href="<%= Url.Content("~/Content/FSNEP-reporting-dates.pdf") %>">Click here to view/download a chart of the time periods for FY12</a></span>
+    <span class="notification-message">Please print out and sign your time records bi-weekly. <a href="<%= Url.Content("~/Content/FSNEP-reporting-dates.pdf") %>">Click here to view/download a chart of the time periods for FY14</a></span>
     <br/><br/><br/>
     <div style="margin: 0pt auto; width: 400px; color: rgb(24, 75, 93); font-size: 24px; font-weight: bold; text-align: center;">
         <span id="ctl00_ContentPlaceHolder1_lblCalendarInfo">
